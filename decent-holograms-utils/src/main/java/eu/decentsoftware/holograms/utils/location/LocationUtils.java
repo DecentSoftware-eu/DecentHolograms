@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.utils.location;
 
-import eu.decentsoftware.holograms.utils.MathUtils;
+import eu.decentsoftware.holograms.utils.RandomUtils;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -38,9 +38,9 @@ public class LocationUtils {
 
 	public static Location randomizeLocation(Location location) {
 		return location.add(
-				MathUtils.randomFloat() - 0.5D,
-				MathUtils.randomFloat() - 0.5D,
-				MathUtils.randomFloat() - 0.5D
+				RandomUtils.randomFloat() - 0.5D,
+				RandomUtils.randomFloat() - 0.5D,
+				RandomUtils.randomFloat() - 0.5D
 		);
 	}
 

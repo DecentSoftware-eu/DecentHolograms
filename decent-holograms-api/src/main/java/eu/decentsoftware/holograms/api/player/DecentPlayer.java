@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.player;
 
-import eu.decentsoftware.holograms.utils.scheduler.ConsumerTask;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -32,11 +31,5 @@ public interface DecentPlayer {
 	 * @return the bukkit instance of this player.
 	 */
 	Player getPlayer();
-
-	/**
-	 * Get the update task of this player.
-	 * @return the update task of this player.
-	 */
-	ConsumerTask<DecentPlayer> getUpdateTask();
 
 }

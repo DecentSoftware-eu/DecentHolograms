@@ -9,7 +9,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramLineType;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.objects.enums.EnumFlag;
-import eu.decentsoftware.holograms.core.hooks.PlaceholderHook;
+import eu.decentsoftware.holograms.core.hooks.PAPI;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.utils.items.HologramItem;
@@ -185,7 +185,7 @@ public class DefaultHologramLine implements HologramLine {
 		if (!HologramLineType.TEXT.equals(type)) return "";
 		String string = Common.colorize(this.text);
 		if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS) && (parent == null || !parent.hasFlag(EnumFlag.DISABLE_PLACEHOLDERS))) {
-			string = PlaceholderHook.setPlaceholders(player, string);
+			string = PAPI.setPlaceholders(player, string);
 		}
 		return string;
 	}

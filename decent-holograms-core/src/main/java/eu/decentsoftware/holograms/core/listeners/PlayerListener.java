@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -19,9 +18,6 @@ public class PlayerListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Player player = e.getPlayer();
 		PLUGIN.getPlayerManager().createPlayer(player);
-		Bukkit.getScheduler().runTaskAsynchronously(PLUGIN.getPlugin(), () ->
-				PLUGIN.getHologramManager().showAll(player)
-		);
 	}
 
 	@EventHandler
@@ -35,14 +31,6 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
-		Player player = e.getPlayer();
-		Bukkit.getScheduler().runTaskAsynchronously(PLUGIN.getPlugin(), () ->
-				PLUGIN.getHologramManager().hideAll(player)
-		);
-	}
-
-	@EventHandler
-	public void onChangeWorld(PlayerChangedWorldEvent e) {
 		Player player = e.getPlayer();
 		Bukkit.getScheduler().runTaskAsynchronously(PLUGIN.getPlugin(), () ->
 				PLUGIN.getHologramManager().hideAll(player)

@@ -14,7 +14,6 @@ import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.core.commands.HologramsCommand;
 import eu.decentsoftware.holograms.core.features.DamageDisplayFeature;
 import eu.decentsoftware.holograms.core.features.HealingDisplayFeature;
-import eu.decentsoftware.holograms.core.hooks.PlaceholderHook;
 import eu.decentsoftware.holograms.core.listeners.PlayerListener;
 import eu.decentsoftware.holograms.core.managers.DefaultFeatureManager;
 import eu.decentsoftware.holograms.core.managers.DefaultHologramManager;
@@ -90,7 +89,6 @@ public class DecentHologramsAPI implements DecentHolograms {
 		}
 		Settings.reload();
 		Lang.reload();
-		PlaceholderHook.reload();
 
 		hologramManager = new DefaultHologramManager();
 		playerManager = new DefaultPlayerManager();
@@ -118,7 +116,6 @@ public class DecentHologramsAPI implements DecentHolograms {
 	public void reload() {
 		Settings.reload();
 		Lang.reload();
-		PlaceholderHook.reload();
 
 		hologramManager.reload();
 		featureManager.reload();

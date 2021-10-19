@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.core.managers;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsProvider;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
@@ -9,6 +10,7 @@ import eu.decentsoftware.holograms.api.managers.HologramManager;
 import eu.decentsoftware.holograms.core.holograms.DefaultHologram;
 import eu.decentsoftware.holograms.core.holograms.DefaultHologramLine;
 import eu.decentsoftware.holograms.utils.Common;
+import eu.decentsoftware.holograms.utils.scheduler.RunnableTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,10 +22,22 @@ import java.util.Set;
 
 public class DefaultHologramManager implements HologramManager {
 
+	private static final DecentHolograms PLUGIN = DecentHologramsProvider.getDecentHolograms();
 	private final Map<String, Hologram> hologramMap = Maps.newLinkedHashMap();
 	private final Set<HologramLine> temporaryLines = Sets.newHashSet();
+	private final RunnableTask displayUpdateTask;
 
 	public DefaultHologramManager() {
+		this.displayUpdateTask = new RunnableTask(DecentHologramsProvider.getDecentHolograms().getPlugin(), 0L, 5L);
+		this.displayUpdateTask.addPart("display_update", () -> getHolograms().forEach(hologram -> {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (hologram.isEnabled() && !hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
+					hologram.show(player);
+				} else if (hologram.isVisible(player) && !(hologram.isEnabled() && hologram.canShow(player) && hologram.isInDisplayRange(player))) {
+					hologram.hide(player);
+				}
+			}
+		}));
 		this.reload();
 	}
 
@@ -32,7 +46,7 @@ public class DefaultHologramManager implements HologramManager {
 		HologramLine line = new DefaultHologramLine(location, content);
 		temporaryLines.add(line);
 		line.show();
-		Bukkit.getScheduler().runTaskLaterAsynchronously(DecentHologramsProvider.getDecentHolograms().getPlugin(), () -> {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(PLUGIN.getPlugin(), () -> {
 			line.destroy();
 			temporaryLines.remove(line);
 		}, duration);
@@ -43,10 +57,12 @@ public class DefaultHologramManager implements HologramManager {
 	public void reload() {
 		this.destroy();
 		this.loadHolograms();
+		this.displayUpdateTask.restart();
 	}
 
 	@Override
 	public void destroy() {
+		this.displayUpdateTask.stop();
 		if (!hologramMap.isEmpty()) {
 			hologramMap.values().forEach(Hologram::destroy);
 			hologramMap.clear();

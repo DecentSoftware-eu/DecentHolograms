@@ -48,7 +48,7 @@ public class HologramsCommand extends DecentPluginCommand {
 				Lang.USE_HELP.send(sender);
 			} else {
 				Common.tell(sender,
-						Common.PREFIX + "&7This server is running &bDecentHolograms v%s&7 by &bd0by&7.\n",
+						Common.PREFIX + "&7This server is running &bDecentHolograms v%s&7 by &bd0by&7.\n&7(https://www.spigotmc.org/resources/96927/)",
 						PLUGIN.getPlugin().getDescription().getVersion()
 				);
 			}

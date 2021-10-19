@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class HologramCloneSub extends DecentCommand {
 
 	public HologramCloneSub() {
-		super("clone", "dh.hologram.admin", true);
+		super("clone", "dh.hologram.admin", true, "copy");
 	}
 
 	@Override

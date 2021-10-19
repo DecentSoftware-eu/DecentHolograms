@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Random;
 
 @UtilityClass
-public class MathUtils {
+public class RandomUtils {
 
 	private static final Random RANDOM = new Random();
 

@@ -1,7 +1,6 @@
 ### Gradle & IntelliJ ###
 /.gradle/
 /.idea/
-/gradle/
 build
 out
 /run/

@@ -126,22 +126,13 @@ public class DefaultHologram implements Hologram {
 		this.updateInterval = Settings.DEFAULT_UPDATE_INTERVAL.getValue();
 		this.updateTask = new ConsumerTask<>(PLUGIN.getPlugin(), this, 0, updateInterval);
 		this.updateTask.addPart("update", (hologram) -> {
-			if (!hologram.isEnabled()) return;
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-				if (!hologram.isVisible(onlinePlayer)) {
-					if (hologram.canShow(onlinePlayer) && hologram.isInDisplayRange(onlinePlayer)) {
-						hologram.show(onlinePlayer);
-					}
-				} else {
-					if (hologram.canShow(onlinePlayer) && hologram.isInUpdateRange(onlinePlayer) && !hologram.hasFlag(EnumFlag.DISABLE_UPDATING)) {
-						hologram.update(onlinePlayer);
-					} else if (!hologram.canShow(onlinePlayer) || !hologram.isInDisplayRange(onlinePlayer)) {
-						hologram.hide(onlinePlayer);
-					}
+				if (hologram.isVisible(onlinePlayer) && hologram.isInUpdateRange(onlinePlayer)) {
+					hologram.update(onlinePlayer);
 				}
 			}
 		});
-		startUpdate();
+		this.startUpdate();
 	}
 
 	/*
@@ -418,11 +409,13 @@ public class DefaultHologram implements Hologram {
 		this.updateInterval = updateInterval;
 
 		this.updateTask.setInterval(this.updateInterval);
-		this.updateTask.restart();
+		this.stopUpdate();
+		this.startUpdate();
 	}
 
 	@Override
 	public void startUpdate() {
+		if (!this.isEnabled() || this.hasFlag(EnumFlag.DISABLE_UPDATING)) return;
 		updateTask.restart();
 	}
 
@@ -438,12 +431,18 @@ public class DefaultHologram implements Hologram {
 	@Override
 	public void addFlags(EnumFlag... flags) {
 		this.flags.addAll(Arrays.asList(flags));
+		if (this.hasFlag(EnumFlag.DISABLE_UPDATING)) {
+			this.stopUpdate();
+		}
 	}
 
 	@Override
 	public void removeFlags(EnumFlag... flags) {
 		for (EnumFlag flag : flags) {
 			this.flags.remove(flag);
+		}
+		if (!this.hasFlag(EnumFlag.DISABLE_UPDATING)) {
+			this.startUpdate();
 		}
 	}
 
