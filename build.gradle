@@ -1,0 +1,41 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+defaultTasks 'build'
+
+allprojects {
+    group 'eu.decentsoftware.holograms'
+    version '1.0.1'
+    description 'Lightweight but powerful hologram plugin with many features and configuration options.'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url = 'https://repo.codemc.io/repository/nms/' }
+    }
+
+    processResources {
+        from(["src/main/resources"]) {
+            filter ReplaceTokens, tokens: [version: version, description: description]
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
+        }
+    }
+
+    jar {
+        dependsOn configurations.runtimeClasspath
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from {
+            configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        }
+    }
+}

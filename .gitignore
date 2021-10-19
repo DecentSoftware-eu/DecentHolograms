@@ -1,0 +1,23 @@
+### Gradle & IntelliJ ###
+/.gradle/
+/.idea/
+/gradle/
+build
+out
+/run/
+*.iml
+/.idea_modules/
+
+### Java ###
+*.class
+*.jar
+
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk

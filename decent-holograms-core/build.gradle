@@ -1,0 +1,30 @@
+repositories {
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'me.clip:placeholderapi:2.10.9'
+
+    implementation project(':decent-holograms-api')
+    implementation project(':decent-holograms-utils')
+
+    implementation project(':decent-holograms-nms:decent-holograms-v1_8_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_8_R2')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_8_R3')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_9_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_9_R2')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_10_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_11_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_12_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_13_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_13_R2')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_14_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_15_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_16_R1')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_16_R2')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_16_R3')
+    implementation project(':decent-holograms-nms:decent-holograms-v1_17_R1')
+}

@@ -1,0 +1,26 @@
+main: eu.decentsoftware.holograms.plugin.DecentHologramsPlugin
+api-version: 1.13
+softdepend: [PlaceholderAPI]
+name: DecentHolograms
+description: @description@
+version: @version@
+author: d0by
+
+commands:
+  decentholograms:
+    aliases: [dh, holograms, hologram, holo]
+    usage: /decentholograms <args>
+    description: The main command of DecentHolograms plugin.
+
+permissions:
+  dh.features.admin:
+    dh.help: true
+  dh.hologram.admin:
+    dh.help: true
+  dh.line.admin:
+    dh.help: true
+  dh.admin:
+    dh.help: true
+    dh.features.admin: true
+    dh.hologram.admin: true
+    dh.line.admin: true
