@@ -21,6 +21,7 @@ permissions:
     dh.help: true
   dh.admin:
     dh.help: true
+    dh.update: true
     dh.features.admin: true
     dh.hologram.admin: true
     dh.line.admin: true

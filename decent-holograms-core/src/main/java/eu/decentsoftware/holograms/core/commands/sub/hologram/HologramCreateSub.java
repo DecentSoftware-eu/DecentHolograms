@@ -44,11 +44,14 @@ public class HologramCreateSub extends DecentCommand {
 	@Override
 	public CommandHandler getCommandHandler() {
 		return (sender, args) -> {
+			final String hologramName = args[0];
+			if (PLUGIN.getHologramManager().containsHologram(hologramName)) {
+				Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, hologramName);
+				return true;
+			}
 			final String content = EditValidator.getLineContent(args, 1);
 			final Player player = EditValidator.getPlayer(sender);
-			EditValidator.isTrue(!PLUGIN.getHologramManager().containsHologram(name), Lang.HOLOGRAM_ALREADY_EXISTS.getValue());
-
-			Hologram hologram = new DefaultHologram(args[0], player.getLocation());
+			Hologram hologram = new DefaultHologram(hologramName, player.getLocation());
 			HologramLine line = new DefaultHologramLine(hologram.getNextLineLocation(), content);
 			hologram.addLine(line);
 			hologram.show();

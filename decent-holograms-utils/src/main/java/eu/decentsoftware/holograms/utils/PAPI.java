@@ -1,11 +1,10 @@
-package eu.decentsoftware.holograms.core.hooks;
+package eu.decentsoftware.holograms.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PAPI {
 
@@ -32,9 +31,7 @@ public class PAPI {
 	 */
 	public static List<String> setPlaceholders(Player player, List<String> stringList) {
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			return stringList.stream()
-					.map(string -> PlaceholderAPI.setPlaceholders(player, string))
-					.collect(Collectors.toList());
+			return PlaceholderAPI.setPlaceholders(player, stringList);
 		}
 		return stringList;
 	}

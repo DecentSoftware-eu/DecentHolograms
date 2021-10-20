@@ -99,14 +99,14 @@ public class NMSAdapter implements eu.decentsoftware.holograms.api.nms.NMSAdapte
 
 		// Objects
 		mapEntityTypes.put(EntityType.ENDER_CRYSTAL, new Pair<>(51, 2.0f));
-		mapEntityTypes.put(EntityType.ARROW, new Pair<>(60, 2.0f));
+		mapEntityTypes.put(EntityType.ARROW, new Pair<>(60, 0.5f));
 		mapEntityTypes.put(EntityType.SNOWBALL, new Pair<>(61, 0.25f));
 		mapEntityTypes.put(EntityType.EGG, new Pair<>(62, 0.25f));
 		mapEntityTypes.put(EntityType.FIREBALL, new Pair<>(63, 1.0f));
 		mapEntityTypes.put(EntityType.SMALL_FIREBALL, new Pair<>(64, 0.3125f));
 		mapEntityTypes.put(EntityType.ENDER_PEARL, new Pair<>(65, 0.25f));
 		mapEntityTypes.put(EntityType.ENDER_SIGNAL, new Pair<>(72, 0.25f));
-		mapEntityTypes.put(EntityType.FIREWORK, new Pair<>(76, 2.0f));
+		mapEntityTypes.put(EntityType.FIREWORK, new Pair<>(76, 0.25f));
 	}
 
 	/*

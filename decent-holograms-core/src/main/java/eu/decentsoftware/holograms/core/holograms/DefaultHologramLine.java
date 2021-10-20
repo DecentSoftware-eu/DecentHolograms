@@ -9,7 +9,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramLineType;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.objects.enums.EnumFlag;
-import eu.decentsoftware.holograms.core.hooks.PAPI;
+import eu.decentsoftware.holograms.utils.PAPI;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.utils.items.HologramItem;
@@ -195,7 +195,7 @@ public class DefaultHologramLine implements HologramLine {
 		if (players.length == 0) players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 		NMSAdapter nmsAdapter = PLUGIN.getNMSAdapter();
 		for (Player player : players) {
-			if (!isVisible(player) && canShow(player) && parent.isInDisplayRange(player)) {
+			if (!isVisible(player) && canShow(player) && (parent == null || parent.isInDisplayRange(player))) {
 				switch (type) {
 					case TEXT: case HEAD: case SMALLHEAD:
 						nmsAdapter.showFakeArmorStand(player, getLocation(), entityId, !HologramLineType.HEAD.equals(type));
@@ -234,7 +234,7 @@ public class DefaultHologramLine implements HologramLine {
 		if (players.length == 0) players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 		NMSAdapter nmsAdapter = PLUGIN.getNMSAdapter();
 		for (Player player : players) {
-			if (!parent.isInUpdateRange(player)) continue;
+			if (parent != null && !parent.isInUpdateRange(player)) continue;
 			if (!isVisible(player)) {
 				show(player);
 				continue;
@@ -263,7 +263,7 @@ public class DefaultHologramLine implements HologramLine {
 	public void updateLocation(Player... players) {
 		if (players.length == 0) players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 		for (Player player : players) {
-			if (!parent.isInUpdateRange(player)) continue;
+			if (parent != null && !parent.isInUpdateRange(player)) continue;
 			if (!isVisible(player)) {
 				show(player);
 				continue;
