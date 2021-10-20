@@ -4,7 +4,7 @@ defaultTasks 'build'
 
 allprojects {
     group 'eu.decentsoftware.holograms'
-    version '1.0.3'
+    version '1.0.5'
     description 'Lightweight but powerful hologram plugin with many features and configuration options.'
 }
 
@@ -26,7 +26,7 @@ subprojects {
 
     processResources {
         from(["src/main/resources"]) {
-            filter ReplaceTokens, tokens: [version: version, description: description]
+            filter ReplaceTokens, tokens: [version: version]
             duplicatesStrategy DuplicatesStrategy.INCLUDE
         }
     }

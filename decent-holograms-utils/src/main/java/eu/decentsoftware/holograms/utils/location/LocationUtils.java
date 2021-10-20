@@ -18,7 +18,7 @@ public class LocationUtils {
 	}
 
 	public static Location asLocation(String string) {
-		String[] spl = string.split(":");
+		String[] spl = string.replace(",", ".").split(":");
 		Location location = null;
 
 		if (spl.length >= 4) {

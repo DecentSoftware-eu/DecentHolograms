@@ -15,18 +15,28 @@ public class HologramItem {
 	private ItemStack itemStack;
 	private Material material;
 	private String nbt = null;
+	private String extras = null;
 	private short durability = 0;
 	private boolean enchanted = false;
 
 	public HologramItem(String string) {
-		string = string.trim();
-
+		// Find NBT tag
 		if (string.contains("{") && string.contains("}")) {
 			int nbtStart = string.indexOf('{');
 			int nbtEnd = string.lastIndexOf('}');
 			if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
 				this.nbt = string.substring(nbtStart, nbtEnd + 1);
 				string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
+			}
+		}
+
+		// Find extras
+		if (string.contains("(") && string.contains(")")) {
+			int extrasStart = string.indexOf('(');
+			int extrasEnd = string.lastIndexOf(')');
+			if (extrasStart > 0 && extrasEnd > 0 && extrasEnd > extrasStart) {
+				this.extras = string.substring(extrasStart + 1, extrasEnd);
+				string = string.substring(0, extrasStart) + string.substring(extrasEnd + 1);
 			}
 		}
 
@@ -60,7 +70,14 @@ public class HologramItem {
 		if (durability > 0) itemBuilder.withDurability(durability);
 		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
 		if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
-			itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
+			if (extras != null && !extras.trim().isEmpty()) {
+				if (extras.length() <= 16) {
+					itemBuilder.withSkullOwner(extras);
+				} else {
+					itemBuilder.withSkullTexture(extras);
+				}
+				itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
+			}
 		}
 
 		itemStack = itemBuilder.toItemStack();
