@@ -39,8 +39,8 @@ public class HologramNearSub extends DecentCommand {
 			Player player = (Player) sender;
 			int range = EditValidator.getIntegerInRange(
 					EditValidator.getInteger(args[0], "Range must be a valid integer."),
-					1, 1_000_000,
-					"Range must be a valid integer between 1 and 1,000,000."
+					1, 1000,
+					"Range must be a valid integer between 1 and 1000."
 			);
 
 			List<Hologram> nearHolograms = Lists.newArrayList();

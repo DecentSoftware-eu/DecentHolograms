@@ -8,23 +8,18 @@ import org.bukkit.entity.EntityType;
 @AllArgsConstructor
 public class HologramEntity {
 
+	private final String content;
 	private EntityType type;
-	private String nbt;
 
 	public HologramEntity(String string) {
-		string = string.trim();
+		this.content = string;
+		this.parseContent();
+	}
 
-		int nbtStart = string.indexOf('{');
-		int nbtEnd = string.lastIndexOf('}');
-		if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
-			this.nbt = string.substring(nbtStart, nbtEnd + 1);
-			string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
-		}
+	private void parseContent() {
+		String string = content.trim();
 
-		try {
-			type = DecentEntityType.parseEntityType(string.trim());
-		} catch (Throwable ignored) {}
-
+		type = DecentEntityType.parseEntityType(string.trim());
 		if (type == null) {
 			type = EntityType.PIG;
 		}

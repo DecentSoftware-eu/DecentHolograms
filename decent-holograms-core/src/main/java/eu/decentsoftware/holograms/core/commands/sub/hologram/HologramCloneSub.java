@@ -38,6 +38,10 @@ public class HologramCloneSub extends DecentCommand {
 			}
 			Player player = (Player) sender;
 			Hologram hologram = EditValidator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
+			if (PLUGIN.getHologramManager().containsHologram(args[1])) {
+				Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, args[1]);
+				return true;
+			}
 			Hologram clone = hologram.clone(args[1], player.getLocation(), temp);
 			clone.show();
 			clone.realignLines();

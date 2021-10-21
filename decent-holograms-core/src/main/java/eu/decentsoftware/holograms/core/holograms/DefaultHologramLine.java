@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -202,11 +203,11 @@ public class DefaultHologramLine implements HologramLine {
 						break;
 					case ICON:
 						nmsAdapter.showFakeArmorStand(player, getLocation(), entityId, true);
-						nmsAdapter.showFakeItem(player, getLocation(), entityId + 1, getItem().parse());
+						nmsAdapter.showFakeItem(player, getLocation(), entityId + 1, HologramItem.parseItemStack(getItem().getContent(), player));
 						nmsAdapter.attachFakeEnity(player, entityId, entityId + 1);
 						break;
 					case ENTITY:
-						int entityTypeId = PLUGIN.getNMSAdapter().getEntityTypeId(getEntity().getType());
+						int entityTypeId = PLUGIN.getNMSAdapter().getEntityTypeId(new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType());
 						if (entityTypeId == -1) return;
 						nmsAdapter.showFakeArmorStand(player, getLocation(), entityId, true);
 						if (entity.getType().isAlive()) {
@@ -223,7 +224,8 @@ public class DefaultHologramLine implements HologramLine {
 				if (HologramLineType.TEXT.equals(type)) {
 					nmsAdapter.updateFakeEntityName(player, entityId, getText(player));
 				} else if (HologramLineType.HEAD.equals(type) || HologramLineType.SMALLHEAD.equals(type)) {
-					nmsAdapter.helmetFakeEntity(player, entityId, getItem().parse());
+					ItemStack itemStack = PAPI.containsPlaceholders(getItem().getContent()) ? HologramItem.parseItemStack(getItem().getContent(), player) : getItem().parse();
+					nmsAdapter.helmetFakeEntity(player, entityId, itemStack);
 				}
 			}
 		}
@@ -243,7 +245,7 @@ public class DefaultHologramLine implements HologramLine {
 			if (HologramLineType.TEXT.equals(type)) {
 				nmsAdapter.updateFakeEntityName(player, entityId, getText(player));
 			} else if (HologramLineType.HEAD.equals(type) || HologramLineType.SMALLHEAD.equals(type)) {
-				nmsAdapter.helmetFakeEntity(player, entityId, getItem().parse());
+				nmsAdapter.helmetFakeEntity(player, entityId, HologramItem.parseItemStack(getItem().getContent(), player));
 			}
 		}
 	}

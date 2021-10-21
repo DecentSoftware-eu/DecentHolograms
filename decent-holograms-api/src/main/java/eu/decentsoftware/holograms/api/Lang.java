@@ -5,7 +5,10 @@ import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.utils.config.Configuration;
 import eu.decentsoftware.holograms.utils.config.Phrase;
+import eu.decentsoftware.holograms.utils.message.Message;
 import lombok.experimental.UtilityClass;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -111,6 +114,17 @@ public class Lang {
 		CONFIG.reload();
 		VALUES.values().forEach(ConfigValue::updateValue);
 		Common.PREFIX = PREFIX.getValue();
+	}
+
+	public static void sendVersionMessage(CommandSender sender) {
+		String format = "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s";
+		String version = PLUGIN.getPlugin().getDescription().getVersion();
+		String url = "https://www.spigotmc.org/resources/96927/";
+		if (sender instanceof Player) {
+			Message.sendHoverURL((Player) sender, Common.colorize(String.format(format, version, url)), url, url);
+			return;
+		}
+		Common.tell(sender, format, version, url);
 	}
 
 }

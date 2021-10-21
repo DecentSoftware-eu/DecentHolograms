@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.utils.UpdateChecker;
 import eu.decentsoftware.holograms.utils.reflect.ReflectField;
 import eu.decentsoftware.holograms.utils.reflect.ReflectionUtil;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -102,6 +103,7 @@ public class DecentHologramsAPI implements DecentHolograms {
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this.getPlugin());
 
 		updateChecker = new UpdateChecker(this.getPlugin(), 96927);
+		new Metrics(this.getPlugin(), 12797);
 	}
 
 	public void disable() {

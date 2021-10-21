@@ -5,7 +5,6 @@ import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.DecentPluginCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.core.commands.sub.*;
-import eu.decentsoftware.holograms.utils.Common;
 
 public class HologramsCommand extends DecentPluginCommand {
 
@@ -19,6 +18,7 @@ public class HologramsCommand extends DecentPluginCommand {
 		addSubCommand(new LineSubCommand());
 		addSubCommand(new FeatureSubCommand());
 		addSubCommand(new ConvertSubCommand());
+		addSubCommand(new VersionSubCommand());
 	}
 
 	@Override
@@ -47,11 +47,7 @@ public class HologramsCommand extends DecentPluginCommand {
 				Lang.UNKNOWN_SUB_COMMAND.send(sender);
 				Lang.USE_HELP.send(sender);
 			} else {
-				Common.tell(sender,
-						"\n%s&7This server is running &bDecentHolograms v%s&7 by &bd0by&7. ( https://decentholograms.eu/ )",
-						Common.PREFIX,
-						PLUGIN.getPlugin().getDescription().getVersion()
-				);
+				Lang.sendVersionMessage(sender);
 			}
 			return true;
 		};

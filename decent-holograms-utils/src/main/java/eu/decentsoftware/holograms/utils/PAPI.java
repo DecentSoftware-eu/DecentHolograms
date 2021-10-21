@@ -36,4 +36,11 @@ public class PAPI {
 		return stringList;
 	}
 
+	public static boolean containsPlaceholders(String string) {
+		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+			return PlaceholderAPI.containsPlaceholders(string);
+		}
+		return false;
+	}
+
 }

@@ -1,25 +1,66 @@
 package eu.decentsoftware.holograms.utils.items;
 
+import eu.decentsoftware.holograms.utils.PAPI;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 @Data
 @AllArgsConstructor
 public class HologramItem {
 
-	private ItemStack itemStack;
+	private final String content;
+	private String nbt;
+	private String extras;
 	private Material material;
-	private String nbt = null;
-	private String extras = null;
 	private short durability = 0;
 	private boolean enchanted = false;
 
 	public HologramItem(String string) {
+		this.content = string;
+		this.parseContent();
+	}
+
+	public ItemStack parse() {
+		return this.parse(null);
+	}
+
+	@SuppressWarnings("deprecation")
+	public ItemStack parse(Player player) {
+		ItemBuilder itemBuilder = new ItemBuilder(material);
+		if (durability > 0) itemBuilder.withDurability(durability);
+		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
+		if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
+			if (extras != null) {
+				String extrasFinal = player == null ? extras : PAPI.setPlaceholders(player, extras);
+				if (!extrasFinal.trim().isEmpty()) {
+					if (extrasFinal.length() <= 16) {
+						itemBuilder.withSkullOwner(extrasFinal);
+					} else {
+						itemBuilder.withSkullTexture(extrasFinal);
+					}
+					itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
+				}
+			}
+		}
+
+		ItemStack itemStack = itemBuilder.toItemStack();
+		if (nbt != null) {
+			try {
+				Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
+			} catch (Throwable ignored) {}
+		}
+		return itemStack;
+	}
+
+	private void parseContent() {
+		String string = this.content;
+
 		// Find NBT tag
 		if (string.contains("{") && string.contains("}")) {
 			int nbtStart = string.indexOf('{');
@@ -45,48 +86,29 @@ public class HologramItem {
 			this.enchanted = true;
 		}
 
+		// Parse material
 		String materialString = string.trim();
+		String materialName = materialString;
 		if (materialString.contains(":")) {
 			String[] materialStringSpl = materialString.split(":", 2);
-			String materialName = materialStringSpl[0];
+			materialName = materialStringSpl[0];
 			try {
 				this.durability = Short.parseShort(materialStringSpl[1]);
 			} catch (Throwable t) {
 				this.durability = 0;
 			}
-			this.material = DecentMaterial.parseMaterial(materialName);
-		} else {
-			this.material = DecentMaterial.parseMaterial(materialString);
 		}
+		this.material = DecentMaterial.parseMaterial(materialName);
+
+		// Material couldn't be parsed, set it to stone.
 		if (this.material == null) {
-			material = Material.STONE;
+			this.material = Material.STONE;
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public ItemStack parse() {
-		if (itemStack != null) return itemStack;
-		ItemBuilder itemBuilder = new ItemBuilder(material);
-		if (durability > 0) itemBuilder.withDurability(durability);
-		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
-		if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
-			if (extras != null && !extras.trim().isEmpty()) {
-				if (extras.length() <= 16) {
-					itemBuilder.withSkullOwner(extras);
-				} else {
-					itemBuilder.withSkullTexture(extras);
-				}
-				itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
-			}
-		}
-
-		itemStack = itemBuilder.toItemStack();
-		if (nbt != null) {
-			try {
-				Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
-			} catch (Throwable ignored) {}
-		}
-		return itemStack;
+	public static ItemStack parseItemStack(String string, Player player) {
+		string = PAPI.setPlaceholders(player, string);
+		return new HologramItem(string).parse();
 	}
 
 }

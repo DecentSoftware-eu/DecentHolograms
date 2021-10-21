@@ -38,7 +38,9 @@ public class DefaultHologramManager implements HologramManager {
 				}
 			}
 		}));
-		this.reload();
+
+		// Reload when worlds are ready
+		Bukkit.getScheduler().runTask(PLUGIN.getPlugin(), this::reload);
 	}
 
 	@Override

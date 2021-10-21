@@ -18,9 +18,9 @@ public class LocationUtils {
 	}
 
 	public static Location asLocation(String string) {
+		if (string == null || string.trim().isEmpty()) return null;
 		String[] spl = string.replace(",", ".").split(":");
 		Location location = null;
-
 		if (spl.length >= 4) {
 			World world = Bukkit.getWorld(spl[0]);
 			if (world != null) {

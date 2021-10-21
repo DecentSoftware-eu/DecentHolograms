@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.objects.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.objects.enums.EnumOrigin;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.config.Configuration;
+import eu.decentsoftware.holograms.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.utils.scheduler.ConsumerTask;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,21 +30,27 @@ public class DefaultHologram implements Hologram {
 	private static final DecentHolograms PLUGIN = DecentHologramsProvider.getDecentHolograms();
 
 	public static Hologram fromFile(final String fileName) {
-		Configuration config = new Configuration(PLUGIN.getPlugin(), "holograms/" + fileName);
-		Location location = config.getLocation("location");
+		final Configuration config = new Configuration(PLUGIN.getPlugin(), "holograms/" + fileName);
+
+		// Get hologram location
+		String locationString = config.getString("location");
+		Location location = LocationUtils.asLocation(locationString);
+		if (location == null) {
+			Common.log(Level.WARNING, "Wrong location format in '%s'!: %s", fileName, locationString);
+			return null;
+		}
+
+		// Parse hologram name
 		String name = fileName.substring(0, fileName.length() - 4);
 		if (name.toLowerCase().startsWith("hologram_") && name.length() > "hologram_".length()) {
 			name = name.substring("hologram_".length());
-		}
-		if (location == null) {
-			Common.log(Level.SEVERE, "Wrong location format in '%s'!", fileName);
-			return null;
 		}
 
 		boolean enabled = true;
 		if (config.isBoolean("enabled")) {
 			enabled = config.getBoolean("enabled");
 		}
+
 		Hologram hologram = new DefaultHologram(name, location, config, enabled);
 		if (config.isString("permission")) {
 			hologram.setPermission(config.getString("permission"));
