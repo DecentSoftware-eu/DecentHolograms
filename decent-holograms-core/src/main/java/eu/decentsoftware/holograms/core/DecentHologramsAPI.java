@@ -19,10 +19,8 @@ import eu.decentsoftware.holograms.core.managers.DefaultFeatureManager;
 import eu.decentsoftware.holograms.core.managers.DefaultHologramManager;
 import eu.decentsoftware.holograms.core.managers.DefaultPlayerManager;
 import eu.decentsoftware.holograms.utils.Common;
-import eu.decentsoftware.holograms.utils.UpdateChecker;
 import eu.decentsoftware.holograms.utils.reflect.ReflectField;
 import eu.decentsoftware.holograms.utils.reflect.ReflectionUtil;
-import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +34,6 @@ public class DecentHologramsAPI implements DecentHolograms {
 
 	public static void onEnable(JavaPlugin plugin) {
 		Preconditions.checkNotNull(plugin, "Plugin cannot be null");
-
 		try {
 			DecentHologramsAPI decentHolograms = new DecentHologramsAPI(plugin);
 			INSTANCE_FIELD.setValue(null, decentHolograms);
@@ -64,8 +61,6 @@ public class DecentHologramsAPI implements DecentHolograms {
 	private PlayerManager playerManager;
 	private NMSAdapter nmsAdapter;
 	private DecentPluginCommand command;
-	@Getter
-	private UpdateChecker updateChecker;
 
 	private boolean start = true;
 
@@ -83,9 +78,11 @@ public class DecentHologramsAPI implements DecentHolograms {
 
 	private void enable() {
 		this.setupNMSAdapter();
+
+		// If there was a problem, shutdown.
 		if (!start) {
 			Common.log(Level.SEVERE, "There was an error enabling DecentHologramsAPI, shutting down!");
-			Bukkit.getPluginManager().disablePlugin(plugin);
+			Bukkit.getPluginManager().disablePlugin(getPlugin());
 			return;
 		}
 		Settings.reload();
@@ -98,12 +95,12 @@ public class DecentHologramsAPI implements DecentHolograms {
 		featureManager.registerFeature(new HealingDisplayFeature());
 
 		command = new HologramsCommand();
-		command.register(this.getPlugin());
+		command.register(getPlugin());
 
-		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this.getPlugin());
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), getPlugin());
 
-		updateChecker = new UpdateChecker(this.getPlugin(), 96927);
-		new Metrics(this.getPlugin(), 12797);
+		// Setup metrics
+		new Metrics(getPlugin(), 12797);
 	}
 
 	public void disable() {
@@ -159,7 +156,7 @@ public class DecentHologramsAPI implements DecentHolograms {
 	}
 
 	/*
-	 *	Other Methods
+	 *	Setup Methods
 	 */
 
 	private void setupNMSAdapter() {
@@ -167,9 +164,9 @@ public class DecentHologramsAPI implements DecentHolograms {
 		try {
 			Class<?> clazz = Class.forName("eu.decentsoftware.holograms.nms." + version + ".NMSAdapter");
 			this.nmsAdapter = (NMSAdapter) clazz.getDeclaredConstructor().newInstance();
-			Common.log("Server version: %s", version);
+			Common.log("Using NMS version: %s", version);
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-			Common.log(Level.SEVERE, "Your server version is not supported... (%s)", version);
+			Common.log(Level.SEVERE, "Your server version (%s) is not supported...", version);
 			this.start = false;
 		}
 	}

@@ -3,7 +3,7 @@ api-version: 1.13
 softdepend: [PlaceholderAPI]
 name: DecentHolograms
 description: Lightweight but powerful hologram plugin with many features and configuration options.
-version: 1.0.6
+version: 1.0.7
 author: d0by
 
 commands:

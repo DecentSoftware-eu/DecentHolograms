@@ -117,14 +117,11 @@ public class Lang {
 	}
 
 	public static void sendVersionMessage(CommandSender sender) {
-		String format = "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s";
-		String version = PLUGIN.getPlugin().getDescription().getVersion();
-		String url = "https://www.spigotmc.org/resources/96927/";
-		if (sender instanceof Player) {
-			Message.sendHoverURL((Player) sender, Common.colorize(String.format(format, version, url)), url, url);
-			return;
-		}
-		Common.tell(sender, format, version, url);
+		Common.tell(sender,
+				"\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
+				PLUGIN.getPlugin().getDescription().getVersion(),
+				"https://www.spigotmc.org/resources/96927/"
+		);
 	}
 
 }

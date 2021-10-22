@@ -81,7 +81,7 @@ public class HealingDisplayFeature implements IFeature, Listener {
 		double heal = e.getAmount();
 
 		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-		String text = appearance.replace("{heal}", String.valueOf((int) heal));
+		String text = String.format(appearance.replace("{heal}", "%.1f"), heal);
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 

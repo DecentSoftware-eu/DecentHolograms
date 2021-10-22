@@ -81,7 +81,7 @@ public class DamageDisplayFeature implements IFeature, Listener {
 		double damage = e.getFinalDamage();
 
 		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-		String text = appearance.replace("{damage}", String.valueOf((int) damage));
+		String text = String.format(appearance.replace("{damage}", "%.1f"), damage);
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 
