@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.core.commands.sub;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
@@ -41,20 +42,22 @@ public class ConvertSubCommand extends DecentCommand {
 			final ConvertorType convertorType = ConvertorType.getByName(args[0]);
 			final String path = args.length >= 2 ? args[0] : null;
 
-			switch (convertorType) {
-				case HOLOGRAPHIC_DISPLAYS:
-					Common.tell(sender, Common.PREFIX + "Converting from " + convertorType.getName());
-					if (path != null) {
-						File file = new File(path);
-						new HolographicDisplaysConvertor().convert(file);
-					} else {
-						new HolographicDisplaysConvertor().convert();
-					}
-					return true;
-				default:
-					break;
+			if (convertorType != null) {
+				switch (convertorType) {
+					case HOLOGRAPHIC_DISPLAYS:
+						Common.tell(sender, Common.PREFIX + "Converting from " + convertorType.getName());
+						if (path != null) {
+							File file = new File(path);
+							new HolographicDisplaysConvertor().convert(file);
+						} else {
+							new HolographicDisplaysConvertor().convert();
+						}
+						return true;
+					default:
+						break;
+				}
 			}
-			Common.tell(sender, Common.PREFIX + "Plugin '" + args[0] + "' couldn't be found.");
+			Common.tell(sender, Common.PREFIX + "Plugin &b'" + args[0] + "'&7 couldn't be found.");
 			return true;
 		};
 	}

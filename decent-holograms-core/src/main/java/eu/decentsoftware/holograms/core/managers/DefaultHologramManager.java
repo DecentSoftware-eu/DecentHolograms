@@ -77,7 +77,8 @@ public class DefaultHologramManager implements HologramManager {
 
 	@Override
 	public void showAll(Player player) {
-		for (Hologram hologram : getHolograms()) {
+		if (hologramMap.isEmpty()) return;
+		for (Hologram hologram : hologramMap.values()) {
 			if (hologram.isEnabled()) {
 				hologram.show(player);
 			}
@@ -86,11 +87,11 @@ public class DefaultHologramManager implements HologramManager {
 
 	@Override
 	public void hideAll(Player player) {
-		for (Hologram hologram : getHolograms()) {
-			hologram.hide(player);
+		if (!hologramMap.isEmpty()) {
+			hologramMap.values().forEach(Hologram::hide);
 		}
-		for (HologramLine hologramLine : temporaryLines) {
-			hologramLine.hide(player);
+		if (!temporaryLines.isEmpty()) {
+			temporaryLines.forEach(HologramLine::hide);
 		}
 	}
 

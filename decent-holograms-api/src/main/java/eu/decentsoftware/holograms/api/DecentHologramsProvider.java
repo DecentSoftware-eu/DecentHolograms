@@ -4,6 +4,10 @@ public final class DecentHologramsProvider {
 
 	private static DecentHolograms INSTANCE;
 
+	public static void setImplementation(DecentHolograms implementation) {
+		DecentHologramsProvider.INSTANCE = implementation;
+	}
+
 	/**
 	 * Get the instance of running DecentHolograms.
 	 * <p>

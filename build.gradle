@@ -4,7 +4,7 @@ defaultTasks 'build'
 
 allprojects {
     group 'eu.decentsoftware.holograms'
-    version '1.0.7'
+    version '1.0.8'
     description 'Lightweight but powerful hologram plugin with many features and configuration options.'
 }
 

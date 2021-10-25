@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.core.features;
 
+import com.avaje.ebean.config.dbplatform.H2SequenceIdGenerator;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsProvider;
 import eu.decentsoftware.holograms.api.Settings;
@@ -9,6 +10,7 @@ import eu.decentsoftware.holograms.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -75,8 +77,9 @@ public class HealingDisplayFeature implements IFeature, Listener {
 		return "Spawn a temporary hologram displaying heals.";
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDamage(EntityRegainHealthEvent e) {
+		if (e.isCancelled()) return;
 		Entity entity = e.getEntity();
 		double heal = e.getAmount();
 

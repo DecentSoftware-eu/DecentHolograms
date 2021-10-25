@@ -5,7 +5,6 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsProvider;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
-import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.DecentPluginCommand;
 import eu.decentsoftware.holograms.api.managers.FeatureManager;
 import eu.decentsoftware.holograms.api.managers.HologramManager;
@@ -19,8 +18,9 @@ import eu.decentsoftware.holograms.core.managers.DefaultFeatureManager;
 import eu.decentsoftware.holograms.core.managers.DefaultHologramManager;
 import eu.decentsoftware.holograms.core.managers.DefaultPlayerManager;
 import eu.decentsoftware.holograms.utils.Common;
-import eu.decentsoftware.holograms.utils.reflect.ReflectField;
 import eu.decentsoftware.holograms.utils.reflect.ReflectionUtil;
+import lombok.Getter;
+import lombok.experimental.FieldNameConstants;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,29 +28,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
+@Getter
 public class DecentHologramsAPI implements DecentHolograms {
-
-	private static final ReflectField<DecentHolograms> INSTANCE_FIELD = new ReflectField<>(DecentHologramsProvider.class, "INSTANCE");
 
 	public static void onEnable(JavaPlugin plugin) {
 		Preconditions.checkNotNull(plugin, "Plugin cannot be null");
-		try {
-			DecentHologramsAPI decentHolograms = new DecentHologramsAPI(plugin);
-			INSTANCE_FIELD.setValue(null, decentHolograms);
-			decentHolograms.enable();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		DecentHologramsAPI decentHologramsAPI = new DecentHologramsAPI(plugin);
+		DecentHologramsProvider.setImplementation(decentHologramsAPI);
+		decentHologramsAPI.enable();
 	}
 
 	public static void onDisable() {
-		try {
-			DecentHologramsAPI decentHolograms = (DecentHologramsAPI) INSTANCE_FIELD.getValue(null);
-			INSTANCE_FIELD.setValue(null, null);
-			decentHolograms.disable();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		DecentHologramsProvider.setImplementation(null);
 	}
 
 	// ==================================== //
@@ -59,9 +48,10 @@ public class DecentHologramsAPI implements DecentHolograms {
 	private HologramManager hologramManager;
 	private FeatureManager featureManager;
 	private PlayerManager playerManager;
-	private NMSAdapter nmsAdapter;
+	private NMSAdapter nMSAdapter;
 	private DecentPluginCommand command;
 
+	@FieldNameConstants.Exclude
 	private boolean start = true;
 
 	/*
@@ -122,40 +112,6 @@ public class DecentHologramsAPI implements DecentHolograms {
 	}
 
 	/*
-	 *	Getters & Setters
-	 */
-
-	@Override
-	public HologramManager getHologramManager() {
-		return hologramManager;
-	}
-
-	@Override
-	public FeatureManager getFeatureManager() {
-		return featureManager;
-	}
-
-	@Override
-	public PlayerManager getPlayerManager() {
-		return playerManager;
-	}
-
-	@Override
-	public NMSAdapter getNMSAdapter() {
-		return nmsAdapter;
-	}
-
-	@Override
-	public CommandBase getCommand() {
-		return command;
-	}
-
-	@Override
-	public JavaPlugin getPlugin() {
-		return plugin;
-	}
-
-	/*
 	 *	Setup Methods
 	 */
 
@@ -163,7 +119,7 @@ public class DecentHologramsAPI implements DecentHolograms {
 		String version = ReflectionUtil.getVersion();
 		try {
 			Class<?> clazz = Class.forName("eu.decentsoftware.holograms.nms." + version + ".NMSAdapter");
-			this.nmsAdapter = (NMSAdapter) clazz.getDeclaredConstructor().newInstance();
+			this.nMSAdapter = (NMSAdapter) clazz.getDeclaredConstructor().newInstance();
 			Common.log("Using NMS version: %s", version);
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
 			Common.log(Level.SEVERE, "Your server version (%s) is not supported...", version);

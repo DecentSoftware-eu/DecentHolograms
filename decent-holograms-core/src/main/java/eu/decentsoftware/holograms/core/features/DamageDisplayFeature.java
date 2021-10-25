@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -75,8 +76,9 @@ public class DamageDisplayFeature implements IFeature, Listener {
 		return "Spawn a temporary hologram displaying damage.";
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDamage(EntityDamageEvent e) {
+		if (e.isCancelled()) return;
 		Entity entity = e.getEntity();
 		double damage = e.getFinalDamage();
 
