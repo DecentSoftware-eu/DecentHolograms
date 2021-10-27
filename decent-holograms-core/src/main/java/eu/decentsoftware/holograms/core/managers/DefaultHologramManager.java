@@ -88,10 +88,10 @@ public class DefaultHologramManager implements HologramManager {
 	@Override
 	public void hideAll(Player player) {
 		if (!hologramMap.isEmpty()) {
-			hologramMap.values().forEach(Hologram::hide);
+			hologramMap.values().forEach(hologram -> hologram.hide(player));
 		}
 		if (!temporaryLines.isEmpty()) {
-			temporaryLines.forEach(HologramLine::hide);
+			temporaryLines.forEach(hologramLine -> hologramLine.hide(player));
 		}
 	}
 
