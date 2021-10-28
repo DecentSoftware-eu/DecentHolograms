@@ -184,11 +184,11 @@ public class DefaultHologramLine implements HologramLine {
 
 	private String getText(Player player) {
 		if (!HologramLineType.TEXT.equals(type)) return "";
-		String string = Common.colorize(this.text);
+		String string = this.text;
 		if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS) && (parent == null || !parent.hasFlag(EnumFlag.DISABLE_PLACEHOLDERS))) {
 			string = PAPI.setPlaceholders(player, string);
 		}
-		return string;
+		return Common.colorize(string);
 	}
 
 	@Override
