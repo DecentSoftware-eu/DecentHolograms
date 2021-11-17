@@ -1,7 +1,7 @@
-apply plugin: 'maven-publish'
 defaultTasks 'build'
 
 allprojects {
+    apply plugin: 'maven-publish'
     group 'eu.decentsoftware.holograms'
     version '2.0'
     description 'Lightweight but powerful hologram plugin with many features and configuration options.'
