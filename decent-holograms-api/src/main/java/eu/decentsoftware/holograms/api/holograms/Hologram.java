@@ -1,286 +1,551 @@
 package eu.decentsoftware.holograms.api.holograms;
 
-import eu.decentsoftware.holograms.api.objects.IFlagsHolder;
-import eu.decentsoftware.holograms.api.objects.ILocationHolder;
-import eu.decentsoftware.holograms.api.objects.IPermissionHolder;
-import eu.decentsoftware.holograms.api.objects.enums.EnumOrigin;
-import eu.decentsoftware.holograms.utils.scheduler.ConsumerTask;
+import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.Settings;
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
+import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
+import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
+import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.api.utils.scheduler.ConsumerTask;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-/**
- * This interface represents a Hologram.
- */
-public interface Hologram extends ILocationHolder, IPermissionHolder, IFlagsHolder {
+@Getter
+@Setter
+public class Hologram extends UpdatingHologramObject {
 
-	/*
-	 *	General Methods
-	 */
+    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 
-	/**
-	 * Hide this hologram from all viewers and stop it from updating.
-	 */
-	void destroy();
+    /*
+     *	Hologram Cache
+     */
 
-	/**
-	 * Hide this hologram from all players, stop it from updating and delete it completely.
-	 */
-	void delete();
+    private static final Map<String, Hologram> CACHED_HOLOGRAMS = new HashMap<>();
 
-	/**
-	 * Save this hologram to a file.
-	 */
-	void save();
+    public static Hologram getCachedHologram(String name) {
+        return CACHED_HOLOGRAMS.get(name);
+    }
 
-	/**
-	 * Enable updating and showing to players automatically.
-	 */
-	void enable();
+    public static Set<String> getCachedHologramNames() {
+        return CACHED_HOLOGRAMS.keySet();
+    }
 
-	/**
-	 * Disable updating and showing to players automatically.
-	 */
-	void disable();
+    public static Collection<Hologram> getCachedHolograms() {
+        return CACHED_HOLOGRAMS.values();
+    }
 
-	/**
-	 * Check whether this hologram is currently enabled.
-	 * @return Boolean whether this hologram is currently enabled.
-	 */
-	boolean isEnabled();
+    /*
+     *	Static Methods
+     */
 
-	/**
-	 * Set hologram origin.
-	 * @param origin New value of origin.
-	 */
-	void setOrigin(EnumOrigin origin);
+    @SuppressWarnings("unchecked")
+    public static Hologram fromFile(final String fileName) {
+        final Configuration config = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "holograms/" + fileName);
 
-	/**
-	 * Get hologram origin.
-	 * @return Current value of origin.
-	 */
-	EnumOrigin getOrigin();
+        // Get hologram location
+        String locationString = config.getString("location");
+        Location location = LocationUtils.asLocation(locationString);
+        if (location == null) return null;
 
-	/**
-	 * Get hologram size. (Number of lines)
-	 * @return Number of lines in this hologram.
-	 */
-	int size();
+        // Parse hologram name
+        String name = fileName.substring(0, fileName.length() - 4);
+        if (name.toLowerCase().startsWith("hologram_") && name.length() > "hologram_".length()) {
+            name = name.substring("hologram_".length());
+        }
 
-	/**
-	 * Get height of this hologram in blocks.
-	 * @return height of this hologram in blocks.
-	 */
-	double getHeight();
+        boolean enabled = true;
+        if (config.isBoolean("enabled")) {
+            enabled = config.getBoolean("enabled");
+        }
 
-	/**
-	 * Set facing direction of this hologram.
-	 * @param facing New facing direction of this hologram.
-	 */
-	void setFacing(float facing);
+        Hologram hologram = new Hologram(name, location, config, enabled);
+        if (config.isString("permission")) {
+            hologram.setPermission(config.getString("permission"));
+        }
+        hologram.setDisplayRange(config.getInt("display-range", Settings.DEFAULT_DISPLAY_RANGE.getValue()));
+        hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE.getValue()));
+        hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL.getValue()));
+        hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
+        hologram.setFacing((float) config.getDouble("facing", 0.0f));
+        if (config.isString("down-origin")) {
+            hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
+        }
 
-	/**
-	 * Get current facing direction of this hologram.
-	 * @return current facing direction of this hologram.
-	 */
-	float getFacing();
+        if (!config.contains("pages") && config.contains("lines")) {
+            // Old Config
+            HologramPage page = hologram.getPage(0);
+            Set<String> keysLines = config.getConfigurationSection("lines").getKeys(false);
+            for (int j = 1; j <= keysLines.size(); j++) {
+                String path = "lines." + j;
+                HologramLine line = HologramLine.fromFile(config.getConfigurationSection(path), page, page.getNextLineLocation());
+                page.addLine(line);
+            }
+            config.set("lines", null);
+            hologram.save();
+            return hologram;
+        }
 
-	/**
-	 * Get List of all players that currently see this hologram.
-	 * @return List of all players that currently see this hologram.
-	 */
-	List<Player> getViewers();
+        // New Config
+        boolean firstPage = true;
+        for (Map<?, ?> map : config.getMapList("pages")) {
+            HologramPage page;
+            if (firstPage) {
+                page = hologram.getPage(0);
+                firstPage = false;
+            } else {
+                page = hologram.addPage();
+            }
 
-	/**
-	 * Get the name of this hologram.
-	 * @return the name of this hologram.
-	 */
-	String getName();
+            // Load click actions
+            if (map.containsKey("actions")) {
+                Map<String, List<String>> actionsMap = (Map<String, List<String>>) map.get("actions");
+                for (ClickType clickType : ClickType.values()) {
+                    if (actionsMap.containsKey(clickType.name())) {
+                        List<String> clickTypeActions = actionsMap.get(clickType.name());
+                        clickTypeActions.forEach(action -> page.addAction(clickType, new Action(action)));
+                    }
+                }
+            }
 
-	/**
-	 * Create a new instance of hologram that is identical to this one.
-	 *
-	 * @param name Name of the clone.
-	 * @param location Location of the clone.
-	 * @param temp Boolean whether the clone is only temporary. (Not saved)
-	 * @return Cloned instance of this hologram.
-	 */
-	Hologram clone(String name, Location location, boolean temp);
+            // Load lines
+            if (map.containsKey("lines")) {
+                for (Map<?, ?> lineMap : (List<Map<?, ?>>) map.get("lines")) {
+                    Map<String, Object> values = null;
+                    try {
+                        values = (Map<String, Object>) lineMap;
+                    } catch (Exception ignored) {}
+                    if (values == null) continue;
+                    HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
+                    page.addLine(line);
+                }
+            }
+        }
+        return hologram;
+    }
 
-	/*
-	 *	Visiblity Methods
-	 */
+    /*
+     *	Fields
+     */
 
-	/**
-	 * Show this hologram for given players.
-	 * @param players Given players.
-	 */
-	void show(Player... players);
+    protected final String name;
+    protected boolean saveToFile;
+    protected final Configuration config;
+    protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
+    protected final List<HologramPage> pages = Collections.synchronizedList(new ArrayList<>());
+    protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN.getValue();
 
-	/**
-	 * Update this hologram for given players.
-	 * @param players Given players.
-	 */
-	void update(Player... players);
+    /*
+     *	Constructors
+     */
 
-	/**
-	 * Hide this hologram for given players.
-	 * @param players Given players.
-	 */
-	void hide(Player... players);
+    public Hologram(String name, Location location) {
+        this(name, location, true);
+    }
 
-	/**
-	 * Check whether this hologram is visible to the given player.
-	 * @param player Given player.
-	 * @return Boolean whether this hologram is visible to the given player.
-	 */
-	boolean isVisible(Player player);
+    public Hologram(String name, Location location, boolean saveToFile) {
+        this(name, location, saveToFile ? new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), String.format("holograms/hologram_%s.yml", name)) : null);
+    }
 
-	/**
-	 * Check whether the given player is allowed to see this hologram.
-	 * @param player Given player.
-	 * @return Boolean whether the given player is allowed to see this hologram.
-	 */
-	boolean canShow(Player player);
+    public Hologram(String name, Location location, Configuration config) {
+        this(name, location, config, true);
+    }
 
-	/**
-	 * Check whether the given player is in display range of this hologram.
-	 * @param player Given player.
-	 * @return Boolean whether the given player is in display range of this hologram.
-	 */
-	boolean isInDisplayRange(Player player);
+    public Hologram(String name, Location location, Configuration config, boolean enabled) {
+        super(location);
+        this.name = name;
+        this.config = config;
+        this.enabled = enabled;
+        this.saveToFile = this.config != null;
+        this.addPage();
+        this.updateTask = new ConsumerTask<>(DECENT_HOLOGRAMS.getPlugin(), this, 0L, 1L);
+        this.updateTask.addPart("update", new Consumer<Hologram>() {
+            int counter = 0;
 
-	/**
-	 * Check whether the given player is in update range of this hologram.
-	 * @param player Given player.
-	 * @return Boolean whether the given player is in update range of this hologram.
-	 */
-	boolean isInUpdateRange(Player player);
+            @Override
+            public void accept(Hologram hologram) {
+                if (counter == hologram.getUpdateInterval()) {
+                    hologram.updateAll();
+                    counter = 0;
+                    return;
+                }
+                hologram.updateAnimationsAll();
+                counter++;
+            }
+        });
+        this.startUpdate();
 
-	/*
-	 *	Lines Methods
-	 */
+        CACHED_HOLOGRAMS.put(this.name, this);
+    }
 
-	/**
-	 * Re-Aling the lines in this hologram putting them to the right place.
-	 * <p>
-	 *     This method is good to use after teleporting the hologram.
-	 * </p>
-	 */
-	void realignLines();
+    /*
+     *	General Methods
+     */
 
-	/**
-	 * Swap two lines in this hologram.
-	 * @param index1 First line.
-	 * @param index2 Second line.
-	 * @return Boolean whether the operation was successful.
-	 */
-	boolean swapLines(int index1, int index2);
+    @Override
+    public String toString() {
+        return getClass().getName() + "{" +
+                "name=" + name +
+                ", enabled=" + enabled +
+                "} " + super.toString();
+    }
 
-	/**
-	 * Insert a new line into this hologram.
-	 * @param index Index of the new line.
-	 * @param line New line.
-	 * @return Boolean whether the operation was successful.
-	 */
-	boolean insertLine(int index, HologramLine line);
+    @Override
+    public void delete() {
+        super.delete();
+        if (config != null) {
+            config.delete();
+        }
+    }
 
-	/**
-	 * Set new content of a line in this hologram.
-	 * @param index Index of the line.
-	 * @param content Line's new content.
-	 * @return Boolean whether the operation was successful.
-	 */
-	boolean setLine(int index, String content);
+    @Override
+    public void destroy() {
+        this.disable();
+        this.viewerPages.clear();
+    }
 
-	/**
-	 * Add a new line on the bottom of this hologram.
-	 * @param line New line.
-	 * @return Boolean whether the operation was successful.
-	 */
-	boolean addLine(HologramLine line);
+    @Override
+    public void enable() {
+        super.enable();
+        this.showAll();
+    }
 
-	/**
-	 * Get line on a specific index in this hologram.
-	 * @param index Index of the line.
-	 * @return The HologramLine or null if it wasn't found.
-	 */
-	HologramLine getLine(int index);
+    @Override
+    public void disable() {
+        this.hideAll();
+        super.disable();
+    }
 
-	/**
-	 * Remove a line from this hologram.
-	 * @param index Index of the line.
-	 * @return The removed line or null if it wasn't found.
-	 */
-	HologramLine removeLine(int index);
+    @Override
+    public void setLocation(Location location) {
+        super.setLocation(location);
+        this.hideClickableEntitiesAll();
+        this.showClickableEntitiesAll();
+    }
 
-	/**
-	 * Get the List of all lines in this hologram.
-	 * @return List of all lines in this hologram.
-	 */
-	List<HologramLine> getLines();
+    /**
+     * Get hologram size. (Number of pages)
+     * @return Number of pages in this hologram.
+     */
+    public int size() {
+        return pages.size();
+    }
 
-	/**
-	 * Get the Location at the bottom of this hologram that's available for a new line.
-	 * @return the Location at the bottom of this hologram that's available for a new line.
-	 */
-	Location getNextLineLocation();
+    /**
+     * Save this hologram to a file.
+     */
+    public void save() {
+        if (!saveToFile) return;
+        config.setLocation("location", location, false);
+        config.set("enabled", enabled);
+        config.set("permission", permission == null || permission.isEmpty() ? null : permission);
+        config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
+        config.set("display-range", displayRange);
+        config.set("update-range", updateRange);
+        config.set("update-interval", updateInterval);
+        config.set("facing", facing);
+        config.set("down-origin", downOrigin);
+        config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
+        config.saveData();
+        config.reload();
+    }
 
-	/*
-	 *	Updating Methods
-	 */
+    /**
+     * Create a new instance of this hologram object that's identical to this one.
+     * @param location Location of the clone.
+     * @return Cloned instance of this line.
+     */
+    public Hologram clone(String name, Location location, boolean temp) {
+        Hologram hologram = new Hologram(name, location, !temp);
+        hologram.setDownOrigin(this.isDownOrigin());
+        hologram.setPermission(this.getPermission());
+        hologram.setFacing(this.getFacing());
+        hologram.setDisplayRange(this.getDisplayRange());
+        hologram.setUpdateRange(this.getUpdateRange());
+        hologram.setUpdateInterval(this.getUpdateInterval());
+        hologram.addFlags(this.getFlags().toArray(new EnumFlag[0]));
+        for (int i = 0; i < size(); i++) {
+            HologramPage page = getPage(i);
+            HologramPage clonePage = page.clone(hologram, i);
+            hologram.pages.add(clonePage);
+        }
+        return hologram;
+    }
 
-	/**
-	 * Set new value of Display Range.
-	 * @param displayRange new value of Display Range.
-	 */
-	void setDisplayRange(int displayRange);
+    public boolean onClick(Player player, int entityId, ClickType clickType) {
+        if (hasFlag(EnumFlag.DISABLE_ACTIONS)) return false;
+        HologramPage page = getPage(player);
+        if (page != null && page.isClickable() && page.getClickableEntityIds().contains(entityId)) {
+            page.executeActions(player, clickType);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Get the current value of Display Range.
-	 * @return the current value of Display Range.
-	 */
-	int getDisplayRange();
+    public void onQuit(Player player) {
+        hide(player);
+        viewerPages.remove(player.getUniqueId());
+    }
 
-	/**
-	 * Set new value of Update Range.
-	 * @param updateRange new value of Update Range.
-	 */
-	void setUpdateRange(int updateRange);
+    /*
+     *	Visiblity Methods
+     */
 
-	/**
-	 * Get the current value of Update Range.
-	 * @return the current value of Update Range.
-	 */
-	int getUpdateRange();
+    /**
+     * Show this hologram for given player on a given page.
+     * @param player Given player.
+     * @param pageIndex Given page.
+     */
+    public boolean show(Player player, int pageIndex) {
+        if (!isEnabled()) return false;
+        HologramPage page = getPage(pageIndex);
+        if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
+            if (isVisible(player)) hide(player);
+            page.getLines().forEach(line -> line.show(player));
+            // Add player to viewers
+            viewerPages.put(player.getUniqueId(), pageIndex);
+            viewers.add(player.getUniqueId());
+            showClickableEntities(player);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Set new value of Update Interval.
-	 * @param updateInterval new value of Update Interval.
-	 */
-	void setUpdateInterval(int updateInterval);
+    public void showAll() {
+        if (isEnabled()) {
+            Bukkit.getOnlinePlayers().forEach(player -> this.show(player, getPlayerPage(player)));
+        }
+    }
 
-	/**
-	 * Get the current value of Update Interval.
-	 * @return the current value of Update Interval.
-	 */
-	int getUpdateInterval();
+    public void update(Player player) {
+        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) return;
+        HologramPage page = getPage(player);
+        if (page != null) {
+            page.getLines().forEach(line -> line.update(player));
+        }
+    }
 
-	/**
-	 * Start the update task of this hologram.
-	 */
-	void startUpdate();
+    public void updateAll() {
+        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
+            getViewerPlayers().forEach(this::update);
+        }
+    }
 
-	/**
-	 * Stop the update task of this hologram.
-	 */
-	void stopUpdate();
+    public void updateAnimations(Player player) {
+        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
+        HologramPage page = getPage(player);
+        if (page != null) {
+            page.getLines().forEach(line -> line.updateAnimations(player));
+        }
+    }
 
-	/**
-	 * Get the update task of this hologram.
-	 * @return the update task of this hologram.
-	 */
-	ConsumerTask<Hologram> getUpdateTask();
+    public void updateAnimationsAll() {
+        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+            getViewerPlayers().forEach(this::updateAnimations);
+        }
+    }
+
+    public void hide(Player player) {
+        if (isEnabled() && isVisible(player)) {
+            HologramPage page = getPage(player);
+            if (page != null) {
+                page.getLines().forEach(line -> line.hide(player));
+                hideClickableEntities(player);
+            }
+            viewers.remove(player.getUniqueId());
+        }
+    }
+
+    public void hideAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::hide);
+        }
+    }
+
+    public void showClickableEntities(Player player) {
+        HologramPage page = getPage(player);
+        if (page == null || !page.isClickable()) return;
+
+        // Spawn clickable entities
+        NMS nms = NMS.getInstance();
+        int amount = (int) (page.getHeight() / 2) + 1;
+        Location location = getLocation().clone();
+        location.setY((int) (location.getY() - page.getHeight()) + 0.5);
+        for (int i = 0; i < amount; i++) {
+            int id = page.getClickableEntityId(i);
+            nms.showFakeEntityArmorStand(player, location, id, true, false, true);
+            location.add(0, 1.8, 0);
+        }
+    }
+
+    public void showClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::showClickableEntities);
+        }
+    }
+
+    public void hideClickableEntities(Player player) {
+        HologramPage page = getPage(player);
+        if (page == null || !page.isClickable()) return;
+        NMS nms = NMS.getInstance();
+        page.getClickableEntityIds().forEach(id -> nms.hideFakeEntities(player, id));
+    }
+
+    public void hideClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::hideClickableEntities);
+        }
+    }
+
+    /**
+     * Check whether the given player is in display range of this hologram object.
+     * @param player Given player.
+     * @return Boolean whether the given player is in display range of this hologram object.
+     */
+    public boolean isInDisplayRange(Player player) {
+        return  player != null &&
+                player.getWorld().getName().equals(location.getWorld().getName()) &&
+                player.getLocation().distanceSquared(location) < (displayRange * displayRange);
+    }
+
+    /**
+     * Check whether the given player is in update range of this hologram object.
+     * @param player Given player.
+     * @return Boolean whether the given player is in update range of this hologram object.
+     */
+    public boolean isInUpdateRange(Player player) {
+        return  player != null &&
+                player.getWorld().getName().equals(location.getWorld().getName()) &&
+                player.getLocation().distanceSquared(location) < (updateRange * updateRange);
+    }
+
+    /*
+     *	Viewer Methods
+     */
+
+    public int getPlayerPage(Player player) {
+        return viewerPages.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    public Set<Player> getViewerPlayers(int pageIndex) {
+        Set<Player> players = new HashSet<>();
+        viewerPages.forEach((uuid, integer) -> {
+            if (integer == pageIndex) {
+                players.add(Bukkit.getPlayer(uuid));
+            }
+        });
+        return players;
+    }
+
+    /*
+     *	Pages Methods
+     */
+
+    /**
+     * Re-Aling the lines in this hologram putting them to the right place.
+     * <p>
+     *     This method is good to use after teleporting the hologram.
+     * </p>
+     */
+    public void realignLines() {
+        for (HologramPage page : pages) {
+            page.realignLines();
+        }
+    }
+
+    public HologramPage addPage() {
+        HologramPage page = new HologramPage(this, pages.size());
+        pages.add(page);
+        return page;
+    }
+
+    public HologramPage insertPage(int index) {
+        if (index < 0 || index > size()) return null;
+        HologramPage page = new HologramPage(this, index);
+        pages.add(index, page);
+
+        // Add 1 to indexes of all the other pages.
+        pages.stream().skip(index - 1).forEach(p -> p.setIndex(p.getIndex() + 1));
+        // Add 1 to all page indexes of current viewers, so they still see the same page.
+        viewerPages.replaceAll((uuid, integer) -> {
+            if (integer > index) {
+                return integer + 1;
+            }
+            return integer;
+        });
+        return page;
+    }
+
+    public HologramPage getPage(int index) {
+        if (index < 0 || index > size()) return null;
+        return pages.get(index);
+    }
+
+    public HologramPage getPage(Player player) {
+        if (isVisible(player)) {
+            return getPage(getPlayerPage(player));
+        }
+        return null;
+    }
+
+    public HologramPage removePage(int index) {
+        if (index < 0 || index > size()) return null;
+        HologramPage page = pages.remove(index);
+        page.getLines().forEach(HologramLine::hide);
+
+        // Update indexes of all the other pages.
+        pages.stream().skip(index - 1).forEach(p -> p.setIndex(p.getIndex() - 1));
+        // Update all page indexes of current viewers, so they still see the same page.
+        viewerPages.replaceAll((uuid, integer) -> {
+            if (integer > index) {
+                return integer - 1;
+            }
+            return integer;
+        });
+        return page;
+    }
+
+    public boolean swapPages(int index1, int index2) {
+        if (index1 == index2 || index1 < 0 || index1 >= size() || index2 < 0 || index2 >= size()) {
+            return false;
+        }
+        // Swap them in the list
+        Collections.swap(pages, index1, index2);
+
+        // Swap indexes of affected pages
+        HologramPage page1 = getPage(index1);
+        HologramPage page2 = getPage(index2);
+        int i = page1.getIndex();
+        page1.setIndex(page2.getIndex());
+        page2.setIndex(i);
+
+        // Swap viewers
+        Set<Player> viewers1 = getViewerPlayers(index1);
+        Set<Player> viewers2 = getViewerPlayers(index2);
+        viewers1.forEach(player -> show(player, index2));
+        viewers2.forEach(player -> show(player, index1));
+        return true;
+    }
+
+    /**
+     * Get the list of all pages in this hologram.
+     * @return List of all pages in this hologram.
+     */
+    public List<HologramPage> getPages() {
+        return ImmutableList.copyOf(pages);
+    }
 
 }

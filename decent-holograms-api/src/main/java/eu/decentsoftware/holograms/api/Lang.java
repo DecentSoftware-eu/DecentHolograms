@@ -1,26 +1,30 @@
 package eu.decentsoftware.holograms.api;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.utils.Common;
-import eu.decentsoftware.holograms.utils.config.ConfigValue;
-import eu.decentsoftware.holograms.utils.config.Configuration;
-import eu.decentsoftware.holograms.utils.config.Phrase;
-import eu.decentsoftware.holograms.utils.message.Message;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
+import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
+import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.Phrase;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class Lang {
 
-	private static final DecentHolograms PLUGIN = DecentHologramsProvider.getDecentHolograms();
-	private static final Configuration CONFIG = new Configuration(PLUGIN.getPlugin(), "lang.yml");
+	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
+	private static final Configuration CONFIG = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "lang.yml");
 
 	// General
-	public static final Phrase PREFIX = new Phrase(CONFIG, "prefix", "&8[&3DecentHolograms&8] &7");
+	public static final Phrase PREFIX = new Phrase(CONFIG, "prefix", Common.PREFIX);
 	public static final Phrase NO_PERM = new Phrase(CONFIG, "no_perm", "{prefix}&cYou are not allowed to use this.");
 	public static final Phrase ONLY_PLAYER = new Phrase(CONFIG, "only_player", "{prefix}&cThis action can only be executed by player.");
 	public static final Phrase RELOADED = new Phrase(CONFIG, "reloaded", "{prefix}Successfully reloaded!");
@@ -43,8 +47,8 @@ public class Lang {
 	public static final Phrase HOLOGRAM_ALIGNED = new Phrase(CONFIG, "hologram.aligned", "{prefix}Hologram has been aligned!");
 	public static final Phrase HOLOGRAM_ALIGN_SELF = new Phrase(CONFIG, "hologram.align_self", "{prefix}Cannot align a Hologram to itself!");
 	public static final Phrase HOLOGRAM_ALIGN_AXIS = new Phrase(CONFIG, "hologram.align_axis", "{prefix}That axis does not exist!");
-	public static final Phrase HOLOGRAM_ORIGIN_SET = new Phrase(CONFIG, "hologram.origin_set", "{prefix}Origin has been set to &b'%1$s'&7!");
-	public static final Phrase HOLOGRAM_ORIGIN_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.origin_does_not_exist", "{prefix}Origin with that name does not exist!");
+	public static final Phrase HOLOGRAM_ORIGIN_SET = new Phrase(CONFIG, "hologram.down_origin_set", "{prefix}Origin has been set to &b'%1$s'&7!");
+	public static final Phrase HOLOGRAM_ORIGIN_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.down_origin_does_not_exist", "{prefix}Down origin value must be either true or false!");
 	public static final Phrase HOLOGRAM_FACING_SET = new Phrase(CONFIG, "hologram.facing_set", "{prefix}Facing has been set!");
 	public static final Phrase HOLOGRAM_FLAG_ADDED = new Phrase(CONFIG, "hologram.flag_add", "{prefix}Flag &b\"%1$s\"&7 has been added!");
 	public static final Phrase HOLOGRAM_FLAG_REMOVED = new Phrase(CONFIG, "hologram.flag_remove", "{prefix}Flag &b\"%1$s\"&7 has been removed!");
@@ -58,11 +62,30 @@ public class Lang {
 	public static final Phrase HOLOGRAM_ENABLED = new Phrase(CONFIG, "hologram.enabled", "{prefix}Hologram has been enabled!");
 	public static final Phrase HOLOGRAM_ALREADY_ENABLED = new Phrase(CONFIG, "hologram.already_enabled", "{prefix}Hologram is already enabled!");
 
+	// Page Edit
+	public static final Phrase PAGE_ADDED = new Phrase(CONFIG, "page.added", "{prefix}Page has been added!");
+	public static final Phrase PAGE_ADD_FAILED = new Phrase(CONFIG, "page.add_failed", "{prefix}Page has been added!");
+	public static final Phrase PAGE_INSERTED = new Phrase(CONFIG, "page.inserted", "{prefix}Page has been inserted!");
+	public static final Phrase PAGE_INSERT_FAILED = new Phrase(CONFIG, "page.insert_failed", "{prefix}Page has been inserted!");
+	public static final Phrase PAGE_DELETED = new Phrase(CONFIG, "page.deleted", "{prefix}Page has been deleted!");
+	public static final Phrase PAGE_SWAPPED = new Phrase(CONFIG, "page.swapped", "{prefix}Pages swapped!");
+	public static final Phrase PAGE_SWAP_SELF = new Phrase(CONFIG, "page.swap_self", "{prefix}&cCannot swap a page with itself!");
+	public static final Phrase PAGE_SWAP_FAILED = new Phrase(CONFIG, "page.swap_failed", "{prefix}&cFailed to swap pages.");
+	public static final Phrase PAGE_DOES_NOT_EXIST = new Phrase(CONFIG, "page.does_not_exist", "{prefix}&cThat page doesn't exist.");
+
+	// Actions
+	public static final Phrase CLICK_TYPE_DOES_NOT_EXIST = new Phrase(CONFIG, "action.click_type_does_not_exist", "{prefix}&cThat click type doesn't exist.");
+	public static final Phrase ACTION_DOES_NOT_EXIST = new Phrase(CONFIG, "action.does_not_exist", "{prefix}&cThat action doesn't exist.");
+	public static final Phrase ACTION_ADDED = new Phrase(CONFIG, "action.added", "{prefix}Action has been added.");
+	public static final Phrase ACTION_REMOVED = new Phrase(CONFIG, "action.removed", "{prefix}Action has been removed.");
+	public static final Phrase ACTION_CLEARED = new Phrase(CONFIG, "action.cleared", "{prefix}Actions have been cleared.");
+	public static final Phrase ACTION_NO_ACTIONS = new Phrase(CONFIG, "action.no_actions", "{prefix}There are no actions set on that click type.");
+
 	// Line Edit
 	public static final Phrase LINE_ADDED = new Phrase(CONFIG, "line.added", "{prefix}Line has been added!");
 	public static final Phrase LINE_ADD_FAILED = new Phrase(CONFIG, "line.add_failed", "{prefix}&cFailed to add line.");
 	public static final Phrase LINE_SET = new Phrase(CONFIG, "line.set", "{prefix}Line has been set!");
-	public static final Phrase LINE_EDIT = new Phrase(CONFIG, "line.edit", "{prefix}&aClick to edit the line!");
+	public static final Phrase LINE_EDIT = new Phrase(CONFIG, "line.edit", "{prefix}&a&l&nClick to edit the line!");
 	public static final Phrase LINE_EDIT_HOVER = new Phrase(CONFIG, "line.edit_hover", "&r%1$s");
 	public static final Phrase LINE_INSERTED = new Phrase(CONFIG, "line.inserted", "{prefix}Line has been inserted!");
 	public static final Phrase LINE_INSERT_FAILED = new Phrase(CONFIG, "line.insert_failed", "{prefix}&cFailed to insert line.");
@@ -78,9 +101,10 @@ public class Lang {
 	public static final Phrase LINE_OFFSETZ_SET = new Phrase(CONFIG, "line.offsetz_set", "{prefix}Line OffsetZ has been set!");
 	public static final Phrase LINE_FLAG_ADDED = new Phrase(CONFIG, "line.flag_added", "{prefix}Flag &b\"%1$s\"&7 has been added!");
 	public static final Phrase LINE_FLAG_REMOVED = new Phrase(CONFIG, "line.flag_removed", "{prefix}Flag &b\"%1$s\"&7 has been removed!");
-	public static final Phrase LINE_DOES_NOT_EXIST = new Phrase(CONFIG, "line.does_not_exist", "{prefix}&cLine with index %1$s is not present.");
+	public static final Phrase LINE_DOES_NOT_EXIST = new Phrase(CONFIG, "line.does_not_exist", "{prefix}&cThat line doesn't exist.");
 	public static final Phrase LINE_PERMISSION_SET = new Phrase(CONFIG, "line.permission_set", "{prefix}Permission has been set!");
 	public static final Phrase LINE_PERMISSION_REMOVED = new Phrase(CONFIG, "line.permission_removed", "{prefix}Permission has been removed!");
+	public static final Phrase LINE_FACING_SET = new Phrase(CONFIG, "line.facing_set", "{prefix}Facing has been set!");
 
 	// Features
 	public static final Phrase FEATURE_DOES_NOT_EXIST = new Phrase(CONFIG, "feature.does_not_exist", "{prefix}&cFeature \"%1$s\" does not exist.");
@@ -119,9 +143,29 @@ public class Lang {
 	public static void sendVersionMessage(CommandSender sender) {
 		Common.tell(sender,
 				"\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
-				PLUGIN.getPlugin().getDescription().getVersion(),
+				Settings.getAPIVersion(),
 				"https://www.spigotmc.org/resources/96927/"
 		);
+	}
+	
+	public static List<String> getHologramInfo(Hologram hologram) {
+		List<String> info = new ArrayList<>();
+		Location l = hologram.getLocation();
+		info.add(String.format(" &8• &7Location: &b%s, %.2f, %.2f, %.2f", l.getWorld().getName(), l.getX(), l.getY(), l.getZ()));
+		info.add(String.format(" &8• &7Enabled: &b%s", hologram.isEnabled()));
+		if (hologram.getPermission() != null && !hologram.getPermission().isEmpty()) {
+			info.add(String.format(" &8• &7Permission: &b%s", hologram.getPermission()));
+		}
+		info.add(String.format(" &8• &7Pages: &b%d", hologram.size()));
+		info.add(String.format(" &8• &7Facing: &b%.1f deg", hologram.getFacing()));
+		info.add(String.format(" &8• &7Down Origin: &b%b", hologram.isDownOrigin()));
+		info.add(String.format(" &8• &7Update Interval: &b%d ticks", hologram.getUpdateInterval()));
+		info.add(String.format(" &8• &7Update Range: &b%d", hologram.getUpdateRange()));
+		info.add(String.format(" &8• &7Display Range: &b%d", hologram.getDisplayRange()));
+		if (!hologram.getFlags().isEmpty()) {
+			String.format(" &8• &7Flags: &b%s", hologram.getFlags().stream().map(EnumFlag::name).collect(Collectors.joining(", ")));
+		}
+		return info;
 	}
 
 }

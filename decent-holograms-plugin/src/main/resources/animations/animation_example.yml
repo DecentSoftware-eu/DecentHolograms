@@ -1,0 +1,27 @@
+#
+# Speed of the animation in ticks.
+# Represents the delay between animation steps.
+#
+# For speed of 2, the animation will wait
+# two ticks between each step.
+speed: 2
+
+#
+# Pause of the animation in ticks.
+# Represents the delay between animation runs.
+#
+# For speed of 20, the animation will wait
+# 20 ticks between each run.
+pause: 20
+
+#
+# Steps of the animation
+#
+# List of strings that's going to be cycled
+# over during the animation.
+steps:
+- 'Test 1'
+- 'Test 2'
+- 'Test 3'
+- 'Test 4'
+- 'Test 5'

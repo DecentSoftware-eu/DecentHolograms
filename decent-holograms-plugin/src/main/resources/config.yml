@@ -34,8 +34,8 @@ defaults:
     icon: 0.6
     head: 0.75
     smallhead: 0.6
-  # Default value of Origin
-  origin: UP
+  # Default value of Down Origin
+  down-origin: false
 
 # Check for updates on plugin startup? [true/false]
 update-checker: true

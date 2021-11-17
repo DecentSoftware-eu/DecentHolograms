@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.commands;
 
-import eu.decentsoftware.holograms.api.exception.DecentCommandException;
 import org.bukkit.command.CommandSender;
 
 @FunctionalInterface

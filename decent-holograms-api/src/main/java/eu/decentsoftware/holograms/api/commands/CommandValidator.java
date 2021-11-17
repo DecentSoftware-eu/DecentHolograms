@@ -11,7 +11,7 @@ public class CommandValidator {
 	/**
 	 * Get the Player from CommandSender if it is a Player.
 	 * <p>
-	 *     If CommandSender is not a Player, message will be sent to him.
+	 *     If CommandSender is not a Player, message will be sent to them.
 	 * </p>
 	 *
 	 * @param sender The CommandSender.
@@ -56,17 +56,26 @@ public class CommandValidator {
 	 * @param commandBase The Command being executed
 	 * @return Boolean whether the Command may be executed by the CommandSender
 	 */
-	public static boolean canExecute(CommandSender sender, CommandBase commandBase, boolean sendMessage) {
+	public static boolean canExecute(CommandSender sender, CommandBase commandBase) {
 		if (commandBase.isPlayerOnly() && !(sender instanceof Player)) {
-			if (sendMessage) Lang.ONLY_PLAYER.send(sender);
+			Lang.ONLY_PLAYER.send(sender);
 			return false;
 		}
 
-		if (commandBase.getPermission() != null && !commandBase.getPermission().isEmpty() && !sender.hasPermission(commandBase.getPermission())) {
-			if (sendMessage) Lang.NO_PERM.send(sender);
+		String perm = commandBase.getPermission();
+		if (perm != null && !perm.trim().isEmpty() && !sender.hasPermission(perm)) {
+			Lang.NO_PERM.send(sender);
 			return false;
 		}
 		return true;
+	}
+
+	public static int getInteger(String string) {
+		try {
+			return Integer.parseInt(string);
+		} catch (NumberFormatException ex) {
+			return -1;
+		}
 	}
 
 }

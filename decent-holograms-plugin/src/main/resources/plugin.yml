@@ -3,7 +3,11 @@ api-version: 1.13
 softdepend: [PlaceholderAPI]
 name: DecentHolograms
 description: Lightweight but powerful hologram plugin with many features and configuration options.
+<<<<<<< Updated upstream
 version: '${version}'
+=======
+version: ${version}
+>>>>>>> Stashed changes
 author: d0by
 
 commands:
@@ -11,17 +15,3 @@ commands:
     aliases: [dh, holograms, hologram, holo]
     usage: /decentholograms <args>
     description: The main command of DecentHolograms plugin.
-
-permissions:
-  dh.features.admin:
-    dh.help: true
-  dh.hologram.admin:
-    dh.help: true
-  dh.line.admin:
-    dh.help: true
-  dh.admin:
-    dh.help: true
-    dh.update: true
-    dh.features.admin: true
-    dh.hologram.admin: true
-    dh.line.admin: true

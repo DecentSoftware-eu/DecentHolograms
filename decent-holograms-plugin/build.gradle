@@ -3,13 +3,14 @@ plugins {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
-    implementation 'org.bstats:bstats-bukkit:2.2.1'
+    compileOnly 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    implementation project(':decent-holograms-core')
     implementation project(':decent-holograms-api')
 }
 
+<<<<<<< Updated upstream
 processResources {
     def props = [version: version]
     inputs.properties props
@@ -30,11 +31,9 @@ tasks.withType(Javadoc) {
     options.addStringOption('charSet', 'UTF-8')
 }
 
+=======
+>>>>>>> Stashed changes
 shadowJar {
     archiveClassifier.set("")
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
-}
-
-jar {
-    archivesBaseName = rootProject.name
 }

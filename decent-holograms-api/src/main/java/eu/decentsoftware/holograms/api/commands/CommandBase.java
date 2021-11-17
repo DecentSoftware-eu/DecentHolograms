@@ -1,8 +1,7 @@
 package eu.decentsoftware.holograms.api.commands;
 
-import lombok.NonNull;
-
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,7 +22,12 @@ public interface CommandBase {
 	/**
 	 * @return The aliases for this Command.
 	 */
-	String[] getAliases();
+	List<String> getAliases();
+
+	/**
+	 * @return Boolean whether this Command is only executable by Players.
+	 */
+	boolean isPlayerOnly();
 
 	/**
 	 * @return Minimum arguments to execute this command.
@@ -41,17 +45,12 @@ public interface CommandBase {
 	String getDescription();
 
 	/**
-	 * @return Boolean whether this Command is only executable by Players.
-	 */
-	boolean isPlayerOnly();
-
-	/**
 	 * Add a SubCommand for this Command.
 	 *
 	 * @param commandBase The instance of {@link CommandBase} you want to add as a SubCommand.
 	 * @return Instance of this Command.
 	 */
-	CommandBase addSubCommand(@NonNull CommandBase commandBase);
+	CommandBase addSubCommand(CommandBase commandBase);
 
 	/**
 	 * Get a sub command by name.
@@ -59,7 +58,7 @@ public interface CommandBase {
 	 * @param name Subcommand name
 	 * @return Subcommand
 	 */
-	CommandBase getSubCommand(@NonNull String name);
+	CommandBase getSubCommand(String name);
 
 	/**
 	 * Get names of all sub commands.
