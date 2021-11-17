@@ -10,7 +10,6 @@ dependencies {
     implementation project(':decent-holograms-api')
 }
 
-<<<<<<< Updated upstream
 processResources {
     def props = [version: version]
     inputs.properties props
@@ -31,8 +30,6 @@ tasks.withType(Javadoc) {
     options.addStringOption('charSet', 'UTF-8')
 }
 
-=======
->>>>>>> Stashed changes
 shadowJar {
     archiveClassifier.set("")
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"

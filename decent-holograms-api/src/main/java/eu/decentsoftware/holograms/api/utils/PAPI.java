@@ -18,10 +18,6 @@ public class PAPI {
 	 */
 	public static String setPlaceholders(Player player, String string) {
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-<<<<<<< Updated upstream:decent-holograms-utils/src/main/java/eu/decentsoftware/holograms/utils/PAPI.java
-=======
-			// Why would PAPI replace color codes?
->>>>>>> Stashed changes:decent-holograms-api/src/main/java/eu/decentsoftware/holograms/api/utils/PAPI.java
 			return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
 		}
 		return string;

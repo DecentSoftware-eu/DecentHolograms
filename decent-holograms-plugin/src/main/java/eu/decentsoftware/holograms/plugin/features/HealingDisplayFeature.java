@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.plugin.features;
 
-import com.avaje.ebean.config.dbplatform.H2SequenceIdGenerator;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
