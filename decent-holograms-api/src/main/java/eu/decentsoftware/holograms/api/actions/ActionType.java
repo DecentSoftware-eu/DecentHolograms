@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.actions;
 import com.google.common.collect.Maps;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.commands.CommandValidator;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -150,6 +151,19 @@ public abstract class ActionType {
 			int prevPage = hologram.getPlayerPage(player) - 1;
 			if (prevPage < 0 || hologram.size() <= prevPage) return true;
 			hologram.show(player, prevPage);
+			return true;
+		}
+	};
+
+	public static final ActionType PAGE = new ActionType("PAGE") {
+		@Override
+		public boolean execute(Player player, String... args) {
+			if (args == null || args.length < 2) return true;
+			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(args[0]);
+			if (hologram == null) return true;
+			int page = CommandValidator.getInteger(args[1]);
+			if (page < 0 || hologram.size() <= page) return true;
+			hologram.show(player, page);
 			return true;
 		}
 	};

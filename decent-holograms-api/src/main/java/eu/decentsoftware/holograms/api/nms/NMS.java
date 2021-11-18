@@ -91,7 +91,6 @@ public abstract class NMS {
         mapEntityTypes.put("ENDERMAN", new Pair<>(18, 2.9f));
         mapEntityTypes.put("ENDERMITE", new Pair<>(19, 0.3f));
         mapEntityTypes.put("EVOKER", new Pair<>(21, 1.95f));
-        mapEntityTypes.put("GUARDIAN", new Pair<>(28, 0.85f));
         mapEntityTypes.put("HORSE", new Pair<>(28, 1.6f));
         mapEntityTypes.put("HUSK", new Pair<>(30, 1.95f));
         mapEntityTypes.put("ILLUSIONER", new Pair<>(31, 1.95f));
@@ -113,6 +112,7 @@ public abstract class NMS {
         mapEntityTypes.put("SKELETON_HORSE", new Pair<>(63, 1.6f));
         mapEntityTypes.put("SLIME", new Pair<>(64, 0.51000005f));
         mapEntityTypes.put("SNOWMAN", new Pair<>(66, 1.9f));
+        mapEntityTypes.put("GUARDIAN", new Pair<>(68, 0.85f));
         mapEntityTypes.put("SPIDER", new Pair<>(69, 0.9f));
         mapEntityTypes.put("SQUID", new Pair<>(70, 1.8f));
         mapEntityTypes.put("STRAY", new Pair<>(71, 1.99f));

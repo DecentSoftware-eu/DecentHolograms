@@ -31,6 +31,5 @@ tasks.withType(Javadoc) {
 }
 
 shadowJar {
-    archiveClassifier.set("")
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
 }

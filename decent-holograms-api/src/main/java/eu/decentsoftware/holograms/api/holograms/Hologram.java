@@ -9,7 +9,6 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.ConsumerTask;
@@ -288,9 +287,11 @@ public class Hologram extends UpdatingHologramObject {
     public boolean onClick(Player player, int entityId, ClickType clickType) {
         if (hasFlag(EnumFlag.DISABLE_ACTIONS)) return false;
         HologramPage page = getPage(player);
-        if (page != null && page.isClickable() && page.getClickableEntityIds().contains(entityId)) {
-            page.executeActions(player, clickType);
-            return true;
+        if (page != null && page.isClickable()) {
+            if (page.getClickableEntityIds().contains(entityId) || page.getLines().stream().anyMatch(line -> line.getEntityIds()[1] == entityId)) {
+                page.executeActions(player, clickType);
+                return true;
+            }
         }
         return false;
     }

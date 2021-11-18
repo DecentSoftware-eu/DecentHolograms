@@ -38,7 +38,7 @@ public class Action {
 
 	@Override
 	public String toString() {
-		return String.format("%s:%s", type.getName(), data);
+		return data == null ? type.getName() : String.format("%s:%s", type.getName(), data);
 	}
 
 }

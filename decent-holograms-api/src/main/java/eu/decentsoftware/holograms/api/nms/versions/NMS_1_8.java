@@ -141,7 +141,7 @@ public class NMS_1_8 extends NMS {
     public void helmetFakeEntity(Player player, ItemStack itemStack, int entityId) {
         Validate.notNull(player);
         Validate.notNull(itemStack);
-        Object nmsItemStack = CRAFT_ITEM_NMS_COPY_METHOD.invoke(itemStack);
+        Object nmsItemStack = CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack);
         if (nmsItemStack == null) return;
         Object packet = PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR.newInstance(entityId, 4, nmsItemStack);
         if (packet == null) return;

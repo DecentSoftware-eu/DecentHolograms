@@ -111,6 +111,11 @@ public class HologramPage extends FlagHolder {
         for (HologramLine line : getLines()) {
             page.addLine(line.clone(page.getNextLineLocation()));
         }
+        for (Map.Entry<ClickType, List<Action>> entry : getActions().entrySet()) {
+            for (Action action : entry.getValue()) {
+                page.addAction(entry.getKey(), action);
+            }
+        }
         return page;
     }
 
@@ -263,9 +268,19 @@ public class HologramPage extends FlagHolder {
     public void executeActions(Player player, ClickType clickType) {
         if (!actions.containsKey(clickType)) return;
         for (Action action : actions.get(clickType)) {
+            String actionName = action.getType().getName();
+            String actionData = action.getData();
+            if (actionName.contains("_PAGE") && actionData == null) {
+                action.setData(getParent().getName());
+            } else if (actionName.equals("PAGE") && actionData.matches("[0-9]+")) {
+                action.setData(getParent().getName() + ":" + actionData);
+            }
+
             if (!action.execute(player)) {
+                action.setData(actionData);
                 return;
             }
+            action.setData(actionData);
         }
     }
 

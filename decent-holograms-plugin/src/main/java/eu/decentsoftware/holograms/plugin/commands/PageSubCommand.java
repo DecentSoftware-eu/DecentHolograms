@@ -498,8 +498,6 @@ public class PageSubCommand extends DecentCommand {
                 if (!action.isValid()) {
                     Lang.ACTION_DOES_NOT_EXIST.send(sender);
                     return true;
-                } else if (action.getType().getName().contains("_PAGE") && action.getData() == null) {
-                    action.setData(hologram.getName());
                 }
                 page.addAction(clickType, action);
                 hologram.save();
