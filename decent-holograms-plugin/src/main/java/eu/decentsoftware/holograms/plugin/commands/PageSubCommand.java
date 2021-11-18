@@ -89,7 +89,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " &3&lHOLOGRAM PAGES HELP");
                 Common.tell(sender, " All page commands.");
                 sender.sendMessage("");
-                CommandBase command = PLUGIN.getCommandManager().getMainCommand();
+                CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("page");
                 List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
                 for (CommandBase subCommand : subCommands) {
                     Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
@@ -498,6 +498,8 @@ public class PageSubCommand extends DecentCommand {
                 if (!action.isValid()) {
                     Lang.ACTION_DOES_NOT_EXIST.send(sender);
                     return true;
+                } else if (action.getType().getName().contains("_PAGE") && action.getData() == null) {
+                    action.setData(hologram.getName());
                 }
                 page.addAction(clickType, action);
                 hologram.save();
