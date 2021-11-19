@@ -61,9 +61,11 @@ public class Hologram extends UpdatingHologramObject {
         if (location == null) return null;
 
         // Parse hologram name
-        String name = fileName.substring(0, fileName.length() - 4);
-        if (name.toLowerCase().startsWith("hologram_") && name.length() > "hologram_".length()) {
-            name = name.substring("hologram_".length());
+        String name;
+        if (fileName.toLowerCase().startsWith("hologram_") && fileName.length() > "hologram_".length()) {
+            name = fileName.substring("hologram_".length(), fileName.length() - 4);
+        } else {
+            name = fileName.substring(0, fileName.length() - 4);
         }
 
         boolean enabled = true;
@@ -80,7 +82,7 @@ public class Hologram extends UpdatingHologramObject {
         hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL.getValue()));
         hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
         hologram.setFacing((float) config.getDouble("facing", 0.0f));
-        if (config.isString("down-origin")) {
+        if (config.isBoolean("down-origin")) {
             hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
         }
 
@@ -363,10 +365,10 @@ public class Hologram extends UpdatingHologramObject {
         if (isEnabled() && isVisible(player)) {
             HologramPage page = getPage(player);
             if (page != null) {
-                page.getLines().forEach(line -> line.hide(player));
                 hideClickableEntities(player);
+                viewers.remove(player.getUniqueId());
+                page.getLines().forEach(line -> line.hide(player));
             }
-            viewers.remove(player.getUniqueId());
         }
     }
 
@@ -384,7 +386,7 @@ public class Hologram extends UpdatingHologramObject {
         NMS nms = NMS.getInstance();
         int amount = (int) (page.getHeight() / 2) + 1;
         Location location = getLocation().clone();
-        location.setY((int) (location.getY() - page.getHeight()) + 0.5);
+        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
             int id = page.getClickableEntityId(i);
             nms.showFakeEntityArmorStand(player, location, id, true, false, true);
@@ -431,6 +433,12 @@ public class Hologram extends UpdatingHologramObject {
         return  player != null &&
                 player.getWorld().getName().equals(location.getWorld().getName()) &&
                 player.getLocation().distanceSquared(location) < (updateRange * updateRange);
+    }
+
+    public void setDownOrigin(boolean downOrigin) {
+        this.downOrigin = downOrigin;
+        this.hideClickableEntitiesAll();
+        this.showClickableEntitiesAll();
     }
 
     /*

@@ -29,7 +29,7 @@ public class Action {
 	}
 
 	public boolean execute(Player player) {
-		return type.execute(player, data);
+		return type.execute(player, data.split(":"));
 	}
 
 	public boolean isValid() {

@@ -4,7 +4,7 @@
 #
 # For speed of 2, the animation will wait
 # two ticks between each step.
-speed: 2
+speed: 10
 
 #
 # Pause of the animation in ticks.
@@ -20,8 +20,8 @@ pause: 20
 # List of strings that's going to be cycled
 # over during the animation.
 steps:
-- 'Test 1'
-- 'Test 2'
-- 'Test 3'
-- 'Test 4'
-- 'Test 5'
+  - 'Example 1'
+  - 'Example 2'
+  - 'Example 3'
+  - 'Example 4'
+  - 'Example 5'

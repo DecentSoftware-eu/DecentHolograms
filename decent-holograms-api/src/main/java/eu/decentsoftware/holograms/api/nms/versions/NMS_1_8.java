@@ -36,7 +36,7 @@ public class NMS_1_8 extends NMS {
     private static final ReflectConstructor PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR;
     private static final ReflectConstructor PACKET_ENTITY_DESTROY_CONSTRUCTOR;
 
-    private static final ReflectField<?> ENTITY_COUNTER_FIELD;
+    private static final ReflectField<Integer> ENTITY_COUNTER_FIELD;
 
     static {
         // UTILITY
@@ -65,7 +65,7 @@ public class NMS_1_8 extends NMS {
 
     @Override
     public int getFreeEntityId() {
-        int entityCount = (int) ENTITY_COUNTER_FIELD.getValue(null);
+        int entityCount = ENTITY_COUNTER_FIELD.getValue(null);
         ENTITY_COUNTER_FIELD.setValue(null, entityCount + 1);
         return entityCount;
     }

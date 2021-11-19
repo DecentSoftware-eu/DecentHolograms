@@ -162,7 +162,7 @@ public class HologramPage extends FlagHolder {
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
         lines.add(index, line);
-        parent.getViewerPlayers(index).forEach(line::show);
+        parent.getViewerPlayers(this.index).forEach(line::show);
         realignLines();
         return true;
     }
@@ -177,7 +177,7 @@ public class HologramPage extends FlagHolder {
         if (index < 0 || index >= size()) {
             return false;
         }
-        HologramLine line = getLine(index);
+        HologramLine line = getLine(this.index);
         line.hide();
         line.setContent(content);
         line.show();

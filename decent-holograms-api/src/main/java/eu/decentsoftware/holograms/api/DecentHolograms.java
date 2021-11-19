@@ -83,6 +83,7 @@ public final class DecentHolograms {
 		Lang.reload();
 
 		hologramManager.reload();
+		animationManager.reload();
 		featureManager.reload();
 		playerManager.reload();
 	}

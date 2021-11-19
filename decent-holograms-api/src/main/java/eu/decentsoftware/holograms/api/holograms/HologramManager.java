@@ -185,7 +185,7 @@ public class HologramManager {
 	private void loadHolograms() {
 		hologramMap.clear();
 
-		String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/holograms", "hologram_\\S+\\.yml", true);
+		String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/holograms", "\\w+\\.yml", true);
 		if (fileNames == null || fileNames.length == 0) return;
 
 		int counter = 0;

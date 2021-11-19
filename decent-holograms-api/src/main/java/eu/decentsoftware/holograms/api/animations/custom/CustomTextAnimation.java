@@ -33,9 +33,11 @@ public class CustomTextAnimation extends TextAnimation {
         Configuration config = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "animations/" + fileName);
 
         // Parse animation name
-        String name = fileName.substring(0, fileName.length() - 4);
-        if (name.toLowerCase().startsWith("animation_") && name.length() > "animation_".length()) {
-            name = name.substring("animation_".length());
+        String name;
+        if (fileName.toLowerCase().startsWith("animation_") && fileName.length() > "animation_".length()) {
+            name = fileName.substring("animation_".length(), fileName.length() - 4);
+        } else {
+            name = fileName.substring(0, fileName.length() - 4);
         }
 
         int speed = config.isInt("speed") ? config.getInt("speed") : 1;

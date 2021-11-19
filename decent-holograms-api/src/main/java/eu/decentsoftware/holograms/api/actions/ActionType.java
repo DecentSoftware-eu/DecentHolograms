@@ -57,7 +57,7 @@ public abstract class ActionType {
 			Validate.notNull(player);
 
 			String string = String.join(" ", args);
-			Bukkit.getScheduler().runTask(DecentHologramsAPI.get().getPlugin(), () -> {
+			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
 				//
 				Bukkit.dispatchCommand(player, string.replace("{player}", player.getName()));
 			});
@@ -71,7 +71,7 @@ public abstract class ActionType {
 			Validate.notNull(player);
 
 			String string = String.join(" ", args);
-			Bukkit.getScheduler().runTask(DecentHologramsAPI.get().getPlugin(), () -> {
+			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
 				//
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string.replace("{player}", player.getName()));
 			});
@@ -95,12 +95,15 @@ public abstract class ActionType {
 		public boolean execute(Player player, String... args) {
 			Validate.notNull(player);
 
-			String string = String.join(" ", args);
+			String string = String.join(":", args);
+			if (string.split(":").length != 4) {
+				string = player.getLocation().getWorld().getName() + ":" + string;
+			}
 			Location location = LocationUtils.asLocation(string);
 			if (location == null) {
 				return false;
 			}
-			player.teleport(location);
+			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> player.teleport(location));
 			return true;
 		}
 	};
@@ -110,8 +113,14 @@ public abstract class ActionType {
 		public boolean execute(Player player, String... args) {
 			Validate.notNull(player);
 
-			if (args.length == 0) return true;
-			Sound sound = Sound.valueOf(args[0]);
+			if (args.length < 1) return true;
+			Sound sound;
+			try {
+				sound = Sound.valueOf(args[0]);
+			} catch (Throwable ignored) {
+				return true;
+			}
+
 			if (args.length < 3) {
 				player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
 			} else {
@@ -162,8 +171,8 @@ public abstract class ActionType {
 			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(args[0]);
 			if (hologram == null) return true;
 			int page = CommandValidator.getInteger(args[1]);
-			if (page < 0 || hologram.size() <= page) return true;
-			hologram.show(player, page);
+			if (page < 1 || page > hologram.size()) return true;
+			hologram.show(player, page - 1);
 			return true;
 		}
 	};

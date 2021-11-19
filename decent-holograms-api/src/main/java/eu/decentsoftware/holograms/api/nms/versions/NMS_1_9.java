@@ -66,7 +66,7 @@ public class NMS_1_9 extends NMS {
     private static ReflectMethod ENTITY_TYPES_GET_SIZE_METHOD;
     private static ReflectField<Float> ENTITY_SIZE_HEIGHT_FIELD;
 
-    private static final ReflectField<?> ENTITY_COUNTER_FIELD;
+    private static final ReflectField<Object> ENTITY_COUNTER_FIELD;
 
     static {
         DWO_CLASS = ReflectionUtil.getNMSClass("DataWatcherObject");
@@ -197,12 +197,12 @@ public class NMS_1_9 extends NMS {
 
     @Override
     public int getFreeEntityId() {
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_14_R1)) {
+        Object entityCounter = ENTITY_COUNTER_FIELD.getValue(null);
+        if (entityCounter instanceof AtomicInteger) {
             return ((AtomicInteger) ENTITY_COUNTER_FIELD.getValue(null)).addAndGet(1);
         }
-        int entityCount = (int) ENTITY_COUNTER_FIELD.getValue(null);
-        ENTITY_COUNTER_FIELD.setValue(null, entityCount + 1);
-        return entityCount;
+        ENTITY_COUNTER_FIELD.setValue(null, (int) entityCounter + 1);
+        return (int) entityCounter;
     }
 
     @Override
