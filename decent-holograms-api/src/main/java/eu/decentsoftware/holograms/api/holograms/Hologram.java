@@ -216,6 +216,7 @@ public class Hologram extends UpdatingHologramObject {
     public void destroy() {
         this.disable();
         this.viewerPages.clear();
+        CACHED_HOLOGRAMS.remove(getName());
     }
 
     @Override
@@ -365,10 +366,10 @@ public class Hologram extends UpdatingHologramObject {
         if (isEnabled() && isVisible(player)) {
             HologramPage page = getPage(player);
             if (page != null) {
-                hideClickableEntities(player);
-                viewers.remove(player.getUniqueId());
                 page.getLines().forEach(line -> line.hide(player));
+                hideClickableEntities(player);
             }
+            viewers.remove(player.getUniqueId());
         }
     }
 

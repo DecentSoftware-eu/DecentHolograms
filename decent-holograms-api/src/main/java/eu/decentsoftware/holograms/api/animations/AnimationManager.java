@@ -12,6 +12,7 @@ import org.apache.commons.lang.Validate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,10 +103,15 @@ public class AnimationManager {
         int counter = 0;
         Common.log("Loading animations...");
         for (String fileName : fileNames) {
-            TextAnimation animation = CustomTextAnimation.fromFile(fileName);
-            if (animation != null) {
-                this.registerAnimation(animation);
-                counter++;
+            try {
+                TextAnimation animation = CustomTextAnimation.fromFile(fileName);
+                if (animation != null) {
+                    this.registerAnimation(animation);
+                    counter++;
+                }
+            } catch (Exception e) {
+                Common.log(Level.WARNING, "Failed to load animation from file '%s'!", fileName);
+                e.printStackTrace();
             }
         }
         Common.log("Loaded %d animations!", counter);

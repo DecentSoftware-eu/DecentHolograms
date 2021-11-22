@@ -113,7 +113,7 @@ public abstract class HologramObject extends FlagHolder {
      * @return List of all players that currently see this hologram.
      */
     public List<Player> getViewerPlayers() {
-        return viewers.stream()
+        return getViewers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(player -> player != null && player.isOnline())
                 .collect(Collectors.toList());

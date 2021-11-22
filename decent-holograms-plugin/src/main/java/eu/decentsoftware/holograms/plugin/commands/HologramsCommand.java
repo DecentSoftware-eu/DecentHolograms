@@ -4,13 +4,11 @@ import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.*;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
-import eu.decentsoftware.holograms.api.player.DecentPlayer;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
 import eu.decentsoftware.holograms.plugin.convertors.HolographicDisplaysConvertor;
-import eu.decentsoftware.holograms.plugin.menu.MainMenu;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -42,7 +40,6 @@ public class HologramsCommand extends DecentCommand {
 		addSubCommand(new PageSubCommand());
 		addSubCommand(new ConvertSubCommand());
 		addSubCommand(new VersionSubCommand());
-//		addSubCommand(new MenuSubCommand());
 
         // Shortcuts
         addSubCommand(new HologramSubCommand.HologramCreateSub());
@@ -136,35 +133,6 @@ public class HologramsCommand extends DecentCommand {
             return null;
         }
 
-    }
-
-    @CommandInfo(
-            playerOnly = true,
-            aliases = {"gui"},
-            permission = "dh.admin",
-            usage = "/dh menu",
-            description = "Open the main DecentHolograms menu."
-    )
-    public static class MenuSubCommand extends DecentCommand {
-
-        public MenuSubCommand() {
-            super("menu");
-        }
-
-        @Override
-        public CommandHandler getCommandHandler() {
-            return (sender, args) -> {
-                Player player = Validator.getPlayer(sender);
-                DecentPlayer decentPlayer = DecentPlayer.getByUUID(player.getUniqueId());
-                new MainMenu(decentPlayer, null).open();
-                return true;
-            };
-        }
-
-        @Override
-        public TabCompleteHandler getTabCompleteHandler() {
-            return null;
-        }
     }
 
     @CommandInfo(

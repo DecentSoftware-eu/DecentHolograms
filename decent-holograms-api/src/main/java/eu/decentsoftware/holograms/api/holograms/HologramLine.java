@@ -382,8 +382,8 @@ public class HologramLine extends HologramObject {
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (isVisible(player)) {
-                viewers.remove(player.getUniqueId());
                 NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]);
+                viewers.remove(player.getUniqueId());
             }
         }
     }

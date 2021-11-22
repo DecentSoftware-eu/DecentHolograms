@@ -6,12 +6,14 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.RunnableTask;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * This class represents a Manager for handling holograms.
@@ -38,7 +40,7 @@ public class HologramManager {
 		}));
 
 		// Reload when worlds are ready
-		Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), this::reload);
+		S.sync(this::reload);
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class HologramManager {
 		HologramLine line = new HologramLine(null, location, content);
 		temporaryLines.add(line);
 		line.show();
-		Bukkit.getScheduler().runTaskLaterAsynchronously(DECENT_HOLOGRAMS.getPlugin(), () -> {
+		S.async(() -> {
 			line.destroy();
 			temporaryLines.remove(line);
 		}, duration);
@@ -73,9 +75,7 @@ public class HologramManager {
 	}
 
 	public void onQuit(Player player) {
-		Bukkit.getScheduler().runTaskAsynchronously(DECENT_HOLOGRAMS.getPlugin(), () ->
-				Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player))
-		);
+		S.async(() -> Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player)));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class HologramManager {
 	 */
 	public Hologram removeHologram(String name) {
 		Hologram hologram = hologramMap.remove(name);
-		hologram.delete();
+		S.async(hologram::delete);
 		return hologram;
 	}
 
@@ -191,12 +191,17 @@ public class HologramManager {
 		int counter = 0;
 		Common.log("Loading holograms... ");
 		for (String fileName : fileNames) {
-			Hologram hologram = Hologram.fromFile(fileName);
-			if (hologram != null && hologram.isEnabled()) {
-				hologram.showAll();
-				hologram.realignLines();
-				this.registerHologram(hologram);
-				counter++;
+			try {
+				Hologram hologram = Hologram.fromFile(fileName);
+				if (hologram != null && hologram.isEnabled()) {
+					hologram.showAll();
+					hologram.realignLines();
+					this.registerHologram(hologram);
+					counter++;
+				}
+			} catch (Exception e) {
+				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", fileName);
+				e.printStackTrace();
 			}
 		}
 		Common.log("Loaded %d holograms!", counter);

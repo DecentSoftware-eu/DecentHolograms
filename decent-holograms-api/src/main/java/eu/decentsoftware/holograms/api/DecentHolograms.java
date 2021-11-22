@@ -5,11 +5,9 @@ import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.features.FeatureManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
-import eu.decentsoftware.holograms.api.menu.MenuListener;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
-import eu.decentsoftware.holograms.api.player.PlayerManager;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
@@ -28,7 +26,6 @@ public final class DecentHolograms {
 	private HologramManager hologramManager;
 	private CommandManager commandManager;
 	private FeatureManager featureManager;
-	private PlayerManager playerManager;
 	private AnimationManager animationManager;
 	private PacketListener packetListener;
 	private File dataFolder;
@@ -54,13 +51,11 @@ public final class DecentHolograms {
 		hologramManager = new HologramManager();
 		commandManager = new CommandManager();
 		featureManager = new FeatureManager();
-		playerManager = new PlayerManager();
 		animationManager = new AnimationManager();
 		packetListener = new PacketListener();
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this), plugin);
-		pm.registerEvents(new MenuListener(), plugin);
 
 		// Setup metrics
 		Metrics metrics = new Metrics(plugin, 12797);
@@ -73,7 +68,6 @@ public final class DecentHolograms {
 		packetListener.destroy();
 		hologramManager.destroy();
 		featureManager.destroy();
-		playerManager.destroy();
 
 		BungeeUtils.destroy();
 	}
@@ -85,7 +79,6 @@ public final class DecentHolograms {
 		hologramManager.reload();
 		animationManager.reload();
 		featureManager.reload();
-		playerManager.reload();
 	}
 
 	public File getDataFolder() {

@@ -177,7 +177,7 @@ public class HologramPage extends FlagHolder {
         if (index < 0 || index >= size()) {
             return false;
         }
-        HologramLine line = getLine(this.index);
+        HologramLine line = getLine(index);
         line.hide();
         line.setContent(content);
         line.show();

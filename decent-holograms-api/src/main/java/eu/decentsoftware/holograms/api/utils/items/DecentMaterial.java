@@ -12,6 +12,7 @@ import java.util.Map;
 public class DecentMaterial {
 
     private static final Map<String, String> MATERIAL_ALIASES = new HashMap<>();
+    private static final ReflectMethod MATERIAL_IS_ITEM_METHOD;
 
     static {
         for (Material material : Material.values()) {
@@ -68,6 +69,10 @@ public class DecentMaterial {
             MATERIAL_ALIASES.put("wood showel", "WOOD_SPADE");
             MATERIAL_ALIASES.put("wooden showel", "WOOD_SPADE");
             MATERIAL_ALIASES.put("lilypad", "WATER_LILY");
+
+            MATERIAL_IS_ITEM_METHOD = new ReflectMethod(ReflectionUtil.getNMSClass("Item"), "getById", int.class);
+        } else {
+            MATERIAL_IS_ITEM_METHOD = new ReflectMethod(Material.class, "isItem");
         }
     }
 
@@ -78,11 +83,9 @@ public class DecentMaterial {
     @SuppressWarnings("deprecation")
     public static boolean isItem(Material material) {
         if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1)) {
-            ReflectMethod method = new ReflectMethod(Material.class, "isItem");
-            return method.invoke(material);
+            return MATERIAL_IS_ITEM_METHOD.invoke(material);
         } else {
-            ReflectMethod method = new ReflectMethod(ReflectionUtil.getNMSClass("Item"), "getById", int.class);
-            return method.invokeStatic(material.getId()) != null;
+            return MATERIAL_IS_ITEM_METHOD.invokeStatic(material.getId()) != null;
         }
     }
 

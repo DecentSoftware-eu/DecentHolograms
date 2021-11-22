@@ -167,10 +167,11 @@ public abstract class ActionType {
 	public static final ActionType PAGE = new ActionType("PAGE") {
 		@Override
 		public boolean execute(Player player, String... args) {
-			if (args == null || args.length < 2) return true;
-			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(args[0]);
+			if (args == null || args.length == 0) return true;
+			String[] spl = args[0].split(":");
+			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(spl[0]);
 			if (hologram == null) return true;
-			int page = CommandValidator.getInteger(args[1]);
+			int page = CommandValidator.getInteger(spl[1]);
 			if (page < 1 || page > hologram.size()) return true;
 			hologram.show(player, page - 1);
 			return true;

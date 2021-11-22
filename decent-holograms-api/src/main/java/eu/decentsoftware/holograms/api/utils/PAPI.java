@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class PAPI {
@@ -18,7 +19,9 @@ public class PAPI {
 	 */
 	public static String setPlaceholders(Player player, String string) {
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
+			try {
+				return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
+			} catch (Exception ignored) {}
 		}
 		return string;
 	}
