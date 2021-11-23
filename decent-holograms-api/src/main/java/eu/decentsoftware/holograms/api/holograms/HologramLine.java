@@ -13,6 +13,7 @@ import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -106,6 +107,7 @@ public class HologramLine extends HologramObject {
     private double offsetX = 0.0D, offsetY = 0.0D, offsetZ = 0.0D;
     private double height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
     private final Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
     private String content;
     private String text;
     private HologramItem item;
@@ -257,14 +259,15 @@ public class HologramLine extends HologramObject {
 
     private String getText(Player player, boolean update) {
         if (!HologramLineType.TEXT.equals(type)) return "";
-        String string = playerTextMap.get(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        String string = playerTextMap.get(uuid);
         if (update || string == null) {
             string = this.text;
             // Parse placeholders
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
                 string = PAPI.setPlaceholders(player, string);
             }
-            playerTextMap.put(player.getUniqueId(), string);
+            playerTextMap.put(uuid, string);
         }
         // Replace Animations
         if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
@@ -293,35 +296,37 @@ public class HologramLine extends HologramObject {
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
-                switch (type) {
-                    case TEXT:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
-                        nms.updateFakeEntityCustomName(player, getText(player, true), entityIds[0]);
-                        break;
-                    case HEAD: case SMALLHEAD:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
-                        ItemStack itemStack = PAPI.containsPlaceholders(getItem().getContent()) ? HologramItem.parseItemStack(getItem().getContent(), player) : getItem().parse();
-                        nms.helmetFakeEntity(player, itemStack, entityIds[0]);
-                        break;
-                    case ICON:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
-                        nms.showFakeEntityItem(player, getLocation(), HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
-                        nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
-                        break;
-                    case ENTITY:
-                        EntityType entityType = new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType();
-                        if (entityType == null || !DecentEntityType.isAllowed(entityType)) break;
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
+                S.async(() -> {
+                    switch (type) {
+                        case TEXT:
+                            nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
+                            nms.updateFakeEntityCustomName(player, getText(player, true), entityIds[0]);
+                            break;
+                        case HEAD: case SMALLHEAD:
+                            nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
+                            ItemStack itemStack = PAPI.containsPlaceholders(getItem().getContent()) ? HologramItem.parseItemStack(getItem().getContent(), player) : getItem().parse();
+                            nms.helmetFakeEntity(player, itemStack, entityIds[0]);
+                            break;
+                        case ICON:
+                            nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
+                            nms.showFakeEntityItem(player, getLocation(), HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
+                            nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
+                            break;
+                        case ENTITY:
+                            EntityType entityType = new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType();
+                            if (entityType == null || !DecentEntityType.isAllowed(entityType)) break;
+                            nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
 
-                        if (entity.getType().isAlive()) {
-                            nms.showFakeEntityLiving(player, getLocation(), entityType, entityIds[1]);
-                        } else {
-                            nms.showFakeEntity(player, getLocation(), entityType, entityIds[1]);
-                        }
-                        nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
-                        break;
-                    default: break;
-                }
+                            if (entity.getType().isAlive()) {
+                                nms.showFakeEntityLiving(player, getLocation(), entityType, entityIds[1]);
+                            } else {
+                                nms.showFakeEntity(player, getLocation(), entityType, entityIds[1]);
+                            }
+                            nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
+                            break;
+                        default: break;
+                    }
+                });
                 viewers.add(player.getUniqueId());
             }
         }
@@ -338,9 +343,15 @@ public class HologramLine extends HologramObject {
         for (Player player : playerList) {
             if (!isVisible(player) || !isInUpdateRange(player)) continue;
             if (HologramLineType.TEXT.equals(type)) {
-                nms.updateFakeEntityCustomName(player, getText(player, true), entityIds[0]);
+                UUID uuid = player.getUniqueId();
+                String lastText = lastTextMap.get(uuid);
+                String text = getText(player, true);
+                if (!text.equals(lastText)) {
+                    lastTextMap.put(uuid, text);
+                    S.async(() -> nms.updateFakeEntityCustomName(player, text, entityIds[0]));
+                }
             } else if (HologramLineType.HEAD.equals(type) || HologramLineType.SMALLHEAD.equals(type)) {
-                nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
+                S.async(() -> nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]));
             }
         }
     }
@@ -355,9 +366,10 @@ public class HologramLine extends HologramObject {
         for (Player player : playerList) {
             if (!isVisible(player) || !isInUpdateRange(player)) continue;
             if (!HologramLineType.ENTITY.equals(type)) {
-                NMS.getInstance().teleportFakeEntity(player, getLocation(), entityIds[0]);
+                S.async(() -> NMS.getInstance().teleportFakeEntity(player, getLocation(), entityIds[0]));
             } else {
-                this.hide(); this.show();
+                this.hide();
+                this.show();
             }
         }
     }
@@ -369,7 +381,13 @@ public class HologramLine extends HologramObject {
         for (Player player : playerList) {
             if (!isVisible(player) || !isInUpdateRange(player)) continue;
             if (HologramLineType.TEXT.equals(type)) {
-                nms.updateFakeEntityCustomName(player, getText(player, false), entityIds[0]);
+                UUID uuid = player.getUniqueId();
+                String lastText = lastTextMap.get(uuid);
+                String text = getText(player, false);
+                if (!text.equals(lastText)) {
+                    lastTextMap.put(uuid, text);
+                    S.async(() -> nms.updateFakeEntityCustomName(player, text, entityIds[0]));
+                }
             }
         }
     }
@@ -382,7 +400,7 @@ public class HologramLine extends HologramObject {
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (isVisible(player)) {
-                NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]);
+                S.async(() -> NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]));
                 viewers.remove(player.getUniqueId());
             }
         }

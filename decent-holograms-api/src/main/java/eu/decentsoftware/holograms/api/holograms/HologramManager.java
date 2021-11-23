@@ -54,7 +54,7 @@ public class HologramManager {
 		HologramLine line = new HologramLine(null, location, content);
 		temporaryLines.add(line);
 		line.show();
-		S.async(() -> {
+		S.sync(() -> {
 			line.destroy();
 			temporaryLines.remove(line);
 		}, duration);
@@ -75,7 +75,7 @@ public class HologramManager {
 	}
 
 	public void onQuit(Player player) {
-		S.async(() -> Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player)));
+		Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class HologramManager {
 	 */
 	public Hologram removeHologram(String name) {
 		Hologram hologram = hologramMap.remove(name);
-		S.async(hologram::delete);
+		hologram.delete();
 		return hologram;
 	}
 

@@ -34,7 +34,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
-        S.async(() -> Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player)));
+        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
     }
 
 }
