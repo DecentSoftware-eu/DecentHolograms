@@ -32,9 +32,7 @@ public class HolographicDisplaysConvertor implements IConvertor {
 			Common.log("Invalid file! Need 'database.yml'");
 			return false;
 		}
-
-		Common.log(file.getAbsolutePath());
-
+//		Common.log(file.getAbsolutePath());
 		int count = 0;
 		Configuration config = new Configuration(PLUGIN.getPlugin(), file);
 		for (String name : config.getKeys(false)) {

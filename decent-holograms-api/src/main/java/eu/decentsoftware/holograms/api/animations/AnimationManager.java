@@ -97,7 +97,7 @@ public class AnimationManager {
     }
 
     private void loadCustomAnimations() {
-        String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/animations", "\\w+\\.yml", true);
+        String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/animations", "\\S+\\.yml", true);
         if (fileNames == null || fileNames.length == 0) return;
 
         int counter = 0;

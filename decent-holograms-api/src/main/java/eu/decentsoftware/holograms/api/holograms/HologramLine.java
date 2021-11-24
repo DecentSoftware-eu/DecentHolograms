@@ -102,12 +102,12 @@ public class HologramLine extends HologramObject {
      */
 
     private final HologramPage parent;
-    private HologramLineType type = HologramLineType.UNKNOWN;
-    private int[] entityIds = new int[256];
-    private double offsetX = 0.0D, offsetY = 0.0D, offsetZ = 0.0D;
-    private double height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
     private final Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
     private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
+    private HologramLineType type;
+    private int[] entityIds = new int[256];
+    private double offsetX = 0.0D, offsetY = 0.0D, offsetZ = 0.0D;
+    private double height;
     private String content;
     private String text;
     private HologramItem item;
@@ -124,6 +124,8 @@ public class HologramLine extends HologramObject {
         this.entityIds[0] = nms.getFreeEntityId();
         this.entityIds[1] = nms.getFreeEntityId();
         this.content = content;
+        this.type = HologramLineType.UNKNOWN;
+        this.height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
         this.parseContent();
     }
 
