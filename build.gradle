@@ -44,6 +44,15 @@ javadoc {
     options.addStringOption('charSet', 'UTF-8')
 }
 
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            from components.java
+            artifactId 'decentholograms'
+        }
+    }
+}
+
 processResources {
     def props = [version: version]
     inputs.properties props
