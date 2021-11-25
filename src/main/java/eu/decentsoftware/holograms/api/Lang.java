@@ -147,6 +147,13 @@ public class Lang {
 				"https://www.spigotmc.org/resources/96927/"
 		);
 	}
+
+	public static void sendUpdateMessage(CommandSender sender) {
+		Common.tell(sender,
+				"\n&fA new version of &3DecentHolograms &7is available. Download it from: %s",
+				"https://www.spigotmc.org/resources/96927/"
+		);
+	}
 	
 	public static List<String> getHologramInfo(Hologram hologram) {
 		List<String> info = new ArrayList<>();

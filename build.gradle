@@ -1,53 +1,70 @@
-defaultTasks 'build'
-
-allprojects {
-    group 'eu.decentsoftware.holograms'
-    version '2.0.7'
-    description 'Lightweight yet very powerful hologram plugin with many features and configuration options.'
+plugins {
+    id "com.github.johnrengelman.shadow" version "4.0.4"
 }
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven-publish'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+defaultTasks 'build'
 
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
+group 'eu.decentsoftware.holograms'
+version '2.0.7'
+description 'Lightweight yet very powerful hologram plugin with many features and configuration options.'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://repo.codemc.io/repository/nms/' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.10.9'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.jetbrains:annotations:16.0.2'
+    annotationProcessor 'org.jetbrains:annotations:16.0.2'
+
+    implementation 'org.bstats:bstats-bukkit:2.2.1'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+javadoc {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
     }
-
-    tasks.withType(Javadoc) {
-        failOnError false
-        options.addStringOption('Xdoclint:none', '-quiet')
-        options.addStringOption('encoding', 'UTF-8')
-        options.addStringOption('charSet', 'UTF-8')
+    filesMatching('version.properties') {
+        expand props
     }
+}
 
-    repositories {
-        mavenCentral()
-        maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url = 'https://repo.codemc.io/repository/nms/' }
+jar {
+    dependsOn configurations.runtimeClasspath
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archivesBaseName = rootProject.name
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     }
+}
 
-    processResources {
-        def props = [version: version]
-        inputs.properties props
-        filteringCharset 'UTF-8'
-        filesMatching('plugin.yml') {
-            expand props
-        }
-        filesMatching('version.properties') {
-            expand props
-        }
-    }
-
-    jar {
-        dependsOn configurations.runtimeClasspath
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        archivesBaseName = rootProject.name
-        from {
-            configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-        }
-    }
+shadowJar {
+    relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
 }

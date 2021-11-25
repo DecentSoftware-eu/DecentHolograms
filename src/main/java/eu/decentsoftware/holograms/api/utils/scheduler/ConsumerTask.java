@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.scheduler;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.api.utils.Common;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;

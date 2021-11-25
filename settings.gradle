@@ -17,6 +17,3 @@ pluginManagement {
 }
 
 rootProject.name = 'DecentHolograms'
-
-include 'decent-holograms-api'
-include 'decent-holograms-plugin'

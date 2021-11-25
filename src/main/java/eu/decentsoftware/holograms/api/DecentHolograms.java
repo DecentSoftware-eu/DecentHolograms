@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
+import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
@@ -29,6 +30,7 @@ public final class DecentHolograms {
 	private AnimationManager animationManager;
 	private PacketListener packetListener;
 	private File dataFolder;
+	private boolean updateAvailable;
 
 	/*
 	 *	Constructors
@@ -60,6 +62,17 @@ public final class DecentHolograms {
 		// Setup metrics
 		Metrics metrics = new Metrics(plugin, 12797);
 		metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
+
+		// Setup update checker
+		if (Settings.CHECK_UPDATES.getValue()) {
+			UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
+			updateChecker.getVersion((ver) -> {
+				if (!ver.equals(Settings.getAPIVersion())) {
+					Lang.sendUpdateMessage(Bukkit.getConsoleSender());
+					updateAvailable = true;
+				}
+			});
+		}
 
 		BungeeUtils.init();
 	}
