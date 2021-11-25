@@ -17,4 +17,8 @@ public class Phrase extends ConfigValue<String> {
 		Common.tell(sender, getValue().replace("{prefix}", Common.PREFIX), args);
 	}
 
+	@Override
+	public String getValue() {
+		return super.getValue().replace("{prefix}", Common.PREFIX);
+	}
 }
