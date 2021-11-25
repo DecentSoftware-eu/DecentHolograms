@@ -1,9 +1,9 @@
 plugins {
+    id 'java-library'
     id "com.github.johnrengelman.shadow" version "4.0.4"
+    id 'maven-publish'
+    id 'java'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
 
 defaultTasks 'build'
 
