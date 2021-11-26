@@ -8,8 +8,9 @@ A lightweight but powerful hologram plugin with many features and configuration 
 # Support
 We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
 
-# API
+# API [![](https://jitpack.io/v/decentsoftware-eu/decentholograms.svg)](https://jitpack.io/#decentsoftware-eu/decentholograms)
 How to get DecentHolograms API into your project:
+Replace TAG with the current version of DecentHolograms. (Latest release)
 
 **Gradle:**
 ```java
