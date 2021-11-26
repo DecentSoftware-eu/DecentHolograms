@@ -269,11 +269,10 @@ public class HologramLine extends HologramObject {
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
                 string = PAPI.setPlaceholders(player, string);
             }
-            playerTextMap.put(uuid, string
-                    .replace("{player}", player.getName())
-                    .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() : 1))
-                    .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1))
-            );
+            string = string.replace("{player}", player.getName())
+                    .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1))
+                    .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+            playerTextMap.put(uuid, string);
         }
         // Replace Animations
         if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
