@@ -7,6 +7,7 @@ import eu.decentsoftware.holograms.api.commands.CommandValidator;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
@@ -46,7 +47,7 @@ public abstract class ActionType {
 			Validate.notNull(player);
 
 			String string = String.join(" ", args);
-			Common.tell(player, string.replace("{player}", player.getName()));
+			Common.tell(player, PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
 			return true;
 		}
 	};
@@ -59,7 +60,7 @@ public abstract class ActionType {
 			String string = String.join(" ", args);
 			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
 				//
-				player.chat(string.replace("{player}", player.getName()));
+				player.chat(PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
 			});
 			return true;
 		}
@@ -73,7 +74,7 @@ public abstract class ActionType {
 			String string = String.join(" ", args);
 			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
 				//
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string.replace("{player}", player.getName()));
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
 			});
 			return true;
 		}
