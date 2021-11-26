@@ -59,7 +59,7 @@ public abstract class ActionType {
 			String string = String.join(" ", args);
 			Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
 				//
-				Bukkit.dispatchCommand(player, string.replace("{player}", player.getName()));
+				player.chat(string.replace("{player}", player.getName()));
 			});
 			return true;
 		}
