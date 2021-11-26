@@ -10,6 +10,7 @@ We are mostly active on Discord so the best way to get support is joining our [D
 
 # API [![](https://jitpack.io/v/decentsoftware-eu/decentholograms.svg)](https://jitpack.io/#decentsoftware-eu/decentholograms)
 How to get DecentHolograms API into your project:
+
 Replace TAG with the current version of DecentHolograms. (Latest release)
 
 **Gradle:**
