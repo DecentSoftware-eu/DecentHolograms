@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @CommandInfo(
-		aliases = {"holograms", "hologram", "dh"},
+		aliases = {"holograms", "hologram", "dh", "holo"},
 		permission = "",
 		usage = "/dh <args>",
 		description = "The main DecentHolograms Command."

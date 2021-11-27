@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
@@ -132,6 +133,47 @@ public class Common {
 
 	public static String removeSpacingChars(String string) {
 		return SPACING_CHARS_REGEX.matcher(string).replaceAll("");
+	}
+
+	/**
+	 * Check whether the given version is higher than the current version.
+	 *
+	 * @param version The version.
+	 * @return Boolean.
+	 */
+	public static boolean isVersionHigher(String version) {
+		if (!version.matches("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(\\d+))?")) {
+			return false;
+		}
+		String current = Settings.getAPIVersion();
+		int[] i1 = splitVersion(version);
+		int[] i2 = splitVersion(current);
+		if (i1 == null || i2 == null) {
+			return false;
+		}
+		return i1[0] > i2[0] // Major version is higher.
+				|| (i1[0] == i2[0] && i1[1] > i2[1]) // Minor version is higher and major is the same.
+				|| (i1[0] == i2[0] && i1[1] == i2[1] && i1[2] > i2[2]); // Major and minor versions are the same and patch is higher.
+	}
+
+	private static int[] splitVersion(String version) {
+		String[] spl = version == null ? null : version.split("\\.");
+		if (spl == null || spl.length < 3) {
+			return new int[0];
+		}
+		int[] arr = new int[spl.length];
+		for (int i = 0; i < spl.length; i++) {
+			arr[i] = parseInt(spl[i]);
+		}
+		return arr;
+	}
+
+	private static int parseInt(String string) {
+		try {
+			return Integer.parseInt(string);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 
 }

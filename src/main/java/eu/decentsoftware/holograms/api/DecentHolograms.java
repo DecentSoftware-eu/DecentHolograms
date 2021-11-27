@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
@@ -72,7 +73,7 @@ public final class DecentHolograms {
 		if (Settings.CHECK_UPDATES.getValue()) {
 			UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
 			updateChecker.getVersion((ver) -> {
-				if (!ver.equals(Settings.getAPIVersion())) {
+				if (Common.isVersionHigher(ver)) {
 					Lang.sendUpdateMessage(Bukkit.getConsoleSender());
 					updateAvailable = true;
 				}
