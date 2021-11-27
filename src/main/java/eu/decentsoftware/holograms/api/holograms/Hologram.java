@@ -255,6 +255,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Get hologram size. (Number of pages)
+     *
      * @return Number of pages in this hologram.
      */
     public int size() {
@@ -282,6 +283,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Create a new instance of this hologram object that's identical to this one.
+     *
      * @param location Location of the clone.
      * @return Cloned instance of this line.
      */
@@ -325,6 +327,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Show this hologram for given player on a given page.
+     *
      * @param player Given player.
      * @param pageIndex Given page.
      */
@@ -431,6 +434,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Check whether the given player is in display range of this hologram object.
+     *
      * @param player Given player.
      * @return Boolean whether the given player is in display range of this hologram object.
      */
@@ -442,9 +446,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Check whether the given player is in update range of this hologram object.
+     *
      * @param player Given player.
      * @return Boolean whether the given player is in update range of this hologram object.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(Player player) {
         return  player != null &&
                 player.getWorld().getName().equals(location.getWorld().getName()) &&

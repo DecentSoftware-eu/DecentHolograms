@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.utils.scheduler;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.utils.DExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.scheduler.BukkitTask;
@@ -30,7 +31,7 @@ public class S {
         try {
             Bukkit.getScheduler().runTaskAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable);
         } catch (IllegalPluginAccessException e) {
-            new Thread(runnable).start();
+            DExecutor.execute(runnable);
         }
     }
 
@@ -38,7 +39,7 @@ public class S {
         try {
             Bukkit.getScheduler().runTaskLaterAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
         } catch (IllegalPluginAccessException e) {
-            new Thread(runnable).start();
+            DExecutor.execute(runnable);
         }
     }
 

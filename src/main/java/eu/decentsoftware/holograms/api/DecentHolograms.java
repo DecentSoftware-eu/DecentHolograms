@@ -86,6 +86,7 @@ public final class DecentHolograms {
 		packetListener.destroy();
 		hologramManager.destroy();
 		featureManager.destroy();
+		ticker.destroy();
 
 		BungeeUtils.destroy();
 	}

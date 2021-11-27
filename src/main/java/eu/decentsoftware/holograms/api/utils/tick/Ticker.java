@@ -8,13 +8,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Ticker {
 
+    private final int taskId;
+    private final AtomicLong ticks;
     private final DList<ITicked> tickedObjects;
     private final DList<ITicked> newTickedObjects;
     private final DList<String> removeTickedObjects;
-    private final AtomicLong ticks;
     private volatile boolean performingTick;
-    private final int taskId;
 
+    /**
+     * Default constructor. Ticker is initialized and started.
+     */
     public Ticker() {
         this.tickedObjects = new DList<>(1024);
         this.newTickedObjects = new DList<>(64);
@@ -26,6 +29,9 @@ public class Ticker {
         }, 1L).getTaskId();
     }
 
+    /**
+     * Stop the ticker and unregister all ticked objects.
+     */
     public void destroy() {
         S.stopTask(taskId);
         tickedObjects.clear();
@@ -33,6 +39,11 @@ public class Ticker {
         removeTickedObjects.clear();
     }
 
+    /**
+     * Register a new ticked object.
+     *
+     * @param ticked The ticked object.
+     */
     public void register(ITicked ticked) {
         if (tickedObjects.contains(ticked)) return;
         synchronized (newTickedObjects) {
@@ -42,6 +53,11 @@ public class Ticker {
         }
     }
 
+    /**
+     * Unregister a ticked object.
+     *
+     * @param id The id of the ticked object.
+     */
     public void unregister(String id) {
         synchronized (removeTickedObjects) {
             if (!removeTickedObjects.contains(id)) {

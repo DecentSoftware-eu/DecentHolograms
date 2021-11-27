@@ -48,6 +48,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Spawn a temporary line that is going to disappear after the given duration.
+	 *
 	 * @param location Location of the line.
 	 * @param content Content of the line.
 	 * @param duration Duration to disappear after. (in ticks)
@@ -57,7 +58,7 @@ public class HologramManager extends Ticked {
 		HologramLine line = new HologramLine(null, location, content);
 		temporaryLines.add(line);
 		line.show();
-		S.sync(() -> {
+		S.async(() -> {
 			line.destroy();
 			temporaryLines.remove(line);
 		}, duration);
@@ -111,6 +112,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Show all registered holograms for the given player.
+	 *
 	 * @param player Given player.
 	 */
 	public void showAll(Player player) {
@@ -124,6 +126,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Hide all registered holograms for the given player.
+	 *
 	 * @param player Given player.
 	 */
 	public void hideAll(Player player) {
@@ -137,6 +140,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Check whether a hologram with the given name is registered in this manager.
+	 *
 	 * @param name Name of the hologram.
 	 * @return Boolean whether a hologram with the given name is registered in this manager.
 	 */
@@ -146,6 +150,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Register a new hologram.
+	 *
 	 * @param hologram New hologram.
 	 * @return The new hologram or null if it wasn't registered successfully.
 	 */
@@ -155,6 +160,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Get hologram by name.
+	 *
 	 * @param name Name of the hologram.
 	 * @return The hologram or null if it wasn't found.
 	 */
@@ -164,6 +170,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Remove hologram by name.
+	 *
 	 * @param name Name of the hologram.
 	 * @return The hologram or null if it wasn't found.
 	 */
@@ -175,6 +182,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Get the names of all registered holograms.
+	 *
 	 * @return Set of the names of all registered holograms.
 	 */
 	public Set<String> getHologramNames() {
@@ -183,6 +191,7 @@ public class HologramManager extends Ticked {
 
 	/**
 	 * Get all registered holograms.
+	 *
 	 * @return Collection of all registered holograms.
 	 */
 	public Collection<Hologram> getHolograms() {

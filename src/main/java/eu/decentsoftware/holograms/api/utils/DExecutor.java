@@ -9,10 +9,17 @@ import java.util.concurrent.Executors;
 
 public class DExecutor {
 
+    private static boolean initialized = false;
     private static ExecutorService service;
     private static int threadId;
 
+    /**
+     * Initialize DExecutor. This method will set up ExecutorService for DecentHolograms.
+     *
+     * @param threads The amount of threads in the service.
+     */
     public static void init(int threads) {
+        if (initialized) return;
         threadId = 0;
         service = Executors.newFixedThreadPool(threads, (runnable) -> {
             Thread thread = new Thread(runnable);
@@ -24,27 +31,56 @@ public class DExecutor {
             });
             return thread;
         });
+        initialized = true;
     }
 
+    /**
+     * Execute given runnables using the ExecutorService.
+     *
+     * @param runnables the runnables.
+     */
     public static void schedule(Runnable... runnables) {
+        if (!initialized) return;
         if (runnables == null || runnables.length == 0) {
             return;
         }
         create(runnables.length).queue(runnables).complete();
     }
 
+    /**
+     * Create new instance of DExecutor that handles scheduled runnables.
+     *
+     * @param estimate The estimated amount of runnables.
+     * @return The new instance.
+     */
     public static DExecutor create(int estimate) {
+        if (!initialized) return null;
         return new DExecutor(service, estimate);
+    }
+
+    /**
+     * Execute a runnable using the ExecutorService.
+     *
+     * @param runnable The runnable.
+     */
+    public static void execute(Runnable runnable) {
+        service.execute(runnable);
     }
 
     private final ExecutorService executor;
     private final DList<CompletableFuture<Void>> running;
 
-    public DExecutor(ExecutorService executor, int estimate) {
+    DExecutor(ExecutorService executor, int estimate) {
         this.executor = executor;
         this.running = new DList<>(estimate);
     }
 
+    /**
+     * Schedule a new runnable.
+     *
+     * @param r The runnable.
+     * @return CompletableFuture executing the runnable.
+     */
     public CompletableFuture<Void> queue(Runnable r) {
         synchronized(running) {
             CompletableFuture<Void> c = CompletableFuture.runAsync(r, executor);
@@ -53,6 +89,12 @@ public class DExecutor {
         }
     }
 
+    /**
+     * Schedule more runnables.
+     *
+     * @param runnables The runnables.
+     * @return This instance. (For chaining)
+     */
     public DExecutor queue(Runnable... runnables) {
         if (runnables == null || runnables.length == 0) {
             return this;
@@ -67,6 +109,9 @@ public class DExecutor {
         return this;
     }
 
+    /**
+     * Complete all scheduled runnables.
+     */
     public void complete() {
         synchronized(running) {
             try {

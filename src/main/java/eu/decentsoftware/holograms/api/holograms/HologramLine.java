@@ -13,7 +13,6 @@ import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -413,6 +412,7 @@ public class HologramLine extends HologramObject {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(Player player) {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
