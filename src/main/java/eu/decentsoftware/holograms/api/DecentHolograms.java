@@ -9,7 +9,9 @@ import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
+import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
+import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
@@ -29,6 +31,7 @@ public final class DecentHolograms {
 	private FeatureManager featureManager;
 	private AnimationManager animationManager;
 	private PacketListener packetListener;
+	private Ticker ticker;
 	private File dataFolder;
 	private boolean updateAvailable;
 
@@ -49,7 +52,9 @@ public final class DecentHolograms {
 		NMS.init();
 		Settings.reload();
 		Lang.reload();
+		DExecutor.init(Runtime.getRuntime().availableProcessors());
 
+		ticker = new Ticker();
 		hologramManager = new HologramManager();
 		commandManager = new CommandManager();
 		featureManager = new FeatureManager();

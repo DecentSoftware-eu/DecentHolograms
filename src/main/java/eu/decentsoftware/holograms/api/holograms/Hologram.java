@@ -11,21 +11,22 @@ import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
-import eu.decentsoftware.holograms.api.utils.scheduler.ConsumerTask;
+import eu.decentsoftware.holograms.api.utils.tick.ITicked;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class Hologram extends UpdatingHologramObject {
+public class Hologram extends UpdatingHologramObject implements ITicked {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 
@@ -52,7 +53,7 @@ public class Hologram extends UpdatingHologramObject {
      */
 
     @SuppressWarnings("unchecked")
-    public static Hologram fromFile(final String fileName) {
+    public static @Nullable Hologram fromFile(final String fileName) {
         final Configuration config = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "holograms/" + fileName);
 
         // Get hologram location
@@ -148,6 +149,7 @@ public class Hologram extends UpdatingHologramObject {
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
     protected final List<HologramPage> pages = Collections.synchronizedList(new ArrayList<>());
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN.getValue();
+    private final AtomicInteger tickCounter;
 
     /*
      *	Constructors
@@ -171,25 +173,36 @@ public class Hologram extends UpdatingHologramObject {
         this.config = config;
         this.enabled = enabled;
         this.saveToFile = this.config != null;
+        this.tickCounter = new AtomicInteger(getUpdateInterval());
         this.addPage();
-        this.updateTask = new ConsumerTask<>(DECENT_HOLOGRAMS.getPlugin(), this, 0L, 1L);
-        this.updateTask.addPart("update", new Consumer<Hologram>() {
-            int counter = 0;
-
-            @Override
-            public void accept(Hologram hologram) {
-                if (counter == hologram.getUpdateInterval()) {
-                    hologram.updateAll();
-                    counter = 0;
-                    return;
-                }
-                hologram.updateAnimationsAll();
-                counter++;
-            }
-        });
-        this.startUpdate();
+        this.register();
 
         CACHED_HOLOGRAMS.put(this.name, this);
+    }
+
+    /*
+     *	Tick
+     */
+
+    @Override
+    public String getId() {
+        return getName();
+    }
+
+    @Override
+    public long getInterval() {
+        return 1L;
+    }
+
+    @Override
+    public void tick() {
+        if (tickCounter.get() == getUpdateInterval()) {
+            updateAll();
+            tickCounter.set(0);
+            return;
+        }
+        updateAnimationsAll();
+        tickCounter.incrementAndGet();
     }
 
     /*
@@ -223,10 +236,12 @@ public class Hologram extends UpdatingHologramObject {
     public void enable() {
         super.enable();
         this.showAll();
+        this.register();
     }
 
     @Override
     public void disable() {
+        this.unregister();
         this.hideAll();
         super.disable();
     }

@@ -6,36 +6,36 @@ import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
 import eu.decentsoftware.holograms.api.animations.text.*;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
-import eu.decentsoftware.holograms.api.utils.scheduler.ConsumerTask;
-import lombok.Getter;
+import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import org.apache.commons.lang.Validate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AnimationManager {
+public class AnimationManager extends Ticked {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private static final Pattern ANIMATION_PATTERN = Pattern.compile("[<{]#?ANIM:(\\w+)(:\\S+)?[}>](.*?)[<{]/#?ANIM[}>]");
     private final Map<String, TextAnimation> animationMap = new HashMap<>();
-    private final ConsumerTask<AnimationManager> animationTask;
-
-    @Getter
-    private long step = 0;
+    private final AtomicLong step;
 
     public AnimationManager() {
+        super(1L);
+        this.step = new AtomicLong(0);
         this.reload();
+    }
 
-        this.animationTask = new ConsumerTask<>(DECENT_HOLOGRAMS.getPlugin(), this, 0L, 1L);
-        this.animationTask.addPart("animation_update", (animationManager) -> animationManager.step++);
-        this.animationTask.restart();
+    @Override
+    public void tick() {
+        step.incrementAndGet();
     }
 
     public void destroy() {
-        this.animationTask.stop();
+        this.unregister();
         this.animationMap.clear();
     }
 
@@ -47,6 +47,11 @@ public class AnimationManager {
         this.registerAnimation(new ScrollAnimation());
         this.registerAnimation(new ColorsAnimation());
         this.loadCustomAnimations();
+        this.register();
+    }
+
+    public long getStep() {
+        return step.get();
     }
 
     public String parseTextAnimations(String string) {
@@ -60,7 +65,7 @@ public class AnimationManager {
 
             TextAnimation animation = getAnimation(animationName);
             if (animation != null) {
-                string = string.replace(matcher.group(), animation.animate(text, step, args == null ? null : args.substring(1).split(",")));
+                string = string.replace(matcher.group(), animation.animate(text, getStep(), args == null ? null : args.substring(1).split(",")));
                 matcher = ANIMATION_PATTERN.matcher(string);
             }
         }
@@ -68,7 +73,7 @@ public class AnimationManager {
         if (string.contains("&u")) {
             TextAnimation animation = getAnimation("colors");
             if (animation != null) {
-                string = string.replace("&u", animation.animate("", step));
+                string = string.replace("&u", animation.animate("", getStep()));
             }
         }
 

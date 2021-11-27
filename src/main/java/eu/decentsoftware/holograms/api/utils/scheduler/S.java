@@ -4,17 +4,26 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.scheduler.BukkitTask;
 
 public class S {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 
+    public static void stopTask(int id) {
+        Bukkit.getScheduler().cancelTask(id);
+    }
+
     public static void sync(Runnable runnable) {
         Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), runnable);
     }
 
-    public static void sync(Runnable runnable, long delay) {
-        Bukkit.getScheduler().runTaskLater(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
+    public static BukkitTask sync(Runnable runnable, long delay) {
+        return Bukkit.getScheduler().runTaskLater(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
+    }
+
+    public static void syncTask(Runnable runnable, long interval) {
+        Bukkit.getScheduler().runTaskTimer(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
     public static void async(Runnable runnable) {
@@ -31,6 +40,10 @@ public class S {
         } catch (IllegalPluginAccessException e) {
             new Thread(runnable).start();
         }
+    }
+
+    public static BukkitTask asyncTask(Runnable runnable, long interval) {
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
 }

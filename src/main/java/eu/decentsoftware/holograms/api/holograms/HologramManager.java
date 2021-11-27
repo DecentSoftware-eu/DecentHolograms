@@ -5,8 +5,8 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
-import eu.decentsoftware.holograms.api.utils.scheduler.RunnableTask;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
+import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,29 +18,32 @@ import java.util.logging.Level;
 /**
  * This class represents a Manager for handling holograms.
  */
-public class HologramManager {
+public class HologramManager extends Ticked {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 	private final Map<String, Hologram> hologramMap = new ConcurrentHashMap<>();
 	private final Set<HologramLine> temporaryLines = Collections.synchronizedSet(new HashSet<>());
 	private final Set<UUID> clickCooldowns = Collections.synchronizedSet(new HashSet<>());
-	private final RunnableTask displayUpdateTask;
 
 	public HologramManager() {
-		this.displayUpdateTask = new RunnableTask(DecentHologramsAPI.get().getPlugin(), 0L, 5L);
-		this.displayUpdateTask.addPart("display_update", () -> Hologram.getCachedHolograms().forEach((hologram) -> {
+		super(20L);
+		// Reload when worlds are ready
+		S.sync(this::reload);
+	}
+
+	@Override
+	public void tick() {
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
+			if (!hologram.isEnabled()) return;
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (hologram.isEnabled() && !hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
+				if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
 					hologram.show(player, hologram.getPlayerPage(player));
-				} else if (hologram.isVisible(player) && !(hologram.isEnabled() && hologram.canShow(player) && hologram.isInDisplayRange(player))) {
+				} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
 					hologram.hide(player);
 				}
 			}
 			clickCooldowns.clear();
-		}));
-
-		// Reload when worlds are ready
-		S.sync(this::reload);
+		}
 	}
 
 	/**
@@ -62,6 +65,10 @@ public class HologramManager {
 	}
 
 	public boolean onClick(Player player, int entityId, ClickType clickType) {
+		if (player == null || clickType == null) {
+			return false;
+		}
+
 		UUID uuid = player.getUniqueId();
 		if (clickCooldowns.contains(uuid)) return false;
 		for (Hologram hologram : getHolograms()) {
@@ -84,14 +91,14 @@ public class HologramManager {
 	public void reload() {
 		this.destroy();
 		this.loadHolograms();
-		this.displayUpdateTask.restart();
+		this.register();
 	}
 
 	/**
 	 * Destroy this manager and all the holograms.
 	 */
 	public void destroy() {
-		this.displayUpdateTask.stop();
+		this.unregister();
 		if (!hologramMap.isEmpty()) {
 			hologramMap.values().forEach(Hologram::destroy);
 			hologramMap.clear();
