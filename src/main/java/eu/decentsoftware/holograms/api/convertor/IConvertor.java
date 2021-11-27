@@ -9,12 +9,14 @@ public interface IConvertor {
 
 	/**
 	 * Automatically find a file to convert the holograms from and convert them.
+	 *
 	 * @return Boolean whether the operation was successful.
 	 */
 	boolean convert();
 
 	/**
 	 * Convert holograms from the given file.
+	 *
 	 * @param file Given file.
 	 * @return Boolean whether the operation was successful.
 	 */
@@ -22,6 +24,7 @@ public interface IConvertor {
 
 	/**
 	 * Convert holograms from all the given files.
+	 *
 	 * @param files Given files.
 	 * @return Boolean whether the operation was successful.
 	 */

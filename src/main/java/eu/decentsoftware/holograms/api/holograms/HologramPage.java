@@ -47,6 +47,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get the current parent hologram of this page.
+     *
      * @return the current parent hologram of this page.
      */
     public Hologram getParent() {
@@ -55,6 +56,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get height of this hologram in blocks.
+     *
      * @return height of this hologram in blocks.
      */
     public double getHeight() {
@@ -84,6 +86,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get hologram size. (Number of lines)
+     *
      * @return Number of lines in this hologram.
      */
     public int size() {
@@ -144,6 +147,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Add a new line to the bottom of this hologram page.
+     *
      * @param line New line.
      * @return Boolean whether the operation was successful.
      */
@@ -156,6 +160,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Insert a new line into this hologram page.
+     *
      * @param index Index of the new line.
      * @param line New line.
      * @return Boolean whether the operation was successful.
@@ -169,6 +174,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Set new content of a line in this hologram page.
+     *
      * @param index Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
@@ -187,6 +193,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get line on a specified index in this hologram page.
+     *
      * @param index Index of the line.
      * @return The HologramLine or null if it wasn't found.
      */
@@ -196,6 +203,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Remove a line from this hologram page.
+     *
      * @param index Index of the line.
      * @return The removed line or null if it wasn't found.
      */
@@ -210,6 +218,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Swap two lines in this hologram page.
+     *
      * @param index1 First line.
      * @param index2 Second line.
      * @return Boolean whether the operation was successful.
@@ -225,6 +234,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get the Location at the bottom of this hologram page that's available for a new line.
+     *
      * @return the Location at the bottom of this hologram page that's available for a new line.
      */
     public Location getNextLineLocation() {
@@ -237,6 +247,7 @@ public class HologramPage extends FlagHolder {
 
     /**
      * Get the List of all lines in this hologram page.
+     *
      * @return List of all lines in this hologram page.
      */
     public List<HologramLine> getLines() {

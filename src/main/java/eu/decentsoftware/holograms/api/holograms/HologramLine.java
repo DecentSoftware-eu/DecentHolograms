@@ -231,6 +231,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Create a new instance of hologram line that's identical to this one.
+     *
      * @param location Location of the clone.
      * @return Cloned instance of this line.
      */
@@ -248,6 +249,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Get the type of this line.
+     *
      * @return the type of this line.
      */
     public HologramLineType getType() {
@@ -292,6 +294,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Show this line for given players.
+     *
      * @param players Given players.
      */
     public void show(Player... players) {
@@ -336,6 +339,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Update this line for given players.
+     *
      * @param players Given players.
      */
     public void update(Player... players) {
@@ -360,6 +364,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Update the location of this line for given players.
+     *
      * @param players Given players.
      */
     public void updateLocation(Player... players) {
@@ -396,6 +401,7 @@ public class HologramLine extends HologramObject {
 
     /**
      * Hide this line for given players.
+     *
      * @param players Given players.
      */
     public void hide(Player... players) {

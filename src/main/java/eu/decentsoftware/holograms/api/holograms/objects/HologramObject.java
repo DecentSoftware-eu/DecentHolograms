@@ -68,6 +68,7 @@ public abstract class HologramObject extends FlagHolder {
 
     /**
      * Check whether the given player is allowed to see this hologram object.
+     *
      * @param player Given player.
      * @return Boolean whether the given player is allowed to see this hologram object.
      */
@@ -84,6 +85,7 @@ public abstract class HologramObject extends FlagHolder {
 
     /**
      * Set facing direction of this hologram.
+     *
      * @param facing New facing direction of this hologram.
      */
     public void setFacing(float facing) {
@@ -102,6 +104,7 @@ public abstract class HologramObject extends FlagHolder {
 
     /**
      * Get List of all players that currently see this hologram.
+     *
      * @return List of all players that currently see this hologram.
      */
     public Set<UUID> getViewers() {
@@ -110,6 +113,7 @@ public abstract class HologramObject extends FlagHolder {
 
     /**
      * Get List of all players that currently see this hologram.
+     *
      * @return List of all players that currently see this hologram.
      */
     public List<Player> getViewerPlayers() {
@@ -121,6 +125,7 @@ public abstract class HologramObject extends FlagHolder {
 
     /**
      * Check whether this hologram object is visible to the given player.
+     *
      * @param player Given player.
      * @return Boolean whether this hologram object is visible to the given player.
      */

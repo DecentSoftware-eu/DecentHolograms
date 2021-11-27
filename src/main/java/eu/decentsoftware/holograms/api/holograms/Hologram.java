@@ -335,7 +335,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         if (!isEnabled()) return false;
         HologramPage page = getPage(pageIndex);
         if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
-            if (isVisible(player)) hide(player);
+            if (isVisible(player)) {
+                hide(player);
+            }
             page.getLines().forEach(line -> line.show(player));
             // Add player to viewers
             viewerPages.put(player.getUniqueId(), pageIndex);
@@ -348,12 +350,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showAll() {
         if (isEnabled()) {
-            Bukkit.getOnlinePlayers().forEach(player -> this.show(player, getPlayerPage(player)));
+            Bukkit.getOnlinePlayers().forEach(player -> show(player, getPlayerPage(player)));
         }
     }
 
     public void update(Player player) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) return;
+        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) return;
         HologramPage page = getPage(player);
         if (page != null) {
             page.getLines().forEach(line -> line.update(player));
@@ -367,7 +369,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void updateAnimations(Player player) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
+        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
         HologramPage page = getPage(player);
         if (page != null) {
             page.getLines().forEach(line -> line.updateAnimations(player));
@@ -381,7 +383,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void hide(Player player) {
-        if (isEnabled() && isVisible(player)) {
+        if (isVisible(player)) {
             HologramPage page = getPage(player);
             if (page != null) {
                 page.getLines().forEach(line -> line.hide(player));

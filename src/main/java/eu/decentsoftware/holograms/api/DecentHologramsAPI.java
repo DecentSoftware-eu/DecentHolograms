@@ -8,6 +8,7 @@ public final class DecentHologramsAPI {
 
 	/**
 	 * Enable DecentHologramsAPI.
+	 *
 	 * @param plugin Plugin from which it's being enabled.
 	 */
 	public static void onEnable(JavaPlugin plugin) {

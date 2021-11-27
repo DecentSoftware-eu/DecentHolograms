@@ -23,8 +23,8 @@ public class S {
         return Bukkit.getScheduler().runTaskLater(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
     }
 
-    public static void syncTask(Runnable runnable, long interval) {
-        Bukkit.getScheduler().runTaskTimer(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
+    public static BukkitTask syncTask(Runnable runnable, long interval) {
+        return Bukkit.getScheduler().runTaskTimer(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
     public static void async(Runnable runnable) {

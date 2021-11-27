@@ -19,10 +19,10 @@ public class Ticker {
      * Default constructor. Ticker is initialized and started.
      */
     public Ticker() {
+        this.ticks = new AtomicLong(0);
         this.tickedObjects = new DList<>(1024);
         this.newTickedObjects = new DList<>(64);
         this.removeTickedObjects = new DList<>(64);
-        this.ticks = new AtomicLong(0);
         this.performingTick = false;
         this.taskId = S.asyncTask(() -> {
             if (!performingTick) tick();

@@ -34,6 +34,7 @@ public class FeatureManager {
 
 	/**
 	 * Get a feature by name.
+	 *
 	 * @param name Name of the feature.
 	 * @return The feature or null is it wasn't found.
 	 */
@@ -43,6 +44,7 @@ public class FeatureManager {
 
 	/**
 	 * Register a new feature.
+	 *
 	 * @param feature The feature.
 	 * @return The feature or null if it wasn't registered successfully.
 	 */
@@ -52,6 +54,7 @@ public class FeatureManager {
 
 	/**
 	 * Get the names of all registered features.
+	 *
 	 * @return Set of the names of all registered features.
 	 */
 	public Set<String> getFeatureNames() {
@@ -60,6 +63,7 @@ public class FeatureManager {
 
 	/**
 	 * Get all registered features.
+	 *
 	 * @return Collection of all registered features.
 	 */
 	public Collection<AbstractFeature> getFeatures() {

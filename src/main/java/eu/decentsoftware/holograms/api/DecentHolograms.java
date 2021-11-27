@@ -100,6 +100,11 @@ public final class DecentHolograms {
 		featureManager.reload();
 	}
 
+	/**
+	 * Get the data folder for DecentHolograms files.
+	 *
+	 * @return the file.
+	 */
 	public File getDataFolder() {
 		if (dataFolder == null) {
 			dataFolder = new File("plugins/DecentHolograms");
