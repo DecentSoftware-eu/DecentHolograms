@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
  */
 public class GradientPattern implements Pattern {
 
-    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("[<{]#([A-Fa-f0-9]{6})[>}](.*?)[<{]/#([A-Fa-f0-9]{6})[>}]");
+    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("[<{]#([A-Fa-f0-9]{6})[}>](((?![<{]#[A-Fa-f0-9]{6}[}>]).)*)[<{]/#([A-Fa-f0-9]{6})[}>]");
 
     /**
      * Applies a gradient pattern to the provided String.
@@ -24,7 +24,7 @@ public class GradientPattern implements Pattern {
         while (matcher.find()) {
             String start = matcher.group(1);
             String content = matcher.group(2);
-            String end = matcher.group(3);
+            String end = matcher.group(4);
             string = string.replace(matcher.group(), IridiumColorAPI.color(content, new Color(Integer.parseInt(start, 16)), new Color(Integer.parseInt(end, 16))));
         }
         return string;
