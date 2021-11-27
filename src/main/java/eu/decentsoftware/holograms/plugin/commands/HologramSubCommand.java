@@ -812,7 +812,12 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				Player player = Validator.getPlayer(sender);
 				Location playerLocation = player.getLocation();
-				hologram.setLocation(playerLocation);
+				Location location = hologram.getLocation();
+				location.setWorld(playerLocation.getWorld());
+				location.setX(playerLocation.getX());
+				location.setY(playerLocation.getY());
+				location.setZ(playerLocation.getZ());
+				hologram.setLocation(location);
 				hologram.realignLines();
 				hologram.save();
 
