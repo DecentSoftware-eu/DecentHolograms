@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.collection;
 
+import eu.decentsoftware.holograms.api.utils.RandomUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -110,8 +112,7 @@ public class DList<T> extends ArrayList<T> {
     }
 
     public int randomIndex() {
-        int max = lastIndex();
-        return max + (int) (Math.random() * (max + 1));
+        return RandomUtils.randomInt(0, size() - 1);
     }
 
     public boolean hasDuplicates() {

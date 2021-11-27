@@ -85,13 +85,6 @@ public class Ticker {
             }
         }
 
-        // Add new ticked objects
-        synchronized (newTickedObjects) {
-            while (newTickedObjects.hasElements()) {
-                tickedObjects.add(newTickedObjects.pop());
-            }
-        }
-
         // Remove ticked objects
         synchronized(removeTickedObjects) {
             while(removeTickedObjects.hasElements()) {
@@ -102,6 +95,13 @@ public class Ticker {
                         break;
                     }
                 }
+            }
+        }
+
+        // Add new ticked objects
+        synchronized (newTickedObjects) {
+            while (newTickedObjects.hasElements()) {
+                tickedObjects.add(newTickedObjects.pop());
             }
         }
         performingTick = false;

@@ -42,8 +42,8 @@ public class HologramManager extends Ticked {
 					hologram.hide(player);
 				}
 			}
-			clickCooldowns.clear();
 		}
+		clickCooldowns.clear();
 	}
 
 	/**
