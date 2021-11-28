@@ -7,7 +7,6 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -35,7 +34,7 @@ public class HologramManager extends Ticked {
 	public void tick() {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.isEnabled()) continue;
-			for (Player player : Bukkit.getOnlinePlayers()) {
+			for (Player player : hologram.getLocation().getWorld().getPlayers()) {
 				if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
 					hologram.show(player, hologram.getPlayerPage(player));
 				} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
