@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.nms.versions;
 
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.RandomUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectConstructor;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
@@ -307,11 +306,12 @@ public class NMS_1_17 extends NMS {
         sendPacket(player, PACKET_MOUNT_CONSTRUCTOR.newInstance(packetDataSerializer));
     }
 
-    @SuppressWarnings("RedundantCast")
     @Override
     public void hideFakeEntities(Player player, int... entityIds) {
         Validate.notNull(player);
-        sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance((Object) entityIds));
+        for (int entityId : entityIds) {
+            sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance(entityId));
+        }
     }
 
 }
