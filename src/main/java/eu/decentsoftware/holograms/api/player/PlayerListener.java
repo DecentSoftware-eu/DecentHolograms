@@ -3,14 +3,13 @@ package eu.decentsoftware.holograms.api.player;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerListener implements Listener {
 
@@ -43,13 +42,9 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
+    public void onTeleport(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
-        Location to = e.getTo();
-        Location from = e.getFrom();
-        if (!to.getWorld().getName().equals(from.getWorld().getName())) {
-            Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
-        }
+        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
     }
 
 }
