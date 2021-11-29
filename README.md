@@ -1,43 +1,20 @@
+---
+description: Official DecentSoftware wiki.
+---
 
-# Decent Holograms
-A lightweight but powerful hologram plugin with many features and configuration options.
+# Home Page
 
-- **Download:** https://decentholograms.eu
-- **Wiki:** https://wiki.decentholograms.eu/
+## Contact Us 📞
 
-# Support
-We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
+If you want to contact us, please send us a message on discord. You can also report bugs or share your ideas either on discord or github.
 
-# API [![](https://jitpack.io/v/decentsoftware-eu/decentholograms.svg)](https://jitpack.io/#decentsoftware-eu/decentholograms)
-How to get DecentHolograms API into your project:
+* Discord: [https://discord.decentsoftware.eu](https://discord.decentsoftware.eu)
+* GitHub: [https://github.decentsoftware.eu](https://github.decentsoftware.eu)
 
-Replace TAG with the current version of DecentHolograms. (Latest release)
+## Ideas & Improvements 💡
 
-**Gradle:**
-```java
-repositories {
-    maven { url 'https://jitpack.io' }
-}
+We highly appriciate ideas for possible improvements because we want our plugins to be suitable for anyone, so if you have any ideas, send us a message on discord.
 
-dependencies {
-    implementation 'com.github.decentsoftware-eu:decentholograms:TAG'
-}
-```
+## Bugs 🐞
 
-**Maven:**
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>com.github.decentsoftware-eu</groupId>
-        <artifactId>decentholograms</artifactId>
-        <version>TAG</version>
-    </dependency>
-</dependencies>
-```
+Have you found a bug or anything that doesn't seem right? Don't panic, report the issue on our discord server or github and we will try our best to resolve your issue as soon as possible.

@@ -1,0 +1,40 @@
+location: world:-229.500:70.000:-1.500
+enabled: true
+display-range: 64
+update-range: 64
+update-interval: 20
+facing: -90.0
+origin: UP
+lines:
+  '1':
+    content: <#00FFFF>&l&nDECENT HOLOGRAMS</#FF00FF>
+    heigth: 0.3
+  '2':
+    content: Very powerful hologram plugin and API
+    heigth: 0.5
+  '3':
+    content: '&a✔ &bEntity Lines:'
+    heigth: 0.3
+  '4':
+    content: '#ENTITY: CAT'
+    heigth: 0.8499999880790711
+  '5':
+    content: '&a✔ &bHead Lines:'
+    heigth: 0.3
+  '6':
+    content: '#HEAD: grass_block'
+    heigth: 0.75
+  '7':
+    content: '&a✔ &bSmall Head Lines:'
+    heigth: 0.3
+  '8':
+    content: '#SMALLHEAD: player_head {SkullOwner:"d0by"}'
+    flags:
+    - DISABLE_UPDATING
+    heigth: 0.6
+  '9':
+    content: '&a✔ &bIcon Lines:'
+    heigth: 0.3
+  '10':
+    content: '#ICON: leather_chestplate {display:{color:3847130}}'
+    heigth: 0.6
