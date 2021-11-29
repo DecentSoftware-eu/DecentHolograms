@@ -1,20 +1,43 @@
----
-description: Official DecentSoftware wiki.
----
 
-# Home Page
+# Decent Holograms
+A lightweight but powerful hologram plugin with many features and configuration options.
 
-## Contact Us 📞
+- **Download:** https://decentholograms.eu
+- **Wiki:** https://wiki.decentholograms.eu/
 
-If you want to contact us, please send us a message on discord. You can also report bugs or share your ideas either on discord or github.
+# Support
+We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
 
-* Discord: [https://discord.decentsoftware.eu](https://discord.decentsoftware.eu)
-* GitHub: [https://github.decentsoftware.eu](https://github.decentsoftware.eu)
+# API [![](https://jitpack.io/v/decentsoftware-eu/decentholograms.svg)](https://jitpack.io/#decentsoftware-eu/decentholograms)
+How to get DecentHolograms API into your project:
 
-## Ideas & Improvements 💡
+Replace TAG with the current version of DecentHolograms. (Latest release)
 
-We highly appriciate ideas for possible improvements because we want our plugins to be suitable for anyone, so if you have any ideas, send us a message on discord.
+**Gradle:**
+```java
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 
-## Bugs 🐞
+dependencies {
+    implementation 'com.github.decentsoftware-eu:decentholograms:TAG'
+}
+```
 
-Have you found a bug or anything that doesn't seem right? Don't panic, report the issue on our discord server or github and we will try our best to resolve your issue as soon as possible.
+**Maven:**
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.decentsoftware-eu</groupId>
+        <artifactId>decentholograms</artifactId>
+        <version>TAG</version>
+    </dependency>
+</dependencies>
+```
