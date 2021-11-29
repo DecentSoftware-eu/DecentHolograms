@@ -89,6 +89,10 @@ public final class DecentHolograms {
 		featureManager.destroy();
 		ticker.destroy();
 
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
+			hologram.destroy();
+		}
+
 		BungeeUtils.destroy();
 	}
 

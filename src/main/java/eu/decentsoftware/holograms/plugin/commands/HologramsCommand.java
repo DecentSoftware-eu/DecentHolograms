@@ -39,7 +39,8 @@ public class HologramsCommand extends DecentCommand {
 		addSubCommand(new FeatureSubCommand());
 		addSubCommand(new PageSubCommand());
 		addSubCommand(new ConvertSubCommand());
-		addSubCommand(new VersionSubCommand());
+        addSubCommand(new VersionSubCommand());
+//        addSubCommand(new TestSubCommand());
 
         // Shortcuts
         addSubCommand(new HologramSubCommand.HologramCreateSub());
@@ -81,6 +82,33 @@ public class HologramsCommand extends DecentCommand {
     /*
      *  SubCommands
      */
+
+    @CommandInfo(
+            permission = "dh.admin",
+            usage = "/dh test",
+            playerOnly = true,
+            minArgs = 1,
+            description = "Test command."
+    )
+    public static class TestSubCommand extends DecentCommand {
+
+        public TestSubCommand() {
+            super("test");
+        }
+
+        @Override
+        public CommandHandler getCommandHandler() {
+            return (sender, args) -> {
+                // Nothing
+                return true;
+            };
+        }
+
+        @Override
+        public TabCompleteHandler getTabCompleteHandler() {
+            return null;
+        }
+    }
 
     @CommandInfo(
             permission = "dh.admin",

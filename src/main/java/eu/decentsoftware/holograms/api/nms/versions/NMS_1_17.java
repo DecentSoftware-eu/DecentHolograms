@@ -306,12 +306,11 @@ public class NMS_1_17 extends NMS {
         sendPacket(player, PACKET_MOUNT_CONSTRUCTOR.newInstance(packetDataSerializer));
     }
 
+    @SuppressWarnings("RedundantCast")
     @Override
     public void hideFakeEntities(Player player, int... entityIds) {
         Validate.notNull(player);
-        for (int entityId : entityIds) {
-            sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance(entityId));
-        }
+        sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance((Object) entityIds));
     }
 
 }
