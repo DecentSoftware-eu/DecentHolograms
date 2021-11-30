@@ -15,10 +15,8 @@ import org.bukkit.util.StringUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @CommandInfo(
 		aliases = {"holograms", "hologram", "dh", "holo"},
@@ -261,7 +259,7 @@ public class HologramsCommand extends DecentCommand {
         @Override
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
-                final ConvertorType convertorType = ConvertorType.getByName(args[0]);
+                final ConvertorType convertorType = ConvertorType.getByAlias(args[0]);
                 final String path = args.length >= 2 ? args[0] : null;
 
                 switch (convertorType) {
@@ -286,11 +284,11 @@ public class HologramsCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return StringUtil.copyPartialMatches(
-                            args[0],
-                            Arrays.stream(ConvertorType.values()).map(ConvertorType::getName).collect(Collectors.toList()),
-                            Lists.newArrayList()
-                    );
+                    List<String> aliases = new ArrayList<>();
+                    for (ConvertorType convertorType : ConvertorType.values()) {
+                        aliases.addAll(convertorType.getAliases());
+                    }
+                    return StringUtil.copyPartialMatches(args[0], aliases, Lists.newArrayList());
                 }
                 return new ArrayList<>();
             };

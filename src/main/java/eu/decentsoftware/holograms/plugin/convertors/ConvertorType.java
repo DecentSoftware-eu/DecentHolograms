@@ -1,20 +1,34 @@
 package eu.decentsoftware.holograms.plugin.convertors;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.Arrays;
+import java.util.List;
 
-@Getter
-@AllArgsConstructor
 public enum ConvertorType {
-	HOLOGRAPHIC_DISPLAYS("HolographicDisplays");
+	HOLOGRAPHIC_DISPLAYS("HolographicDisplays", "DH", "hd");
 
-	public static ConvertorType getByName(String name) {
+	public static ConvertorType getByAlias(String alias) {
 		for (ConvertorType convertorType : ConvertorType.values()) {
-			if (convertorType.getName().equals(name)) return convertorType;
+			if (convertorType.getAliases().contains(alias)) {
+				return convertorType;
+			}
 		}
 		return null;
 	}
 
 	private final String name;
+	private final List<String> aliases;
+
+	ConvertorType(String name, String... aliases) {
+		this.name = name;
+		this.aliases = Arrays.asList(aliases);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<String> getAliases() {
+		return aliases;
+	}
 
 }
