@@ -29,12 +29,12 @@ import java.util.stream.IntStream;
         permission = "",
         usage = "/dh pages help",
         description = "All commands for editting hologram pages.",
-        aliases = {"pages", "p"}
+        aliases = {"page", "p"}
 )
 public class PageSubCommand extends DecentCommand {
 
     public PageSubCommand() {
-        super("page");
+        super("pages");
 
         addSubCommand(new PageHelpSub());
         addSubCommand(new PageAddSub());
