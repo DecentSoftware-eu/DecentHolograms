@@ -20,7 +20,8 @@ public enum Version {
 	v1_16_R1(17),
 	v1_16_R2(18),
 	v1_16_R3(19),
-	v1_17_R1(20);
+	v1_17_R1(20),
+	v1_18_R1(21);
 
 	private final int id;
 
