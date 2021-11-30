@@ -78,7 +78,7 @@ public final class DHAPI {
         HologramPage page = hologram.getPage(0);
         if (lines != null) {
             for (String line : lines) {
-                HologramLine hologramLine = createHologramLine(page, page.getNextLineLocation(), line);
+                HologramLine hologramLine = new HologramLine(page, page.getNextLineLocation(), line);
                 page.addLine(hologramLine);
             }
         }
@@ -117,6 +117,87 @@ public final class DHAPI {
     }
 
     /**
+     * Add a new page into hologram.
+     *
+     * @param hologram The hologram.
+     * @return The new page.
+     * @throws IllegalArgumentException If hologram is null.
+     */
+    public static HologramPage addHologramPage(Hologram hologram) throws IllegalArgumentException {
+        return addHologramPage(hologram, null);
+    }
+
+    /**
+     * Add a new page into hologram.
+     *
+     * @param hologram The hologram.
+     * @param lines New pages lines.
+     * @return The new page.
+     * @throws IllegalArgumentException If hologram is null.
+     */
+    public static HologramPage addHologramPage(Hologram hologram, List<String> lines) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        HologramPage page = hologram.addPage();
+        if (lines != null && !lines.isEmpty()) {
+            for (String content : lines) {
+                HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
+                page.addLine(line);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * Insert a new hologram page on the specified index into hologram.
+     *
+     * @param hologram The hologram.
+     * @param index The index.
+     * @return The new page.
+     * @throws IllegalArgumentException If hologram is null or the index is out of bounds.
+     */
+    public static HologramPage insertHologramPage(Hologram hologram, int index) throws IllegalArgumentException {
+        return insertHologramPage(hologram, index, null);
+    }
+
+    /**
+     * Insert a new hologram page on the specified index into hologram.
+     *
+     * @param hologram The hologram.
+     * @param index The index.
+     * @param lines New pages lines.
+     * @return The new page.
+     * @throws IllegalArgumentException If hologram is null or the index is out of bounds.
+     */
+    public static HologramPage insertHologramPage(Hologram hologram, int index, List<String> lines) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        HologramPage page = hologram.insertPage(index);
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+        }
+        if (lines != null && !lines.isEmpty()) {
+            for (String content : lines) {
+                HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
+                page.addLine(line);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * Remove a page from hologram.
+     *
+     * @param hologram The hologram.
+     * @param index Index of the page.
+     * @return The removed page.
+     * @throws IllegalArgumentException If hologram is null;
+     */
+    @Nullable
+    public static HologramPage removeHologramPage(Hologram hologram, int index) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        return hologram.removePage(index);
+    }
+
+    /**
      * Get hologram by name.
      *
      * @param name The name.
@@ -135,7 +216,7 @@ public final class DHAPI {
      * @param hologram The hologram.
      * @param index The index.
      * @return The hologram page.
-     * @throws IllegalArgumentException If the hologram is null.
+     * @throws IllegalArgumentException If the hologram is null or the indexes are invalid.
      */
     @Nullable
     public static HologramPage getHologramPage(Hologram hologram, int index) throws IllegalArgumentException {
@@ -149,12 +230,108 @@ public final class DHAPI {
      * @param page The parent page.
      * @param index The index.
      * @return The hologram line.
-     * @throws IllegalArgumentException If the page is null.
+     * @throws IllegalArgumentException If the page is null or the indexes are invalid.
      */
     @Nullable
     public static HologramLine getHologramLine(HologramPage page, int index) throws IllegalArgumentException {
         Validate.notNull(page);
         return page.getLine(index);
+    }
+
+    /**
+     * Add a new line into hologram.
+     *
+     * @param hologram The hologram.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If hologram or content is null.
+     */
+    public static HologramLine addHologramLine(Hologram hologram, String content) throws IllegalArgumentException {
+        return addHologramLine(hologram, 0, content);
+    }
+
+    /**
+     * Add a new line into hologram page.
+     *
+     * @param hologram The hologram.
+     * @param pageIndex Index of the page.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If hologram or content is null or the indexes are invalid.
+     */
+    public static HologramLine addHologramLine(Hologram hologram, int pageIndex, String content) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        Validate.notNull(content);
+        HologramPage page = hologram.getPage(pageIndex);
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+        }
+        return addHologramLine(page, content);
+    }
+
+    /**
+     * Add a new line into hologram page.
+     *
+     * @param page The page.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If page or content is null.
+     */
+    public static HologramLine addHologramLine(HologramPage page, String content) throws IllegalArgumentException {
+        HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
+        page.addLine(line);
+        return line;
+    }
+
+    /**
+     * Insert a new line on the specified index into hologram page.
+     *
+     * @param hologram The hologram.
+     * @param lineIndex Index of the new line.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If hologram or content is null or the indexes are invalid.
+     */
+    public static HologramLine insertHologramLine(Hologram hologram, int lineIndex, String content) throws IllegalArgumentException {
+        return insertHologramLine(hologram, 0, lineIndex, content);
+    }
+
+    /**
+     * Insert a new line on the specified index into hologram page.
+     *
+     * @param hologram The hologram.
+     * @param pageIndex Index of the hologram page.
+     * @param lineIndex Index of the new line.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If hologram or content is null or the indexes are invalid.
+     */
+    public static HologramLine insertHologramLine(Hologram hologram, int pageIndex, int lineIndex, String content) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        HologramPage page = hologram.getPage(pageIndex);
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+        }
+        return insertHologramLine(page, lineIndex, content);
+    }
+
+    /**
+     * Insert a new line on the specified index into hologram page.
+     *
+     * @param page The page.
+     * @param index Index of the new line.
+     * @param content New lines content.
+     * @return The new line.
+     * @throws IllegalArgumentException If page or content is null or the indexes are invalid.
+     */
+    public static HologramLine insertHologramLine(HologramPage page, int index, String content) throws IllegalArgumentException {
+        HologramLine oldLine = page.getLine(index);
+        if (oldLine == null) {
+            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+        }
+        HologramLine line = new HologramLine(page, oldLine.getLocation(), content);
+        page.insertLine(index, line);
+        return line;
     }
 
     /**
@@ -167,9 +344,13 @@ public final class DHAPI {
     public static void setHologramLine(HologramLine line, String content) throws IllegalArgumentException {
         Validate.notNull(line);
         Validate.notNull(content);
+
         if (!line.getContent().equals(content)) {
             line.setContent(content);
             line.update();
+            if (line.hasParent()) {
+                line.getParent().realignLines();
+            }
         }
     }
 
@@ -179,12 +360,15 @@ public final class DHAPI {
      * @param page The parent page.
      * @param lineIndex The index of the line.
      * @param content The new content.
-     * @throws IllegalArgumentException If any of the arguments is null.
+     * @throws IllegalArgumentException If any of the arguments is null or the indexes are invalid.
      */
     public static void setHologramLine(HologramPage page, int lineIndex, String content) throws IllegalArgumentException {
         Validate.notNull(page);
         Validate.notNull(content);
-        HologramLine line = getHologramLine(page, lineIndex);
+        HologramLine line = page.getLine(lineIndex);
+        if (line == null) {
+            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+        }
         setHologramLine(line, content);
     }
 
@@ -194,7 +378,7 @@ public final class DHAPI {
      * @param hologram The parent hologram.
      * @param lineIndex The index of the line.
      * @param content The new content.
-     * @throws IllegalArgumentException If any of the arguments is null.
+     * @throws IllegalArgumentException If any of the arguments is null or the indexes are invalid.
      */
     public static void setHologramLine(Hologram hologram, int lineIndex, String content) throws IllegalArgumentException {
         setHologramLine(hologram, 0, lineIndex, content);
@@ -207,14 +391,67 @@ public final class DHAPI {
      * @param pageIndex The index of the parent page.
      * @param lineIndex The index of the line.
      * @param content The new content.
-     * @throws IllegalArgumentException If any of the arguments is null.
+     * @throws IllegalArgumentException If any of the arguments is null or the indexes are invalid.
      */
     public static void setHologramLine(Hologram hologram, int pageIndex, int lineIndex, String content) throws IllegalArgumentException {
         Validate.notNull(hologram);
         Validate.notNull(content);
-        HologramPage page = getHologramPage(hologram, pageIndex);
-        HologramLine line = getHologramLine(page, lineIndex);
+
+        HologramPage page = hologram.getPage(pageIndex);
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+        }
+        HologramLine line = page.getLine(lineIndex);
+        if (line == null) {
+            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+        }
         setHologramLine(line, content);
+    }
+
+    /**
+     * Remove a line from hologram page.
+     *
+     * @param hologram The hologram.
+     * @param lineIndex Index of the line.
+     * @return The removed hologram line.
+     * @throws IllegalArgumentException If hologram is null or the indexes are invalid.
+     */
+    @Nullable
+    public static HologramLine removeHologramLine(Hologram hologram, int lineIndex) throws IllegalArgumentException {
+        return removeHologramLine(hologram, 0, lineIndex);
+    }
+
+    /**
+     * Remove a line from hologram page.
+     *
+     * @param hologram The hologram.
+     * @param pageIndex Index of the page.
+     * @param lineIndex Index of the line.
+     * @return The removed hologram line.
+     * @throws IllegalArgumentException If hologram is null or the indexes are invalid.
+     */
+    @Nullable
+    public static HologramLine removeHologramLine(Hologram hologram, int pageIndex, int lineIndex) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        HologramPage page = hologram.getPage(pageIndex);
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+        }
+        return page.removeLine(lineIndex);
+    }
+
+    /**
+     * Remove a line from hologram page.
+     *
+     * @param page The hologram page.
+     * @param lineIndex Index of the line.
+     * @return The removed hologram line.
+     * @throws IllegalArgumentException If hologram is null or the indexes are invalid.
+     */
+    @Nullable
+    public static HologramLine removeHologramLine(HologramPage page, int lineIndex) throws IllegalArgumentException {
+        Validate.notNull(page);
+        return page.removeLine(lineIndex);
     }
 
     /**
@@ -229,7 +466,8 @@ public final class DHAPI {
     }
 
     /**
-     * Set the lines of this hologram on the specified page.
+     * Set the lines of this hologram on the specified page. If there are lines
+     * that are out of the new bounds, they are removed.
      *
      * @param hologram The hologram.
      * @param pageIndex The page.
@@ -238,10 +476,13 @@ public final class DHAPI {
      */
     public static void setHologramLines(Hologram hologram, int pageIndex, List<String> lines) throws IllegalArgumentException {
         Validate.notNull(hologram);
+        if (lines == null || lines.isEmpty()) {
+            return;
+        }
 
         HologramPage page = hologram.getPage(pageIndex);
-        if (lines == null || lines.isEmpty() || page == null) {
-            return;
+        if (page == null) {
+            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
         }
 
         while (page.size() > lines.size()) {
@@ -256,7 +497,7 @@ public final class DHAPI {
                     line.setContent(content);
                 }
             } else {
-                HologramLine line = createHologramLine(page, page.getNextLineLocation(), content);
+                HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
                 page.addLine(line);
             }
         }
