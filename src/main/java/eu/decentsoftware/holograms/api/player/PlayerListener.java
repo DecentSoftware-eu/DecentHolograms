@@ -6,7 +6,6 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -41,10 +40,10 @@ public class PlayerListener implements Listener {
         Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
     }
 
-    @EventHandler
-    public void onTeleport(PlayerChangedWorldEvent e) {
-        Player player = e.getPlayer();
-        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
-    }
+//    @EventHandler
+//    public void onTeleport(PlayerChangedWorldEvent e) {
+//        Player player = e.getPlayer();
+//        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
+//    }
 
 }
