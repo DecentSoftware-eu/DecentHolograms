@@ -6,9 +6,9 @@ import java.util.List;
 public enum ConvertorType {
 	HOLOGRAPHIC_DISPLAYS("HolographicDisplays", "DH", "hd");
 
-	public static ConvertorType getByAlias(String alias) {
+	public static ConvertorType fromString(String alias) {
 		for (ConvertorType convertorType : ConvertorType.values()) {
-			if (convertorType.getAliases().contains(alias)) {
+			if (convertorType.getName().equals(alias) || convertorType.getAliases().contains(alias)) {
 				return convertorType;
 			}
 		}
