@@ -1,7 +1,9 @@
 package eu.decentsoftware.holograms.api.nms;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.api.nms.versions.*;
+import eu.decentsoftware.holograms.api.nms.versions.NMS_1_17;
+import eu.decentsoftware.holograms.api.nms.versions.NMS_1_8;
+import eu.decentsoftware.holograms.api.nms.versions.NMS_1_9;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.objects.Pair;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
@@ -74,7 +76,11 @@ public abstract class NMS {
             NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, "channel");
         }
         CRAFT_PLAYER_GET_HANDLE_METHOD = new ReflectMethod(craftPlayerClass, "getHandle");
-        PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "sendPacket", PACKET_CLASS);
+        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1)) {
+            PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "a", PACKET_CLASS);
+        } else {
+            PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "sendPacket", PACKET_CLASS);
+        }
 
         // Entities
         mapEntityTypes.put("BAT", new Pair<>(3, 0.9f));

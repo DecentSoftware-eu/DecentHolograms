@@ -741,7 +741,7 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				int pageIndex = Validator.getInteger(args[1]);
-				HologramPage page = Validator.getHologramPage(hologram, pageIndex - 1);
+				HologramPage page = Validator.getHologramPage(hologram, pageIndex);
 				if (page == null) {
 					Lang.HOLOGRAM_DOES_NOT_EXIST.send(sender);
 					return true;
