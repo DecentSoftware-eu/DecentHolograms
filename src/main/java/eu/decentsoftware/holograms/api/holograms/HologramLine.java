@@ -148,6 +148,10 @@ public class HologramLine extends HologramObject {
         this.update();
     }
 
+    public boolean hasOffsets() {
+        return getOffsetX() != 0d || getOffsetZ() != 0d;
+    }
+
     /**
      * Enable updating and showing to players automatically.
      */
@@ -370,16 +374,16 @@ public class HologramLine extends HologramObject {
      *
      * @param players Given players.
      */
-    public void updateLocation(Player... players) {
+    public void updateLocation(boolean updateRotation, Player... players) {
         if (!isEnabled()) return;
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (!isVisible(player) || !isInUpdateRange(player)) continue;
-            if (!HologramLineType.ENTITY.equals(type)) {
-                NMS.getInstance().teleportFakeEntity(player, getLocation(), entityIds[0]);
-            } else {
+            if (HologramLineType.ENTITY.equals(type) && updateRotation) {
                 this.hide();
                 this.show();
+            } else {
+                NMS.getInstance().teleportFakeEntity(player, getLocation(), entityIds[0]);
             }
         }
     }
@@ -440,6 +444,9 @@ public class HologramLine extends HologramObject {
 
     public void setOffsetX(double offsetX) {
         this.offsetX.set(offsetX);
+        if (this.hasParent()) {
+            this.getParent().updateHasOffsets();
+        }
     }
 
     public void setOffsetY(double offsetY) {
@@ -448,6 +455,9 @@ public class HologramLine extends HologramObject {
 
     public void setOffsetZ(double offsetZ) {
         this.offsetZ.set(offsetZ);
+        if (this.hasParent()) {
+            this.getParent().updateHasOffsets();
+        }
     }
 
     /*

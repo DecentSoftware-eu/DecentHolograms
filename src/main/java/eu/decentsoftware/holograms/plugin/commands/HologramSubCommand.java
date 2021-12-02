@@ -495,7 +495,7 @@ public class HologramSubCommand extends DecentCommand {
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
 				List<String> matches = Lists.newArrayList();
-				if (args.length == 1 || args.length == 3) {
+				if (args.length == 1) {
 					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
 				} else if (args.length == 2) {
 					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);

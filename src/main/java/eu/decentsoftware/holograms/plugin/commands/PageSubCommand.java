@@ -46,6 +46,7 @@ public class PageSubCommand extends DecentCommand {
         addSubCommand(new PageRemoveActionSub());
         addSubCommand(new PageClearActionsSub());
         addSubCommand(new PageActionsSub());
+        addSubCommand(new PageAlwaysFacePlayerSub());
     }
 
     @Override
@@ -559,6 +560,60 @@ public class PageSubCommand extends DecentCommand {
         @Override
         public TabCompleteHandler getTabCompleteHandler() {
             return TabCompleteHandler.HOLOGRAM_PAGES_ACTION_INDEXES;
+        }
+
+    }
+
+    @CommandInfo(
+            permission = "dh.admin",
+            usage = "/dh page alwaysfaceplayer <hologram> <page> <true|false>",
+            description = "Set always face player state of the hologram page.",
+            aliases = {"setalwaysfaceplayer"},
+            minArgs = 3
+    )
+    public static class PageAlwaysFacePlayerSub extends DecentCommand {
+
+        public PageAlwaysFacePlayerSub() {
+            super("alwaysfaceplayer");
+        }
+
+        @Override
+        public CommandHandler getCommandHandler() {
+            return (sender, args) -> {
+                boolean value = Validator.getBoolean(args[2], Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_DOES_NOT_EXIST.getValue());
+                Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
+                HologramPage page = hologram.getPage(Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue()) - 1);
+                if (page == null) {
+                    Lang.PAGE_DOES_NOT_EXIST.send(sender);
+                    return true;
+                }
+                page.setAlwaysFacePlayer(value);
+                page.realignLines();
+                hologram.save();
+                Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_SET.send(sender, value);
+                return true;
+            };
+        }
+
+        @Override
+        public TabCompleteHandler getTabCompleteHandler() {
+            return (sender, args) -> {
+                List<String> matches = Lists.newArrayList();
+                if (args.length == 1) {
+                    StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+                } else if (args.length == 2) {
+                    Hologram hologram = PLUGIN.getHologramManager().getHologram(args[0]);
+                    if (hologram != null) {
+                        StringUtil.copyPartialMatches(args[1], IntStream
+                                .rangeClosed(1, hologram.size())
+                                .boxed().map(String::valueOf)
+                                .collect(Collectors.toList()), matches);
+                    }
+                } else if (args.length == 3) {
+                    StringUtil.copyPartialMatches(args[2], Lists.newArrayList("true", "false"), matches);
+                }
+                return matches;
+            };
         }
 
     }

@@ -64,11 +64,17 @@ public class OffsetListener extends Ticked implements Listener {
     public void updateOffsets(Player player, Hologram hologram) {
         Location playerLoc = player.getLocation();
         Location holoLoc = hologram.getLocation();
+
         HologramPage page = hologram.getPage(player);
+        if (!page.isAlwaysFacePlayer() || !page.hasOffsets()) {
+            return;
+        }
+
         for (HologramLine line : page.getLines()) {
             if (line.getOffsetX() == 0d && line.getOffsetZ() == 0d) {
                 continue;
             }
+
             Location prevLocation = line.getLocation();
             OffsetCalculator.Loc2D result = OffsetCalculator.calculateOffSet(
                     new OffsetCalculator.Loc2D(playerLoc.getX(), playerLoc.getZ()),
@@ -76,8 +82,10 @@ public class OffsetListener extends Ticked implements Listener {
                     new OffsetCalculator.Loc2D(holoLoc.getX(), holoLoc.getZ())
             );
             Location finalOffsetLoc = new Location(holoLoc.getWorld(), result.getX(), line.getLocation().getY(), result.getZ());
+            finalOffsetLoc.setYaw(prevLocation.getYaw());
+
             line.setLocation(finalOffsetLoc);
-            line.updateLocation(player);
+            line.updateLocation(false, player);
             line.setLocation(prevLocation);
         }
     }

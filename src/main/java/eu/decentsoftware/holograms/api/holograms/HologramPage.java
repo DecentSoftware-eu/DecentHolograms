@@ -9,11 +9,13 @@ import eu.decentsoftware.holograms.api.nms.NMS;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Getter
@@ -26,10 +28,14 @@ public class HologramPage extends FlagHolder {
 
     private int index;
     private final Hologram parent;
-    private final List<Integer> clickableEntityIds = new ArrayList<>();
-    private final List<HologramLine> lines = new ArrayList<>();
-    private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
+    private final List<Integer> clickableEntityIds;
+    private final List<HologramLine> lines;
+    private final Map<ClickType, List<Action>> actions;
     private Location location;
+    protected boolean alwaysFacePlayer;
+
+    @FieldNameConstants.Exclude
+    protected final AtomicBoolean hasOffsets;
 
     /*
      *	Constructors
@@ -39,11 +45,31 @@ public class HologramPage extends FlagHolder {
         this.location = parent.getLocation();
         this.parent = parent;
         this.index = index;
+        this.clickableEntityIds = new ArrayList<>();
+        this.lines = new ArrayList<>();
+        this.actions = new EnumMap<>(ClickType.class);
+        this.hasOffsets = new AtomicBoolean(false);
+        this.alwaysFacePlayer = parent.isAlwaysFacePlayer();
     }
 
     /*
      *	General Methods
      */
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean hasOffsets() {
+        return hasOffsets.get();
+    }
+
+    public void updateHasOffsets() {
+        for (HologramLine hLine : getLines()) {
+            if (hLine.hasOffsets()) {
+                hasOffsets.set(true);
+                return;
+            }
+        }
+        hasOffsets.set(false);
+    }
 
     /**
      * Get the current parent hologram of this page.
@@ -106,6 +132,7 @@ public class HologramPage extends FlagHolder {
             actionsMap.put(entry.getKey().name(), entry.getValue().stream().map(Action::toString).collect(Collectors.toList()));
         }
         map.put("actions", actionsMap);
+        map.put("always-face-player", isAlwaysFacePlayer());
         return map;
     }
 
@@ -119,6 +146,7 @@ public class HologramPage extends FlagHolder {
                 page.addAction(entry.getKey(), action);
             }
         }
+        page.setAlwaysFacePlayer(isAlwaysFacePlayer());
         return page;
     }
 
@@ -140,7 +168,7 @@ public class HologramPage extends FlagHolder {
 
         for (HologramLine line : lines) {
             line.setLocation(currentLocation.clone().add(line.getOffsetX(), line.getOffsetY(), line.getOffsetZ()));
-            line.updateLocation();
+            line.updateLocation(true);
             currentLocation.subtract(0, line.getHeight(), 0);
         }
     }
@@ -154,6 +182,9 @@ public class HologramPage extends FlagHolder {
     public boolean addLine(@NonNull HologramLine line) {
         lines.add(line);
         parent.getViewerPlayers(index).forEach(line::show);
+        if (line.hasOffsets() && !hasOffsets()) {
+            hasOffsets.set(true);
+        }
         realignLines();
         return true;
     }
@@ -168,6 +199,9 @@ public class HologramPage extends FlagHolder {
     public boolean insertLine(int index, @NonNull HologramLine line) {
         lines.add(index, line);
         parent.getViewerPlayers(this.index).forEach(line::show);
+        if (line.hasOffsets() && !hasOffsets()) {
+            hasOffsets.set(true);
+        }
         realignLines();
         return true;
     }
@@ -213,6 +247,7 @@ public class HologramPage extends FlagHolder {
             line.destroy();
             realignLines();
         }
+        updateHasOffsets();
         return line;
     }
 
