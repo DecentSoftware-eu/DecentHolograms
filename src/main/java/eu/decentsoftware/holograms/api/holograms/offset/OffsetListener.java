@@ -16,7 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OffsetListener extends Ticked implements Listener {
 
-    private final Map<UUID, Double> lastAngles = new ConcurrentHashMap<>();
+    private final Map<UUID, Float> lastYaws = new ConcurrentHashMap<>();
+    private final Map<UUID, Float> lastYawsTemp = new ConcurrentHashMap<>();
 
     public OffsetListener() {
         super(2L);
@@ -28,33 +29,36 @@ public class OffsetListener extends Ticked implements Listener {
 
     @Override
     public void tick() {
-        try {
-            for (Hologram hologram : Hologram.getCachedHolograms()) {
-                if (!hologram.isAlwaysFacePlayer()) continue;
-                Location hl = hologram.getLocation();
-                for (Player player : hologram.getViewerPlayers()) {
-                    UUID uuid = player.getUniqueId();
-                    Location l = player.getLocation();
-                    double angle = OffsetCalculator.angleOn(l.getX(), l.getZ(), hl.getX(), hl.getY());
-                    if (lastAngles.containsKey(uuid)) {
-                        double lastAngle = lastAngles.get(uuid);
-                        if (Math.abs(lastAngle - angle) < Math.PI / 45) {
-//                            continue;
-                        }
-                    }
-                    updateOffsets(player, hologram);
-                    lastAngles.put(uuid, angle);
-                }
+        for (Hologram hologram : Hologram.getCachedHolograms()) {
+            if (!hologram.isEnabled() || !hologram.isAlwaysFacePlayer()) {
+                continue;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            for (Player player : hologram.getViewerPlayers()) {
+                UUID uuid = player.getUniqueId();
+                Location l = player.getLocation();
+                float yaw = l.getYaw();
+
+                // If the angle difference is too low, just skip the update.
+                if (lastYaws.containsKey(uuid)) {
+                    float lastYaw = lastYaws.get(uuid);
+                    if (Math.abs(yaw - lastYaw) < 1.0f) {
+                        continue;
+                    }
+                }
+
+                updateOffsets(player, hologram);
+                lastYawsTemp.put(uuid, yaw);
+            }
         }
+        lastYaws.putAll(lastYawsTemp);
+        lastYawsTemp.clear();
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        lastAngles.remove(player.getUniqueId());
+        lastYaws.remove(player.getUniqueId());
     }
 
     public void updateOffsets(Player player, Hologram hologram) {
