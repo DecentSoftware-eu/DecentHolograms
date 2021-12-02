@@ -169,6 +169,9 @@ public class HologramPage extends FlagHolder {
         for (HologramLine line : lines) {
             line.setLocation(currentLocation.clone().add(line.getOffsetX(), line.getOffsetY(), line.getOffsetZ()));
             line.updateLocation(true);
+            if (line.hasOffsets() && !hasOffsets()) {
+                hasOffsets.set(true);
+            }
             currentLocation.subtract(0, line.getHeight(), 0);
         }
     }
