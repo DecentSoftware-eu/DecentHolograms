@@ -185,9 +185,6 @@ public class HologramPage extends FlagHolder {
     public boolean addLine(@NonNull HologramLine line) {
         lines.add(line);
         parent.getViewerPlayers(index).forEach(line::show);
-        if (line.hasOffsets() && !hasOffsets()) {
-            hasOffsets.set(true);
-        }
         realignLines();
         return true;
     }
@@ -202,9 +199,6 @@ public class HologramPage extends FlagHolder {
     public boolean insertLine(int index, @NonNull HologramLine line) {
         lines.add(index, line);
         parent.getViewerPlayers(this.index).forEach(line::show);
-        if (line.hasOffsets() && !hasOffsets()) {
-            hasOffsets.set(true);
-        }
         realignLines();
         return true;
     }
@@ -250,7 +244,6 @@ public class HologramPage extends FlagHolder {
             line.destroy();
             realignLines();
         }
-        updateHasOffsets();
         return line;
     }
 
