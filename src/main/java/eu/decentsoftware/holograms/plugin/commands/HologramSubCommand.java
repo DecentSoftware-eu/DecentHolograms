@@ -48,6 +48,7 @@ public class HologramSubCommand extends DecentCommand {
 		addSubCommand(new HologramAlignSub());
 		addSubCommand(new HologramNearSub());
 		addSubCommand(new HologramDownOriginSub());
+		addSubCommand(new HologramAlwaysFacePlayerSub());
 		addSubCommand(new HologramFacingSub());
 		addSubCommand(new HologramFlagAddSub());
 		addSubCommand(new HologramFlagRemoveSub());
@@ -426,7 +427,7 @@ public class HologramSubCommand extends DecentCommand {
 	@CommandInfo(
 			permission = "dh.admin",
 			usage = "/dh hologram downorigin <hologram> <true|false>",
-			description = "Set origin of the hologram.",
+			description = "Set down origin state of the hologram.",
 			aliases = {"setdownorigin"},
 			minArgs = 2
 	)
@@ -439,12 +440,53 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
-				boolean downOrigin = Validator.getBoolean(args[1], Lang.HOLOGRAM_ORIGIN_DOES_NOT_EXIST.getValue());
+				boolean value = Validator.getBoolean(args[1], Lang.HOLOGRAM_DOWN_ORIGIN_DOES_NOT_EXIST.getValue());
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
-				hologram.setDownOrigin(downOrigin);
+				hologram.setDownOrigin(value);
 				hologram.realignLines();
 				hologram.save();
-				Lang.HOLOGRAM_ORIGIN_SET.send(sender, downOrigin);
+				Lang.HOLOGRAM_DOWN_ORIGIN_SET.send(sender, value);
+				return true;
+			};
+		}
+
+		@Override
+		public TabCompleteHandler getTabCompleteHandler() {
+			return (sender, args) -> {
+				List<String> matches = Lists.newArrayList();
+				if (args.length == 1 || args.length == 3) {
+					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+				} else if (args.length == 2) {
+					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);
+				}
+				return matches;
+			};
+		}
+
+	}
+
+	@CommandInfo(
+			permission = "dh.admin",
+			usage = "/dh hologram alwaysfaceplayer <hologram> <true|false>",
+			description = "Set always face player state of the hologram.",
+			aliases = {"setalwaysfaceplayer"},
+			minArgs = 2
+	)
+	public static class HologramAlwaysFacePlayerSub extends DecentCommand {
+
+		public HologramAlwaysFacePlayerSub() {
+			super("alwaysfaceplayer");
+		}
+
+		@Override
+		public CommandHandler getCommandHandler() {
+			return (sender, args) -> {
+				boolean value = Validator.getBoolean(args[1], Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_DOES_NOT_EXIST.getValue());
+				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
+				hologram.setAlwaysFacePlayer(value);
+				hologram.realignLines();
+				hologram.save();
+				Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_SET.send(sender, value);
 				return true;
 			};
 		}

@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.holograms;
 
+import com.google.common.util.concurrent.AtomicDouble;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
@@ -105,7 +106,9 @@ public class HologramLine extends HologramObject {
     private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
     private HologramLineType type;
     private int[] entityIds = new int[256];
-    private double offsetX = 0.0D, offsetY = 0.0D, offsetZ = 0.0D;
+    private AtomicDouble offsetX = new AtomicDouble(0d);
+    private AtomicDouble offsetY = new AtomicDouble(0d);
+    private AtomicDouble offsetZ = new AtomicDouble(0d);
     private double height;
     private String content;
     private String text;
@@ -206,7 +209,7 @@ public class HologramLine extends HologramObject {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
             height = NMS.getInstance().getEntityHeigth(entity.getType()) + 0.15;
-            offsetY = -(height + (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1) ? 0.1 : 0.2));
+            setOffsetY(-(height + (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1) ? 0.1 : 0.2)));
             return;
         } else {
             type = HologramLineType.TEXT;
@@ -215,7 +218,7 @@ public class HologramLine extends HologramObject {
             }
             text = content;
         }
-        this.offsetY = type.getOffsetY();
+        setOffsetY(type.getOffsetY());
     }
 
     public Map<String, Object> serializeToMap() {
@@ -224,8 +227,8 @@ public class HologramLine extends HologramObject {
         map.put("height", height);
         if (!flags.isEmpty()) map.put("flags", flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
         if (permission != null && !permission.trim().isEmpty()) map.put("permission", permission);
-        if (offsetX != 0.0d) map.put("offsetX", offsetX);
-        if (offsetZ != 0.0d) map.put("offsetZ", offsetZ);
+        if (getOffsetX() != 0.0d) map.put("offsetX", offsetX);
+        if (getOffsetZ() != 0.0d) map.put("offsetZ", offsetZ);
         return map;
     }
 
@@ -421,6 +424,30 @@ public class HologramLine extends HologramObject {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(Player player) {
         return parent == null || parent.getParent().isInDisplayRange(player);
+    }
+
+    public double getOffsetX() {
+        return offsetX.get();
+    }
+
+    public double getOffsetY() {
+        return offsetY.get();
+    }
+
+    public double getOffsetZ() {
+        return offsetZ.get();
+    }
+
+    public void setOffsetX(double offsetX) {
+        this.offsetX.set(offsetX);
+    }
+
+    public void setOffsetY(double offsetY) {
+        this.offsetY.set(offsetY);
+    }
+
+    public void setOffsetZ(double offsetZ) {
+        this.offsetZ.set(offsetZ);
     }
 
     /*

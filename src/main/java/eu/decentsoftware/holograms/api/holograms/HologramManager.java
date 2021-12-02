@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.holograms;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
+import eu.decentsoftware.holograms.api.holograms.offset.OffsetListener;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -24,9 +25,11 @@ public class HologramManager extends Ticked {
 	private final Map<String, Hologram> hologramMap = new ConcurrentHashMap<>();
 	private final Set<HologramLine> temporaryLines = Collections.synchronizedSet(new HashSet<>());
 	private final Set<UUID> clickCooldowns = Collections.synchronizedSet(new HashSet<>());
+	private final OffsetListener offsetListener;
 
 	public HologramManager() {
 		super(20L);
+		this.offsetListener = new OffsetListener();
 		// Reload when worlds are ready
 		S.sync(this::reload);
 	}
@@ -75,7 +78,7 @@ public class HologramManager extends Ticked {
 		for (Hologram hologram : getHolograms()) {
 			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) continue;
 			if (hologram.onClick(player, entityId, clickType)) {
-				clickCooldowns.add(uuid);
+				// clickCooldowns.add(uuid);
 				return true;
 			}
 		}
@@ -93,6 +96,7 @@ public class HologramManager extends Ticked {
 		this.destroy();
 		this.loadHolograms();
 		this.register();
+		this.offsetListener.register();
 	}
 
 	/**
@@ -100,6 +104,7 @@ public class HologramManager extends Ticked {
 	 */
 	public void destroy() {
 		this.unregister();
+		this.offsetListener.unregister();
 		if (!hologramMap.isEmpty()) {
 			hologramMap.values().forEach(Hologram::destroy);
 			hologramMap.clear();

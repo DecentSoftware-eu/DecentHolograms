@@ -48,4 +48,14 @@ public enum Version {
 	public boolean isBeforeOrEqual(Version version) {
 		return this.getId() <= version.getId();
 	}
+
+	public static Version fromString(String version) {
+		for (Version value : Version.values()) {
+			if (value.name().equalsIgnoreCase(version)) {
+				return value;
+			}
+		}
+		return null;
+	}
+
 }

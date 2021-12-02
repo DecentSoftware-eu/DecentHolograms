@@ -23,6 +23,7 @@ public class Settings {
 
 	public static final ConfigValue<String> DEFAULT_TEXT = new ConfigValue<>(CONFIG, false, "defaults.text", "Blank Line");
 	public static final ConfigValue<Boolean> DEFAULT_DOWN_ORIGIN = new ConfigValue<>(CONFIG, false, "defaults.down-origin", false);
+	public static final ConfigValue<Boolean> DEFAULT_ALWAYS_FACE_PLAYER = new ConfigValue<>(CONFIG, false, "defaults.always-face-player", true);
 
 	public static final DoubleConfigValue DEFAULT_HEIGHT_TEXT = new DoubleConfigValue(CONFIG, false, "defaults.height.text", 0.3D, 0.0D, 2.5D);
 	public static final DoubleConfigValue DEFAULT_HEIGHT_ICON = new DoubleConfigValue(CONFIG, false, "defaults.height.icon", 0.6D, 0.0D, 2.5D);

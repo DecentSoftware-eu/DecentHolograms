@@ -16,9 +16,15 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class Common {
 
-	private static final Pattern SPACING_CHARS_REGEX = Pattern.compile("[_ \\-]+");
-	public static final Version SERVER_VERSION = Version.valueOf(ReflectionUtil.getVersion());
-	public static String PREFIX = "&8[&3DecentHolograms&8] &7";
+	private static final Pattern SPACING_CHARS_REGEX;
+	public static final Version SERVER_VERSION;
+	public static String PREFIX;
+
+	static {
+		SPACING_CHARS_REGEX = Pattern.compile("[_ \\-]+");
+		SERVER_VERSION = Version.valueOf(ReflectionUtil.getVersion());
+		PREFIX = "&8[&3DecentHolograms&8] &7";
+	}
 
 	/*
 	 * 	Colorize

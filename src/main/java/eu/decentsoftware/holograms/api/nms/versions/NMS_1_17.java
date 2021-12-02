@@ -95,7 +95,7 @@ public class NMS_1_17 extends NMS {
             ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, "a", String.class);
             DATA_WATCHER_REGISTER_METHOD = new ReflectMethod(DATA_WATCHER_CLASS, "a", DWO_CLASS, Object.class);
         } else {
-            I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "Z");
+            I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "Y");
             REGISTRY_BLOCKS_FROM_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"), "fromId", int.class);
             ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, "fromName", String.class);
             DATA_WATCHER_REGISTER_METHOD = new ReflectMethod(DATA_WATCHER_CLASS, "register", DWO_CLASS, Object.class);
@@ -144,7 +144,8 @@ public class NMS_1_17 extends NMS {
         // ENTITY TYPES
         ENTITY_TYPES_A_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "a", String.class);
         ENTITY_TYPE_GET_KEY_METHOD = new ReflectMethod(EntityType.class, "getKey");
-        REGISTRY_BLOCKS_GET_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"), Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1) ? "a" : "getId", Object.class);
+        REGISTRY_BLOCKS_GET_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"),
+                Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1) ? "a" : "getId", Object.class);
         NAMESPACED_KEY_GET_KEY_METHOD = new ReflectMethod(ReflectionUtil.getClass("org.bukkit.NamespacedKey"), "getKey");
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");

@@ -47,8 +47,10 @@ public class Lang {
 	public static final Phrase HOLOGRAM_ALIGNED = new Phrase(CONFIG, "hologram.aligned", "{prefix}Hologram has been aligned!");
 	public static final Phrase HOLOGRAM_ALIGN_SELF = new Phrase(CONFIG, "hologram.align_self", "{prefix}Cannot align a Hologram to itself!");
 	public static final Phrase HOLOGRAM_ALIGN_AXIS = new Phrase(CONFIG, "hologram.align_axis", "{prefix}That axis does not exist!");
-	public static final Phrase HOLOGRAM_ORIGIN_SET = new Phrase(CONFIG, "hologram.down_origin_set", "{prefix}Origin has been set to &b'%1$s'&7!");
-	public static final Phrase HOLOGRAM_ORIGIN_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.down_origin_does_not_exist", "{prefix}Down origin value must be either true or false!");
+	public static final Phrase HOLOGRAM_DOWN_ORIGIN_SET = new Phrase(CONFIG, "hologram.down_origin_set", "{prefix}Origin has been set to &b'%1$s'&7!");
+	public static final Phrase HOLOGRAM_DOWN_ORIGIN_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.down_origin_does_not_exist", "{prefix}Down origin value must be either true or false!");
+	public static final Phrase HOLOGRAM_ALWAYS_FACE_PLAYER_SET = new Phrase(CONFIG, "hologram.always_face_player_set", "{prefix}Always Face Player has been set to &b'%1$s'&7!");
+	public static final Phrase HOLOGRAM_ALWAYS_FACE_PLAYER_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.always_face_player_does_not_exist", "{prefix}Always Face Player value must be either true or false!");
 	public static final Phrase HOLOGRAM_FACING_SET = new Phrase(CONFIG, "hologram.facing_set", "{prefix}Facing has been set!");
 	public static final Phrase HOLOGRAM_FLAG_ADDED = new Phrase(CONFIG, "hologram.flag_add", "{prefix}Flag &b\"%1$s\"&7 has been added!");
 	public static final Phrase HOLOGRAM_FLAG_REMOVED = new Phrase(CONFIG, "hologram.flag_remove", "{prefix}Flag &b\"%1$s\"&7 has been removed!");

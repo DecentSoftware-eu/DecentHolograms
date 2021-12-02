@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
@@ -86,6 +87,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         if (config.isBoolean("down-origin")) {
             hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
         }
+        if (config.isBoolean("always-face-player")) {
+            hologram.setAlwaysFacePlayer(config.getBoolean("always-face-player", Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue()));
+        }
 
         if (!config.contains("pages") && config.contains("lines")) {
             // Old Config
@@ -147,8 +151,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean saveToFile;
     protected final Configuration config;
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
-    protected final List<HologramPage> pages = Collections.synchronizedList(new ArrayList<>());
+    protected final DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN.getValue();
+    protected boolean alwaysFacePlayer = Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue();
     private final AtomicInteger tickCounter;
 
     /*
@@ -276,6 +281,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         config.set("update-interval", updateInterval);
         config.set("facing", facing);
         config.set("down-origin", downOrigin);
+        config.set("always-face-player", alwaysFacePlayer);
         config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
         config.saveData();
         config.reload();
