@@ -141,8 +141,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             }
 
             if (map.containsKey("always-face-player")) {
-                boolean afp = (boolean) map.get("always-face-player");
-                page.setAlwaysFacePlayer(afp);
+                Object afp = map.get("always-face-player");
+                if (afp instanceof Boolean) {
+                    page.setAlwaysFacePlayer((boolean) afp);
+                }
             }
         }
         return hologram;
