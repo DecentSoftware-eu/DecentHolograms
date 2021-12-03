@@ -34,6 +34,10 @@ public class HologramManager extends Ticked {
 		S.sync(this::reload);
 	}
 
+	public OffsetListener getOffsetListener() {
+		return offsetListener;
+	}
+
 	@Override
 	public void tick() {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {

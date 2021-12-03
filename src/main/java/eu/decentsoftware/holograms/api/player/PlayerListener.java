@@ -40,10 +40,4 @@ public class PlayerListener implements Listener {
         Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
     }
 
-//    @EventHandler
-//    public void onTeleport(PlayerChangedWorldEvent e) {
-//        Player player = e.getPlayer();
-//        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
-//    }
-
 }

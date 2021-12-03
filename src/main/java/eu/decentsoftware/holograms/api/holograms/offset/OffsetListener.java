@@ -78,7 +78,7 @@ public class OffsetListener extends Ticked implements Listener {
             Location prevLocation = line.getLocation();
             OffsetCalculator.Loc2D result = OffsetCalculator.calculateOffSet(
                     new OffsetCalculator.Loc2D(playerLoc.getX(), playerLoc.getZ()),
-                    new OffsetCalculator.Loc2D(-line.getOffsetX(), -line.getOffsetZ()),
+                    new OffsetCalculator.Loc2D(line.getOffsetX(), line.getOffsetZ()),
                     new OffsetCalculator.Loc2D(holoLoc.getX(), holoLoc.getZ())
             );
             Location finalOffsetLoc = new Location(holoLoc.getWorld(), result.getX(), line.getLocation().getY(), result.getZ());
