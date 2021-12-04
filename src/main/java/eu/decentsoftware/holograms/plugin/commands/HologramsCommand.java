@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
+import eu.decentsoftware.holograms.plugin.convertors.GHoloConverter;
 import eu.decentsoftware.holograms.plugin.convertors.HolographicDisplaysConvertor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -263,17 +264,31 @@ public class HologramsCommand extends DecentCommand {
             return (sender, args) -> {
                 final ConvertorType convertorType = ConvertorType.fromString(args[0]);
                 final String path = args.length >= 2 ? args[0] : null;
+                
+                if (convertorType == null) {
+                    Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
+                    return true;
+                }
 
                 switch (convertorType) {
                     case HOLOGRAPHIC_DISPLAYS:
-                        Common.tell(sender, Common.PREFIX + "Converting from " + convertorType.getName());
+                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
                         if (path != null) {
                             File file = new File(path);
-                            new HolographicDisplaysConvertor().convert(file);
+                            return new HolographicDisplaysConvertor().convert(file);
                         } else {
-                            new HolographicDisplaysConvertor().convert();
+                            return new HolographicDisplaysConvertor().convert();
                         }
-                        return true;
+                    
+                    case GHOLO:
+                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
+                        if (path != null) {
+                            File file = new File(path);
+                            return new GHoloConverter().convert(file);
+                        } else {
+                            return new GHoloConverter().convert();
+                        }
+                        
                     default:
                         break;
                 }

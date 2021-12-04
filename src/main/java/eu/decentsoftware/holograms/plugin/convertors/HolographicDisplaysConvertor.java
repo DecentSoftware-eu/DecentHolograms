@@ -38,17 +38,8 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config.getString(name + ".location"));
 			List<String> lines = prepareLines(config.getStringList(name + ".lines"));
-
-			if (PLUGIN.getHologramManager().containsHologram(name)) {
-				Common.log(Level.WARNING, "A hologram with name '%s' already exists, skipping...");
-				continue;
-			}
-			Hologram hologram = new Hologram(name, location);
-			HologramPage page = hologram.getPage(0);
-			PLUGIN.getHologramManager().registerHologram(hologram);
-			lines.forEach((line) -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
-			hologram.save();
-			count++;
+			
+			count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
 		}
 		Common.log("Successfully converted %d HolographicDisplays holograms!", count);
 		return true;
