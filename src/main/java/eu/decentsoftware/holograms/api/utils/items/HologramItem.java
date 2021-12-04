@@ -1,8 +1,10 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,7 +44,10 @@ public class HologramItem {
 			if (extras != null) {
 				String extrasFinal = player == null ? extras : PAPI.setPlaceholders(player, extras);
 				if (!extrasFinal.trim().isEmpty()) {
-					if (extrasFinal.length() <= 16) {
+					if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+						String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
+						itemBuilder.withItemStack(HeadDatabaseUtils.getHeadItemStackById(headDatabaseId));
+					} else if (extrasFinal.length() <= 16) {
 						itemBuilder.withSkullOwner(extrasFinal);
 					} else {
 						itemBuilder.withSkullTexture(extrasFinal);
