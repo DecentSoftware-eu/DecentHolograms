@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.utils.entity;
 import com.google.common.collect.Sets;
 import eu.decentsoftware.holograms.api.utils.Common;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,8 +71,10 @@ public class DecentEntityType {
         return !ENTITY_TYPE_BLACKLIST.contains(entityType.name());
     }
 
+    @Nullable
     public static EntityType parseEntityType(String string) {
         EntityType entityType = ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
+        if (entityType == null) return null;
         if (ENTITY_TYPE_BLACKLIST.contains(entityType.name())) {
             return null;
         }
