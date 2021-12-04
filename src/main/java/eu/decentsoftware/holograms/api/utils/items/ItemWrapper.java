@@ -31,18 +31,7 @@ public class ItemWrapper {
 	}
 
 	public ItemStack parse() {
-		ItemBuilder itemBuilder = new ItemBuilder(material == null ? Material.STONE : material);
-		if (name != null) {
-			itemBuilder.withName(Common.colorize(name));
-		}
-		itemBuilder.withAmount(amount);
-		itemBuilder.withDurability(durability);
-		if (lore != null && !lore.isEmpty()) {
-			itemBuilder.withLore(Common.colorize(lore));
-		}
-		if (enchantments != null && !enchantments.isEmpty()) {
-			enchantments.forEach(itemBuilder::withEnchantment);
-		}
+		ItemBuilder itemBuilder = buildCommon();
 		if (skullOwner != null) {
 			itemBuilder.withSkullOwner(skullOwner);
 		} else if (skullTexture != null) {
@@ -57,18 +46,7 @@ public class ItemWrapper {
 	}
 
 	public ItemBuilder parseBuilder(Player player) {
-		ItemBuilder itemBuilder = new ItemBuilder(material == null ? Material.STONE : material);
-		if (name != null) {
-			itemBuilder.withName(Common.colorize(name));
-		}
-		itemBuilder.withAmount(amount);
-		itemBuilder.withDurability(durability);
-		if (lore != null && !lore.isEmpty()) {
-			itemBuilder.withLore(Common.colorize(lore));
-		}
-		if (enchantments != null && !enchantments.isEmpty()) {
-			enchantments.forEach(itemBuilder::withEnchantment);
-		}
+		ItemBuilder itemBuilder = buildCommon();
 		if (skullOwner != null) {
 			itemBuilder.withSkullOwner(skullOwner.equals("@") ? player.getName() : skullOwner);
 		} else if (skullTexture != null) {
@@ -76,6 +54,24 @@ public class ItemWrapper {
 		}
 		itemBuilder.withItemFlags(flags);
 		return itemBuilder;
+	}
+	
+	private ItemBuilder buildCommon() {
+		ItemBuilder temp = new ItemBuilder(material == null ? Material.STONE : material)
+			.withAmount(amount)
+			.withDurability(durability);
+		
+		if (name != null) {
+			temp.withName(Common.colorize(name));
+		}
+		if (lore != null && !lore.isEmpty()) {
+			temp.withLore(Common.colorize(lore));
+		}
+		if (enchantments != null && !enchantments.isEmpty()) {
+			enchantments.forEach(temp::withEnchantment);
+		}
+		
+		return temp;
 	}
 
 }
