@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum ConvertorType {
-	HOLOGRAPHIC_DISPLAYS("HolographicDisplays", "DH", "hd");
+	HOLOGRAPHIC_DISPLAYS("HolographicDisplays", "DH", "hd"),
+	GHOLO("GHolo", "gholo", "gh");
 
 	public static ConvertorType fromString(String alias) {
 		for (ConvertorType convertorType : ConvertorType.values()) {
-			if (convertorType.getName().equals(alias) || convertorType.getAliases().contains(alias)) {
+			if (convertorType.getName().equalsIgnoreCase(alias) || convertorType.getAliases().contains(alias)) {
 				return convertorType;
 			}
 		}
