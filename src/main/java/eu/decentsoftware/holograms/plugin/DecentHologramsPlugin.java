@@ -22,7 +22,7 @@ public class DecentHologramsPlugin extends JavaPlugin {
 		decentHolograms.getFeatureManager().registerFeature(new HealingDisplayFeature());
 
 		CommandManager commandManager = decentHolograms.getCommandManager();
-		DecentCommand mainCommand =new HologramsCommand();
+		DecentCommand mainCommand = new HologramsCommand();
 		commandManager.setMainCommand(mainCommand);
 		commandManager.registerCommand(mainCommand);
 	}
@@ -31,4 +31,5 @@ public class DecentHologramsPlugin extends JavaPlugin {
 	public void onDisable() {
 		DecentHologramsAPI.onDisable();
 	}
+
 }

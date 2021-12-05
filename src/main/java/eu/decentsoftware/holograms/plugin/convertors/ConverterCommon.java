@@ -22,7 +22,7 @@ public class ConverterCommon {
         plugin.getHologramManager().registerHologram(hologram);
         lines.forEach((line) -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
         hologram.save();
-        count++;
-        return count;
+        return ++count;
     }
+
 }

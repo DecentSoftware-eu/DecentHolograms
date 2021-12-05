@@ -4,7 +4,6 @@ import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

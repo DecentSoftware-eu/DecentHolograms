@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api;
 
-import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
@@ -8,6 +7,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ public final class DHAPI {
      * @throws IllegalArgumentException If name or location is null or hologram with the given name already exists.
      */
     public static Hologram createHologram(String name, Location location, boolean saveToFile) throws IllegalArgumentException {
-        return createHologram(name, location, saveToFile, Lists.newArrayList("Decent", "Holograms"));
+        return createHologram(name, location, saveToFile, new ArrayList<>());
     }
 
     /**
@@ -83,7 +83,44 @@ public final class DHAPI {
             }
         }
         hologram.showAll();
+        hologram.save();
         return hologram;
+    }
+
+    /**
+     * Move a hologram to the given location.
+     *
+     * @param name The holograms name.
+     * @param location The location.
+     * @throws IllegalArgumentException If hologram or location is null.
+     */
+    public static void moveHologram(String name, Location location) throws IllegalArgumentException {
+        Validate.notNull(name);
+        Validate.notNull(location);
+
+        Hologram hologram = getHologram(name);
+        moveHologram(hologram, location);
+    }
+
+    /**
+     * Move a hologram to the given location.
+     *
+     * @param hologram The hologram.
+     * @param location The location.
+     * @throws IllegalArgumentException If hologram or location is null.
+     */
+    public static void moveHologram(Hologram hologram, Location location) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        Validate.notNull(location);
+
+        Location hologramLocation = hologram.getLocation();
+        hologramLocation.setWorld(location.getWorld());
+        hologramLocation.setX(location.getX());
+        hologramLocation.setY(location.getY());
+        hologramLocation.setZ(location.getZ());
+        hologram.setLocation(hologramLocation);
+        hologram.realignLines();
+        hologram.save();
     }
 
     /**

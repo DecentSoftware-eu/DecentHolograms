@@ -197,6 +197,9 @@ public class HologramPage extends FlagHolder {
      * @return Boolean whether the operation was successful.
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
+        if (index < 0 || index >= size()) {
+            return false;
+        }
         lines.add(index, line);
         parent.getViewerPlayers(this.index).forEach(line::show);
         realignLines();
@@ -229,6 +232,9 @@ public class HologramPage extends FlagHolder {
      * @return The HologramLine or null if it wasn't found.
      */
     public HologramLine getLine(int index) {
+        if (index < 0 || index >= size()) {
+            return null;
+        }
         return lines.get(index);
     }
 
@@ -239,6 +245,9 @@ public class HologramPage extends FlagHolder {
      * @return The removed line or null if it wasn't found.
      */
     public HologramLine removeLine(int index) {
+        if (index < 0 || index >= size()) {
+            return null;
+        }
         HologramLine line = lines.remove(index);
         if (line != null) {
             line.destroy();
