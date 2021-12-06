@@ -45,7 +45,7 @@ public class HologramManager extends Ticked {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
 					hologram.show(player, hologram.getPlayerPage(player));
-				} else if (hologram.isVisible(player) && (!hologram.canShow(player) || !hologram.isInDisplayRange(player))) {
+				} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
 					hologram.hide(player);
 				}
 			}

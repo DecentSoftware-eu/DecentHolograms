@@ -152,7 +152,7 @@ public class Lang {
 
 	public static void sendUpdateMessage(CommandSender sender) {
 		Common.tell(sender,
-				"\n&fA new version of &3DecentHolograms &fis available. Download it from: &7%s",
+				"\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7%s",
 				"https://www.spigotmc.org/resources/96927/"
 		);
 	}

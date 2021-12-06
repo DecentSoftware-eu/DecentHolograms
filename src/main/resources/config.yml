@@ -23,9 +23,9 @@ defaults:
   # Default line
   text: Blank Line
   # Default Hologram display range in blocks.
-  display-range: 64
+  display-range: 48
   # Default Hologram update range in blocks.
-  update-range: 64
+  update-range: 48
   # Default Hologram update interval in ticks.
   update-interval: 20
   # Default heigths of different hologram line types.

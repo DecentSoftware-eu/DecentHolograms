@@ -209,6 +209,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void tick() {
         if (tickCounter.get() == getUpdateInterval()) {
+            for (UUID uid : getViewers()) {
+                Player player = Bukkit.getPlayer(uid);
+                if (player == null) {
+                    viewers.remove(uid);
+                }
+            }
             updateAll();
             tickCounter.set(0);
             return;
@@ -352,10 +358,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 hide(player);
             }
             page.getLines().forEach(line -> line.show(player));
+            showClickableEntities(player);
             // Add player to viewers
             viewerPages.put(player.getUniqueId(), pageIndex);
             viewers.add(player.getUniqueId());
-            showClickableEntities(player);
             return true;
         }
         return false;

@@ -45,8 +45,8 @@ public class Ticker {
      * @param ticked The ticked object.
      */
     public void register(ITicked ticked) {
-        if (tickedObjects.contains(ticked)) return;
         synchronized (newTickedObjects) {
+            if (tickedObjects.contains(ticked)) return;
             if (!newTickedObjects.contains(ticked)) {
                 newTickedObjects.add(ticked);
             }

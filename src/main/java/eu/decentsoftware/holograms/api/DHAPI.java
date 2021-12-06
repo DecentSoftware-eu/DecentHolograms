@@ -181,6 +181,7 @@ public final class DHAPI {
                 page.addLine(line);
             }
         }
+        hologram.save();
         return page;
     }
 
@@ -217,6 +218,7 @@ public final class DHAPI {
                 page.addLine(line);
             }
         }
+        hologram.save();
         return page;
     }
 
@@ -231,7 +233,9 @@ public final class DHAPI {
     @Nullable
     public static HologramPage removeHologramPage(Hologram hologram, int index) throws IllegalArgumentException {
         Validate.notNull(hologram);
-        return hologram.removePage(index);
+        HologramPage page = hologram.removePage(index);
+        hologram.save();
+        return page;
     }
 
     /**
@@ -317,6 +321,7 @@ public final class DHAPI {
     public static HologramLine addHologramLine(HologramPage page, String content) throws IllegalArgumentException {
         HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
         page.addLine(line);
+        page.getParent().save();
         return line;
     }
 
@@ -368,6 +373,7 @@ public final class DHAPI {
         }
         HologramLine line = new HologramLine(page, oldLine.getLocation(), content);
         page.insertLine(index, line);
+        page.getParent().save();
         return line;
     }
 
@@ -388,6 +394,9 @@ public final class DHAPI {
             if (line.hasParent()) {
                 line.getParent().realignLines();
             }
+        }
+        if (line.hasParent()) {
+            line.getParent().getParent().save();
         }
     }
 
@@ -474,7 +483,9 @@ public final class DHAPI {
         if (page == null) {
             throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
         }
-        return page.removeLine(lineIndex);
+        HologramLine line = page.removeLine(lineIndex);
+        hologram.save();
+        return line;
     }
 
     /**
@@ -488,7 +499,9 @@ public final class DHAPI {
     @Nullable
     public static HologramLine removeHologramLine(HologramPage page, int lineIndex) throws IllegalArgumentException {
         Validate.notNull(page);
-        return page.removeLine(lineIndex);
+        HologramLine line = page.removeLine(lineIndex);
+        page.getParent().save();
+        return line;
     }
 
     /**
@@ -540,6 +553,7 @@ public final class DHAPI {
         }
         hologram.realignLines();
         hologram.updateAll();
+        hologram.save();
     }
 
 
