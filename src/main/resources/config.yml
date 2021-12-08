@@ -13,7 +13,7 @@
 # bugs or ideas for possible improvements.
 #
 # - Web: www.decentholograms.eu
-# - Wiki: wiki.decentsoftware.eu/decentholograms
+# - Wiki: wiki.decentholograms.eu
 # - Discord: discord.decentsoftware.eu
 # - GitHub: github.decentsoftware.eu
 #
@@ -36,6 +36,8 @@ defaults:
     smallhead: 0.6
   # Default value of Down Origin
   down-origin: false
+  # Default value of Always Face Player
+  always-face-player: true
 
 # Check for updates on plugin startup? [true/false]
 update-checker: true
