@@ -318,6 +318,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         for (int i = 0; i < size(); i++) {
             HologramPage page = getPage(i);
             HologramPage clonePage = page.clone(hologram, i);
+            if (hologram.pages.size() > i) {
+                hologram.pages.set(i, clonePage);
+            }
             hologram.pages.add(clonePage);
         }
         return hologram;

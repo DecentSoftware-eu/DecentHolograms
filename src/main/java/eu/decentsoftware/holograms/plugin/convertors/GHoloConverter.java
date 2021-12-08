@@ -35,7 +35,7 @@ public class GHoloConverter implements IConvertor {
         int count = 0;
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
         for (String name : config.getConfigurationSection("H").getKeys(false)) {
-            Location location =parseLocation(config.getString(name + ".l"));
+            Location location = parseLocation(config.getString(name + ".l"));
             List<String> lines = prepareLines(config.getStringList(name + ".c"));
             
             count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
