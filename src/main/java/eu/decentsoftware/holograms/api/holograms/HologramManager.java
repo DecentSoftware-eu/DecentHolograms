@@ -100,6 +100,7 @@ public class HologramManager extends Ticked {
 	public void reload() {
 		this.destroy();
 		this.loadHolograms();
+
 		this.register();
 		this.offsetListener.register();
 	}
@@ -115,10 +116,10 @@ public class HologramManager extends Ticked {
 		for (Hologram hologram : new DList<>(Hologram.getCachedHolograms())) {
 			hologram.destroy();
 		}
-		if (!temporaryLines.isEmpty()) {
-			temporaryLines.forEach(HologramLine::destroy);
-			temporaryLines.clear();
+		for (HologramLine line : temporaryLines) {
+			line.destroy();
 		}
+		temporaryLines.clear();
 		clickCooldowns.clear();
 	}
 
