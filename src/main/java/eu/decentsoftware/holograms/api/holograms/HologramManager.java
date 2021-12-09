@@ -145,8 +145,8 @@ public class HologramManager extends Ticked {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			hologram.hideAll();
 		}
-		if (!temporaryLines.isEmpty()) {
-			temporaryLines.forEach(HologramLine::hide);
+		for (HologramLine line : temporaryLines) {
+			line.hide();
 		}
 	}
 
