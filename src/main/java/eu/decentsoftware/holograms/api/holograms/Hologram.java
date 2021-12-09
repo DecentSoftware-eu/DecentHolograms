@@ -35,7 +35,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Hologram Cache
      */
 
-    private static final Map<String, Hologram> CACHED_HOLOGRAMS = new HashMap<>();
+    private static final Map<String, Hologram> CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
 
     public static Hologram getCachedHologram(String name) {
         return CACHED_HOLOGRAMS.get(name);
@@ -209,12 +209,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void tick() {
         if (tickCounter.get() == getUpdateInterval()) {
-            for (UUID uid : getViewers()) {
-                Player player = Bukkit.getPlayer(uid);
-                if (player == null) {
-                    viewers.remove(uid);
-                }
-            }
             updateAll();
             tickCounter.set(0);
             return;

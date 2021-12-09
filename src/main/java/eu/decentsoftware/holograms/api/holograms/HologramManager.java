@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.offset.OffsetListener;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
@@ -79,10 +80,10 @@ public class HologramManager extends Ticked {
 
 		UUID uuid = player.getUniqueId();
 		if (clickCooldowns.contains(uuid)) return false;
-		for (Hologram hologram : getHolograms()) {
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) continue;
 			if (hologram.onClick(player, entityId, clickType)) {
-				// clickCooldowns.add(uuid);
+//				clickCooldowns.add(uuid);
 				return true;
 			}
 		}
@@ -107,16 +108,18 @@ public class HologramManager extends Ticked {
 	 * Destroy this manager and all the holograms.
 	 */
 	public void destroy() {
+		this.offsetListener.destroy();
 		this.unregister();
-		this.offsetListener.unregister();
-		if (!hologramMap.isEmpty()) {
-			hologramMap.values().forEach(Hologram::destroy);
-			hologramMap.clear();
+
+		hologramMap.clear();
+		for (Hologram hologram : new DList<>(Hologram.getCachedHolograms())) {
+			hologram.destroy();
 		}
 		if (!temporaryLines.isEmpty()) {
 			temporaryLines.forEach(HologramLine::destroy);
 			temporaryLines.clear();
 		}
+		clickCooldowns.clear();
 	}
 
 	/**
@@ -125,8 +128,7 @@ public class HologramManager extends Ticked {
 	 * @param player Given player.
 	 */
 	public void showAll(Player player) {
-		if (hologramMap.isEmpty()) return;
-		for (Hologram hologram : hologramMap.values()) {
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (hologram.isEnabled()) {
 				hologram.show(player, hologram.getPlayerPage(player));
 			}
@@ -139,8 +141,8 @@ public class HologramManager extends Ticked {
 	 * @param player Given player.
 	 */
 	public void hideAll(Player player) {
-		if (!hologramMap.isEmpty()) {
-			hologramMap.values().forEach(Hologram::hideAll);
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
+			hologram.hideAll();
 		}
 		if (!temporaryLines.isEmpty()) {
 			temporaryLines.forEach(HologramLine::hide);

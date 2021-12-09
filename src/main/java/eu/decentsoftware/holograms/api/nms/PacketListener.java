@@ -20,7 +20,12 @@ public class PacketListener {
         this.unregister(player);
         ChannelPipeline pipeline = nms.getPipeline(player);
         PacketHandler packetHandler = new PacketHandler(player);
-        pipeline.addBefore("packet_handler", "decent_holograms", packetHandler);
+        try {
+            pipeline.addBefore("packet_handler", "decent_holograms", packetHandler);
+            return true;
+        } catch (Exception ignored) {
+            // fail
+        }
         return true;
     }
 
@@ -36,7 +41,7 @@ public class PacketListener {
             pipeline.remove("decent_holograms");
             return true;
         } catch (Exception ignored) {
-            // Not Registered
+            // not registered
         }
         return false;
     }

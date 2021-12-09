@@ -86,8 +86,9 @@ public final class DecentHolograms {
 
 	protected void disable() {
 		packetListener.destroy();
-		hologramManager.destroy();
 		featureManager.destroy();
+		hologramManager.destroy();
+		animationManager.destroy();
 		ticker.destroy();
 
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
@@ -101,8 +102,8 @@ public final class DecentHolograms {
 		Settings.reload();
 		Lang.reload();
 
-		hologramManager.reload();
 		animationManager.reload();
+		hologramManager.reload();
 		featureManager.reload();
 	}
 

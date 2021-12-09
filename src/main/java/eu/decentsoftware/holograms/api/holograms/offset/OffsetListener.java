@@ -25,6 +25,8 @@ public class OffsetListener extends Ticked implements Listener {
 
     public void destroy() {
         this.unregister();
+        this.lastYawsTemp.clear();
+        this.lastYaws.clear();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class OffsetListener extends Ticked implements Listener {
         Location holoLoc = hologram.getLocation();
 
         HologramPage page = hologram.getPage(player);
-        if (!page.isAlwaysFacePlayer() || !page.hasOffsets()) {
+        if (page == null || !page.isAlwaysFacePlayer() || !page.hasOffsets()) {
             return;
         }
 
