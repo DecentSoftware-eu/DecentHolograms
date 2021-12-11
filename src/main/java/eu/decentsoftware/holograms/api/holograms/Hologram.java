@@ -241,6 +241,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     public void destroy() {
         this.disable();
         this.viewerPages.clear();
+        DECENT_HOLOGRAMS.getHologramManager().removeHologram(getName());
         CACHED_HOLOGRAMS.remove(getName());
     }
 

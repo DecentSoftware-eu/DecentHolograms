@@ -379,6 +379,7 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.disable();
+				hologram.save();
 
 				Lang.HOLOGRAM_DISABLED.send(sender);
 				return true;
@@ -528,6 +529,7 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.enable();
+				hologram.save();
 
 				Lang.HOLOGRAM_ENABLED.send(sender);
 				return true;

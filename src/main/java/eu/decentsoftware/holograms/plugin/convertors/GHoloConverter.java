@@ -61,6 +61,7 @@ public class GHoloConverter implements IConvertor {
     private List<String> prepareLines(List<String> lines) {
         return lines.stream().map(line -> {
             line = line.replace("[x]", "\u2588");
+            line = line.replace("[X]", "\u2588");
             line = line.replace("[|]", "\u23B9");
             if (line.toUpperCase(Locale.ROOT).startsWith("ICON:") || line.toUpperCase(Locale.ROOT).startsWith("ENTITY:")) {
                 return "#" + line;

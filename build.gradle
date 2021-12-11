@@ -1,14 +1,14 @@
 plugins {
-    id 'java-library'
-    id "com.github.johnrengelman.shadow" version "4.0.4"
-    id 'maven-publish'
     id 'java'
+    id 'maven-publish'
+    id "io.freefair.lombok" version "6.3.0"
+    id "com.github.johnrengelman.shadow" version "4.0.4"
 }
 
 defaultTasks 'build'
 
 group 'eu.decentsoftware.holograms'
-version '2.2.3'
+version '2.2.4'
 description 'Lightweight yet very powerful hologram plugin with many features and configuration options.'
 
 repositories {
@@ -20,16 +20,14 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.10.9'
+    compileOnly 'me.clip:placeholderapi:2.10.10'
+    compileOnly 'com.arcaniax:HeadDatabase-API:1.3.1'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    compileOnly 'org.jetbrains:annotations:16.0.2'
-    annotationProcessor 'org.jetbrains:annotations:16.0.2'
+    // Annotations
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+    annotationProcessor 'org.jetbrains:annotations:22.0.0'
 
     implementation 'org.bstats:bstats-bukkit:2.2.1'
-
-    compileOnly "com.arcaniax:HeadDatabase-API:1.3.1"
 }
 
 sourceCompatibility = 1.8
