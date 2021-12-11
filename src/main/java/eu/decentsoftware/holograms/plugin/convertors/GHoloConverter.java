@@ -35,8 +35,10 @@ public class GHoloConverter implements IConvertor {
         int count = 0;
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
         for (String name : config.getConfigurationSection("H").getKeys(false)) {
-            Location location = parseLocation(config.getString(name + ".l"));
-            List<String> lines = prepareLines(config.getStringList(name + ".c"));
+            String path = "H." + name;
+            
+            Location location = LocationUtils.asLocation(config.getString(path + ".l"));
+            List<String> lines = prepareLines(config.getStringList(path + ".c"));
             
             count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
         }
@@ -54,10 +56,6 @@ public class GHoloConverter implements IConvertor {
     
     private boolean isFileValid(final File file) {
         return file != null && file.exists() && !file.isDirectory() && file.getName().equals("h.data");
-    }
-    
-    private Location parseLocation(final String locationString) {
-        return LocationUtils.asLocation(locationString);
     }
     
     private List<String> prepareLines(List<String> lines) {

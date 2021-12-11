@@ -10,6 +10,8 @@ import org.bukkit.World;
 import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 @UtilityClass
 public class LocationUtils {
 
@@ -35,7 +37,7 @@ public class LocationUtils {
 		String[] spl = string.replace(",", ".").split(":");
 		Location location;
 		if (spl.length >= 4) {
-			World world = Bukkit.getWorld(spl[0]);
+			World world = getWorld(spl[0]);
 			if (world != null) {
 				try {
 					location = new Location(world, Double.parseDouble(spl[1]), Double.parseDouble(spl[2]), Double.parseDouble(spl[3]));
@@ -63,6 +65,16 @@ public class LocationUtils {
 
 	public static double distance2D(@NonNull Location location1, @NonNull Location location2) {
 		return Math.sqrt(NumberConversions.square(location1.getX() - location2.getX()) + NumberConversions.square(location1.getZ() - location2.getZ()));
+	}
+	
+	// Plugins like GHolo use the world's UUID instead of the name for location.
+	private static World getWorld(@NonNull String value) {
+		UUID uuid = null;
+		try {
+			uuid = UUID.fromString(value);
+		} catch (IllegalArgumentException ignored) {}
+		
+		return uuid == null ? Bukkit.getWorld(value) : Bukkit.getWorld(uuid);
 	}
 
 }
