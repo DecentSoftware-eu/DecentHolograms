@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.holograms;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
@@ -14,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -24,15 +27,17 @@ public class HologramManager extends Ticked {
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 	private final Map<String, Hologram> hologramMap = new ConcurrentHashMap<>();
 	private final Set<HologramLine> temporaryLines = Collections.synchronizedSet(new HashSet<>());
-	private final Set<UUID> clickCooldowns = Collections.synchronizedSet(new HashSet<>());
+	private final Cache<UUID, Byte> clickCooldowns;
 	private final OffsetListener offsetListener;
 
 	public HologramManager() {
 		super(20L);
-		this.offsetListener = null; // new OffsetListener();
+		this.clickCooldowns = CacheBuilder.newBuilder()
+				.expireAfterWrite(250, TimeUnit.MILLISECONDS) // Expire after five ticks
+				.build();
+		this.offsetListener = null;
 		this.register();
-		// Reload when worlds are ready
-		S.sync(this::reload);
+		S.sync(this::reload); // Reload when worlds are ready
 	}
 
 	public OffsetListener getOffsetListener() {
@@ -44,24 +49,23 @@ public class HologramManager extends Ticked {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.isEnabled()) continue;
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
-					hologram.show(player, hologram.getPlayerPage(player));
-				} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
-					hologram.hide(player);
-				}
+				updateVisibility(player, hologram);
 			}
 		}
-		clickCooldowns.clear();
 	}
 
 	public void updateVisibility(Player player) {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.isEnabled()) continue;
-			if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
-				hologram.show(player, hologram.getPlayerPage(player));
-			} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
-				hologram.hide(player);
-			}
+			updateVisibility(player, hologram);
+		}
+	}
+
+	public void updateVisibility(Player player, Hologram hologram) {
+		if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
+			hologram.show(player, hologram.getPlayerPage(player));
+		} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
+			hologram.hide(player);
 		}
 	}
 
@@ -90,11 +94,11 @@ public class HologramManager extends Ticked {
 		}
 
 		UUID uuid = player.getUniqueId();
-		if (clickCooldowns.contains(uuid)) return false;
+		if (clickCooldowns.asMap().containsKey(uuid)) return false;
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) continue;
 			if (hologram.onClick(player, entityId, clickType)) {
-//				clickCooldowns.add(uuid);
+				clickCooldowns.put(uuid, (byte) 1);
 				return true;
 			}
 		}
@@ -129,7 +133,7 @@ public class HologramManager extends Ticked {
 		}
 		temporaryLines.clear();
 
-		clickCooldowns.clear();
+		clickCooldowns.cleanUp();
 	}
 
 	/**
