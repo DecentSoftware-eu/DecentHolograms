@@ -47,6 +47,7 @@ public class AnimationManager extends Ticked {
         this.registerAnimation(new ScrollAnimation());
         this.registerAnimation(new ColorsAnimation());
         this.loadCustomAnimations();
+        this.step.set(0);
         this.register();
     }
 

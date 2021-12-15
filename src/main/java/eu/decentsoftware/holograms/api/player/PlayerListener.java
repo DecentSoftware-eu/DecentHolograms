@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerListener implements Listener {
 
@@ -21,7 +22,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        decentHolograms.getHologramManager().showAll(player);
+        decentHolograms.getHologramManager().updateVisibility(player);
         decentHolograms.getPacketListener().register(player);
         if (player.hasPermission("dh.admin") && decentHolograms.isUpdateAvailable()) {
             Lang.sendUpdateMessage(player);
@@ -39,6 +40,12 @@ public class PlayerListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
         Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        Player player = e.getPlayer();
+        decentHolograms.getHologramManager().updateVisibility(player);
     }
 
 }

@@ -48,7 +48,7 @@ public class HologramSubCommand extends DecentCommand {
 		addSubCommand(new HologramAlignSub());
 		addSubCommand(new HologramNearSub());
 		addSubCommand(new HologramDownOriginSub());
-		addSubCommand(new HologramAlwaysFacePlayerSub());
+//		addSubCommand(new HologramAlwaysFacePlayerSub());
 		addSubCommand(new HologramFacingSub());
 		addSubCommand(new HologramFlagAddSub());
 		addSubCommand(new HologramFlagRemoveSub());

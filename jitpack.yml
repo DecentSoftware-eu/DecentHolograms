@@ -1,0 +1,6 @@
+jdk: openjdk8
+install:
+  - './gradlew build :lib:publishToMavenLocal'
+env:
+  GROUP: 'eu.decentsoftware'
+  ARTIFACT: 'decentholograms'

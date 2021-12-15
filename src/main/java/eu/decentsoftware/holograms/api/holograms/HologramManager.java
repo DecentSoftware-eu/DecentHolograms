@@ -54,6 +54,17 @@ public class HologramManager extends Ticked {
 		clickCooldowns.clear();
 	}
 
+	public void updateVisibility(Player player) {
+		for (Hologram hologram : Hologram.getCachedHolograms()) {
+			if (!hologram.isEnabled()) continue;
+			if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
+				hologram.show(player, hologram.getPlayerPage(player));
+			} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
+				hologram.hide(player);
+			}
+		}
+	}
+
 	/**
 	 * Spawn a temporary line that is going to disappear after the given duration.
 	 *
