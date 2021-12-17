@@ -94,6 +94,7 @@ public abstract class NMS {
         mapEntityTypes.put("DOLPHIN", new Pair<>(12, 0.6f));
         mapEntityTypes.put("DROWNED", new Pair<>(14, 1.95f));
         mapEntityTypes.put("ELDER_GUARDIAN", new Pair<>(15, 2.9f));
+        mapEntityTypes.put("ENDER_DRAGON", new Pair<>(17, 8.0f));
         mapEntityTypes.put("ENDERMAN", new Pair<>(18, 2.9f));
         mapEntityTypes.put("ENDERMITE", new Pair<>(19, 0.3f));
         mapEntityTypes.put("EVOKER", new Pair<>(21, 1.95f));

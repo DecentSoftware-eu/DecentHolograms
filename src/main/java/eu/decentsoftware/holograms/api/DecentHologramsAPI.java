@@ -46,7 +46,7 @@ public final class DecentHologramsAPI {
 	 */
 	public static DecentHolograms get() {
 		if (implementation == null) {
-			throw new IllegalStateException("There is no running instance of DecentHologramsAPI, enabled it first.");
+			throw new IllegalStateException("There is no running instance of DecentHologramsAPI, enable it first.");
 		}
 		return implementation;
 	}
