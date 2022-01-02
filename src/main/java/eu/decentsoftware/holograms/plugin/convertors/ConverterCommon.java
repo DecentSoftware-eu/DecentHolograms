@@ -1,6 +1,9 @@
 package eu.decentsoftware.holograms.plugin.convertors;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ActionType;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
@@ -42,6 +45,9 @@ public class ConverterCommon {
             HologramPage page = hologram.getPage(i);
             List<String> lines = pages.get(i);
             lines.forEach((line) -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
+            
+            page.addAction(ClickType.LEFT, new Action(ActionType.PREV_PAGE, hologram.getName()));
+            page.addAction(ClickType.RIGHT, new Action(ActionType.NEXT_PAGE, hologram.getName()));
         }
         
         plugin.getHologramManager().registerHologram(hologram);
