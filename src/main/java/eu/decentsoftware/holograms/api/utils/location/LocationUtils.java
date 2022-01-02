@@ -22,7 +22,7 @@ public class LocationUtils {
 		}
 		return location;
 	}
-
+	
 	public static @Nullable Location asLocation(String string) {
 		try {
 			return asLocationE(string);

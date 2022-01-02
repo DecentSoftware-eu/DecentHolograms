@@ -7,6 +7,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
+import eu.decentsoftware.holograms.plugin.convertors.CMIConverter;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
 import eu.decentsoftware.holograms.plugin.convertors.GHoloConverter;
 import eu.decentsoftware.holograms.plugin.convertors.HolographicDisplaysConvertor;
@@ -287,6 +288,16 @@ public class HologramsCommand extends DecentCommand {
                             return new GHoloConverter().convert(file);
                         } else {
                             return new GHoloConverter().convert();
+                        }
+                    
+                    case CMI:
+                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
+                        Common.tell(sender, "%sNOTE: CMI support is limited!", Common.PREFIX);
+                        if (path != null) {
+                            File file = new File(path);
+                            return new CMIConverter().convert(file);
+                        } else {
+                            return new CMIConverter().convert();
                         }
                         
                     default:
