@@ -6,11 +6,9 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.entity.Player;
 
-public class PacketHandler extends ChannelDuplexHandler {
+public class PacketHandlerCommon {
 
     protected static final Class<?> ENTITY_USE_PACKET_CLASS;
     protected static final ReflectField<Integer> ENTITY_USE_PACKET_ID_FIELD;
@@ -31,47 +29,43 @@ public class PacketHandler extends ChannelDuplexHandler {
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
         if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_17_R1)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "j");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS);
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS);
         } else if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_14_R1)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "i");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         } else if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_9_R1)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "g");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         } else {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "e");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         }
     }
 
-    private final Player player;
-
-    public PacketHandler(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-        if (packet != null && packet.getClass().isAssignableFrom(ENTITY_USE_PACKET_CLASS)) {
-            int entityId = ENTITY_USE_PACKET_ID_FIELD.getValue(packet);
-            ClickType clickType = this.getClickType(packet);
-            DecentHologramsAPI.get().getHologramManager().onClick(player, entityId, clickType);
+    /**
+     * Handle the PacketPlayInEntityUse packet and detect possible hologram clicks.
+     *
+     * @param packet The packet.
+     * @param player The player that clicked.
+     */
+    public static boolean handlePacket(Object packet, Player player) {
+        if (packet == null || !packet.getClass().isAssignableFrom(ENTITY_USE_PACKET_CLASS)) {
+            return false;
         }
-        super.channelRead(channelHandlerContext, packet);
+        int entityId = ENTITY_USE_PACKET_ID_FIELD.getValue(packet);
+        ClickType clickType = getClickType(packet, player);
+        return DecentHologramsAPI.get().getHologramManager().onClick(player, entityId, clickType);
     }
 
-    protected int getEntityUseActionOrdinal(Object packet) {
-        if (packet != null && packet.getClass().isAssignableFrom(ENTITY_USE_PACKET_CLASS)) {
-            Object packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
-            ENTITY_USE_PACKET_A_METHOD.invoke(packet, packetDataSerializer);
-            PACKET_DATA_SERIALIZER_READ_INT_METHOD.invoke(packetDataSerializer);
-            return PACKET_DATA_SERIALIZER_READ_INT_METHOD.invoke(packetDataSerializer);
-        }
-        return -1;
+    private static int getEntityUseActionOrdinal(Object packet) {
+        Object packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
+        ENTITY_USE_PACKET_A_METHOD.invoke(packet, packetDataSerializer);
+        PACKET_DATA_SERIALIZER_READ_INT_METHOD.invoke(packetDataSerializer);
+        return PACKET_DATA_SERIALIZER_READ_INT_METHOD.invoke(packetDataSerializer);
     }
 
-    private ClickType getClickType(Object packet) {
-        int ordinal = this.getEntityUseActionOrdinal(packet);
+    private static ClickType getClickType(Object packet, Player player) {
+        int ordinal = getEntityUseActionOrdinal(packet);
         if (ordinal == 1) {
             return player.isSneaking() ? ClickType.SHIFT_LEFT : ClickType.LEFT;
         } else {

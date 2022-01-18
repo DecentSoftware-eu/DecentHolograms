@@ -6,14 +6,17 @@ public final class DecentHologramsAPI {
 
 	private static DecentHolograms implementation;
 
-	/**
-	 * Enable DecentHologramsAPI.
-	 *
-	 * @param plugin Plugin from which it's being enabled.
-	 */
-	public static void onEnable(JavaPlugin plugin) {
+	public static void onLoad(JavaPlugin plugin) {
 		if (implementation != null) return;
 		implementation = new DecentHolograms(plugin);
+		implementation.load();
+	}
+
+	/**
+	 * Enable DecentHologramsAPI.
+	 */
+	public static void onEnable() {
+		if (implementation == null) return;
 		implementation.enable();
 	}
 
@@ -37,7 +40,7 @@ public final class DecentHologramsAPI {
 	 * Get the instance of running DecentHolograms.
 	 * <p>
 	 *     If you use shaded version of the API, you must enable
-	 *     it first using {@link DecentHologramsAPI#onEnable(JavaPlugin)} class.
+	 *     it first using {@link DecentHologramsAPI#onEnable()} class.
 	 *     Also, don't forget to disable the API in you onDisable method
 	 *     when you are done using it. {@link DecentHologramsAPI#onDisable()}
 	 * </p>

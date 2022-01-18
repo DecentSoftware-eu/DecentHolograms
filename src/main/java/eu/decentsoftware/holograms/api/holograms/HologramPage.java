@@ -132,7 +132,7 @@ public class HologramPage extends FlagHolder {
             actionsMap.put(entry.getKey().name(), entry.getValue().stream().map(Action::toString).collect(Collectors.toList()));
         }
         map.put("actions", actionsMap);
-        map.put("always-face-player", isAlwaysFacePlayer());
+//        map.put("always-face-player", isAlwaysFacePlayer());
         return map;
     }
 

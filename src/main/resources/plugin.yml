@@ -1,6 +1,9 @@
 main: eu.decentsoftware.holograms.plugin.DecentHologramsPlugin
 api-version: 1.13
-softdepend: [PlaceholderAPI, HeadDatabase]
+softdepend:
+  - PlaceholderAPI
+  - HeadDatabase
+  - ProtocolLib
 name: DecentHolograms
 description: Lightweight but powerful hologram plugin with many features and configuration options.
 version: ${version}

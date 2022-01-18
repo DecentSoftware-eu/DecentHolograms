@@ -47,4 +47,8 @@ public class S {
         return Bukkit.getScheduler().runTaskTimerAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
+    public static BukkitTask asyncTask(Runnable runnable, long interval, long delay) {
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, delay, interval);
+    }
+
 }

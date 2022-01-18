@@ -182,4 +182,14 @@ public class Common {
 		}
 	}
 
+	/**
+	 * Check whether the given plugin is enabled.
+	 *
+	 * @param name The plugins name.
+	 * @return The boolean.
+	 */
+	public static boolean isPluginEnabled(String name) {
+		return Bukkit.getPluginManager().isPluginEnabled(name);
+	}
+
 }

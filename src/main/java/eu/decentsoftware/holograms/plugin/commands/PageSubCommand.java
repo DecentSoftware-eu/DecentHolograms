@@ -46,7 +46,7 @@ public class PageSubCommand extends DecentCommand {
         addSubCommand(new PageRemoveActionSub());
         addSubCommand(new PageClearActionsSub());
         addSubCommand(new PageActionsSub());
-        addSubCommand(new PageAlwaysFacePlayerSub());
+//        addSubCommand(new PageAlwaysFacePlayerSub());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.nms;
 
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,9 +18,13 @@ public class PacketListener {
     }
 
     public boolean register(Player player) {
+        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+            return true;
+        }
+
         this.unregister(player);
         ChannelPipeline pipeline = nms.getPipeline(player);
-        PacketHandler packetHandler = new PacketHandler(player);
+        PacketHandler__Custom packetHandler = new PacketHandler__Custom(player);
         try {
             pipeline.addBefore("packet_handler", "decent_holograms", packetHandler);
             return true;
@@ -30,12 +35,20 @@ public class PacketListener {
     }
 
     public void registerAll() {
+        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+            return;
+        }
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             this.register(player);
         }
     }
 
     public boolean unregister(Player player) {
+        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+            return true;
+        }
+
         ChannelPipeline pipeline = NMS.getInstance().getPipeline(player);
         try {
             pipeline.remove("decent_holograms");
@@ -47,6 +60,10 @@ public class PacketListener {
     }
 
     public void unregisterAll() {
+        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+            return;
+        }
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             this.unregister(player);
         }

@@ -36,8 +36,6 @@ defaults:
     smallhead: 0.6
   # Default value of Down Origin
   down-origin: false
-  # Default value of Always Face Player
-  always-face-player: true
 
 # Check for updates on plugin startup? [true/false]
 update-checker: true

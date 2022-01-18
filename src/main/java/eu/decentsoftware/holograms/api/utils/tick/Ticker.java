@@ -26,7 +26,7 @@ public class Ticker {
         this.performingTick = false;
         this.taskId = S.asyncTask(() -> {
             if (!performingTick) tick();
-        }, 1L).getTaskId();
+        }, 1L, 5L).getTaskId();
     }
 
     /**

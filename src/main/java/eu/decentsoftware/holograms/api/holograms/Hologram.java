@@ -289,7 +289,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         config.set("update-interval", updateInterval);
         config.set("facing", facing);
         config.set("down-origin", downOrigin);
-        config.set("always-face-player", alwaysFacePlayer);
+//        config.set("always-face-player", alwaysFacePlayer);
         config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
         config.saveData();
         config.reload();

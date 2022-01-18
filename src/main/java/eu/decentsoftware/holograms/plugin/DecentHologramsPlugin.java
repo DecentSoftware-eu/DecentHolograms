@@ -14,8 +14,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DecentHologramsPlugin extends JavaPlugin {
 
 	@Override
+	public void onLoad() {
+		DecentHologramsAPI.onLoad(this);
+	}
+
+	@Override
 	public void onEnable() {
-		DecentHologramsAPI.onEnable(this);
+		DecentHologramsAPI.onEnable();
 
 		DecentHolograms decentHolograms = DecentHologramsAPI.get();
 		decentHolograms.getFeatureManager().registerFeature(new DamageDisplayFeature());
