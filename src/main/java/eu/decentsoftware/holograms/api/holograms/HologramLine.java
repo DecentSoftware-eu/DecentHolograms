@@ -309,6 +309,10 @@ public class HologramLine extends HologramObject {
         List<Player> playerList = getPlayers(false, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
+            if (player == null) {
+                continue;
+            }
+            
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                 switch (type) {
                     case TEXT:
