@@ -49,6 +49,25 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		}
 		return true;
 	}
+	
+	@Override
+	public List<String> prepareLines(List<String> lines){
+		return lines.stream().map(line -> {
+			line = line.replace("[x]", "\u2588");
+			line = line.replace("[X]", "\u2588");
+			line = line.replace("[/]", "\u258C");
+			line = line.replace("[.]", "\u2591");
+			line = line.replace("[..]", "\u2592");
+			line = line.replace("[...]", "\u2593");
+			line = line.replace("[p]", "\u2022");
+			line = line.replace("[P]", "\u2022");
+			line = line.replace("[|]", "\u23B9");
+			if (line.toUpperCase().startsWith("ICON: ")) {
+				return "#" + line;
+			}
+			return line;
+		}).collect(Collectors.toList());
+	}
 
 	private boolean isFileValid(final File file) {
 		return file != null && file.exists() && !file.isDirectory() && file.getName().equals("database.yml");
@@ -72,24 +91,6 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		}
 		
 		return LocationUtils.asLocation(String.format("%s:%f:%f:%f", world, x, y, z));
-	}
-
-	private List<String> prepareLines(List<String> lines) {
-		return lines.stream().map(line -> {
-			line = line.replace("[x]", "\u2588");
-			line = line.replace("[X]", "\u2588");
-			line = line.replace("[/]", "\u258C");
-			line = line.replace("[.]", "\u2591");
-			line = line.replace("[..]", "\u2592");
-			line = line.replace("[...]", "\u2593");
-			line = line.replace("[p]", "\u2022");
-			line = line.replace("[P]", "\u2022");
-			line = line.replace("[|]", "\u23B9");
-			if (line.toUpperCase().startsWith("ICON: ")) {
-				return "#" + line;
-			}
-			return line;
-		}).collect(Collectors.toList());
 	}
 
 }

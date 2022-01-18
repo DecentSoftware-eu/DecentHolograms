@@ -58,7 +58,8 @@ public class GHoloConverter implements IConvertor {
         return file != null && file.exists() && !file.isDirectory() && file.getName().equals("h.data");
     }
     
-    private List<String> prepareLines(List<String> lines) {
+    @Override
+    public List<String> prepareLines(List<String> lines){
         return lines.stream().map(line -> {
             line = line.replace("[x]", "\u2588");
             line = line.replace("[X]", "\u2588");
