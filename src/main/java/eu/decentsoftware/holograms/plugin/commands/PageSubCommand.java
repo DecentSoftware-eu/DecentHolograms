@@ -90,7 +90,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " &3&lHOLOGRAM PAGES HELP");
                 Common.tell(sender, " All page commands.");
                 sender.sendMessage("");
-                CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("page");
+                CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
                 List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
                 for (CommandBase subCommand : subCommands) {
                     Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
