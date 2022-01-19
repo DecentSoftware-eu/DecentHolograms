@@ -1,15 +1,12 @@
 package eu.decentsoftware.holograms.api;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.features.FeatureManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.nms.PacketHandler__ProtocolLib;
-import eu.decentsoftware.holograms.api.nms.PacketListener;
+import eu.decentsoftware.holograms.api.nms.NMSPacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -34,11 +31,10 @@ public final class DecentHolograms {
 	private CommandManager commandManager;
 	private FeatureManager featureManager;
 	private AnimationManager animationManager;
-	private PacketListener packetListener;
+	private NMSPacketListener packetListener;
 	private Ticker ticker;
 	private File dataFolder;
 	private boolean updateAvailable;
-	private boolean usingProtocolLib;
 
 	/*
 	 *	Constructors
@@ -47,7 +43,6 @@ public final class DecentHolograms {
 	DecentHolograms(JavaPlugin plugin) {
 		Validate.notNull(plugin);
 		this.plugin = plugin;
-		this.usingProtocolLib = false;
 	}
 
 	/*
@@ -55,11 +50,7 @@ public final class DecentHolograms {
 	 */
 
 	protected void load() {
-		if (Common.isPluginEnabled("ProtocolLib")) {
-			ProtocolManager pm = ProtocolLibrary.getProtocolManager();
-			pm.addPacketListener(new PacketHandler__ProtocolLib());
-			usingProtocolLib = true;
-		}
+
 	}
 
 	protected void enable() {
@@ -73,7 +64,7 @@ public final class DecentHolograms {
 		commandManager = new CommandManager();
 		featureManager = new FeatureManager();
 		animationManager = new AnimationManager();
-		packetListener = new PacketListener();
+		packetListener = new NMSPacketListener();
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this), plugin);
@@ -130,14 +121,6 @@ public final class DecentHolograms {
 			dataFolder = new File("plugins/DecentHolograms");
 		}
 		return dataFolder;
-	}
-
-	public boolean isUsingProtocolLib() {
-		return usingProtocolLib;
-	}
-
-	public void setUsingProtocolLib(boolean usingProtocolLib) {
-		this.usingProtocolLib = usingProtocolLib;
 	}
 
 }

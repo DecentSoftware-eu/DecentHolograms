@@ -1,28 +1,38 @@
 package eu.decentsoftware.holograms.api.nms;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.utils.Common;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PacketListener {
+public class NMSPacketListener {
 
     private static final NMS nms = NMS.getInstance();
+    private boolean usingProtocolLib;
 
-    public PacketListener() {
-        this.registerAll();
+    public NMSPacketListener() {
+        registerAll();
     }
 
     public void destroy() {
-        this.unregisterAll();
+        if (usingProtocolLib && Common.isPluginEnabled("ProtocolLib")) {
+            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+            protocolManager.removePacketListeners(DecentHologramsAPI.get().getPlugin());
+            usingProtocolLib = false;
+            return;
+        }
+        unregisterAll();
     }
 
     public boolean register(Player player) {
-        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+        if (usingProtocolLib) {
             return true;
         }
 
-        this.unregister(player);
+        unregister(player);
         ChannelPipeline pipeline = nms.getPipeline(player);
         PacketHandler__Custom packetHandler = new PacketHandler__Custom(player);
         try {
@@ -35,17 +45,21 @@ public class PacketListener {
     }
 
     public void registerAll() {
-        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
-            return;
-        }
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            this.register(player);
+        // If ProtocolLib is present, use it for packet listening.
+        if (Common.isPluginEnabled("ProtocolLib")) {
+            new PacketHandler__ProtocolLib();
+            usingProtocolLib = true;
+            Common.log("Using ProtocolLib for packet listening.");
+        } else {
+            usingProtocolLib = false;
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                register(player);
+            }
         }
     }
 
     public boolean unregister(Player player) {
-        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+        if (usingProtocolLib) {
             return true;
         }
 
@@ -60,12 +74,12 @@ public class PacketListener {
     }
 
     public void unregisterAll() {
-        if (DecentHologramsAPI.get().isUsingProtocolLib()) {
+        if (usingProtocolLib) {
             return;
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            this.unregister(player);
+            unregister(player);
         }
     }
 
