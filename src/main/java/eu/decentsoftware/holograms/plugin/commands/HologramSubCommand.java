@@ -921,22 +921,22 @@ public class HologramSubCommand extends DecentCommand {
 					return matches;
 				} else if (args.length == 2 && Validator.isPlayer(sender)) {
 					hologram = PLUGIN.getHologramManager().getHologram(args[0]);
-					location = hologram.getLocation();
-					if (hologram != null) {
+					location = hologram == null ? null : hologram.getLocation();
+					if (location != null) {
 						return Lists.newArrayList(String.valueOf(location.getX()), "~");
 					}
 					return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getX()));
 				} else if (args.length == 3 && Validator.isPlayer(sender)) {
 					hologram = PLUGIN.getHologramManager().getHologram(args[0]);
-					location = hologram.getLocation();
-					if (hologram != null) {
+					location = hologram == null ? null : hologram.getLocation();
+					if (location != null) {
 						return Lists.newArrayList(String.valueOf(location.getY()), "~");
 					}
 					return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getY()));
 				} else if (args.length == 4 && Validator.isPlayer(sender)) {
 					hologram = PLUGIN.getHologramManager().getHologram(args[0]);
-					location = hologram.getLocation();
-					if (hologram != null) {
+					location = hologram == null ? null : hologram.getLocation();
+					if (location != null) {
 						return Lists.newArrayList(String.valueOf(location.getZ()), "~");
 					}
 					return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getZ()));
