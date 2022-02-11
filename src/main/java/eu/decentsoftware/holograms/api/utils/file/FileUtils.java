@@ -24,7 +24,7 @@ public class FileUtils {
         if (dir.exists() && dir.isDirectory()) {
             return dir.list((dir1, name) -> regex == null || regex.trim().isEmpty() || name.matches(regex));
         } else if (createDir && dir.mkdirs()) {
-            Common.log("Created directory " + path);
+            Common.log("Created directory %s", path);
         }
         return new String[0];
     }
