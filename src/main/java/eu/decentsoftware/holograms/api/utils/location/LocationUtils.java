@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.location;
 
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.RandomUtils;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 @UtilityClass
 public class LocationUtils {
@@ -27,9 +29,9 @@ public class LocationUtils {
 		try {
 			return asLocationE(string);
 		} catch (LocationParseException e) {
-			e.printStackTrace();
+			Common.log(Level.WARNING, "Error while parsing Location %s: %s", string, e.getMessage());
+			return null;
 		}
-		return null;
 	}
 
 	public static Location asLocationE(String string) throws LocationParseException {
