@@ -36,7 +36,7 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config, name);
 			if(location == null){
-				Common.log(Level.WARNING, "Location for '%s' was null. Skipping...", name);
+				Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
 				continue;
 			}
 			

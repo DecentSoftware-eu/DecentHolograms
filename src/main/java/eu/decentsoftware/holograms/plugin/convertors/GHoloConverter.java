@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -38,6 +39,11 @@ public class GHoloConverter implements IConvertor {
             String path = "H." + name;
             
             Location location = LocationUtils.asLocation(config.getString(path + ".l"));
+            if(location == null){
+                Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+                continue;
+            }
+            
             List<String> lines = prepareLines(config.getStringList(path + ".c"));
             
             count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
