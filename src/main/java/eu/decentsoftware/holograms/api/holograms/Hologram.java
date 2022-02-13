@@ -185,7 +185,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         this.config = config;
         this.enabled = enabled;
         this.saveToFile = this.config != null;
-        this.tickCounter = new AtomicInteger(getUpdateInterval());
+        this.tickCounter = new AtomicInteger();
         this.addPage();
         this.register();
 
