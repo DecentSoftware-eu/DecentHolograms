@@ -224,7 +224,7 @@ public class NMS_1_9 extends NMS {
     @Override
     public float getEntityHeigth(EntityType type) {
         if (Common.SERVER_VERSION.isBefore(Version.v1_14_R1)) {
-            return super.getEntityTypeId(type);
+            return super.getEntityHeigth(type);
         }
 
         if (type == null) return 0.0f;
