@@ -245,7 +245,7 @@ public class FeatureSubCommand extends DecentCommand {
             return (sender, args) -> {
                 List<AbstractFeature> features = Lists.newArrayList(PLUGIN.getFeatureManager().getFeatures());
                 if (features.isEmpty()) {
-                    Common.tell(sender, "%sThere are no features are currenty registered.");
+                    Common.tell(sender, "%sThere are no features are currently registered.");
                 } else {
                     sender.sendMessage("");
                     Common.tell(sender, " &3&lFEATURES LIST");

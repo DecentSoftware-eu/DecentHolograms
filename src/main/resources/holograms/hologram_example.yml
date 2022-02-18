@@ -34,7 +34,7 @@ origin: UP
 lines:
   '1':
     content: 'Blank Line'
-    heigth: 0.3
+    height: 0.3
   '2':
     content: '#ITEM: STONE'
-    heigth: 0.6
+    height: 0.6

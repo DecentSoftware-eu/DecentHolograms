@@ -172,7 +172,7 @@ public class NMS_1_17 extends NMS {
     }
 
     @Override
-    public float getEntityHeigth(EntityType type) {
+    public float getEntityHeight(EntityType type) {
         if (type == null) return 0.0f;
         Object namespacedKey = ENTITY_TYPE_GET_KEY_METHOD.invoke(type);
         String key = NAMESPACED_KEY_GET_KEY_METHOD.invoke(namespacedKey);
@@ -311,7 +311,7 @@ public class NMS_1_17 extends NMS {
 
     @SuppressWarnings("RedundantCast")
     @Override
-    public void attachFakeEnity(Player player, int vehicleId, int entityId) {
+    public void attachFakeEntity(Player player, int vehicleId, int entityId) {
         Validate.notNull(player);
         Object packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
         PACKET_DATA_SERIALIZER_D_METHOD.invoke(packetDataSerializer, vehicleId);

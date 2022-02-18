@@ -155,7 +155,7 @@ public class HologramPage extends FlagHolder {
      */
 
     /**
-     * Re-Aling the lines in this hologram page putting them to the right place.
+     * Re-Align the lines in this hologram page putting them to the right place.
      * <p>
      *     This method is good to use after teleporting the hologram page.
      * </p>

@@ -149,7 +149,7 @@ public class NMS_1_8 extends NMS {
     }
 
     @Override
-    public void attachFakeEnity(Player player, int vehicleId, int entityId) {
+    public void attachFakeEntity(Player player, int vehicleId, int entityId) {
         Validate.notNull(player);
         Object packet = PACKET_ATTACH_ENTITY_CONSTRUCTOR.newInstance();
         if (packet == null) return;

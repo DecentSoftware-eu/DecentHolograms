@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 @CommandInfo(
         permission = "",
         usage = "/dh pages help",
-        description = "All commands for editting hologram pages.",
+        description = "All commands for editing hologram pages.",
         aliases = {"page", "p"}
 )
 public class PageSubCommand extends DecentCommand {
@@ -74,7 +74,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permission = "dh.admin",
             usage = "/dh page ?",
-            description = "All commands for editting pages.",
+            description = "All commands for editing pages.",
             aliases = {"?"}
     )
     static class PageHelpSub extends DecentCommand {
