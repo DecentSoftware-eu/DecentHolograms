@@ -40,6 +40,9 @@ defaults:
 # Check for updates on plugin startup? [true/false]
 update-checker: true
 
+# Click cooldown in ticks
+click-cooldown: 20
+
 
 
 # # # # # # # # # # # # # # # # #

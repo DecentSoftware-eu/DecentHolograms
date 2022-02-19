@@ -97,7 +97,8 @@ public abstract class ActionType {
 			Validate.notNull(player);
 
 			String string = String.join(":", args);
-			if (string.split(":").length != 4) {
+			String[] spl = string.split(":");
+			if (spl.length == 3 || spl.length == 5) {
 				string = player.getLocation().getWorld().getName() + ":" + string;
 			}
 			Location location = LocationUtils.asLocation(string);

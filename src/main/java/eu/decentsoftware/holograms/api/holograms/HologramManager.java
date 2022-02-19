@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.offset.OffsetListener;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -33,7 +34,7 @@ public class HologramManager extends Ticked {
 	public HologramManager() {
 		super(20L);
 		this.clickCooldowns = CacheBuilder.newBuilder()
-				.expireAfterWrite(250, TimeUnit.MILLISECONDS) // Expire after five ticks
+				.expireAfterWrite(Settings.CLICK_COOLDOWN.getValue() * 50L, TimeUnit.MILLISECONDS)
 				.build();
 		this.offsetListener = null;
 		this.register();

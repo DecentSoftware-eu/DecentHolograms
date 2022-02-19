@@ -69,9 +69,11 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		Entity entity = e.getEntity();
 		double damage = e.getFinalDamage();
 
-		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-		String text = String.format(appearance.replace("{damage}", "%.1f"), damage);
-		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		if (damage > 0d) {
+			Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+			String text = String.format(appearance.replace("{damage}", "%.1f"), damage);
+			PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		}
 	}
 
 }

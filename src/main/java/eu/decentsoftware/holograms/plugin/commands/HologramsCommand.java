@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @CommandInfo(
 		aliases = {"holograms", "hologram", "dh", "holo"},
-		permission = "",
+		permission = "dh.default",
 		usage = "/dh <args>",
 		description = "The main DecentHolograms Command."
 )
@@ -62,7 +62,7 @@ public class HologramsCommand extends DecentCommand {
 	@Override
 	public CommandHandler getCommandHandler() {
 		return (sender, args) -> {
-			if (sender.hasPermission("dh.help")) {
+			if (sender.hasPermission("dh.admin")) {
 				if (args.length == 0) {
 					Lang.USE_HELP.send(sender);
 					return true;
@@ -70,8 +70,8 @@ public class HologramsCommand extends DecentCommand {
 				Lang.UNKNOWN_SUB_COMMAND.send(sender);
 				Lang.USE_HELP.send(sender);
 			} else {
-				Lang.sendVersionMessage(sender);
-			}
+                Lang.sendVersionMessage(sender);
+            }
 			return true;
 		};
 	}

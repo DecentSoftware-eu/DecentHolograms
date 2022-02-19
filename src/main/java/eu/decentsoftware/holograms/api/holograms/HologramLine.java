@@ -401,7 +401,7 @@ public class HologramLine extends HologramObject {
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, false);
+                String text = getText(player, true);
                 if (!text.equals(lastText)) {
                     lastTextMap.put(uuid, text);
                     nms.updateFakeEntityCustomName(player, text, entityIds[0]);

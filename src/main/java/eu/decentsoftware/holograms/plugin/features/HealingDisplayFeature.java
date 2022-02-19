@@ -69,9 +69,11 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		Entity entity = e.getEntity();
 		double heal = e.getAmount();
 
-		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-		String text = String.format(appearance.replace("{heal}", "%.1f"), heal);
-		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		if (heal > 0d) {
+			Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+			String text = String.format(appearance.replace("{heal}", "%.1f"), heal);
+			PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		}
 	}
 
 }

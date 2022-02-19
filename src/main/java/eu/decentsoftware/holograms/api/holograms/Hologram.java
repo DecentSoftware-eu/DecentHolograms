@@ -87,9 +87,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         if (config.isBoolean("down-origin")) {
             hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
         }
-        if (config.isBoolean("always-face-player")) {
-            hologram.setAlwaysFacePlayer(config.getBoolean("always-face-player", Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue()));
-        }
+//        if (config.isBoolean("always-face-player")) {
+//            hologram.setAlwaysFacePlayer(config.getBoolean("always-face-player", Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue()));
+//        }
 
         if (!config.contains("pages") && config.contains("lines")) {
             // Old Config
@@ -160,7 +160,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
     protected final DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN.getValue();
-    protected boolean alwaysFacePlayer = Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue();
+    protected boolean alwaysFacePlayer = false; //Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue();
     private final AtomicInteger tickCounter;
 
     /*
