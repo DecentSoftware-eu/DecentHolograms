@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class CMIConverter implements IConvertor {
@@ -33,13 +34,18 @@ public class CMIConverter implements IConvertor {
         int count = 0;
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
         for(String name : config.getKeys(false)) {
-            // Auto-generated holograms to change pages.
+            // Skip Auto-generated holograms to change pages.
             if(name.endsWith("#>") || name.endsWith("#<")) {
-                Common.log("Skipping auto-generated next/prev page holograms...");
+                Common.log("Skipping auto-generated next/prev page hologram '%s'...", name);
                 continue;
             }
             
             Location loc = LocationUtils.asLocation(config.getString(name + ".Loc").replace(";", ":"));
+            if(loc == null){
+                Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+                continue;
+            }
+            
             List<List<String>> pages = createPages(config.getStringList(name + ".Lines"));
             
             count = ConverterCommon.createHologramPages(count, name, loc, pages, PLUGIN);

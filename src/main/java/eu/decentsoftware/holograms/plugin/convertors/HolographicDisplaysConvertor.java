@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class HolographicDisplaysConvertor implements IConvertor {
@@ -34,6 +35,11 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		Configuration config = new Configuration(PLUGIN.getPlugin(), file);
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config, name);
+			if(location == null){
+				Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+				continue;
+			}
+			
 			List<String> lines = prepareLines(config.getStringList(name + ".lines"));
 			
 			count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
