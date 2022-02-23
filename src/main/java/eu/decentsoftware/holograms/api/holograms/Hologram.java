@@ -9,15 +9,18 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -355,14 +358,24 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             if (isVisible(player)) {
                 hide(player);
             }
-            page.getLines().forEach(line -> line.show(player));
-            // Add player to viewers
-            viewerPages.put(player.getUniqueId(), pageIndex);
-            viewers.add(player.getUniqueId());
-            showClickableEntities(player);
+            if(Common.SERVER_VERSION.isAfter(Version.v1_8_R3)){
+                showPageTo(player, page, pageIndex);
+            }else{
+                //We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.
+                //I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
+                Bukkit.getScheduler().runTaskLater(DECENT_HOLOGRAMS.getPlugin(), () -> showPageTo(player, page, pageIndex), 0L);
+            }
             return true;
         }
         return false;
+    }
+
+    private void showPageTo(Player player, HologramPage page, int pageIndex){
+        page.getLines().forEach(line -> line.show(player));
+        // Add player to viewers
+        viewerPages.put(player.getUniqueId(), pageIndex);
+        viewers.add(player.getUniqueId());
+        showClickableEntities(player);
     }
 
     public void showAll() {
