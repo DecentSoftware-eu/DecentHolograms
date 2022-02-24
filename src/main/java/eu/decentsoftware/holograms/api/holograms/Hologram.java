@@ -342,7 +342,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /*
-     *	Visiblity Methods
+     *	Visibility Methods
      */
 
     /**
@@ -518,7 +518,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     /**
-     * Re-Aling the lines in this hologram putting them to the right place.
+     * Re-Align the lines in this hologram putting them to the right place.
      * <p>
      *     This method is good to use after teleporting the hologram.
      * </p>

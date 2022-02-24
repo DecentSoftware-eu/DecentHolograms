@@ -182,7 +182,7 @@ public class HologramsCommand extends DecentCommand {
             return (sender, args) -> {
                 final List<Hologram> holograms = Lists.newArrayList(PLUGIN.getHologramManager().getHolograms());
                 if (holograms.isEmpty()) {
-                    Common.tell(sender, "%sThere are currenty no holograms.", Common.PREFIX);
+                    Common.tell(sender, "%sThere are currently no holograms.", Common.PREFIX);
                     return true;
                 }
                 int currentPage = args.length >= 1 ? Validator.getInteger(args[0], "Page must be a valid integer.") - 1 : 0;

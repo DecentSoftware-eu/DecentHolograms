@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @CommandInfo(
 		permission = "dh.admin",
 		usage = "/dh holograms help",
-		description = "All commands for editting holograms.",
+		description = "All commands for editing holograms.",
 		aliases = {"hologram", "holo", "h"}
 )
 public class HologramSubCommand extends DecentCommand {
@@ -701,7 +701,7 @@ public class HologramSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				sender.sendMessage("");
 				Common.tell(sender, " &3&lDECENT HOLOGRAMS HELP (HOLOGRAMS)");
-				Common.tell(sender, " All commands for editting holograms.");
+				Common.tell(sender, " All commands for editing holograms.");
 				sender.sendMessage("");
 				CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("holograms");
 				List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());

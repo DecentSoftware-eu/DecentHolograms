@@ -190,7 +190,7 @@ public abstract class NMS {
         return -1;
     }
 
-    public float getEntityHeigth(EntityType type) {
+    public float getEntityHeight(EntityType type) {
         if (type == null) return 0.0f;
         String name = type.name();
         if (mapEntityTypes.containsKey(name)) {
@@ -215,7 +215,7 @@ public abstract class NMS {
 
     public abstract void helmetFakeEntity(Player player, ItemStack itemStack, int entityId);
 
-    public abstract void attachFakeEnity(Player player, int vehicleId, int entityId);
+    public abstract void attachFakeEntity(Player player, int vehicleId, int entityId);
 
     public abstract void hideFakeEntities(Player player, int... entityIds);
 

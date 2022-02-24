@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 @CommandInfo(
 		permission = "dh.admin",
 		usage = "/dh lines help",
-		description = "All commands for editting hologram lines.",
+		description = "All commands for editing hologram lines.",
 		aliases = {"line", "l"}
 )
 public class LineSubCommand extends DecentCommand {
@@ -343,7 +343,7 @@ public class LineSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permission = "dh.admin",
-			usage = "/dh line height <hologram> <page> <line> <heigth>",
+			usage = "/dh line height <hologram> <page> <line> <height>",
 			description = "Set height of a line.",
 			aliases = {"setheight"},
 			minArgs = 4
@@ -409,7 +409,7 @@ public class LineSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				sender.sendMessage("");
 				Common.tell(sender, " &3&lDECENT HOLOGRAMS HELP (LINES)");
-				Common.tell(sender, " All commands for editting hologram lines.");
+				Common.tell(sender, " All commands for editing hologram lines.");
 				sender.sendMessage("");
 				CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("lines");
 				List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());

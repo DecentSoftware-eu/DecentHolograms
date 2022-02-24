@@ -212,7 +212,7 @@ public class HologramLine extends HologramObject {
         } else if (contentU.startsWith("#ENTITY:")) {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
-            height = NMS.getInstance().getEntityHeigth(entity.getType()) + 0.15;
+            height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
             setOffsetY(-(height + (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1) ? 0.1 : 0.2)));
             return;
         } else {
@@ -327,7 +327,7 @@ public class HologramLine extends HologramObject {
                     case ICON:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
                         nms.showFakeEntityItem(player, getLocation(), HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
-                        nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
+                        nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
                         break;
                     case ENTITY:
                         EntityType entityType = new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType();
@@ -339,7 +339,7 @@ public class HologramLine extends HologramObject {
                         } else {
                             nms.showFakeEntity(player, getLocation(), entityType, entityIds[1]);
                         }
-                        nms.attachFakeEnity(player, entityIds[0], entityIds[1]);
+                        nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
                         break;
                     default: break;
                 }

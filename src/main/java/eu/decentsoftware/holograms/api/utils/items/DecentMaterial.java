@@ -30,17 +30,17 @@ public class DecentMaterial {
             MATERIAL_ALIASES.put("command block", "COMMAND");
             MATERIAL_ALIASES.put("repeater", "DIODE");
             MATERIAL_ALIASES.put("double slab", "DOUBLE_STEP");
-            MATERIAL_ALIASES.put("diamond showel", "DIAMOND_SPADE");
+            MATERIAL_ALIASES.put("diamond shovel", "DIAMOND_SPADE");
             MATERIAL_ALIASES.put("flower pot", "FLOWER_POT_ITEM");
             MATERIAL_ALIASES.put("grilled porkchop", "GRILLED_PORK");
             MATERIAL_ALIASES.put("cooked porkchop", "GRILLED_PORK");
-            MATERIAL_ALIASES.put("gold showel", "GOLD_SPADE");
+            MATERIAL_ALIASES.put("gold shovel", "GOLD_SPADE");
             MATERIAL_ALIASES.put("huge brown mushroom", "HUGE_MUSHROOM_1");
             MATERIAL_ALIASES.put("huge red mushroom", "HUGE_MUSHROOM_2");
             MATERIAL_ALIASES.put("hardened clay", "HARD_CLAY");
             MATERIAL_ALIASES.put("iron bars", "IRON_FENCE");
             MATERIAL_ALIASES.put("dye", "INK_SACK");
-            MATERIAL_ALIASES.put("iron showel", "IRON_SPADE");
+            MATERIAL_ALIASES.put("iron shovel", "IRON_SPADE");
             MATERIAL_ALIASES.put("mycelium", "MYCEL");
             MATERIAL_ALIASES.put("nether wart", "NETHER_STALK");
             MATERIAL_ALIASES.put("nether warts", "NETHER_STALK");
@@ -58,7 +58,7 @@ public class DecentMaterial {
             MATERIAL_ALIASES.put("slab", "STEP");
             MATERIAL_ALIASES.put("gunpowder", "SULPHUR");
             MATERIAL_ALIASES.put("glistering lamp", "SPECKLED_MELON");
-            MATERIAL_ALIASES.put("stone showel", "STONE_SPADE");
+            MATERIAL_ALIASES.put("stone shovel", "STONE_SPADE");
             MATERIAL_ALIASES.put("stone brick", "SMOOTH_BRICK");
             MATERIAL_ALIASES.put("stone bricks", "SMOOTH_BRICK");
             MATERIAL_ALIASES.put("stone stair", "SMOOTH_STAIRS");
@@ -66,8 +66,8 @@ public class DecentMaterial {
             MATERIAL_ALIASES.put("glass pane", "THIN_GLASS");
             MATERIAL_ALIASES.put("double wood slab", "WOOD_DOUBLE_STEP");
             MATERIAL_ALIASES.put("wood slab", "WOOD_STEP");
-            MATERIAL_ALIASES.put("wood showel", "WOOD_SPADE");
-            MATERIAL_ALIASES.put("wooden showel", "WOOD_SPADE");
+            MATERIAL_ALIASES.put("wood shovel", "WOOD_SPADE");
+            MATERIAL_ALIASES.put("wooden shovel", "WOOD_SPADE");
             MATERIAL_ALIASES.put("lilypad", "WATER_LILY");
 
             MATERIAL_IS_ITEM_METHOD = new ReflectMethod(ReflectionUtil.getNMSClass("Item"), "getById", int.class);
