@@ -25,12 +25,12 @@ dependencies {
     compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0';
 
     // Annotations
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.jetbrains:annotations:22.0.0'
     annotationProcessor 'org.jetbrains:annotations:22.0.0'
 
-    implementation 'org.bstats:bstats-bukkit:2.2.1'
+    implementation 'org.bstats:bstats-bukkit:3.0.0'
 }
 
 sourceCompatibility = 1.8
