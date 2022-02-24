@@ -124,6 +124,21 @@ public final class DHAPI {
     }
 
     /**
+     * Remove a hologram by its name.
+     * <p>
+     *     The removed hologram will also get its file deleted.
+     * </p>
+     *
+     * @param name The name.
+     */
+    public static void removeHologram(String name) {
+        Validate.notNull(name);
+
+        Hologram hologram = getHologram(name);
+        hologram.delete();
+    }
+
+    /**
      * Create a new hologram line with the given parent page on the specified location with the given content.
      *
      * @param parent The parent page.
