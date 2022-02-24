@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.player;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         decentHolograms.getHologramManager().updateVisibility(player);
-        decentHolograms.getPacketListener().register(player);
+        S.sync(() -> decentHolograms.getPacketListener().hook(player));
         if (player.hasPermission("dh.admin") && decentHolograms.isUpdateAvailable()) {
             Lang.sendUpdateMessage(player);
         }
@@ -33,7 +34,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         decentHolograms.getHologramManager().onQuit(player);
-        decentHolograms.getPacketListener().unregister(player);
+        decentHolograms.getPacketListener().unhook(player);
     }
 
     @EventHandler

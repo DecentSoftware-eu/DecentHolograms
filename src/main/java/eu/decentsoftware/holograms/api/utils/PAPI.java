@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class PAPI {
 
 	/**

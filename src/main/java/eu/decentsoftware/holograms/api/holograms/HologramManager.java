@@ -1,7 +1,5 @@
 package eu.decentsoftware.holograms.api.holograms;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
@@ -17,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -26,16 +23,16 @@ import java.util.logging.Level;
 public class HologramManager extends Ticked {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-	private final Map<String, Hologram> hologramMap = new ConcurrentHashMap<>();
-	private final Set<HologramLine> temporaryLines = Collections.synchronizedSet(new HashSet<>());
-	private final Cache<UUID, Byte> clickCooldowns;
+	private final Map<String, Hologram> hologramMap;
+	private final Map<UUID, Integer> clickCooldowns;
+	private final Set<HologramLine> temporaryLines;
 	private final OffsetListener offsetListener;
 
 	public HologramManager() {
 		super(20L);
-		this.clickCooldowns = CacheBuilder.newBuilder()
-				.expireAfterWrite(Settings.CLICK_COOLDOWN.getValue() * 50L, TimeUnit.MILLISECONDS)
-				.build();
+		this.hologramMap = new ConcurrentHashMap<>();
+		this.clickCooldowns = new ConcurrentHashMap<>();
+		this.temporaryLines = Collections.synchronizedSet(new HashSet<>());
 		this.offsetListener = null;
 		this.register();
 		S.sync(this::reload); // Reload when worlds are ready
@@ -53,6 +50,16 @@ public class HologramManager extends Ticked {
 				updateVisibility(player, hologram);
 			}
 		}
+
+//		// Update click cooldowns
+//		for (UUID uid : clickCooldowns.keySet()) {
+//			int current = clickCooldowns.get(uid);
+//			if (current == Settings.CLICK_COOLDOWN.getValue()) {
+//				clickCooldowns.remove(uid);
+//			} else {
+//				clickCooldowns.put(uid, current + 1);
+//			}
+//		}
 	}
 
 	public void updateVisibility(Player player) {
@@ -94,12 +101,18 @@ public class HologramManager extends Ticked {
 			return false;
 		}
 
-		UUID uuid = player.getUniqueId();
-		if (clickCooldowns.asMap().containsKey(uuid)) return false;
+		UUID uid = player.getUniqueId();
+		if (clickCooldowns.containsKey(uid)) {
+			return false;
+		}
+
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) continue;
+			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+				continue;
+			}
 			if (hologram.onClick(player, entityId, clickType)) {
-				clickCooldowns.put(uuid, (byte) 1);
+				clickCooldowns.put(uid, Settings.CLICK_COOLDOWN.getValue());
+				S.async(() -> clickCooldowns.remove(uid), Settings.CLICK_COOLDOWN.getValue());
 				return true;
 			}
 		}
@@ -134,7 +147,7 @@ public class HologramManager extends Ticked {
 		}
 		temporaryLines.clear();
 
-		clickCooldowns.cleanUp();
+		clickCooldowns.clear();
 	}
 
 	/**

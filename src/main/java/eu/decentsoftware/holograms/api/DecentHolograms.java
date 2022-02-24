@@ -6,7 +6,7 @@ import eu.decentsoftware.holograms.api.features.FeatureManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.nms.NMSPacketListener;
+import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.player.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -31,7 +31,7 @@ public final class DecentHolograms {
 	private CommandManager commandManager;
 	private FeatureManager featureManager;
 	private AnimationManager animationManager;
-	private NMSPacketListener packetListener;
+	private PacketListener packetListener;
 	private Ticker ticker;
 	private File dataFolder;
 	private boolean updateAvailable;
@@ -64,7 +64,7 @@ public final class DecentHolograms {
 		commandManager = new CommandManager();
 		featureManager = new FeatureManager();
 		animationManager = new AnimationManager();
-		packetListener = new NMSPacketListener();
+		packetListener = new PacketListener();
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this), plugin);

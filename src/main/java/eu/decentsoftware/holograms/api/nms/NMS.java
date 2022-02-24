@@ -82,7 +82,7 @@ public abstract class NMS {
             PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "sendPacket", PACKET_CLASS);
         }
 
-        if (Common.SERVER_VERSION == Version.v1_12_R1) {
+        if (Common.SERVER_VERSION.isBeforeOrEqual(Version.v1_12_R1)) {
             // Entities
             mapEntityTypes.put("BAT", new Pair<>(65, 0.9f));
             mapEntityTypes.put("BLAZE", new Pair<>(61, 1.8f));
