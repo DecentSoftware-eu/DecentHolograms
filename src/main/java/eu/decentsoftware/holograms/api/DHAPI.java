@@ -124,6 +124,18 @@ public final class DHAPI {
     }
 
     /**
+     * Update the given hologram for all viewers.
+     * 
+     * @param name The holograms name.
+     */
+    public static void updateHologram(String name) {
+        Validate.notNull(name);
+
+        Hologram hologram = getHologram(name);
+        hologram.updateAll();
+    }
+
+    /**
      * Remove a hologram by its name.
      * <p>
      *     The removed hologram will also get its file deleted.
