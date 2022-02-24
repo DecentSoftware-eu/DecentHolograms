@@ -2,7 +2,6 @@ package eu.decentsoftware.holograms.api.nms;
 
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -18,7 +17,7 @@ public class PacketHandlerCommon {
     private static final ReflectMethod PACKET_DATA_SERIALIZER_READ_INT_METHOD;
 
     static {
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_17_R1)) {
+        if (Version.afterOrEqual(17)) {
             ENTITY_USE_PACKET_CLASS = ReflectionUtil.getNMClass("network.protocol.game.PacketPlayInUseEntity");
             PACKET_DATA_SERIALIZER_CLASS = ReflectionUtil.getNMClass("network.PacketDataSerializer");
         } else {
@@ -27,13 +26,13 @@ public class PacketHandlerCommon {
         }
         ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "a");
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_17_R1)) {
+        if (Version.afterOrEqual(17)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "j");
             ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS);
-        } else if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_14_R1)) {
+        } else if (Version.afterOrEqual(14)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "i");
             ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
-        } else if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_9_R1)) {
+        } else if (Version.afterOrEqual(9)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "g");
             ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         } else {

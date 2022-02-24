@@ -6,10 +6,7 @@ import eu.decentsoftware.holograms.api.nms.versions.NMS_1_8;
 import eu.decentsoftware.holograms.api.nms.versions.NMS_1_9;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.objects.Pair;
-import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
-import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
-import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.api.utils.reflect.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
@@ -40,7 +37,7 @@ public abstract class NMS {
         Class<?> playerConnectionClass;
         Class<?> craftPlayerClass;
         Class<?> networkManagerClass;
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_17_R1)) {
+        if (Version.afterOrEqual(17)) {
             entityPlayerClass = ReflectionUtil.getNMClass("server.level.EntityPlayer");
             playerConnectionClass = ReflectionUtil.getNMClass("server.network.PlayerConnection");
             craftPlayerClass = ReflectionUtil.getObcClass("entity.CraftPlayer");
@@ -76,13 +73,13 @@ public abstract class NMS {
             NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, "channel");
         }
         CRAFT_PLAYER_GET_HANDLE_METHOD = new ReflectMethod(craftPlayerClass, "getHandle");
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1)) {
+        if (Version.afterOrEqual(18)) {
             PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "a", PACKET_CLASS);
         } else {
             PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "sendPacket", PACKET_CLASS);
         }
 
-        if (Common.SERVER_VERSION.isBeforeOrEqual(Version.v1_12_R1)) {
+        if (Version.beforeOrEqual(12)) {
             // Entities
             mapEntityTypes.put("BAT", new Pair<>(65, 0.9f));
             mapEntityTypes.put("BLAZE", new Pair<>(61, 1.8f));
@@ -215,9 +212,9 @@ public abstract class NMS {
     private static NMS instance;
 
     public static void init() {
-        if (Common.SERVER_VERSION.isBefore(Version.v1_9_R1)) {
+        if (Version.before(9)) {
             instance = new NMS_1_8();
-        } else if (Common.SERVER_VERSION.isBefore(Version.v1_17_R1)) {
+        } else if (Version.before(17)) {
             instance = new NMS_1_9();
         } else {
             instance = new NMS_1_17();

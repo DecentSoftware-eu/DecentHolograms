@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.nms.versions;
 
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.RandomUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import io.netty.buffer.ByteBuf;
@@ -89,7 +88,7 @@ public class NMS_1_17 extends NMS {
         // DATA WATCHER
         DATA_WATCHER_CLASS = ReflectionUtil.getNMClass("network.syncher.DataWatcher");
         DATA_WATCHER_CONSTRUCTOR = new ReflectConstructor(DATA_WATCHER_CLASS, ENTITY_CLASS);
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1)) {
+        if (Version.afterOrEqual(18)) {
             I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "Z");
             REGISTRY_BLOCKS_FROM_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"), "a", int.class);
             ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, "a", String.class);
@@ -129,7 +128,7 @@ public class NMS_1_17 extends NMS {
         PACKET_ENTITY_DESTROY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityDestroy"),
                 int[].class);
         // DATA WATCHER OBJECT
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1)) {
+        if (Version.afterOrEqual(18)) {
             DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "aa").getValue(null);
             DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aL").getValue(null);
             DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
@@ -145,7 +144,7 @@ public class NMS_1_17 extends NMS {
         ENTITY_TYPES_A_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "a", String.class);
         ENTITY_TYPE_GET_KEY_METHOD = new ReflectMethod(EntityType.class, "getKey");
         REGISTRY_BLOCKS_GET_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"),
-                Common.SERVER_VERSION.isAfterOrEqual(Version.v1_18_R1) ? "a" : "getId", Object.class);
+                Version.afterOrEqual(18) ? "a" : "getId", Object.class);
         NAMESPACED_KEY_GET_KEY_METHOD = new ReflectMethod(ReflectionUtil.getClass("org.bukkit.NamespacedKey"), "getKey");
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");

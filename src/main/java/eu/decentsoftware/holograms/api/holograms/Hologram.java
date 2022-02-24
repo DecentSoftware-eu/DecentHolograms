@@ -9,7 +9,6 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
@@ -360,7 +359,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             if (isVisible(player)) {
                 hide(player);
             }
-            if (Common.SERVER_VERSION.isAfter(Version.v1_8_R3)) {
+            if (Version.after(8)) {
                 showPageTo(player, page, pageIndex);
             } else {
                 // We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.

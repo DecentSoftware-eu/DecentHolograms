@@ -213,7 +213,7 @@ public class HologramLine extends HologramObject {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
             height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
-            setOffsetY(-(height + (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1) ? 0.1 : 0.2)));
+            setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)));
             return;
         } else {
             type = HologramLineType.TEXT;

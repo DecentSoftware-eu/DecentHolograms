@@ -287,7 +287,7 @@ public class ItemBuilder implements Cloneable {
 			SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
 			if (meta != null) meta.setOwner(playerName);
 			itemStack.setItemMeta(meta);
-			if (Common.SERVER_VERSION.isBefore(Version.v1_13_R1)) {
+			if (Version.before(13)) {
 				this.withDurability((short) SkullType.PLAYER.ordinal());
 			}
 		} catch (ClassCastException ignored) {}
@@ -315,7 +315,7 @@ public class ItemBuilder implements Cloneable {
 			}
 			itemStack.setItemMeta(meta);
 
-			if (Common.SERVER_VERSION.isBefore(Version.v1_13_R1)) {
+			if (Version.before(13)) {
 				this.withDurability((short) SkullType.PLAYER.ordinal());
 			}
 		} catch (ClassCastException ignored) {}

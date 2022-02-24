@@ -19,7 +19,7 @@ public class DecentMaterial {
             MATERIAL_ALIASES.put(Common.removeSpacingChars(material.name()).toLowerCase(), material.name());
         }
 
-        if (Common.SERVER_VERSION.isBefore(Version.v1_13_R1)) {
+        if (Version.before(13)) {
             MATERIAL_ALIASES.put("brewing stand", "BREWING_STAND_ITEM");
             MATERIAL_ALIASES.put("carrot", "CARROT_ITEM");
             MATERIAL_ALIASES.put("carrot on stick", "CARROT_STICK");
@@ -82,7 +82,7 @@ public class DecentMaterial {
 
     @SuppressWarnings("deprecation")
     public static boolean isItem(Material material) {
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_13_R1)) {
+        if (Version.afterOrEqual(13)) {
             return MATERIAL_IS_ITEM_METHOD.invoke(material);
         } else {
             return MATERIAL_IS_ITEM_METHOD.invokeStatic(material.getId()) != null;

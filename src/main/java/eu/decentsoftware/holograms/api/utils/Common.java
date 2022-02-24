@@ -2,8 +2,6 @@ package eu.decentsoftware.holograms.api.utils;
 
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
-import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -17,12 +15,10 @@ import java.util.regex.Pattern;
 public class Common {
 
 	private static final Pattern SPACING_CHARS_REGEX;
-	public static final Version SERVER_VERSION;
 	public static String PREFIX;
 
 	static {
 		SPACING_CHARS_REGEX = Pattern.compile("[_ \\-]+");
-		SERVER_VERSION = Version.valueOf(ReflectionUtil.getVersion());
 		PREFIX = "&8[&3DecentHolograms&8] &7";
 	}
 

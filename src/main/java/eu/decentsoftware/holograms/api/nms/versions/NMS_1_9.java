@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NMS_1_9 extends NMS {
 
-    private static final int ARMOR_STAND_ID = Common.SERVER_VERSION.isBefore(Version.v1_13_R1) ? 30 : 1;
+    private static final int ARMOR_STAND_ID = Version.before(13) ? 30 : 1;
     private static int DROPPED_ITEM_ID = 2;
     // UTILITY
     private static final Class<?> ENTITY_CLASS;
@@ -76,7 +76,7 @@ public class NMS_1_9 extends NMS {
         ENTITY_ARMOR_STAND_CLASS = ReflectionUtil.getNMSClass("EntityArmorStand");
         ENTITY_ITEM_CLASS = ReflectionUtil.getNMSClass("EntityItem");
         ENUM_ITEM_SLOT_CLASS = ReflectionUtil.getNMSClass("EnumItemSlot");
-        ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, Common.SERVER_VERSION.isAfterOrEqual(Version.v1_14_R1) ? "fromName" : "a", String.class);
+        ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, Version.afterOrEqual(14) ? "fromName" : "a", String.class);
         CRAFT_ITEM_NMS_COPY_METHOD = new ReflectMethod(ReflectionUtil.getObcClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class);
         CRAFT_CHAT_MESSAGE_FROM_STRING_METHOD = new ReflectMethod(ReflectionUtil.getObcClass("util.CraftChatMessage"), "fromStringOrNull", String.class);
         // DATA WATCHER
@@ -93,7 +93,7 @@ public class NMS_1_9 extends NMS {
         PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMSClass("PacketPlayOutEntityMetadata"), int.class, DATA_WATCHER_CLASS, boolean.class);
         PACKET_ENTITY_TELEPORT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMSClass("PacketPlayOutEntityTeleport"));
         PACKET_MOUNT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMSClass("PacketPlayOutMount"));
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_16_R1)) {
+        if (Version.afterOrEqual(16)) {
             PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMSClass("PacketPlayOutEntityEquipment"), int.class, List.class);
             PAIR_OF_METHOD = new ReflectMethod(ReflectionUtil.getClass("com.mojang.datafixers.util.Pair"), "of", Object.class, Object.class);
         } else {
@@ -102,7 +102,7 @@ public class NMS_1_9 extends NMS {
         }
         PACKET_ENTITY_DESTROY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMSClass("PacketPlayOutEntityDestroy"), int[].class);
         // DATA WATCHER OBJECT
-        switch (Common.SERVER_VERSION) {
+        switch (Version.CURRENT) {
             case v1_9_R1:
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ax").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "az").getValue(null);
@@ -166,10 +166,10 @@ public class NMS_1_9 extends NMS {
                 DWO_CUSTOM_NAME_VISIBLE = null;
         }
 
-        if (Common.SERVER_VERSION.isBefore(Version.v1_13_R1)) {
+        if (Version.before(13)) {
             DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "a").getValue(null);
             DWO_ITEM = new ReflectField<>(ENTITY_ITEM_CLASS, "c").getValue(null);
-        } else if (Common.SERVER_VERSION.isBefore(Version.v1_14_R1)) {
+        } else if (Version.before(14)) {
             DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "a").getValue(null);
             DWO_ITEM = new ReflectField<>(ENTITY_ITEM_CLASS, "b").getValue(null);
         } else {
@@ -207,7 +207,7 @@ public class NMS_1_9 extends NMS {
 
     @Override
     public int getEntityTypeId(EntityType type) {
-        if (Common.SERVER_VERSION.isBefore(Version.v1_14_R1)) {
+        if (Version.before(14)) {
             return super.getEntityTypeId(type);
         }
 
@@ -223,7 +223,7 @@ public class NMS_1_9 extends NMS {
 
     @Override
     public float getEntityHeight(EntityType type) {
-        if (Common.SERVER_VERSION.isBefore(Version.v1_14_R1)) {
+        if (Version.before(14)) {
             return super.getEntityHeight(type);
         }
 
@@ -273,7 +273,7 @@ public class NMS_1_9 extends NMS {
         Object nmsItemStack = CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack);
         Object dataWatcher = DATA_WATCHER_CONSTRUCTOR.newInstance(ENTITY_CLASS.cast(null));
         if (nmsItemStack == null || dataWatcher == null) return;
-        if (Common.SERVER_VERSION.isBefore(Version.v1_11_R1)) {
+        if (Version.before(11)) {
             DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ITEM, Optional.fromNullable(nmsItemStack));
         } else {
             DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ITEM, nmsItemStack);
@@ -289,7 +289,7 @@ public class NMS_1_9 extends NMS {
         Validate.notNull(name);
 
         Object dataWatcher = DATA_WATCHER_CONSTRUCTOR.newInstance(ENTITY_CLASS.cast(null));
-        if (Common.SERVER_VERSION.isBefore(Version.v1_13_R1)) {
+        if (Version.before(13)) {
             DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_CUSTOM_NAME, name); // Custom Name
         } else {
             DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_CUSTOM_NAME, java.util.Optional.ofNullable(CRAFT_CHAT_MESSAGE_FROM_STRING_METHOD.invokeStatic(name))); // Custom Name
@@ -327,7 +327,7 @@ public class NMS_1_9 extends NMS {
         }
         Object nmsItemStack = CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack);
         Object packet;
-        if (Common.SERVER_VERSION.isAfterOrEqual(Version.v1_16_R1)) {
+        if (Version.afterOrEqual(16)) {
             Object pair = PAIR_OF_METHOD.invokeStatic(ENUM_ITEM_SLOT_HEAD, nmsItemStack);
             packet = PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR.newInstance(entityId, Lists.newArrayList(pair));
         } else {
@@ -388,7 +388,7 @@ public class NMS_1_9 extends NMS {
         ReflectionUtil.setFieldValue(spawn, "e", location.getZ());
         ReflectionUtil.setFieldValue(spawn, "i", MATH_HELPER_D_METHOD.invokeStatic(location.getPitch() * 256.0F / 360.0F));
         ReflectionUtil.setFieldValue(spawn, "j", MATH_HELPER_D_METHOD.invokeStatic(location.getYaw() * 256.0F / 360.0F));
-        ReflectionUtil.setFieldValue(spawn, "k", Common.SERVER_VERSION.isAfterOrEqual(Version.v1_14_R1) ?
+        ReflectionUtil.setFieldValue(spawn, "k", Version.beforeOrEqual(14) ?
                 ENTITY_TYPES_CLASS.cast(REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_ENTITY_TYPE_FIELD.getValue(null), entityTypeId)) :
                 entityTypeId);
         sendPacket(player, spawn);
