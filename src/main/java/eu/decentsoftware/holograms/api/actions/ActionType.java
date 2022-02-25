@@ -41,6 +41,13 @@ public abstract class ActionType {
 	 * Actions
 	 */
 
+	public static final ActionType NONE = new ActionType("NONE") {
+		@Override
+		public boolean execute(Player player, String... args) {
+			return true;
+		}
+	};
+
 	public static final ActionType MESSAGE = new ActionType("MESSAGE") {
 		@Override
 		public boolean execute(Player player, String... args) {
