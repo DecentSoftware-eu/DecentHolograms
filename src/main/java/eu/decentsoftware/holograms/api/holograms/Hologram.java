@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -330,7 +331,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         HologramPage page = getPage(player);
         if (page != null && page.isClickable()) {
             if (page.getClickableEntityIds().contains(entityId) || page.getLines().stream().anyMatch(line -> line.getEntityIds()[1] == entityId)) {
-                page.executeActions(player, clickType);
+                if (EventFactory.handleHologramInteractEvent(player, this, page, clickType, entityId)) {
+                    page.executeActions(player, clickType);
+                }
                 return true;
             }
         }
