@@ -78,6 +78,5 @@ jar {
 }
 
 shadowJar {
-    archivesBaseName = "${baseName}.${extension}"
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
 }
