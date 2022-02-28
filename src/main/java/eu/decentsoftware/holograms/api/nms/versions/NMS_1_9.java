@@ -388,7 +388,7 @@ public class NMS_1_9 extends NMS {
         ReflectionUtil.setFieldValue(spawn, "e", location.getZ());
         ReflectionUtil.setFieldValue(spawn, "i", MATH_HELPER_D_METHOD.invokeStatic(location.getPitch() * 256.0F / 360.0F));
         ReflectionUtil.setFieldValue(spawn, "j", MATH_HELPER_D_METHOD.invokeStatic(location.getYaw() * 256.0F / 360.0F));
-        ReflectionUtil.setFieldValue(spawn, "k", Version.beforeOrEqual(14) ?
+        ReflectionUtil.setFieldValue(spawn, "k", Version.afterOrEqual(14) ?
                 ENTITY_TYPES_CLASS.cast(REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_ENTITY_TYPE_FIELD.getValue(null), entityTypeId)) :
                 entityTypeId);
         sendPacket(player, spawn);
