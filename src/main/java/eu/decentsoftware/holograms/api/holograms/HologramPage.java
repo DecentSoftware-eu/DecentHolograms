@@ -226,6 +226,76 @@ public class HologramPage extends FlagHolder {
     }
 
     /**
+     * This will replace the content of all lines and add
+     * new lines if there's more new lines than actual lines
+     * or if there is a difference between line contents.
+     *
+     * @param lines {@link List} of {@link String}
+     * @return If it was successful or not
+     */
+    public boolean replaceLines(List<String> lines) {
+        // Validating if there is a difference between the line count
+        boolean changed = false;
+        LinkedList<HologramLine> toAdd = new LinkedList<>();
+        for (int i = 0; i < lines.size(); i++) {
+            // Validator to validate if the line is new or not
+            // If the line is new add it to the toAdd list.
+            boolean isLineNew = false;
+            HologramLine line;
+            try {
+                // Attempting to get the old line from the i index
+                line = this.lines.get(i);
+            } catch (IndexOutOfBoundsException exception) {
+                // Line does not exist, make a new line
+                isLineNew = true;
+                line = new HologramLine(this, location, lines.get(i));
+            }
+
+            // The line is validated to be new, so add it to the toAdd list
+            if (isLineNew) {
+                changed = true;
+                toAdd.add(line);
+                continue;
+            }
+
+            // We do not need to try-catch because we already know the index size
+            // of the new lines, and we know it will not be greater than that.
+            String newLine = lines.get(i);
+            String lineContent = line.getContent();
+
+            // Comparing both of the lines to see if we need to change the content
+            // This way of comparing strings could possibly be improved, I don't know.
+            boolean isDifferent = lineContent.equalsIgnoreCase(newLine);
+
+            // If the content is different, update the content
+            // If the content is not different, do nothing.
+            if (isDifferent) {
+                line.setContent(newLine);
+
+                // Validating that the content has been changed at least once
+                // which will be used in the return value
+                if (!changed)
+                    changed = true;
+            }
+        }
+
+        toAdd.forEach(this::addLine);
+        return changed;
+    }
+
+    /**
+     * This will replace the content of all lines and add
+     * new lines if there's more new lines than actual lines
+     * or if there is a difference between line contents.
+     *
+     * @param lines {@link String} array
+     * @return If it was successful or not
+     */
+    public boolean replaceLines(String... lines) {
+        return replaceLines(Arrays.asList(lines));
+    }
+
+    /**
      * Get line on a specified index in this hologram page.
      *
      * @param index Index of the line.
@@ -254,6 +324,18 @@ public class HologramPage extends FlagHolder {
             realignLines();
         }
         return line;
+    }
+
+    /**
+     * Clears all the lines
+     */
+    public void clearLines() {
+        getLines().forEach(line -> {
+            line.destroy();
+            line.delete();
+        });
+        lines.clear();
+        realignLines();
     }
 
     /**
