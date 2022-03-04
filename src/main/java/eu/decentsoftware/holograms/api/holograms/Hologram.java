@@ -540,7 +540,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public HologramPage insertPage(int index) {
-        if (index < 0 || index > size()) return null;
+        if (index < 1 || index > size()) return null;
         HologramPage page = new HologramPage(this, index);
         pages.add(index, page);
 

@@ -228,7 +228,7 @@ public final class DHAPI {
      * Insert a new hologram page on the specified index into hologram.
      *
      * @param hologram The hologram.
-     * @param index The index.
+     * @param index The index. Index starts at 1.
      * @param lines New pages lines.
      * @return The new page.
      * @throws IllegalArgumentException If hologram is null or the index is out of bounds.
