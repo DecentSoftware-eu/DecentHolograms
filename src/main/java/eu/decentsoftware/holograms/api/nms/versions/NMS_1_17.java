@@ -89,7 +89,7 @@ public class NMS_1_17 extends NMS {
         DATA_WATCHER_CLASS = ReflectionUtil.getNMClass("network.syncher.DataWatcher");
         DATA_WATCHER_CONSTRUCTOR = new ReflectConstructor(DATA_WATCHER_CLASS, ENTITY_CLASS);
         if (Version.afterOrEqual(18)) {
-            I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "Z");
+            I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), Version.CURRENT.equals(Version.v1_18_R2) ? "W" : "Z");
             REGISTRY_BLOCKS_FROM_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"), "a", int.class);
             ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, "a", String.class);
             DATA_WATCHER_REGISTER_METHOD = new ReflectMethod(DATA_WATCHER_CLASS, "a", DWO_CLASS, Object.class);
@@ -129,10 +129,17 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "aa").getValue(null);
-            DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aL").getValue(null);
-            DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
-            DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bH").getValue(null);
+            if (Version.CURRENT.equals(Version.v1_18_R2)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "Z").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aN").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bG").getValue(null);
+            } else {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "aa").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aL").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bH").getValue(null);
+            }
         } else {
             DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "Z").getValue(null);
             DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aJ").getValue(null);
@@ -149,7 +156,7 @@ public class NMS_1_17 extends NMS {
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");
 
-        ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "b");
+        ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, Version.CURRENT.equals(Version.v1_18_R2) ? "c" : "b");
         VEC_3D_A = new ReflectField<>(VEC_3D_CLASS, "a").getValue(null);
     }
 

@@ -185,11 +185,11 @@ public class PageSubCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
-                HologramPage page = hologram.insertPage(Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue()));
+                HologramPage page = hologram.insertPage(Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue()) - 1);
                 if (page != null) {
                     String content = Settings.DEFAULT_TEXT.getValue();
                     if (args.length > 2) {
-                        content = Validator.getLineContent(args, 1);
+                        content = Validator.getLineContent(args, 2);
                     }
                     page.addLine(new HologramLine(page, page.getNextLineLocation(), content));
                     hologram.save();

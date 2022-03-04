@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -415,15 +416,24 @@ public final class DHAPI {
         Validate.notNull(line);
         Validate.notNull(content);
 
-        if (!line.getContent().equals(content)) {
-            line.setContent(content);
-            line.update();
-            if (line.hasParent()) {
-                line.getParent().realignLines();
-            }
+        // If the new content is the same as current content, don't do anyting.
+        if (line.getContent().equals(content)) {
+            return;
         }
+
+        Player[] viewers = line.getViewerPlayers().toArray(new Player[0]);
+        // Hide the line so that when we update the content, it respawns.
+        line.hide();
+        // Set the new content
+        line.setContent(content);
+        // Show the line to the previous viewers again.
+        line.show(viewers);
+
+        // Update the lines parent if it has one.
         if (line.hasParent()) {
-            line.getParent().getParent().save();
+            HologramPage parent = line.getParent();
+            parent.realignLines();
+            parent.getParent().save();
         }
     }
 
@@ -569,10 +579,7 @@ public final class DHAPI {
         for (int i = 0; i < lines.size(); i++) {
             String content = lines.get(i);
             if (page.size() > i) {
-                HologramLine line = page.getLine(i);
-                if (!line.getContent().equals(content)) {
-                    line.setContent(content);
-                }
+                setHologramLine(page, i, content);
             } else {
                 HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
                 page.addLine(line);
