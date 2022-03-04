@@ -540,12 +540,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public HologramPage insertPage(int index) {
-        if (index < 0 || index > size()) return null;
+        if (index < 1 || index > size()) return null;
         HologramPage page = new HologramPage(this, index);
         pages.add(index, page);
 
         // Add 1 to indexes of all the other pages.
-        pages.stream().skip(index).forEach(p -> p.setIndex(p.getIndex() + 1));
+        pages.stream().skip(index - 1).forEach(p -> p.setIndex(p.getIndex() + 1));
         // Add 1 to all page indexes of current viewers, so they still see the same page.
         viewerPages.replaceAll((uuid, integer) -> {
             if (integer > index) {
