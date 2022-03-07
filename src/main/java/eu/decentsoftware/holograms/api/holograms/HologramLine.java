@@ -105,7 +105,7 @@ public class HologramLine extends HologramObject {
     private final Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
     private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
     private HologramLineType type;
-    private int[] entityIds = new int[256];
+    private int[] entityIds = new int[2];
     private AtomicDouble offsetX = new AtomicDouble(0d);
     private AtomicDouble offsetY = new AtomicDouble(0d);
     private AtomicDouble offsetZ = new AtomicDouble(0d);
