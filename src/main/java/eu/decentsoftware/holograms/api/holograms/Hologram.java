@@ -212,12 +212,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void tick() {
         if (tickCounter.get() == getUpdateInterval()) {
-            updateAll();
             tickCounter.set(0);
+            updateAll();
             return;
         }
-        updateAnimationsAll();
         tickCounter.incrementAndGet();
+        updateAnimationsAll();
     }
 
     /*
@@ -574,14 +574,20 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         page.getLines().forEach(HologramLine::hide);
 
         // Update indexes of all the other pages.
-        pages.stream().skip(index).forEach(p -> p.setIndex(p.getIndex() - 1));
+        for (int i = 0; i < pages.size(); i++) {
+            pages.get(i).setIndex(i);
+        }
         // Update all page indexes of current viewers, so they still see the same page.
-        viewerPages.replaceAll((uuid, integer) -> {
-            if (integer > index) {
-                return integer - 1;
+        if (pages.size() > 0) {
+            for (UUID uuid : viewerPages.keySet()) {
+                int currentPage = viewerPages.get(uuid);
+                if (currentPage == index) {
+                    show(Bukkit.getPlayer(uuid), 0);
+                } else if (currentPage > index) {
+                    viewerPages.put(uuid, currentPage - 1);
+                }
             }
-            return integer;
-        });
+        }
         return page;
     }
 

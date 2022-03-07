@@ -250,8 +250,7 @@ public class PageSubCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
-                int index = Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue());
-                hologram.removePage(index - 1);
+                hologram.removePage(Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue()) - 1);
                 if (hologram.size() == 0) {
                     hologram.delete();
                     Lang.PAGE_DELETED.send(sender);
