@@ -38,7 +38,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Hologram Cache
      */
 
-    private static final Map<String, Hologram> CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
+    private static final Map<String, Hologram> CACHED_HOLOGRAMS;
+
+    static {
+        CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
+    }
 
     public static Hologram getCachedHologram(String name) {
         return CACHED_HOLOGRAMS.get(name);
