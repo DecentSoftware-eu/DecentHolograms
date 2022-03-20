@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.decentsoftware-eu:decentholograms:TAG'
+    compileOnly 'com.github.decentsoftware-eu:decentholograms:TAG'
 }
 ```
 
@@ -42,6 +42,7 @@ dependencies {
         <groupId>com.github.decentsoftware-eu</groupId>
         <artifactId>decentholograms</artifactId>
         <version>TAG</version>
+        <scope>provided</scope>
     </dependency>
 </dependencies>
 ```
