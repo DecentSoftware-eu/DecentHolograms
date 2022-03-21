@@ -19,7 +19,6 @@ public class DecentEntityType {
         }
 
         ENTITY_TYPE_BLACKLIST = Sets.newHashSet(
-                "ENDER_DRAGON",
                 "ARMOR_STAND",
                 "PRIMED_TNT",
                 "AREA_EFFECT_CLOUD",
