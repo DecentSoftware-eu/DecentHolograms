@@ -190,7 +190,7 @@ public class HologramLine extends HologramObject {
      */
     public void parseContent() {
         HologramLineType prevType = type;
-        String contentU = content.toUpperCase();
+        String contentU = content.toUpperCase(Locale.ROOT);
         if (contentU.startsWith("#ICON:")) {
             type = HologramLineType.ICON;
             if (prevType != type) {
@@ -220,7 +220,7 @@ public class HologramLine extends HologramObject {
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
             }
-            text = content;
+            text = parseCustomReplacements();
         }
         setOffsetY(type.getOffsetY());
     }
@@ -298,7 +298,26 @@ public class HologramLine extends HologramObject {
         }
         return playerList;
     }
-
+    
+    // Parses custom replacements that can be defined in the config
+    private String parseCustomReplacements() {
+        ConfigurationSection customReplacements = DECENT_HOLOGRAMS.getPlugin().getConfig()
+            .getConfigurationSection("custom-replacements");
+        
+        // If config section is invalid/doesn't exist, return the unparsed content.
+        if (customReplacements == null) {
+            return content;
+        }
+        
+        for (String replacement : customReplacements.getKeys(false)) {
+            if (content.contains(replacement.toUpperCase(Locale.ROOT))) {
+                content = content.replace(replacement.toUpperCase(Locale.ROOT), customReplacements.getString(replacement));
+            }
+        }
+        
+        return content;
+    }
+    
     /**
      * Show this line for given players.
      *
