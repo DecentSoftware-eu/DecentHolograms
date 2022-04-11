@@ -301,18 +301,8 @@ public class HologramLine extends HologramObject {
     
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
-        ConfigurationSection customReplacements = DECENT_HOLOGRAMS.getPlugin().getConfig()
-            .getConfigurationSection("custom-replacements");
-        
-        // If config section is invalid/doesn't exist, return the unparsed content.
-        if (customReplacements == null) {
-            return content;
-        }
-        
-        for (String replacement : customReplacements.getKeys(false)) {
-            if (content.contains(replacement.toUpperCase(Locale.ROOT))) {
-                content = content.replace(replacement.toUpperCase(Locale.ROOT), customReplacements.getString(replacement));
-            }
+        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.getValue().entrySet()) {
+            content = content.replace(replacement.getKey(), replacement.getValue());
         }
         
         return content;
