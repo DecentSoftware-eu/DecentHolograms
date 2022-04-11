@@ -45,7 +45,7 @@ public class Settings {
 	public static final IntegerConfigValue DEFAULT_UPDATE_RANGE = new IntegerConfigValue(CONFIG, false, "defaults.update-range", 48, 8, 48);
 	public static final IntegerConfigValue DEFAULT_UPDATE_INTERVAL = new IntegerConfigValue(CONFIG, false, "defaults.update-interval", 20, 1, 1200);
 	
-	public static final MapConfigValue CUSTOM_REPLACEMENTS = new MapConfigValue(CONFIG, false, "custom-replacements", DEFAULT_CUSTOM_REPLACEMENTS);
+	public static final MapableConfigValues CUSTOM_REPLACEMENTS = new MapableConfigValues(CONFIG, false, "custom-replacements", DEFAULT_CUSTOM_REPLACEMENTS);
 	
 	// ========================================= //
 
