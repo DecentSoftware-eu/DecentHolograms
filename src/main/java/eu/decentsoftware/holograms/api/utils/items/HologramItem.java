@@ -128,9 +128,8 @@ public class HologramItem {
 		stringBuilder.append(" ");
 		Map<Enchantment, Integer> enchants = itemStack.getEnchantments();
 		if (enchants != null && !enchants.isEmpty()) {
-			stringBuilder.append("!ENCHANTED");
+			stringBuilder.append("!ENCHANTED").append(" ");
 		}
-		stringBuilder.append(" ");
 		if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
 			String owner = itemBuilder.getSkullOwner();
 			String texture = itemBuilder.getSkullTexture();
