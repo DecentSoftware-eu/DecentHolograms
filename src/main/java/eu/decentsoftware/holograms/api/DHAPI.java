@@ -314,22 +314,24 @@ public final class DHAPI {
      * Add a new line with an item into hologram.
      * 
      * @param hologram The hologram.
-     * @param material Item material to add as content.
+     * @param material Material for new line content.
      * @return The new line.
      * @throws IllegalArgumentException If hologram or material is null
      */
     public static HologramLine addHologramLine(Hologram hologram, Material material) throws IllegalArgumentException {
+        Validate.notNull(material);
         return addHologramLine(hologram, new ItemStack(material));
     }
     
     /**
      * Add an ItemStack as new line into hologram.
-     * @param hologram
-     * @param item
-     * @return
-     * @throws IllegalArgumentException
+     * @param hologram The hologram.
+     * @param item ItemStack for new line content.
+     * @return The new line.
+     * @throws IllegalArgumentException If hologram or item is null
      */
     public static HologramLine addHologramLine(Hologram hologram, ItemStack item) throws IllegalArgumentException {
+        Validate.notNull(item);
         return addHologramLine(hologram, "#ICON:" + HologramItem.fromItemStack(item).getContent());
     }
     
