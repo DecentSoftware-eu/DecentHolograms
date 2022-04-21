@@ -30,16 +30,9 @@ import java.util.stream.IntStream;
 		aliases = {"line", "l"}
 )
 public class LineSubCommand extends DecentCommand {
-	
-	private static final List<String> lineTypes = new ArrayList<>();
 
 	public LineSubCommand() {
 		super("lines");
-		
-		lineTypes.add("#ICON: ");
-		lineTypes.add("#HEAD: ");
-		lineTypes.add("#SMALLHEAD: ");
-		lineTypes.add("#ENTITY: ");
 
 		addSubCommand(new LineHelpSub());
 		addSubCommand(new LineAddSub());
@@ -904,14 +897,14 @@ public class LineSubCommand extends DecentCommand {
 		if (args.length == 1 && args[0].toLowerCase(Locale.ROOT).startsWith("#")) {
 			StringUtil.copyPartialMatches(
 				args[0],
-				lineTypes,
+				Arrays.asList("#ICON: ", "#HEAD: ", "#SMALLHEAD: ", "#ENTITY: "), 
 				collection
 			);
 		} else if (args.length == 2) {
 			switch(args[0].toUpperCase(Locale.ROOT)) {
 				case "#ICON:":
 				case "#HEAD:":
-				case "#SMALLHEAD":
+				case "#SMALLHEAD:":
 					StringUtil.copyPartialMatches(
 						args[1],
 						Arrays.stream(Material.values())
@@ -933,6 +926,10 @@ public class LineSubCommand extends DecentCommand {
 				
 				if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 					names.add("(%player_name%)");
+				}
+				
+				if (Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+					names.add("(HEADDATABASE_<id>)");
 				}
 				
 				StringUtil.copyPartialMatches(args[2], names, collection);
