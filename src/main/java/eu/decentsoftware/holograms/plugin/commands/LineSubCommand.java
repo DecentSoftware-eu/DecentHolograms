@@ -535,7 +535,7 @@ public class LineSubCommand extends DecentCommand {
 				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
 					putHologramNames(args[0], matches);
-				} else if (args.length == 2){
+				} else if (args.length == 2) {
 					putPages(args[0], args[1], matches);
 				} else if (args.length == 3) {
 					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
