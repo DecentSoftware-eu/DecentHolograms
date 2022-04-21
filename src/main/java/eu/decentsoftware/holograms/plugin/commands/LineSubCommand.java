@@ -927,13 +927,15 @@ public class LineSubCommand extends DecentCommand {
 			}
 		} else if (args.length >= 3) {
 			if (args[2].startsWith("(") && args.length == 3) {
-				StringUtil.copyPartialMatches(
-					args[2],
-					Bukkit.getOnlinePlayers().stream()
-						.map(player -> "(" + player.getName() + ")")
-						.collect(Collectors.toList()),
-					collection
-				);
+				List<String> names = Bukkit.getOnlinePlayers().stream()
+					.map(player -> "(" + player.getName() + ")")
+					.collect(Collectors.toList());
+				
+				if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+					names.add("(%player_name%)");
+				}
+				
+				StringUtil.copyPartialMatches(args[2], names, collection);
 				return;
 			}
 			
