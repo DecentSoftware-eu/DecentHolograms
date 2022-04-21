@@ -17,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +29,12 @@ import java.util.stream.IntStream;
 		aliases = {"line", "l"}
 )
 public class LineSubCommand extends DecentCommand {
-
+	
+	private static final List<String> items = Arrays.stream(Material.values())
+		.filter(DecentMaterial::isItem)
+		.map(Material::name)
+		.collect(Collectors.toList());
+	
 	public LineSubCommand() {
 		super("lines");
 
@@ -108,15 +112,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length >= 3) {
-					putContent(Arrays.copyOfRange(args, 2, args.length), matches);
+				if (args.length <= 2) {
+					return handleCommonArgs(args);
+				} else {
+					return getContent(Arrays.copyOfRange(args, 2, args.length));
 				}
-				return matches;
 			};
 		}
 	}
@@ -173,19 +173,15 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
 				} else if (args.length == 4) {
-					putLines(args[0], Validator.getInteger(args[1]), args[3], matches);
+					return getLines(args[0], Validator.getInteger(args[1]), args[3]);
 				} else if (args.length == 5) {
-					StringUtil.copyPartialMatches(args[2], Arrays.asList("X", "Z", "XZ"), matches);
+					return getPartialMatches(args[4], Arrays.asList("X", "Z", "XZ"));
 				}
-				return matches;
+				
+				return Collections.emptyList();
 			};
 		}
 
@@ -224,17 +220,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -273,17 +259,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length == 4) {
-					putFlags(args[3], matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getFlags(args[3]);
 				}
-				return matches;
 			};
 		}
 
@@ -323,17 +303,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length == 4) {
-					putFlags(args[3], matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getFlags(args[3]);
 				}
-				return matches;
 			};
 		}
 
@@ -376,15 +350,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
 				}
-				return matches;
+				
+				return Collections.emptyList();
 			};
 		}
 
@@ -475,17 +445,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -525,17 +485,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length >= 4) {
-					putContent(Arrays.copyOfRange(args, 3, args.length), matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getContent(Arrays.copyOfRange(args, 3, args.length));
 				}
-				return matches;
 			};
 		}
 
@@ -576,17 +530,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -626,17 +570,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -678,17 +612,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -728,17 +652,7 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				}
-				return matches;
-			};
+			return (sender, args) -> handleCommonArgs(args);
 		}
 
 	}
@@ -775,17 +689,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length >= 4) {
-					putContent(Arrays.copyOfRange(args, 3, args.length), matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getContent(Arrays.copyOfRange(args, 3, args.length));
 				}
-				return matches;
 			};
 		}
 
@@ -827,17 +735,11 @@ public class LineSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = new ArrayList<>();
-				if (args.length == 1) {
-					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
-					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length == 4) {
-					putLines(args[0], Validator.getInteger(args[1]), args[3], matches);
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getLines(args[0], Validator.getInteger(args[1]), args[3]);
 				}
-				return matches;
 			};
 		}
 	}
@@ -881,42 +783,49 @@ public class LineSubCommand extends DecentCommand {
 
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
-			return null;
+			return (sender, args) -> {
+				if (args.length <= 3) {
+					return handleCommonArgs(args);
+				} else {
+					return getPartialMatches(args[3], Arrays.asList("NORTH", "EAST", "SOUTH", "WEST"));
+				}
+			};
 		}
 	}
 
 	/*
 	 *	Utility Methods
 	 */
-
-	protected static void putHologramNames(String token, Collection<String> collection) {
-		StringUtil.copyPartialMatches(token, PLUGIN.getHologramManager().getHologramNames(), collection);
-	}
-
-	protected static void putContent(String[] args, Collection<String> collection) {
-		if (args.length == 1 && args[0].toLowerCase(Locale.ROOT).startsWith("#")) {
-			StringUtil.copyPartialMatches(
-				args[0],
-				Arrays.asList("#ICON: ", "#HEAD: ", "#SMALLHEAD: ", "#ENTITY: "), 
-				collection
-			);
+	
+	// Utility method to handle all "/dh <subcommand> <hologram> <page> <line>" stuff
+	protected static List<String> handleCommonArgs(String[] args) {
+		if (args.length == 1) {
+			return getHologramNames(args[0]);
 		} else if (args.length == 2) {
-			switch(args[0].toUpperCase(Locale.ROOT)) {
+			return getPages(args[0], args[1]);
+		} else if (args.length == 3) {
+			return getLines(args[0], Validator.getInteger(args[1]), args[2]);
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	protected static List<String> getHologramNames(String token) {
+		return getPartialMatches(token, PLUGIN.getHologramManager().getHologramNames());
+	}
+	
+	protected static List<String> getContent(String[] args) {
+		if (args.length == 1 && args[0].startsWith("#")) {
+			return getPartialMatches(args[0], Arrays.asList("#ICON: ", "#HEAD: ", "#SMALLHEAD: ", "#ENTITY: "));
+		} else if (args.length == 2) {
+			switch (args[0].toUpperCase(Locale.ROOT)) {
 				case "#ICON:":
 				case "#HEAD:":
 				case "#SMALLHEAD:":
-					StringUtil.copyPartialMatches(
-						args[1],
-						Arrays.stream(Material.values())
-							.filter(DecentMaterial::isItem)
-							.map(Material::name)
-							.collect(Collectors.toList()),
-						collection
-					);
-					break;
+					return getPartialMatches(args[1], items);
 				
 				case "#ENTITY:":
-					StringUtil.copyPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames(), collection);
+					return getPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames());
 			}
 		} else if (args.length >= 3) {
 			String item = args[1].toUpperCase(Locale.ROOT);
@@ -933,41 +842,68 @@ public class LineSubCommand extends DecentCommand {
 					names.add("(HEADDATABASE_<id>)");
 				}
 				
-				StringUtil.copyPartialMatches(args[2], names, collection);
-				return;
+				return getPartialMatches(args[2], names);
 			}
 			
 			String lastArg = args[args.length - 1];
-			if (lastArg.startsWith("!")) {
-				collection.add("!ENCHANTED");
+			if (lastArg.startsWith("!") && args[0].toUpperCase(Locale.ROOT).startsWith("#ICON:")) {
+				return Collections.singletonList("!ENCHANTED");
 			}
 		}
+		
+		return Collections.emptyList();
 	}
-
-	protected static void putPages(String hologramName, String token, Collection<String> collection) {
+	
+	protected static List<String> getPages(String hologramName, String token) {
 		Hologram hologram = PLUGIN.getHologramManager().getHologram(hologramName);
 		if (hologram != null) {
-			StringUtil.copyPartialMatches(token, IntStream
-					.rangeClosed(1, hologram.size())
-					.boxed().map(String::valueOf)
-					.collect(Collectors.toList()), collection);
+			return getPartialMatches(token, IntStream
+				.rangeClosed(1, hologram.size())
+				.boxed().map(String::valueOf)
+				.collect(Collectors.toList()));
 		}
+		
+		return Collections.emptyList();
 	}
-
-	protected static void putLines(String hologramName, int pageIndex, String token, Collection<String> collection) {
+	
+	protected static List<String> getLines(String hologramName, int pageIndex, String token) {
 		Hologram hologram = PLUGIN.getHologramManager().getHologram(hologramName);
-		if (hologram == null) return;
+		if (hologram == null) return Collections.emptyList();
 		HologramPage page = hologram.getPage(pageIndex - 1);
 		if (page != null) {
-			StringUtil.copyPartialMatches(token, IntStream
-					.rangeClosed(1, page.size())
-					.boxed().map(String::valueOf)
-					.collect(Collectors.toList()), collection);
+			return getPartialMatches(token, IntStream
+				.rangeClosed(1, page.size())
+				.boxed().map(String::valueOf)
+				.collect(Collectors.toList()));
 		}
+		
+		return Collections.emptyList();
 	}
-
-	protected static void putFlags(String token, Collection<String> collection) {
-		StringUtil.copyPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()), collection);
+	
+	protected static List<String> getFlags(String token) {
+		return getPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()));
+	}
+	
+	// Slight alteration of Bukkits StringUtil.copyPartialMatches
+	private static List<String> getPartialMatches(String token, Iterable<String> originals) {
+		if (originals == null) {
+			return Collections.emptyList();
+		}
+		
+		if (token == null || token.isEmpty()) {
+			List<String> tmp = new ArrayList<>();
+			originals.iterator().forEachRemaining(tmp::add);
+			return tmp;
+		}
+		
+		List<String> matches = new ArrayList<>();
+		for(String str : originals){
+			if(str.length() >= token.length() && str.regionMatches(true, 0, token, 0, token.length())){
+				matches.add(str);
+			}
+		}
+		
+		return matches;
 	}
 
 }
