@@ -13,15 +13,13 @@ import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,9 +30,16 @@ import java.util.stream.IntStream;
 		aliases = {"line", "l"}
 )
 public class LineSubCommand extends DecentCommand {
+	
+	private static final List<String> lineTypes = new ArrayList<>();
 
 	public LineSubCommand() {
 		super("lines");
+		
+		lineTypes.add("#ICON: ");
+		lineTypes.add("#HEAD: ");
+		lineTypes.add("#SMALLHEAD: ");
+		lineTypes.add("#ENTITY: ");
 
 		addSubCommand(new LineHelpSub());
 		addSubCommand(new LineAddSub());
@@ -115,8 +120,8 @@ public class LineSubCommand extends DecentCommand {
 					putHologramNames(args[0], matches);
 				} else if (args.length == 2) {
 					putPages(args[0], args[1], matches);
-				} else if (args.length == 3) {
-					putContent(args, args.length, matches);
+				} else if (args.length >= 3) {
+					putContent(copyFromIndex(args, 2), matches);
 				}
 				return matches;
 			};
@@ -530,10 +535,12 @@ public class LineSubCommand extends DecentCommand {
 				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
 					putHologramNames(args[0], matches);
-				} else if (args.length == 2) {
+				} else if (args.length == 2){
 					putPages(args[0], args[1], matches);
-				} else if (args.length == 4) {
-					putContent(args, 4, matches);
+				} else if (args.length == 3) {
+					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
+				} else if (args.length >= 4) {
+					putContent(copyFromIndex(args, 3), matches);
 				}
 				return matches;
 			};
@@ -782,8 +789,8 @@ public class LineSubCommand extends DecentCommand {
 					putPages(args[0], args[1], matches);
 				} else if (args.length == 3) {
 					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
-				} else if (args.length == 5) {
-					putContent(args, 5, matches);
+				} else if (args.length >= 4) {
+					putContent(copyFromIndex(args, 3), matches);
 				}
 				return matches;
 			};
@@ -893,19 +900,47 @@ public class LineSubCommand extends DecentCommand {
 		StringUtil.copyPartialMatches(token, PLUGIN.getHologramManager().getHologramNames(), collection);
 	}
 
-	protected static void putContent(String[] args, int length, Collection<String> collection) {
-		if (args.length < length) return;
-		if (args[1].startsWith("#ICON:") || args[1].startsWith("#HEAD:") || args[1].startsWith("#SMALLHEAD:")) {
+	protected static void putContent(String[] args, Collection<String> collection) {
+		if (args.length == 1 && args[0].toLowerCase(Locale.ROOT).startsWith("#")) {
 			StringUtil.copyPartialMatches(
-					args[2],
-					Arrays.stream(Material.values())
+				args[0],
+				lineTypes,
+				collection
+			);
+		} else if (args.length == 2) {
+			switch(args[0].toUpperCase(Locale.ROOT)) {
+				case "#ICON:":
+				case "#HEAD:":
+				case "#SMALLHEAD":
+					StringUtil.copyPartialMatches(
+						args[1],
+						Arrays.stream(Material.values())
 							.filter(DecentMaterial::isItem)
 							.map(Material::name)
 							.collect(Collectors.toList()),
+						collection
+					);
+					break;
+				
+				case "#ENTITY:":
+					StringUtil.copyPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames(), collection);
+			}
+		} else if (args.length >= 3) {
+			if (args[2].startsWith("(") && args.length == 3) {
+				StringUtil.copyPartialMatches(
+					args[2],
+					Bukkit.getOnlinePlayers().stream()
+						.map(player -> "(" + player.getName() + ")")
+						.collect(Collectors.toList()),
 					collection
-			);
-		} else if (args[1].startsWith("#ENTITY:")) {
-			StringUtil.copyPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames(), collection);
+				);
+				return;
+			}
+			
+			String lastArg = args[args.length - 1];
+			if (lastArg.startsWith("!")) {
+				collection.add("!ENCHANTED");
+			}
 		}
 	}
 
@@ -933,6 +968,20 @@ public class LineSubCommand extends DecentCommand {
 
 	protected static void putFlags(String token, Collection<String> collection) {
 		StringUtil.copyPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()), collection);
+	}
+	
+	// Creates a copy of the provided String array but starting at the provided startIndex.
+	private static String[] copyFromIndex(String[] original, int startIndex) {
+		List<String> tmp = new ArrayList<>();
+		for (int i = 0; i < original.length; i++) {
+			if (i < startIndex) {
+				continue;
+			}
+			
+			tmp.add(original[i]);
+		}
+		
+		return tmp.toArray(new String[0]);
 	}
 
 }
