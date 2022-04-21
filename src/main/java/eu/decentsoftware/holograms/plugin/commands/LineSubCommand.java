@@ -121,7 +121,7 @@ public class LineSubCommand extends DecentCommand {
 				} else if (args.length == 2) {
 					putPages(args[0], args[1], matches);
 				} else if (args.length >= 3) {
-					putContent(copyFromIndex(args, 2), matches);
+					putContent(Arrays.copyOfRange(args, 2, args.length), matches);
 				}
 				return matches;
 			};
@@ -540,7 +540,7 @@ public class LineSubCommand extends DecentCommand {
 				} else if (args.length == 3) {
 					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
 				} else if (args.length >= 4) {
-					putContent(copyFromIndex(args, 3), matches);
+					putContent(Arrays.copyOfRange(args, 3, args.length), matches);
 				}
 				return matches;
 			};
@@ -790,7 +790,7 @@ public class LineSubCommand extends DecentCommand {
 				} else if (args.length == 3) {
 					putLines(args[0], Validator.getInteger(args[1]), args[2], matches);
 				} else if (args.length >= 4) {
-					putContent(copyFromIndex(args, 3), matches);
+					putContent(Arrays.copyOfRange(args, 3, args.length), matches);
 				}
 				return matches;
 			};
@@ -970,20 +970,6 @@ public class LineSubCommand extends DecentCommand {
 
 	protected static void putFlags(String token, Collection<String> collection) {
 		StringUtil.copyPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()), collection);
-	}
-	
-	// Creates a copy of the provided String array but starting at the provided startIndex.
-	private static String[] copyFromIndex(String[] original, int startIndex) {
-		List<String> tmp = new ArrayList<>();
-		for (int i = 0; i < original.length; i++) {
-			if (i < startIndex) {
-				continue;
-			}
-			
-			tmp.add(original[i]);
-		}
-		
-		return tmp.toArray(new String[0]);
 	}
 
 }
