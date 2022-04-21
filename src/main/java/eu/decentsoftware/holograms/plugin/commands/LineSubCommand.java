@@ -919,7 +919,8 @@ public class LineSubCommand extends DecentCommand {
 					StringUtil.copyPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames(), collection);
 			}
 		} else if (args.length >= 3) {
-			if (args[2].startsWith("(") && args.length == 3) {
+			String item = args[1].toUpperCase(Locale.ROOT);
+			if (args[2].startsWith("(") && args.length == 3 && (item.contains("HEAD") || item.contains("SKULL"))) {
 				List<String> names = Bukkit.getOnlinePlayers().stream()
 					.map(player -> "(" + player.getName() + ")")
 					.collect(Collectors.toList());
