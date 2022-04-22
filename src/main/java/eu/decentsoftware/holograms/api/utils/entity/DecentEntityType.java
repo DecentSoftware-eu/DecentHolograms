@@ -12,13 +12,11 @@ public class DecentEntityType {
 
     private static final Map<String, EntityType> ENTITY_TYPE_ALIASES = new HashMap<>();
     private static final Set<String> ENTITY_TYPE_BLACKLIST;
-    private static final EnumSet<EntityType> ENTITY_TYPES = EnumSet.allOf(EntityType.class);
+    private static final Set<EntityType> ENTITY_TYPES;
 
     static {
-        for (EntityType entityType : ENTITY_TYPES) {
-            ENTITY_TYPE_ALIASES.put(Common.removeSpacingChars(entityType.name()).toLowerCase(), entityType);
-        }
-
+        ENTITY_TYPES = new HashSet<>(EnumSet.allOf(EntityType.class));
+        
         ENTITY_TYPE_BLACKLIST = Sets.newHashSet(
                 "ARMOR_STAND",
                 "PRIMED_TNT",
@@ -52,17 +50,20 @@ public class DecentEntityType {
                 "TIPPED_ARROW",
                 "UNKNOWN"
         );
+        
+        ENTITY_TYPES.removeIf(entityType -> ENTITY_TYPE_BLACKLIST.contains(entityType.name()));
+    
+        for (EntityType entityType : ENTITY_TYPES) {
+            ENTITY_TYPE_ALIASES.put(Common.removeSpacingChars(entityType.name()).toLowerCase(), entityType);
+        }
     }
 
     public static List<EntityType> getAllowedEntityTypes() {
-        return ENTITY_TYPES.stream()
-            .filter(DecentEntityType::isAllowed)
-            .collect(Collectors.toList());
+        return new ArrayList<>(ENTITY_TYPES);
     }
 
     public static List<String> getAllowedEntityTypeNames() {
         return ENTITY_TYPES.stream()
-            .filter(DecentEntityType::isAllowed)
             .map(EntityType::name)
             .collect(Collectors.toList());
     }
@@ -75,9 +76,8 @@ public class DecentEntityType {
     public static EntityType parseEntityType(String string) {
         EntityType entityType = ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
         if (entityType == null) return null;
-        if (isAllowed(entityType)) {
-            return null;
-        }
+        if (isAllowed(entityType)) return null;
+        
         return entityType;
     }
 
