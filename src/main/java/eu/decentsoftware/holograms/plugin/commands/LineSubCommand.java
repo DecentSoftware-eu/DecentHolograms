@@ -885,15 +885,13 @@ public class LineSubCommand extends DecentCommand {
 	}
 	
 	// Slight alteration of Bukkits StringUtil.copyPartialMatches
-	private static List<String> getPartialMatches(String token, Iterable<String> originals) {
+	private static List<String> getPartialMatches(String token, Collection<String> originals) {
 		if (originals == null) {
 			return Collections.emptyList();
 		}
 		
 		if (token == null || token.isEmpty()) {
-			List<String> tmp = new ArrayList<>();
-			originals.iterator().forEachRemaining(tmp::add);
-			return tmp;
+			return new ArrayList<>(originals);
 		}
 		
 		List<String> matches = new ArrayList<>();
