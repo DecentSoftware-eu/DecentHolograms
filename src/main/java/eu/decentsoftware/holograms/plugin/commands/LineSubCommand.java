@@ -846,7 +846,7 @@ public class LineSubCommand extends DecentCommand {
 			}
 			
 			String lastArg = args[args.length - 1];
-			if (lastArg.startsWith("!") && args[0].toUpperCase(Locale.ROOT).startsWith("#ICON:")) {
+			if ("!ENCHANTED".regionMatches(true, 0, lastArg, 0, lastArg.length()) && args[0].toUpperCase(Locale.ROOT).startsWith("#ICON:")) {
 				return Collections.singletonList("!ENCHANTED");
 			}
 		}
