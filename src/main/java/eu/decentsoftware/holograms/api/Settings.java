@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -15,17 +14,7 @@ public class Settings {
 
 	private static final String API_VERSION;
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-	private static final Map<String, String> DEFAULT_CUSTOM_REPLACEMENTS = new HashMap<String, String>(){{
-		put("[x]", "\u2588");
-		put("[X]", "\u2588");
-		put("[/]", "\u258C");
-		put("[.]", "\u2591");
-		put("[..]", "\u2592");
-		put("[...]", "\u2593");
-		put("[p]", "\u2022");
-		put("[P]", "\u2022");
-		put("[|]", "\u23B9");
-	}};
+	private static final Map<String, String> DEFAULT_CUSTOM_REPLACEMENTS = getPopulatedMap();
 	
 	public static final Configuration CONFIG = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "config.yml");
 
@@ -88,6 +77,23 @@ public class Settings {
 
 	public static String getAPIVersion() {
 		return API_VERSION;
+	}
+	
+	// Most clean way of having the default replacements populated.
+	private static Map<String, String> getPopulatedMap(){
+		Map<String, String> tmp = Maps.newHashMap();
+		
+		tmp.put("[x]", "\u2588");
+		tmp.put("[X]", "\u2588");
+		tmp.put("[/]", "\u258C");
+		tmp.put("[.]", "\u2591");
+		tmp.put("[..]", "\u2592");
+		tmp.put("[...]", "\u2593");
+		tmp.put("[p]", "\u2022");
+		tmp.put("[P]", "\u2022");
+		tmp.put("[|]", "\u23B9");
+		
+		return tmp;
 	}
 
 }
