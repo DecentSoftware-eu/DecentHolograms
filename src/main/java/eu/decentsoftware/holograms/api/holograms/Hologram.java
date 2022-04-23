@@ -147,12 +147,14 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 }
             }
 
+            /*
             if (map.containsKey("always-face-player")) {
                 Object afp = map.get("always-face-player");
                 if (afp instanceof Boolean) {
                     page.setAlwaysFacePlayer((boolean) afp);
                 }
             }
+             */
         }
         return hologram;
     }
@@ -216,7 +218,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void tick() {
         if (tickCounter.get() == getUpdateInterval()) {
-            tickCounter.set(0);
+            tickCounter.set(1);
             updateAll();
             return;
         }
@@ -405,18 +407,23 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             getViewerPlayers().forEach(this::update);
         }
     }
-
+    
     public void updateAnimations(Player player) {
+        updateAnimations(true, player);
+    }
+    
+    public void updateAnimations(boolean updatePlaceholders, Player player) {
         if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
+        
         HologramPage page = getPage(player);
         if (page != null) {
-            page.getLines().forEach(line -> line.updateAnimations(player));
+            page.getLines().forEach(line -> line.updateAnimations(updatePlaceholders, player));
         }
     }
 
     public void updateAnimationsAll() {
         if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            getViewerPlayers().forEach(this::updateAnimations);
+            getViewerPlayers().forEach(player -> updateAnimations(false, player));
         }
     }
 
