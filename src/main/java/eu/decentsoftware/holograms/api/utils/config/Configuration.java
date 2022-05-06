@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class Configuration extends YamlConfiguration {
 
@@ -31,18 +32,7 @@ public class Configuration extends YamlConfiguration {
     private File file;
 
     public Configuration(JavaPlugin plugin, String name) {
-        this.plugin = plugin;
-        this.fileName = name.endsWith(".yml") ? name : name + ".yml";
-        this.dataFolder = plugin.getDataFolder();
-
-        loadFile();
-        createData();
-
-        try {
-            loadConfig();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        this(plugin, plugin.getDataFolder(), name);
     }
 
     public Configuration(JavaPlugin plugin, File file) {
@@ -52,12 +42,7 @@ public class Configuration extends YamlConfiguration {
         this.dataFolder = plugin.getDataFolder();
 
         createData();
-
-        try {
-            loadConfig();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        loadConfig();
     }
 
     public Configuration(JavaPlugin plugin, File dataFolder, String name) {
@@ -67,16 +52,16 @@ public class Configuration extends YamlConfiguration {
 
         loadFile();
         createData();
-
-        try {
-            loadConfig();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        loadConfig();
     }
 
-    private void loadConfig() throws IOException, InvalidConfigurationException {
-        this.load(file);
+    private void loadConfig() {
+        try {
+            this.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            Common.log(Level.WARNING, "Unable to load file '%s'", file.getName());
+            e.printStackTrace();
+        }
     }
 
     public File loadFile() {
@@ -88,41 +73,42 @@ public class Configuration extends YamlConfiguration {
         if (file == null) {
             loadFile();
         }
-
-        try {
-            this.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Attempting to fix error...");
-            createData();
-            saveData();
-        }
+        
+        this.save(file);
     }
 
     @Override
-    public void save(File file) throws IOException {
-        super.save(file);
+    public void save(File file) {
+        try {
+            super.save(file);
+        } catch (IOException e) {
+            Common.log(Level.WARNING, "Error while saving data for '%s'", fileName);
+            e.printStackTrace();
+        }
     }
 
     public void reload() {
-        try {
-            this.loadConfig();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        this.loadConfig();
     }
 
     public void createData() {
         if (!file.exists()) {
             if (!dataFolder.exists()) {
-                dataFolder.mkdirs();
+                if (dataFolder.mkdirs()) {
+                    Common.log("Created folder %s", dataFolder.getName());
+                } else {
+                    Common.log(Level.WARNING, "Unable to create folder %s", dataFolder.getName());
+                }
             }
 
             // If file isn't a resource, create from scratch
             if (plugin.getResource(fileName) == null) {
                 try {
-                    file.createNewFile();
+                    if (file.createNewFile()) {
+                        Common.log("Created new file '%s'", file.getName());
+                    }
                 } catch (IOException e) {
+                    Common.log("Error while creating file '%s'", file.getName());
                     e.printStackTrace();
                 }
             } else {
