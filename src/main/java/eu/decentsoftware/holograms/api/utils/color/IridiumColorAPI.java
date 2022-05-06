@@ -12,7 +12,6 @@ import net.md_5.bungee.api.ChatColor;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
