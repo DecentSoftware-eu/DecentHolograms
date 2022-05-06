@@ -94,18 +94,16 @@ public class Configuration extends YamlConfiguration {
     public void createData() {
         if (!file.exists()) {
             if (!dataFolder.exists()) {
-                if (dataFolder.mkdirs()) {
-                    Common.log("Created folder %s", dataFolder.getName());
-                } else {
-                    Common.log(Level.WARNING, "Unable to create folder %s", dataFolder.getName());
+                if (!dataFolder.mkdirs()) {
+                    Common.log(Level.WARNING, "Unable to create folder '%s'", dataFolder.getName());
                 }
             }
 
             // If file isn't a resource, create from scratch
             if (plugin.getResource(fileName) == null) {
                 try {
-                    if (file.createNewFile()) {
-                        Common.log("Created new file '%s'", file.getName());
+                    if (!file.createNewFile()) {
+                        Common.log(Level.WARNING, "Unable to create new file '%s' (Does it already exist?)", file.getName());
                     }
                 } catch (IOException e) {
                     Common.log("Error while creating file '%s'", file.getName());
@@ -119,7 +117,9 @@ public class Configuration extends YamlConfiguration {
 
     public void delete() {
         if (file.exists()) {
-            file.delete();
+            if (!file.delete()) {
+                Common.log(Level.WARNING, "Cannot delete existing file '%s' (Permission issue?)", file.getName());
+            }
         }
     }
 
