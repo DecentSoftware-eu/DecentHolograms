@@ -32,6 +32,18 @@ public interface IConvertor {
 	boolean convert(File... files);
 	
 	/**
+	 * Check if a provided file is not null, does exist, is not a folder and has the same name (with extension)
+	 * as provided.
+	 * 
+	 * @param file The file to check.
+	 * @param fileName The file name to check.
+	 * @return true if the aforementioned cases are all true.
+	 */
+	default boolean isValidFile(File file, String fileName) {
+		return (file != null) && file.exists() && !file.isDirectory() && file.getName().equals(fileName);
+	}
+	
+	/**
 	 * Convert the formatting of the lines into one that DecentHolograms can understand.
 	 * 
 	 * @param lines Lines to convert.
