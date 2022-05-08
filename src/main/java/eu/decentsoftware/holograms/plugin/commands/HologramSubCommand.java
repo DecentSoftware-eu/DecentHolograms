@@ -163,6 +163,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -213,6 +214,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -259,6 +261,7 @@ public class HologramSubCommand extends DecentCommand {
 				clone.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -306,6 +309,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.showAll();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -395,6 +399,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.disable();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -431,6 +436,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.setDisplayRange(range);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -468,6 +474,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -513,6 +520,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -560,6 +568,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.enable();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -605,6 +614,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.setFacing(facing);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -651,6 +661,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.addFlags(flag);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -699,6 +710,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.removeFlags(flag);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -907,6 +919,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -950,6 +963,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.realignLines();
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 
@@ -1098,7 +1112,12 @@ public class HologramSubCommand extends DecentCommand {
 					Lang.HOLOGRAM_PERMISSION_REMOVED.send(sender);
 				}
 				
-				return hologram.save();
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
+				return true;
 			};
 		}
 
@@ -1163,6 +1182,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.setUpdateInterval(interval);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
@@ -1199,6 +1219,7 @@ public class HologramSubCommand extends DecentCommand {
 				hologram.setUpdateRange(range);
 				
 				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
 				
