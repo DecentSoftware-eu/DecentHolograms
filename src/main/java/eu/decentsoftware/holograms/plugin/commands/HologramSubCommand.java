@@ -161,7 +161,11 @@ public class HologramSubCommand extends DecentCommand {
 				}
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_ALIGNED.send(sender);
 				return true;
 			};
@@ -207,7 +211,10 @@ public class HologramSubCommand extends DecentCommand {
 
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -250,7 +257,11 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram clone = hologram.clone(args[1], player.getLocation(), temp);
 				clone.showAll();
 				clone.realignLines();
-				clone.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				PLUGIN.getHologramManager().registerHologram(clone);
 				Lang.HOLOGRAM_CLONED.send(sender);
 				return true;
@@ -293,7 +304,10 @@ public class HologramSubCommand extends DecentCommand {
 				HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
 				page.addLine(line);
 				hologram.showAll();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				PLUGIN.getHologramManager().registerHologram(hologram);
 
@@ -379,7 +393,10 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.disable();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_DISABLED.send(sender);
 				return true;
@@ -412,7 +429,11 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDisplayRange(range);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_DISPLAY_RANGE_SET.send(sender, range);
 				return true;
 			};
@@ -445,7 +466,11 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDownOrigin(value);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_DOWN_ORIGIN_SET.send(sender, value);
 				return true;
 			};
@@ -486,7 +511,11 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setAlwaysFacePlayer(value);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_SET.send(sender, value);
 				return true;
 			};
@@ -529,7 +558,10 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.enable();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_ENABLED.send(sender);
 				return true;
@@ -571,7 +603,11 @@ public class HologramSubCommand extends DecentCommand {
 						break;
 				}
 				hologram.setFacing(facing);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				hologram.realignLines();
 				Lang.HOLOGRAM_FACING_SET.send(sender, facing);
 				return true;
@@ -613,7 +649,10 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.addFlags(flag);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_FLAG_ADDED.send(sender, flag.name());
 				return true;
@@ -658,7 +697,10 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.removeFlags(flag);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_FLAG_REMOVED.send(sender, flag.name());
 				return true;
@@ -863,8 +905,11 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(playerLocation.getZ());
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
-
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
 			};
@@ -903,7 +948,10 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(z);
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -1049,8 +1097,8 @@ public class HologramSubCommand extends DecentCommand {
 					hologram.setPermission(null);
 					Lang.HOLOGRAM_PERMISSION_REMOVED.send(sender);
 				}
-				hologram.save();
-				return true;
+				
+				return hologram.save();
 			};
 		}
 
@@ -1113,7 +1161,11 @@ public class HologramSubCommand extends DecentCommand {
 				final int interval = Validator.getInteger(args[1], 1, 1200, "Interval must be a valid number between 1 and 1200.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateInterval(interval);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_UPDATE_INTERVAL_SET.send(sender, interval);
 				return true;
 			};
@@ -1145,7 +1197,11 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateRange(range);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					return false;
+				}
+				
 				Lang.HOLOGRAM_UPDATE_RANGE_SET.send(sender, range);
 				return true;
 			};

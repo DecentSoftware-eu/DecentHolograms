@@ -55,40 +55,45 @@ public class Configuration extends YamlConfiguration {
         loadConfig();
     }
 
-    private void loadConfig() {
+    private boolean loadConfig() {
         try {
             this.load(file);
+            return true;
         } catch (IOException | InvalidConfigurationException e) {
             Common.log(Level.WARNING, "Unable to load file '%s'", file.getName());
             e.printStackTrace();
+            
+            return false;
         }
     }
 
-    public File loadFile() {
+    public void loadFile() {
         file = new File(dataFolder, fileName);
-        return file;
     }
 
-    public void saveData() {
+    public boolean saveData() {
         if (file == null) {
             loadFile();
         }
         
-        this.save(file);
-    }
-
-    @Override
-    public void save(File file) {
-        try {
-            super.save(file);
-        } catch (IOException e) {
-            Common.log(Level.WARNING, "Error while saving data for '%s'", fileName);
-            e.printStackTrace();
+        try{
+            save(file);
+            return true;
+        }catch(IOException ex){
+            Common.log(Level.WARNING, "Error while saving file '%s'", file.getName());
+            ex.printStackTrace();
+            
+            return false;
         }
     }
 
-    public void reload() {
-        this.loadConfig();
+    @Override
+    public void save(File file) throws IOException{
+        super.save(file);
+    }
+
+    public boolean reload() {
+        return this.loadConfig();
     }
 
     public void createData() {
