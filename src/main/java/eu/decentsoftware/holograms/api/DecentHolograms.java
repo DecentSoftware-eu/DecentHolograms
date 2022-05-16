@@ -13,6 +13,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
+import eu.decentsoftware.holograms.api.world.WorldListener;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 import org.bstats.bukkit.Metrics;
@@ -68,6 +69,7 @@ public final class DecentHolograms {
 
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerListener(this), plugin);
+		pm.registerEvents(new WorldListener(this), plugin);
 //		pm.registerEvents(hologramManager.getOffsetListener(), plugin);
 
 		// Setup metrics
