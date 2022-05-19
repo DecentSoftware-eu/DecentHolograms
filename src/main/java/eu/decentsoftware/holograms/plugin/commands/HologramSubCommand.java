@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.plugin.commands;
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.*;
+import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
@@ -378,7 +379,7 @@ public class HologramSubCommand extends DecentCommand {
 					Lang.HOLOGRAM_ALREADY_DISABLED.send(sender);
 					return true;
 				}
-				hologram.disable();
+				hologram.disable(DisableCause.COMMAND);
 				hologram.save();
 
 				Lang.HOLOGRAM_DISABLED.send(sender);

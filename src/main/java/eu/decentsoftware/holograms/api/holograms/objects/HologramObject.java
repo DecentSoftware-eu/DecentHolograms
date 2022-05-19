@@ -1,6 +1,8 @@
 package eu.decentsoftware.holograms.api.holograms.objects;
 
 import com.google.common.collect.ImmutableSet;
+import eu.decentsoftware.holograms.api.holograms.DisableCause;
+import eu.decentsoftware.holograms.plugin.Validator;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -20,6 +22,7 @@ public abstract class HologramObject extends FlagHolder {
      */
 
     protected boolean enabled = true;
+    protected DisableCause cause = DisableCause.NONE;
     protected final Set<UUID> viewers = Collections.synchronizedSet(new HashSet<>());
     protected Location location;
     protected String permission = null;
@@ -56,6 +59,7 @@ public abstract class HologramObject extends FlagHolder {
      * Enable updating and showing to players automatically.
      */
     public void enable() {
+        this.cause = DisableCause.NONE;
         this.enabled = true;
     }
 
@@ -63,7 +67,33 @@ public abstract class HologramObject extends FlagHolder {
      * Disable updating and showing to players automatically.
      */
     public void disable() {
+        disable(DisableCause.API);
+    }
+    
+    /**
+     * Disable updating and showing to players automatically.
+     * <br>Allows you to set a {@link DisableCause cause} for why the Hologram was disabled.
+     * 
+     * @param cause The cause for why the Hologram was disabled.
+     * 
+     * @throws IllegalArgumentException When {@link DisableCause#NONE NONE} is used as the disable cause.
+     */
+    public void disable(DisableCause cause) {
+        if (cause.equals(DisableCause.NONE))
+            throw new IllegalArgumentException("Cannot use DisableCause NONE while disabling Hologram!");
+        
+        this.cause = cause;
         this.enabled = false;
+    }
+    
+    /**
+     * The cause for disabling the hologram.
+     * <br>May return {@link DisableCause#NONE NONE} if the Hologram is still enabled.
+     * 
+     * @return The cause of why the Hologram is disabled, or {@link DisableCause#NONE NONE} if it is still enabled.
+     */
+    public DisableCause getDisableCause() {
+        return cause;
     }
 
     /**
