@@ -2,7 +2,6 @@ package eu.decentsoftware.holograms.api.holograms.objects;
 
 import com.google.common.collect.ImmutableSet;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
-import eu.decentsoftware.holograms.plugin.Validator;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
