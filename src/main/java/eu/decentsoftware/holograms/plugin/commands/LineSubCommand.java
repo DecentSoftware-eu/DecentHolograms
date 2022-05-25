@@ -178,7 +178,7 @@ public class LineSubCommand extends DecentCommand {
 				} else if (args.length == 4) {
 					return getLines(args[0], Validator.getInteger(args[1]), args[3]);
 				} else if (args.length == 5) {
-					return getPartialMatches(args[4], Arrays.asList("X", "Z", "XZ"));
+					return TabCompleteHandler.getPartialMatches(args[4], "X", "Z", "XZ");
 				}
 				
 				return Collections.emptyList();
@@ -787,7 +787,7 @@ public class LineSubCommand extends DecentCommand {
 				if (args.length <= 3) {
 					return handleCommonArgs(args);
 				} else {
-					return getPartialMatches(args[3], Arrays.asList("NORTH", "EAST", "SOUTH", "WEST"));
+					return TabCompleteHandler.getPartialMatches(args[3], "NORTH", "EAST", "SOUTH", "WEST");
 				}
 			};
 		}
@@ -811,25 +811,25 @@ public class LineSubCommand extends DecentCommand {
 	}
 	
 	protected static List<String> getHologramNames(String token) {
-		return getPartialMatches(token, PLUGIN.getHologramManager().getHologramNames());
+		return TabCompleteHandler.getPartialMatches(token, PLUGIN.getHologramManager().getHologramNames());
 	}
 	
 	protected static List<String> getContent(String[] args) {
 		if (args.length == 1 && args[0].startsWith("#")) {
-			return getPartialMatches(args[0], Arrays.asList("#ICON: ", "#HEAD: ", "#SMALLHEAD: ", "#ENTITY: "));
+			return TabCompleteHandler.getPartialMatches(args[0], "#ICON: ", "#HEAD: ", "#SMALLHEAD: ", "#ENTITY: ");
 		} else if (args.length == 2) {
 			switch (args[0].toUpperCase(Locale.ROOT)) {
 				case "#ICON:":
 				case "#HEAD:":
 				case "#SMALLHEAD:":
-					return getPartialMatches(args[1], items);
+					return TabCompleteHandler.getPartialMatches(args[1], items);
 				
 				case "#ENTITY:":
-					return getPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames());
+					return TabCompleteHandler.getPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames());
 			}
 		} else if (args.length >= 3) {
 			String item = args[1].toUpperCase(Locale.ROOT);
-			if (args[2].startsWith("(") && args.length == 3 && (item.contains("HEAD") || item.contains("SKULL"))) {
+			if (args[2].startsWith("(") && (item.contains("HEAD") || item.contains("SKULL"))) {
 				List<String> names = Bukkit.getOnlinePlayers().stream()
 					.map(player -> "(" + player.getName() + ")")
 					.collect(Collectors.toList());
@@ -842,7 +842,7 @@ public class LineSubCommand extends DecentCommand {
 					names.add("(HEADDATABASE_<id>)");
 				}
 				
-				return getPartialMatches(args[2], names);
+				return TabCompleteHandler.getPartialMatches(args[args.length - 1], names);
 			}
 			
 			String lastArg = args[args.length - 1];
@@ -857,7 +857,7 @@ public class LineSubCommand extends DecentCommand {
 	protected static List<String> getPages(String hologramName, String token) {
 		Hologram hologram = PLUGIN.getHologramManager().getHologram(hologramName);
 		if (hologram != null) {
-			return getPartialMatches(token, IntStream
+			return TabCompleteHandler.getPartialMatches(token, IntStream
 				.rangeClosed(1, hologram.size())
 				.boxed().map(String::valueOf)
 				.collect(Collectors.toList()));
@@ -871,7 +871,7 @@ public class LineSubCommand extends DecentCommand {
 		if (hologram == null) return Collections.emptyList();
 		HologramPage page = hologram.getPage(pageIndex - 1);
 		if (page != null) {
-			return getPartialMatches(token, IntStream
+			return TabCompleteHandler.getPartialMatches(token, IntStream
 				.rangeClosed(1, page.size())
 				.boxed().map(String::valueOf)
 				.collect(Collectors.toList()));
@@ -881,27 +881,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 	
 	protected static List<String> getFlags(String token) {
-		return getPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()));
-	}
-	
-	// Slight alteration of Bukkits StringUtil.copyPartialMatches
-	private static List<String> getPartialMatches(String token, Collection<String> originals) {
-		if (originals == null) {
-			return Collections.emptyList();
-		}
-		
-		if (token == null || token.isEmpty()) {
-			return new ArrayList<>(originals);
-		}
-		
-		List<String> matches = new ArrayList<>();
-		for(String str : originals){
-			if(str.length() >= token.length() && str.regionMatches(true, 0, token, 0, token.length())){
-				matches.add(str);
-			}
-		}
-		
-		return matches;
+		return TabCompleteHandler.getPartialMatches(token, Arrays.stream(EnumFlag.values()).map(Enum::name).collect(Collectors.toList()));
 	}
 
 }

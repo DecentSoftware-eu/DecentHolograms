@@ -5,7 +5,6 @@ import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.*;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.utils.Common;
-import org.bukkit.util.StringUtil;
 
 import java.util.List;
 
@@ -85,9 +84,7 @@ public class FeatureSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    List<String> matches = Lists.newArrayList();
-                    StringUtil.copyPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames(), matches);
-                    return matches;
+                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames());
                 }
                 return null;
             };
@@ -130,9 +127,7 @@ public class FeatureSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    List<String> matches = Lists.newArrayList();
-                    StringUtil.copyPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames(), matches);
-                    return matches;
+                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames());
                 }
                 return null;
             };
@@ -219,9 +214,7 @@ public class FeatureSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    List<String> matches = Lists.newArrayList();
-                    StringUtil.copyPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames(), matches);
-                    return matches;
+                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames());
                 }
                 return null;
             };
@@ -297,9 +290,7 @@ public class FeatureSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    List<String> matches = Lists.newArrayList();
-                    StringUtil.copyPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames(), matches);
-                    return matches;
+                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getFeatureManager().getFeatureNames());
                 }
                 return null;
             };

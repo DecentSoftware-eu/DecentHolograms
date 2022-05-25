@@ -15,7 +15,6 @@ import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -170,13 +169,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("X", "Y", "Z", "XZ", "FACE", "FACING"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "X", "Y", "Z", "XZ", "FACE", "FACING");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -305,20 +303,15 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 3 && (args[1].startsWith("#ICON:") || args[1].startsWith("#HEAD:") || args[1].startsWith("#SMALLHEAD:"))) {
-					StringUtil.copyPartialMatches(
-							args[2],
-							Arrays.stream(Material.values())
-									.filter(DecentMaterial::isItem)
-									.map(Material::name)
-									.collect(Collectors.toList()),
-							matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
+						.filter(DecentMaterial::isItem)
+						.map(Material::name)
+						.collect(Collectors.toList()));
 				} else if (args.length == 3 && args[1].startsWith("#ENTITY:")) {
-					StringUtil.copyPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames());
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -454,13 +447,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -495,13 +487,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -581,15 +572,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList(
-							"SOUTH", "WEST", "NORTH", "EAST", "0", "45", "90", "135", "180", "-45", "-90", "-135"
-					), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "NORTH", "EAST", "SOUTH", "WEST", "0", "45", "90", "135", "180", "-45", "-90", "-135");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -623,17 +611,14 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1],
-							Arrays.stream(EnumFlag.values())
-									.map(EnumFlag::name)
-									.collect(Collectors.toList()), matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(EnumFlag.values())
+						.map(EnumFlag::name)
+						.collect(Collectors.toList()));
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -668,17 +653,14 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1],
-							Arrays.stream(EnumFlag.values())
-									.map(EnumFlag::name)
-									.collect(Collectors.toList()), matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(EnumFlag.values())
+						.map(EnumFlag::name)
+						.collect(Collectors.toList()));
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -916,9 +898,7 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram;
 				Location location;
 				if (args.length == 1) {
-					List<String> matches = Lists.newArrayList();
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
-					return matches;
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2 && Validator.isPlayer(sender)) {
 					hologram = PLUGIN.getHologramManager().getHologram(args[0]);
 					location = hologram == null ? null : hologram.getLocation();
