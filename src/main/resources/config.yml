@@ -80,3 +80,21 @@ healing-display:
   # Heal placeholder: {heal}
   # Animations and Placeholders DO work here
   appearance: '&a+ {heal}'
+
+# # # # # # # # # # # # # # # # #
+#
+# Custom text replacements
+#
+# Replace specific patterns in Holograms with custom replacements, similar to HolographicDisplays
+#
+# # # # # # # # # #
+custom-replacements:
+  '[x]': '\u2588'
+  '[X]': '\u2588'
+  '[/]': '\u258C'
+  '[.]': '\u2591'
+  '[..]': '\u2592'
+  '[...]': '\u2593'
+  '[p]': '\u2022'
+  '[P]': '\u2022'
+  '[|]': '\u23B9'

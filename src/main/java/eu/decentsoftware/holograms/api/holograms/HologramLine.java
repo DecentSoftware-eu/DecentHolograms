@@ -190,7 +190,7 @@ public class HologramLine extends HologramObject {
      */
     public void parseContent() {
         HologramLineType prevType = type;
-        String contentU = content.toUpperCase();
+        String contentU = content.toUpperCase(Locale.ROOT);
         if (contentU.startsWith("#ICON:")) {
             type = HologramLineType.ICON;
             if (prevType != type) {
@@ -220,7 +220,7 @@ public class HologramLine extends HologramObject {
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
             }
-            text = content;
+            text = parseCustomReplacements();
         }
         setOffsetY(type.getOffsetY());
     }
@@ -298,7 +298,16 @@ public class HologramLine extends HologramObject {
         }
         return playerList;
     }
-
+    
+    // Parses custom replacements that can be defined in the config
+    private String parseCustomReplacements() {
+        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.getValue().entrySet()) {
+            content = content.replace(replacement.getKey(), replacement.getValue());
+        }
+        
+        return content;
+    }
+    
     /**
      * Show this line for given players.
      *
