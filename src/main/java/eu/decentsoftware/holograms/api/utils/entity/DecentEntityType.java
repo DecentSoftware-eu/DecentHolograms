@@ -75,10 +75,10 @@ public class DecentEntityType {
     @Nullable
     public static EntityType parseEntityType(String string) {
         EntityType entityType = ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
-        if (entityType == null) return null;
-        if (isAllowed(entityType)) return null;
-        
-        return entityType;
+        if (entityType != null && isAllowed(entityType)) {
+            return entityType;
+        }
+        return null;
     }
 
 }
