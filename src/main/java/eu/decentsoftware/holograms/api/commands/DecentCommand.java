@@ -61,7 +61,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 
 	@Override
 	public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-		return handeTabComplete(sender, args);
+		return handleTabComplete(sender, args);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 
 		return this.getCommandHandler().handle(sender, args);
 	}
-
+	
 	/**
 	 * Handle Tab Complete of the Command.
 	 *
@@ -127,7 +127,19 @@ public abstract class DecentCommand extends Command implements CommandBase {
 	 * @param args The arguments.
 	 * @return List of tab completed Strings.
 	 */
+	@Deprecated
 	protected final List<String> handeTabComplete(CommandSender sender, String[] args) {
+		return handleTabComplete(sender, args);
+	}
+	
+	/**
+	 * Handle Tab Complete of the Command.
+	 *
+	 * @param sender The sender.
+	 * @param args The arguments.
+	 * @return List of tab completed Strings.
+	 */
+	protected final List<String> handleTabComplete(CommandSender sender, String[] args) {
 		if (getPermission() != null && !sender.hasPermission(getPermission())) {
 			return ImmutableList.of();
 		}
@@ -148,7 +160,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		} else if (args.length > 1) {
 			for (CommandBase subCommand : getSubCommands()) {
 				if (CommandValidator.isIdentifier(args[0], subCommand)) {
-					return ((DecentCommand) subCommand).handeTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+					return ((DecentCommand) subCommand).handleTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
 				}
 			}
 		}

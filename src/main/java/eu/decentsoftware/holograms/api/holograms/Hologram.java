@@ -287,8 +287,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Save this hologram to a file.
      */
-    public void save() {
-        if (!saveToFile) return;
+    public boolean save() {
+        if (!saveToFile) return true;
         config.setLocation("location", location, false);
         config.set("enabled", enabled);
         config.set("permission", permission == null || permission.isEmpty() ? null : permission);
@@ -300,8 +300,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         config.set("down-origin", downOrigin);
 //        config.set("always-face-player", alwaysFacePlayer);
         config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-        config.saveData();
-        config.reload();
+        
+        return config.saveData() && config.reload();
     }
 
     /**

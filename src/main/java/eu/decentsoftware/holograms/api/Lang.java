@@ -63,6 +63,7 @@ public class Lang {
 	public static final Phrase HOLOGRAM_ALREADY_DISABLED = new Phrase(CONFIG, "hologram.already_disabled", "{prefix}Hologram is already disabled!");
 	public static final Phrase HOLOGRAM_ENABLED = new Phrase(CONFIG, "hologram.enabled", "{prefix}Hologram has been enabled!");
 	public static final Phrase HOLOGRAM_ALREADY_ENABLED = new Phrase(CONFIG, "hologram.already_enabled", "{prefix}Hologram is already enabled!");
+	public static final Phrase HOLOGRAM_SAVE_FAILED = new Phrase(CONFIG, "hologram.save_failed", "{prefix}&cHologram could not be saved. Check the console for errors!");
 
 	// Page Edit
 	public static final Phrase PAGE_ADDED = new Phrase(CONFIG, "page.added", "{prefix}Page has been added!");
