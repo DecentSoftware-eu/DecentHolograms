@@ -9,10 +9,8 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.StringUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class DecentCommand extends Command implements CommandBase {
 
@@ -135,16 +133,14 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		}
 
 		if (args.length == 1) {
-			List<String> matches = Lists.newLinkedList();
-			List<String> subs = getSubCommands().stream()
-					.map(CommandBase::getName)
-					.collect(Collectors.toList());
-			getSubCommands().forEach(sub ->
-					subs.addAll(Lists.newArrayList(sub.getAliases()))
-			);
-
-			StringUtil.copyPartialMatches(args[0], subs, matches);
-
+			List<String> subs = new ArrayList<>();
+			getSubCommands().forEach(cmd -> {
+				subs.add(cmd.getName());
+				subs.addAll(Lists.newArrayList(cmd.getAliases()));
+			});
+			
+			List<String> matches = TabCompleteHandler.getPartialMatches(args[0], subs);
+			
 			if (!matches.isEmpty()) {
 				Collections.sort(matches);
 				return matches;
