@@ -13,15 +13,9 @@ public class HologramEntity {
 
 	public HologramEntity(String string) {
 		this.content = string;
-		this.parseContent();
-	}
-
-	private void parseContent() {
-		String string = content.trim();
-
-		type = DecentEntityType.parseEntityType(string.trim());
-		if (type == null) {
-			type = EntityType.PIG;
+		this.type = DecentEntityType.parseEntityType(content.trim());
+		if (this.type == null) {
+			this.type = EntityType.PIG;
 		}
 	}
 
