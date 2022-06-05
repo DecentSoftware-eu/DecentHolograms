@@ -1,10 +1,7 @@
 package eu.decentsoftware.holograms.api;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
-import eu.decentsoftware.holograms.api.utils.config.DoubleConfigValue;
-import eu.decentsoftware.holograms.api.utils.config.IntegerConfigValue;
+import eu.decentsoftware.holograms.api.utils.config.*;
 import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
@@ -17,6 +14,8 @@ public class Settings {
 
 	private static final String API_VERSION;
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
+	private static final Map<String, String> DEFAULT_CUSTOM_REPLACEMENTS = getPopulatedMap();
+	
 	public static final Configuration CONFIG = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "config.yml");
 
 	public static final ConfigValue<Boolean> CHECK_UPDATES = new ConfigValue<>(CONFIG, false, "update-checker", true);
@@ -34,7 +33,9 @@ public class Settings {
 	public static final IntegerConfigValue DEFAULT_DISPLAY_RANGE = new IntegerConfigValue(CONFIG, false, "defaults.display-range", 48, 8, 48);
 	public static final IntegerConfigValue DEFAULT_UPDATE_RANGE = new IntegerConfigValue(CONFIG, false, "defaults.update-range", 48, 8, 48);
 	public static final IntegerConfigValue DEFAULT_UPDATE_INTERVAL = new IntegerConfigValue(CONFIG, false, "defaults.update-interval", 20, 1, 1200);
-
+	
+	public static final MapableConfigValues CUSTOM_REPLACEMENTS = new MapableConfigValues(CONFIG, false, "custom-replacements", DEFAULT_CUSTOM_REPLACEMENTS);
+	
 	// ========================================= //
 
 	private static final Map<String, ConfigValue<?>> VALUES = Maps.newHashMap();
@@ -76,6 +77,23 @@ public class Settings {
 
 	public static String getAPIVersion() {
 		return API_VERSION;
+	}
+	
+	// Most clean way of having the default replacements populated.
+	private static Map<String, String> getPopulatedMap(){
+		Map<String, String> tmp = Maps.newHashMap();
+		
+		tmp.put("[x]", "\u2588");
+		tmp.put("[X]", "\u2588");
+		tmp.put("[/]", "\u258C");
+		tmp.put("[.]", "\u2591");
+		tmp.put("[..]", "\u2592");
+		tmp.put("[...]", "\u2593");
+		tmp.put("[p]", "\u2022");
+		tmp.put("[P]", "\u2022");
+		tmp.put("[|]", "\u23B9");
+		
+		return tmp;
 	}
 
 }

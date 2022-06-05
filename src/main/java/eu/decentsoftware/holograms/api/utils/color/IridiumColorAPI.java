@@ -190,7 +190,7 @@ public class IridiumColorAPI {
     }
 
     /**
-     * Returns a gradient array of chat colors.
+     * Returns a gradient array of chat colors or just white if {@code step} is 1 or less.
      *
      * @param start The starting color.
      * @param end   The ending color.
@@ -200,6 +200,11 @@ public class IridiumColorAPI {
      */
     @Nonnull
     private static ChatColor[] createGradient(@Nonnull Color start, @Nonnull Color end, int step) {
+        // Return just white if step is 1 or less. Prevents possible "/ by zero" exception.
+        if (step <= 1) {
+            return new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE};
+        }
+        
         ChatColor[] colors = new ChatColor[step];
         int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
         int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);

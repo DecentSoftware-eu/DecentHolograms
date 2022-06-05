@@ -22,16 +22,16 @@ public class GHoloConverter implements IConvertor {
     private static final Pattern GRADIENT = Pattern.compile("\\[(#[0-9a-f]{6}) (\\w+) (#[0-9a-f]{6})]", Pattern.CASE_INSENSITIVE);
     
     @Override
-    public boolean convert(){
+    public ConvertorRest convert(){
         return convert(new File("plugins/GHolo/data/h.data"));
     }
     
     @Override
-    public boolean convert(File file) {
+    public ConvertorRest convert(File file) {
         Common.log("Converting GHolo holograms...");
         if (!this.isFileValid(file)) {
             Common.log("Invalid file! Need 'h.data'");
-            return false;
+            return new ConvertorRest(false, 0);
         }
         int count = 0;
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
@@ -49,15 +49,16 @@ public class GHoloConverter implements IConvertor {
             count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
         }
         Common.log("Successfully converted %d GHolo holograms!", count);
-        return true;
+        return new ConvertorRest(true, count);
     }
     
     @Override
-    public boolean convert(File... files) {
+    public ConvertorRest convert(File... files) {
+        int summary = 0;
         for (File file : files) {
-            this.convert(file);
+            summary += this.convert(file).getCount();
         }
-        return true;
+        return new ConvertorRest(true, summary);
     }
     
     private boolean isFileValid(final File file) {

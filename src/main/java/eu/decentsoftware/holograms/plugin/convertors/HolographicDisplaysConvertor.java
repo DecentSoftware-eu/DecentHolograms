@@ -19,16 +19,16 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
 
 	@Override
-	public boolean convert() {
+	public ConvertorRest convert() {
 		return convert(new File("plugins/HolographicDisplays/database.yml"));
 	}
 
 	@Override
-	public boolean convert(final File file) {
+	public ConvertorRest convert(final File file) {
 		Common.log("Converting HolographicDisplays holograms...");
 		if (!this.isFileValid(file)) {
 			Common.log("Invalid file! Need 'database.yml'");
-			return false;
+			return new ConvertorRest(false, 0);
 		}
 //		Common.log(file.getAbsolutePath());
 		int count = 0;
@@ -45,29 +45,21 @@ public class HolographicDisplaysConvertor implements IConvertor {
 			count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
 		}
 		Common.log("Successfully converted %d HolographicDisplays holograms!", count);
-		return true;
+		return new ConvertorRest(true, count);
 	}
 
 	@Override
-	public boolean convert(final File... files) {
-		for (final File file : files) {
-			this.convert(file);
+	public ConvertorRest convert(final File... files) {
+		int summary = 0;
+		for (File file : files) {
+			summary += this.convert(file).getCount();
 		}
-		return true;
+		return new ConvertorRest(true, summary);
 	}
 	
 	@Override
 	public List<String> prepareLines(List<String> lines){
 		return lines.stream().map(line -> {
-			line = line.replace("[x]", "\u2588");
-			line = line.replace("[X]", "\u2588");
-			line = line.replace("[/]", "\u258C");
-			line = line.replace("[.]", "\u2591");
-			line = line.replace("[..]", "\u2592");
-			line = line.replace("[...]", "\u2593");
-			line = line.replace("[p]", "\u2022");
-			line = line.replace("[P]", "\u2022");
-			line = line.replace("[|]", "\u23B9");
 			if (line.toUpperCase().startsWith("ICON: ")) {
 				return "#" + line;
 			}

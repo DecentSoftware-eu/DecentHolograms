@@ -41,8 +41,8 @@ public class HologramItem {
 		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
 		if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
 			if (extras != null) {
-				String extrasFinal = player == null ? extras : PAPI.setPlaceholders(player, extras);
-				if (!extrasFinal.trim().isEmpty()) {
+				String extrasFinal = player == null ? extras.trim() : PAPI.setPlaceholders(player, extras).trim();
+				if (!extrasFinal.isEmpty()) {
 					if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
 						String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
 						itemBuilder.withItemStack(HeadDatabaseUtils.getHeadItemStackById(headDatabaseId));
@@ -128,9 +128,8 @@ public class HologramItem {
 		stringBuilder.append(" ");
 		Map<Enchantment, Integer> enchants = itemStack.getEnchantments();
 		if (enchants != null && !enchants.isEmpty()) {
-			stringBuilder.append("!ENCHANTED");
+			stringBuilder.append("!ENCHANTED").append(" ");
 		}
-		stringBuilder.append(" ");
 		if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
 			String owner = itemBuilder.getSkullOwner();
 			String texture = itemBuilder.getSkullTexture();

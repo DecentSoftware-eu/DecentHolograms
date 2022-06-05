@@ -7,13 +7,10 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
-import eu.decentsoftware.holograms.plugin.convertors.CMIConverter;
-import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
-import eu.decentsoftware.holograms.plugin.convertors.GHoloConverter;
-import eu.decentsoftware.holograms.plugin.convertors.HolographicDisplaysConvertor;
+import eu.decentsoftware.holograms.plugin.convertors.*;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -189,7 +186,7 @@ public class HologramsCommand extends DecentCommand {
                 List<String> header = Lists.newArrayList("", " &3&lHOLOGRAM LIST - #" + (currentPage + 1), " &fList of all existing holograms.", "");
                 Function<Hologram, String> parseItem = hologram -> {
                     Location l = hologram.getLocation();
-                    String name = hologram.isEnabled() ? hologram.getName() : "&c" + hologram.getName();
+                    String name = (hologram.isEnabled() ? "" : "&c") + hologram.getName();
                     return String.format(" &8• &b%s &8| &7%s, %.2f, %.2f, %.2f", name, l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
                 };
                 Message.sendPaginatedMessage((Player) sender, currentPage, "/dh list %d", 15, header, null, holograms, parseItem);
@@ -199,7 +196,26 @@ public class HologramsCommand extends DecentCommand {
 
         @Override
         public TabCompleteHandler getTabCompleteHandler() {
-            return null;
+            return (sender, args) -> {
+                if (args.length != 1) {
+                    return null;
+                }
+    
+                int holograms = PLUGIN.getHologramManager().getHolograms().size();
+                if (holograms == 0) {
+                    return null;
+                }
+    
+                List<String> pages = new ArrayList<>();
+                int page = 0;
+                while(holograms > 0) {
+                    page++;
+                    pages.add(String.valueOf(page));
+                    holograms -= 15;
+                }
+    
+                return TabCompleteHandler.getPartialMatches(args[0], pages);
+            };
         }
 
     }
@@ -271,23 +287,35 @@ public class HologramsCommand extends DecentCommand {
                     return true;
                 }
 
+                long startTime = System.currentTimeMillis();
+
                 switch (convertorType) {
                     case HOLOGRAPHIC_DISPLAYS:
                         Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
                         if (path != null) {
                             File file = new File(path);
-                            return new HolographicDisplaysConvertor().convert(file);
+
+                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new HolographicDisplaysConvertor().convert();
+                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                     
                     case GHOLO:
                         Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
                         if (path != null) {
                             File file = new File(path);
-                            return new GHoloConverter().convert(file);
+
+                            ConvertorRest convertorRest = new GHoloConverter().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new GHoloConverter().convert();
+                            ConvertorRest convertorRest = new GHoloConverter().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                     
                     case CMI:
@@ -295,9 +323,14 @@ public class HologramsCommand extends DecentCommand {
                         Common.tell(sender, "%sNOTE: CMI support is limited!", Common.PREFIX);
                         if (path != null) {
                             File file = new File(path);
-                            return new CMIConverter().convert(file);
+
+                            ConvertorRest convertorRest = new CMIConverter().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new CMIConverter().convert();
+                            ConvertorRest convertorRest = new CMIConverter().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                         
                     default:
@@ -308,13 +341,17 @@ public class HologramsCommand extends DecentCommand {
             };
         }
 
+        public void sendComplete(CommandSender sender, long startTime, ConvertorRest convertorRest) {
+            Common.tell(sender, "%sSuccessfully converted &a%s &7holograms in &a%s", Common.PREFIX, convertorRest.getCount(), (System.currentTimeMillis() - startTime) / 1000f + "s.");
+        }
+
         @Override
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return StringUtil.copyPartialMatches(args[0], Arrays.stream(ConvertorType.values()).map(ConvertorType::getName).collect(Collectors.toList()), Lists.newArrayList());
+                    return TabCompleteHandler.getPartialMatches(args[0], Arrays.stream(ConvertorType.values()).map(ConvertorType::getName).collect(Collectors.toList()));
                 }
-                return new ArrayList<>();
+                return null;
             };
         }
 

@@ -190,7 +190,7 @@ public class HologramLine extends HologramObject {
      */
     public void parseContent() {
         HologramLineType prevType = type;
-        String contentU = content.toUpperCase();
+        String contentU = content.toUpperCase(Locale.ROOT);
         if (contentU.startsWith("#ICON:")) {
             type = HologramLineType.ICON;
             if (prevType != type) {
@@ -220,7 +220,7 @@ public class HologramLine extends HologramObject {
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
             }
-            text = content;
+            text = parseCustomReplacements();
         }
         setOffsetY(type.getOffsetY());
     }
@@ -298,7 +298,16 @@ public class HologramLine extends HologramObject {
         }
         return playerList;
     }
-
+    
+    // Parses custom replacements that can be defined in the config
+    private String parseCustomReplacements() {
+        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.getValue().entrySet()) {
+            content = content.replace(replacement.getKey(), replacement.getValue());
+        }
+        
+        return content;
+    }
+    
     /**
      * Show this line for given players.
      *
@@ -391,8 +400,8 @@ public class HologramLine extends HologramObject {
             }
         }
     }
-
-    public void updateAnimations(Player... players) {
+    
+    public void updateAnimations(boolean updatePlaceholders, Player... players) {
         if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) return;
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
@@ -401,7 +410,7 @@ public class HologramLine extends HologramObject {
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, true);
+                String text = getText(player, updatePlaceholders);
                 if (!text.equals(lastText)) {
                     lastTextMap.put(uuid, text);
                     nms.updateFakeEntityCustomName(player, text, entityIds[0]);

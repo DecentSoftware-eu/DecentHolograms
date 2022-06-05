@@ -16,7 +16,6 @@ import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -162,7 +161,12 @@ public class HologramSubCommand extends DecentCommand {
 				}
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_ALIGNED.send(sender);
 				return true;
 			};
@@ -171,13 +175,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("X", "Y", "Z", "XZ", "FACE", "FACING"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "X", "Y", "Z", "XZ", "FACE", "FACING");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -208,7 +211,11 @@ public class HologramSubCommand extends DecentCommand {
 
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -251,7 +258,12 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram clone = hologram.clone(args[1], player.getLocation(), temp);
 				clone.showAll();
 				clone.realignLines();
-				clone.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				PLUGIN.getHologramManager().registerHologram(clone);
 				Lang.HOLOGRAM_CLONED.send(sender);
 				return true;
@@ -294,7 +306,11 @@ public class HologramSubCommand extends DecentCommand {
 				HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
 				page.addLine(line);
 				hologram.showAll();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				PLUGIN.getHologramManager().registerHologram(hologram);
 
@@ -306,20 +322,15 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 3 && (args[1].startsWith("#ICON:") || args[1].startsWith("#HEAD:") || args[1].startsWith("#SMALLHEAD:"))) {
-					StringUtil.copyPartialMatches(
-							args[2],
-							Arrays.stream(Material.values())
-									.filter(DecentMaterial::isItem)
-									.map(Material::name)
-									.collect(Collectors.toList()),
-							matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
+						.filter(DecentMaterial::isItem)
+						.map(Material::name)
+						.collect(Collectors.toList()));
 				} else if (args.length == 3 && args[1].startsWith("#ENTITY:")) {
-					StringUtil.copyPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames());
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -380,7 +391,11 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.disable(DisableCause.COMMAND);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_DISABLED.send(sender);
 				return true;
@@ -413,7 +428,12 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDisplayRange(range);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_DISPLAY_RANGE_SET.send(sender, range);
 				return true;
 			};
@@ -446,7 +466,12 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDownOrigin(value);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_DOWN_ORIGIN_SET.send(sender, value);
 				return true;
 			};
@@ -455,13 +480,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -487,7 +511,12 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setAlwaysFacePlayer(value);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_SET.send(sender, value);
 				return true;
 			};
@@ -496,13 +525,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList("true", "false"), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -530,7 +558,11 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.enable();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_ENABLED.send(sender);
 				return true;
@@ -572,7 +604,12 @@ public class HologramSubCommand extends DecentCommand {
 						break;
 				}
 				hologram.setFacing(facing);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				hologram.realignLines();
 				Lang.HOLOGRAM_FACING_SET.send(sender, facing);
 				return true;
@@ -582,15 +619,12 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1 || args.length == 3) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1], Lists.newArrayList(
-							"SOUTH", "WEST", "NORTH", "EAST", "0", "45", "90", "135", "180", "-45", "-90", "-135"
-					), matches);
+					return TabCompleteHandler.getPartialMatches(args[1], "NORTH", "EAST", "SOUTH", "WEST", "0", "45", "90", "135", "180", "-45", "-90", "-135");
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -614,7 +648,11 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.addFlags(flag);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_FLAG_ADDED.send(sender, flag.name());
 				return true;
@@ -624,17 +662,14 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1],
-							Arrays.stream(EnumFlag.values())
-									.map(EnumFlag::name)
-									.collect(Collectors.toList()), matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(EnumFlag.values())
+						.map(EnumFlag::name)
+						.collect(Collectors.toList()));
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -659,7 +694,11 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.removeFlags(flag);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_FLAG_REMOVED.send(sender, flag.name());
 				return true;
@@ -669,17 +708,14 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
-				List<String> matches = Lists.newArrayList();
 				if (args.length == 1) {
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
-					StringUtil.copyPartialMatches(args[1],
-							Arrays.stream(EnumFlag.values())
-									.map(EnumFlag::name)
-									.collect(Collectors.toList()), matches
-					);
+					return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(EnumFlag.values())
+						.map(EnumFlag::name)
+						.collect(Collectors.toList()));
 				}
-				return matches;
+				return null;
 			};
 		}
 
@@ -864,8 +900,12 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(playerLocation.getZ());
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
-
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
 			};
@@ -904,7 +944,11 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(z);
 				hologram.setLocation(location);
 				hologram.realignLines();
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -917,9 +961,7 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram;
 				Location location;
 				if (args.length == 1) {
-					List<String> matches = Lists.newArrayList();
-					StringUtil.copyPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames(), matches);
-					return matches;
+					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2 && Validator.isPlayer(sender)) {
 					hologram = PLUGIN.getHologramManager().getHologram(args[0]);
 					location = hologram == null ? null : hologram.getLocation();
@@ -1050,7 +1092,12 @@ public class HologramSubCommand extends DecentCommand {
 					hologram.setPermission(null);
 					Lang.HOLOGRAM_PERMISSION_REMOVED.send(sender);
 				}
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				return true;
 			};
 		}
@@ -1114,7 +1161,12 @@ public class HologramSubCommand extends DecentCommand {
 				final int interval = Validator.getInteger(args[1], 1, 1200, "Interval must be a valid number between 1 and 1200.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateInterval(interval);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_UPDATE_INTERVAL_SET.send(sender, interval);
 				return true;
 			};
@@ -1146,7 +1198,12 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateRange(range);
-				hologram.save();
+				
+				if (!hologram.save()) {
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+				
 				Lang.HOLOGRAM_UPDATE_RANGE_SET.send(sender, range);
 				return true;
 			};

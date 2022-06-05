@@ -20,16 +20,16 @@ public class CMIConverter implements IConvertor {
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
     
     @Override
-    public boolean convert() {
+    public ConvertorRest convert() {
         return convert(new File("plugins/CMI/holograms.yml"));
     }
     
     @Override
-    public boolean convert(File file) {
+    public ConvertorRest convert(File file) {
         Common.log("Converting CMI holograms...");
         if(!ConverterCommon.isValidFile(file, "holograms.yml")){
             Common.log("Invalid file! Need 'holograms.yml'");
-            return false;
+            return new ConvertorRest(false, 0);
         }
         int count = 0;
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
@@ -51,15 +51,16 @@ public class CMIConverter implements IConvertor {
             count = ConverterCommon.createHologramPages(count, name, loc, pages, PLUGIN);
         }
         Common.log("Successfully converted %d CMI Holograms!", count);
-        return true;
+        return new ConvertorRest(true, count);
     }
     
     @Override
-    public boolean convert(File... files) {
-        for(final File file : files) {
-            this.convert(file);
+    public ConvertorRest convert(File... files) {
+        int summary = 0;
+        for (File file : files) {
+            summary += this.convert(file).getCount();
         }
-        return true;
+        return new ConvertorRest(true, summary);
     }
     
     @Override

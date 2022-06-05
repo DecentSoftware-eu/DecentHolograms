@@ -147,12 +147,14 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 }
             }
 
+            /*
             if (map.containsKey("always-face-player")) {
                 Object afp = map.get("always-face-player");
                 if (afp instanceof Boolean) {
                     page.setAlwaysFacePlayer((boolean) afp);
                 }
             }
+             */
         }
         return hologram;
     }
@@ -216,7 +218,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void tick() {
         if (tickCounter.get() == getUpdateInterval()) {
-            tickCounter.set(0);
+            tickCounter.set(1);
             updateAll();
             return;
         }
@@ -285,8 +287,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Save this hologram to a file.
      */
-    public void save() {
-        if (!saveToFile) return;
+    public boolean save() {
+        if (!saveToFile) return true;
         config.setLocation("location", location, false);
         config.set("enabled", enabled);
         config.set("permission", permission == null || permission.isEmpty() ? null : permission);
@@ -298,8 +300,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         config.set("down-origin", downOrigin);
 //        config.set("always-face-player", alwaysFacePlayer);
         config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-        config.saveData();
-        config.reload();
+        
+        return config.saveData() && config.reload();
     }
 
     /**
@@ -405,18 +407,23 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             getViewerPlayers().forEach(this::update);
         }
     }
-
+    
     public void updateAnimations(Player player) {
+        updateAnimations(true, player);
+    }
+    
+    public void updateAnimations(boolean updatePlaceholders, Player player) {
         if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
+        
         HologramPage page = getPage(player);
         if (page != null) {
-            page.getLines().forEach(line -> line.updateAnimations(player));
+            page.getLines().forEach(line -> line.updateAnimations(updatePlaceholders, player));
         }
     }
 
     public void updateAnimationsAll() {
         if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            getViewerPlayers().forEach(this::updateAnimations);
+            getViewerPlayers().forEach(player -> updateAnimations(false, player));
         }
     }
 
