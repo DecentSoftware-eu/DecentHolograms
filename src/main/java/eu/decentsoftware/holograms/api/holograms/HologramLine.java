@@ -400,8 +400,8 @@ public class HologramLine extends HologramObject {
             }
         }
     }
-
-    public void updateAnimations(Player... players) {
+    
+    public void updateAnimations(boolean updatePlaceholders, Player... players) {
         if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) return;
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
@@ -410,7 +410,7 @@ public class HologramLine extends HologramObject {
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, true);
+                String text = getText(player, updatePlaceholders);
                 if (!text.equals(lastText)) {
                     lastTextMap.put(uuid, text);
                     nms.updateFakeEntityCustomName(player, text, entityIds[0]);
