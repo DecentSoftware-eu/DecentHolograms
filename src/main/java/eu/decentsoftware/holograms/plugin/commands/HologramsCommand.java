@@ -7,11 +7,9 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
-import eu.decentsoftware.holograms.plugin.convertors.CMIConverter;
-import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
-import eu.decentsoftware.holograms.plugin.convertors.GHoloConverter;
-import eu.decentsoftware.holograms.plugin.convertors.HolographicDisplaysConvertor;
+import eu.decentsoftware.holograms.plugin.convertors.*;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -289,23 +287,35 @@ public class HologramsCommand extends DecentCommand {
                     return true;
                 }
 
+                long startTime = System.currentTimeMillis();
+
                 switch (convertorType) {
                     case HOLOGRAPHIC_DISPLAYS:
                         Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
                         if (path != null) {
                             File file = new File(path);
-                            return new HolographicDisplaysConvertor().convert(file);
+
+                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new HolographicDisplaysConvertor().convert();
+                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                     
                     case GHOLO:
                         Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
                         if (path != null) {
                             File file = new File(path);
-                            return new GHoloConverter().convert(file);
+
+                            ConvertorRest convertorRest = new GHoloConverter().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new GHoloConverter().convert();
+                            ConvertorRest convertorRest = new GHoloConverter().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                     
                     case CMI:
@@ -313,9 +323,14 @@ public class HologramsCommand extends DecentCommand {
                         Common.tell(sender, "%sNOTE: CMI support is limited!", Common.PREFIX);
                         if (path != null) {
                             File file = new File(path);
-                            return new CMIConverter().convert(file);
+
+                            ConvertorRest convertorRest = new CMIConverter().convert(file);
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         } else {
-                            return new CMIConverter().convert();
+                            ConvertorRest convertorRest = new CMIConverter().convert();
+                            sendComplete(sender, startTime, convertorRest);
+                            return convertorRest.getSuccess();
                         }
                         
                     default:
@@ -324,6 +339,10 @@ public class HologramsCommand extends DecentCommand {
                 Common.tell(sender, Common.PREFIX + "Plugin '" + args[0] + "' couldn't be found.");
                 return true;
             };
+        }
+
+        public void sendComplete(CommandSender sender, long startTime, ConvertorRest convertorRest) {
+            Common.tell(sender, "%sSuccessfully converted &a%s &7holograms in &a%s", Common.PREFIX, convertorRest.getCount(), (System.currentTimeMillis() - startTime) / 1000f + "s.");
         }
 
         @Override
