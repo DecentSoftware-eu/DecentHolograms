@@ -252,9 +252,9 @@ public class HologramManager extends Ticked {
 				if (hologram != null && hologram.isEnabled()) {
 					hologram.showAll();
 					hologram.realignLines();
-					registerHologram(hologram);
-					counter++;
 				}
+				registerHologram(hologram);
+				counter++;
 			} catch (Exception e) {
 				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", fileName);
 				e.printStackTrace();
