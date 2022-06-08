@@ -26,18 +26,21 @@ public class PacketHandlerCommon {
         }
         ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "a");
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
-        if (Version.afterOrEqual(17)) {
+        if (Version.afterOrEqual(19)) {
+            PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "k");
+        } else if (Version.afterOrEqual(17)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "j");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS);
         } else if (Version.afterOrEqual(14)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "i");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         } else if (Version.afterOrEqual(9)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "g");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         } else {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "e");
-            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(PacketHandlerCommon.ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
+        }
+        if (Version.afterOrEqual(17)) {
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS);
+        } else {
+            ENTITY_USE_PACKET_A_METHOD = new ReflectMethod(ENTITY_USE_PACKET_CLASS, "b", PACKET_DATA_SERIALIZER_CLASS);
         }
     }
 

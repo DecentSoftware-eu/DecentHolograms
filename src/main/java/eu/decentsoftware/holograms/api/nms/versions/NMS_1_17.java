@@ -89,7 +89,13 @@ public class NMS_1_17 extends NMS {
         DATA_WATCHER_CLASS = ReflectionUtil.getNMClass("network.syncher.DataWatcher");
         DATA_WATCHER_CONSTRUCTOR = new ReflectConstructor(DATA_WATCHER_CLASS, ENTITY_CLASS);
         if (Version.afterOrEqual(18)) {
-            I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), Version.CURRENT.equals(Version.v1_18_R2) ? "W" : "Z");
+            if (Version.CURRENT.equals(Version.v1_18_R2)) {
+                I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "W");
+            } else if (Version.afterOrEqual(19)) {
+                I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "X");
+            } else {
+                I_REGISTRY_Y_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.IRegistry"), "Z");
+            }
             REGISTRY_BLOCKS_FROM_ID_METHOD = new ReflectMethod(ReflectionUtil.getNMClass("core.RegistryBlocks"), "a", int.class);
             ENUM_ITEM_SLOT_FROM_NAME_METHOD = new ReflectMethod(ENUM_ITEM_SLOT_CLASS, "a", String.class);
             DATA_WATCHER_REGISTER_METHOD = new ReflectMethod(DATA_WATCHER_CLASS, "a", DWO_CLASS, Object.class);
@@ -114,9 +120,13 @@ public class NMS_1_17 extends NMS {
         PACKET_DATA_SERIALIZER_WRITE_BOOLEAN_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "writeBoolean", boolean.class);
         // PACKETS
         PACKET_SPAWN_ENTITY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntity"),
-                int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS);
-        PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntityLiving"),
-                PACKET_DATA_SERIALIZER_CLASS);
+                int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS, double.class);
+        if (Version.before(19)) {
+            PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntityLiving"),
+                    PACKET_DATA_SERIALIZER_CLASS);
+        } else {
+            PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR = null;
+        }
         PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityMetadata"),
                 int.class, DATA_WATCHER_CLASS, boolean.class);
         PACKET_ENTITY_TELEPORT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityTeleport"),
@@ -129,7 +139,7 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.CURRENT.equals(Version.v1_18_R2)) {
+            if (Version.CURRENT.equals(Version.v1_18_R2) || Version.afterOrEqual(19)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "Z").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aN").getValue(null);
@@ -156,8 +166,8 @@ public class NMS_1_17 extends NMS {
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");
 
-        ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, Version.CURRENT.equals(Version.v1_18_R2) ? "c" : "b");
-        VEC_3D_A = new ReflectField<>(VEC_3D_CLASS, "a").getValue(null);
+        ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, Version.CURRENT.equals(Version.v1_18_R2) || Version.afterOrEqual(19) ? "c" : "b");
+        VEC_3D_A = new ReflectField<>(VEC_3D_CLASS, Version.afterOrEqual(19) ? "b" : "a").getValue(null);
     }
 
     @Override
@@ -206,7 +216,7 @@ public class NMS_1_17 extends NMS {
 
         sendPacket(player, PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance(
                 entityId,
-                MATH_HELPER_A_METHOD.invokeStatic(RandomUtils.RANDOM),
+                UUID.randomUUID(),
                 location.getX(),
                 location.getY(),
                 location.getZ(),
@@ -214,7 +224,8 @@ public class NMS_1_17 extends NMS {
                 location.getPitch(),
                 REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_Y_FIELD.getValue(null), entityTypeId),
                 0,
-                VEC_3D_A
+                VEC_3D_A,
+                0d
         ));
         teleportFakeEntity(player, location, entityId);
     }
@@ -227,7 +238,11 @@ public class NMS_1_17 extends NMS {
 
         int entityTypeId = getEntityTypeId(entityType);
         if (entityTypeId == -1) return;
-        showFakeEntityLiving(player, location, entityTypeId, entityId);
+        if (Version.afterOrEqual(19)) {
+            showFakeEntity(player, location, entityTypeId, entityId);
+        } else {
+            showFakeEntityLiving(player, location, entityTypeId, entityId);
+        }
     }
 
     private void showFakeEntityLiving(Player player, Location location, int entityTypeId, int entityId) {
@@ -261,7 +276,7 @@ public class NMS_1_17 extends NMS {
         if (small) data += 0x01;
         if (!clickable) data += 0x10;
         DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ARMOR_STAND_DATA, data);
-        showFakeEntityLiving(player, location, 1, entityId);
+        showFakeEntityLiving(player, location, EntityType.ARMOR_STAND, entityId);
         sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(entityId, dataWatcher, true));
     }
 
@@ -273,7 +288,7 @@ public class NMS_1_17 extends NMS {
 
         Object dataWatcher = DATA_WATCHER_CONSTRUCTOR.newInstance(ENTITY_CLASS.cast(null));
         DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ITEM, CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack));
-        showFakeEntity(player, location, 41, entityId);
+        showFakeEntity(player, location, getEntityTypeId(EntityType.DROPPED_ITEM), entityId);
         sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(entityId, dataWatcher, true));
         teleportFakeEntity(player, location, entityId);
     }
