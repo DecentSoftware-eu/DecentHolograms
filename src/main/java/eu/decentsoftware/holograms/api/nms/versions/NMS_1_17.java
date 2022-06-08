@@ -119,13 +119,15 @@ public class NMS_1_17 extends NMS {
         PACKET_DATA_SERIALIZER_WRITE_SHORT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "writeShort", int.class);
         PACKET_DATA_SERIALIZER_WRITE_BOOLEAN_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "writeBoolean", boolean.class);
         // PACKETS
-        PACKET_SPAWN_ENTITY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntity"),
-                int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS, double.class);
         if (Version.before(19)) {
             PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntityLiving"),
                     PACKET_DATA_SERIALIZER_CLASS);
+            PACKET_SPAWN_ENTITY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntity"),
+                    int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS);
         } else {
             PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR = null;
+            PACKET_SPAWN_ENTITY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntity"),
+                    int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS, double.class);
         }
         PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityMetadata"),
                 int.class, DATA_WATCHER_CLASS, boolean.class);
@@ -214,19 +216,34 @@ public class NMS_1_17 extends NMS {
         Validate.notNull(player);
         Validate.notNull(location);
 
-        sendPacket(player, PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance(
-                entityId,
-                UUID.randomUUID(),
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getYaw(),
-                location.getPitch(),
-                REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_Y_FIELD.getValue(null), entityTypeId),
-                0,
-                VEC_3D_A,
-                0d
-        ));
+        if (Version.afterOrEqual(19)) {
+            sendPacket(player, PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance(
+                    entityId,
+                    UUID.randomUUID(),
+                    location.getX(),
+                    location.getY(),
+                    location.getZ(),
+                    location.getYaw(),
+                    location.getPitch(),
+                    REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_Y_FIELD.getValue(null), entityTypeId),
+                    0,
+                    VEC_3D_A,
+                    0d
+            ));
+        } else {
+            sendPacket(player, PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance(
+                    entityId,
+                    UUID.randomUUID(),
+                    location.getX(),
+                    location.getY(),
+                    location.getZ(),
+                    location.getYaw(),
+                    location.getPitch(),
+                    REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_Y_FIELD.getValue(null), entityTypeId),
+                    0,
+                    VEC_3D_A
+            ));
+        }
         teleportFakeEntity(player, location, entityId);
     }
 
