@@ -26,10 +26,18 @@ public class MapableConfigValues extends ConfigValue<Map<String, String>> {
                 config.reload();
             }
         } else {
+            char separator = '\uFFFF';
+            config.options().pathSeparator(separator);
+            config.reload();
+
+            String path = this.path.replace(".", String.valueOf(separator));
             Map<String, String> temp = new HashMap<>();
             for (String key : config.getSectionKeys(path)) {
-                temp.put(key, config.getString(path + "." + key));
+                temp.put(key, config.getString(path + separator + key));
             }
+
+            config.options().pathSeparator('.');
+            config.reload();
             
             value = temp.isEmpty() ? defaultValue : temp;
         }
