@@ -228,7 +228,7 @@ public class NMS_1_17 extends NMS {
                     REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(I_REGISTRY_Y_FIELD.getValue(null), entityTypeId),
                     0,
                     VEC_3D_A,
-                    0d
+                    location.getYaw()
             ));
         } else {
             sendPacket(player, PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance(
