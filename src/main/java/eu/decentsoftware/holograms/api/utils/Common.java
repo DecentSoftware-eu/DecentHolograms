@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -55,11 +56,11 @@ public class Common {
 	/**
 	 * Log a message into console.
 	 * <p>
-	 *     This method formats given arguments in the message.
+	 * This method formats given arguments in the message.
 	 * </p>
 	 *
 	 * @param message The message.
-	 * @param args The arguments
+	 * @param args    The arguments
 	 */
 	public static void log(String message, Object... args) {
 		log(String.format(message, args));
@@ -68,7 +69,7 @@ public class Common {
 	/**
 	 * Log a message into console.
 	 *
-	 * @param level Level of this message.
+	 * @param level   Level of this message.
 	 * @param message The message.
 	 */
 	public static void log(Level level, String message) {
@@ -78,12 +79,12 @@ public class Common {
 	/**
 	 * Log a message into console.
 	 * <p>
-	 *     This method formats given arguments in the message.
+	 * This method formats given arguments in the message.
 	 * </p>
 	 *
-	 * @param level Level of this message.
+	 * @param level   Level of this message.
 	 * @param message The message.
-	 * @param args The arguments.
+	 * @param args    The arguments.
 	 */
 	public static void log(Level level, String message, Object... args) {
 		log(level, String.format(message, args));
@@ -109,10 +110,10 @@ public class Common {
 	/**
 	 * Send a message to given CommandSender.
 	 * <p>
-	 *     This method will colorize the message.
+	 * This method will colorize the message.
 	 * </p>
 	 *
-	 * @param player The CommandSender receiving the message.
+	 * @param player  The CommandSender receiving the message.
 	 * @param message The message.
 	 */
 	public static void tell(CommandSender player, String message) {
@@ -122,12 +123,12 @@ public class Common {
 	/**
 	 * Send a message to given CommandSender.
 	 * <p>
-	 *     This method will colorize the message and formats given arguments to the message.
+	 * This method will colorize the message and formats given arguments to the message.
 	 * </p>
 	 *
-	 * @param player The CommandSender receiving the message.
+	 * @param player  The CommandSender receiving the message.
 	 * @param message The message.
-	 * @param args The arguments.
+	 * @param args    The arguments.
 	 */
 	public static void tell(CommandSender player, String message, Object... args) {
 		tell(player, String.format(message, args));
@@ -144,18 +145,18 @@ public class Common {
 	 * @return Boolean.
 	 */
 	public static boolean isVersionHigher(String version) {
-		if (!version.matches("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(\\d+))?")) {
+		if (version == null || !version.matches("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(\\d+))?")) {
 			return false;
 		}
 		String current = Settings.getAPIVersion();
 		int[] i1 = splitVersion(version);
 		int[] i2 = splitVersion(current);
-		if (i1 == null || i2 == null) {
+		if (i1 == null || i1.length < 3 || i2 == null || i2.length < 3) {
 			return false;
 		}
-		return i1[0] > i2[0] // Major version is higher.
-				|| (i1[0] == i2[0] && i1[1] > i2[1]) // Minor version is higher and major is the same.
-				|| (i1[0] == i2[0] && i1[1] == i2[1] && i1[2] > i2[2]); // Major and minor versions are the same and patch is higher.
+		return i1[0] > i2[0] || // Major version is higher.
+				i1[0] == i2[0] && i1[1] > i2[1] || // Minor version is higher and major is the same.
+				i1[0] == i2[0] && i1[1] == i2[1] && i1[2] > i2[2]; // Major and minor versions are the same and patch is higher.
 	}
 
 	private static int[] splitVersion(String version) {
