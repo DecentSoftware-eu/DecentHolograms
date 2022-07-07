@@ -7,6 +7,16 @@ body:
       value: |
         Thanks for taking the time to fill out this bug report!
         If this format doesn't suit your needs, feel free to use the [blank](https://github.com/DecentSoftware-eu/DecentHolograms3/issues/new) one instead.
+  - type: checkboxes
+    id: making-sure
+    attributes:
+      label: Just making sure
+      description: 'Please make sure, all the following are true:'
+      options:
+        - label: I made sure, this bug is not already known or reported.
+          required: true
+        - label: I believe, that this bug is fixable.
+          required: true
   - type: textarea
     id: reproduction
     attributes:
