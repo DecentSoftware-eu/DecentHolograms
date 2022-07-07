@@ -45,8 +45,6 @@ public class FutureHologramsConverter implements IConvertor {
                     continue;
                 }
                 
-                Common.log(name + "." + page);
-                
                 ConfigurationSection section = config.getConfigurationSection(name + "." + page);
                 List<String> lines = section.getStringList("lines");
                 if (lines == null || lines.isEmpty()) {

@@ -58,8 +58,10 @@ public class HologramItem {
 
 		ItemStack itemStack = itemBuilder.toItemStack();
 		if (nbt != null) {
-			//noinspection deprecation
-			Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
+			try {
+				// noinspection deprecation
+				Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
+			} catch (Throwable ignored) {}
 		}
 		return itemStack;
 	}
