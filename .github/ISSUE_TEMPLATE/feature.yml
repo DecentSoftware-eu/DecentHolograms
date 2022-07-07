@@ -10,10 +10,14 @@ body:
   - type: checkboxes
     id: making-sure
     attributes:
-      label: Are you sure, that this feature is not already in the plugin?
-      description: Make sure, this feature is not a thing already.
+      label: Just making sure
+      description: 'Please make sure, all the following are true:'
       options:
         - label: I have read the wiki and made sure, this feature is not yet in the plugin.
+          required: true
+        - label: I believe, that this feature is possible to implement.
+          required: true
+        - label: I made sure, that this feature has not been requested yet.
           required: true
   - type: textarea
     id: problem
