@@ -55,7 +55,7 @@ body:
     id: log
     attributes:
       label: Log
-      description: Paste a full log. Always use [Pastebin](https://pastebin.com/). Must be a full log, not a crash report, or a screenshot.
+      description: Paste a full log. Always use [Pastebin](https://pastebin.com/) or [HelpChat](https://paste.helpch.at/). Must be a full log, not a crash report, or a screenshot.
       placeholder: https://pastebin.com/...
     validations:
       required: true
