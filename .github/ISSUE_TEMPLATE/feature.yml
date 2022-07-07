@@ -1,0 +1,45 @@
+name: Feature Request
+description: File a feature request for DecentHolograms
+labels: [ feature ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+        If this format doesn't suit your needs, feel free to use the [blank](https://github.com/DecentSoftware-eu/DecentHolograms3/issues/new) one instead.
+  - type: checkboxes
+    id: making-sure
+    attributes:
+      label: Are you sure, that this feature is not already in the plugin?
+      description: Make sure, this feature is not a thing already.
+      options:
+        - label: I have read the wiki and made sure, this feature is not yet in the plugin.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is the reason, you want to see this feature?
+      value: |
+        I am unable to achieve '...'
+        I think it would be useful for '...'
+    validations:
+      required: false
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature
+      description: What is the feature you would like to see?
+      value: |
+        I would like to see '...'
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there any alternatives for this feature?
+      value: |
+        It would also be possible by doing '...'
+    validations:
+      required: false
