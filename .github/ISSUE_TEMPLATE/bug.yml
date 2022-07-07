@@ -1,0 +1,64 @@
+name: Bug Report
+description: File a bug report for DecentHolograms
+labels: [ bug ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        If this format doesn't suit your needs, feel free to use the [blank](https://github.com/DecentSoftware-eu/DecentHolograms3/issues/new) one instead.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Please tell us how you reached the problem.
+      value: |
+        1. Install DecentHolograms...
+        2. Do something...
+        3. Do something else...
+        4. This happens...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution
+      description: Please explain what you think causes the problem (optional)
+      placeholder: e.g. There is a missing null check at...
+    validations:
+      required: false
+  - type: input
+    id: server_version
+    attributes:
+      label: Server Version
+      description: What version of Minecraft is the server on?
+      placeholder: DO NOT SAY "LATEST"
+    validations:
+      required: true
+  - type: input
+    id: client_version
+    attributes:
+      label: Client Version
+      description: What version of Minecraft is the client on?
+      placeholder: DO NOT SAY "LATEST"
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin Version
+      description: What version of DecentHolograms are you running? (/dh version)
+      placeholder: DO NOT SAY "LATEST"
+    validations:
+      required: true
+  - type: input
+    id: log
+    attributes:
+      label: Log
+      description: Paste a full log. Always use [Pastebin](https://pastebin.com/). Must be a full log, not a crash report, or a screenshot.
+      placeholder: https://pastebin.com/...
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "Thank you for filling this out! We will look into your report as soon as possible."
