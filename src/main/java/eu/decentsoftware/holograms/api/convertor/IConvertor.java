@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.convertor;
 
-import eu.decentsoftware.holograms.plugin.convertors.ConvertorRest;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,7 @@ public interface IConvertor {
 	 *
 	 * @return IConvertorRest with the result of the operation - the success status and the number of converted holograms.
 	 */
-	IConvertorRest convert();
+	ConvertorResult convert();
 
 	/**
 	 * Convert holograms from the given file.
@@ -23,15 +23,7 @@ public interface IConvertor {
 	 * @param file Given file.
 	 * @return IConvertorRest with the result of the operation - the success status and the number of converted holograms.
 	 */
-	IConvertorRest convert(File file);
-
-	/**
-	 * Convert holograms from all the given files.
-	 *
-	 * @param files Given files.
-	 * @return IConvertorRest with the result of the operation - the success status and the number of converted holograms.
-	 */
-	IConvertorRest convert(File... files);
+	ConvertorResult convert(File file);
 	
 	/**
 	 * Convert the formatting of the lines into one that DecentHolograms can understand.

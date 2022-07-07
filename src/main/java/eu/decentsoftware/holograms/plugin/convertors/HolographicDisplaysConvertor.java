@@ -19,42 +19,32 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
 
 	@Override
-	public ConvertorRest convert() {
+	public ConvertorResult convert() {
 		return convert(new File("plugins/HolographicDisplays/database.yml"));
 	}
 
 	@Override
-	public ConvertorRest convert(final File file) {
+	public ConvertorResult convert(final File file) {
 		Common.log("Converting HolographicDisplays holograms...");
-		if (!this.isFileValid(file)) {
+		if (!ConverterCommon.isValidFile(file, "database.yml")) {
 			Common.log("Invalid file! Need 'database.yml'");
-			return new ConvertorRest(false, 0);
+			return ConvertorResult.createFailed();
 		}
-//		Common.log(file.getAbsolutePath());
-		int count = 0;
+		
 		Configuration config = new Configuration(PLUGIN.getPlugin(), file);
+		ConvertorResult convertorResult = new ConvertorResult();
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config, name);
 			if(location == null){
-				Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+				Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+				convertorResult.addFailed();
 				continue;
 			}
 			
 			List<String> lines = prepareLines(config.getStringList(name + ".lines"));
-			
-			count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
+			ConverterCommon.createHologram(convertorResult, name, location, lines, PLUGIN);
 		}
-		Common.log("Successfully converted %d HolographicDisplays holograms!", count);
-		return new ConvertorRest(true, count);
-	}
-
-	@Override
-	public ConvertorRest convert(final File... files) {
-		int summary = 0;
-		for (File file : files) {
-			summary += this.convert(file).getCount();
-		}
-		return new ConvertorRest(true, summary);
+		return convertorResult;
 	}
 	
 	@Override
@@ -65,10 +55,6 @@ public class HolographicDisplaysConvertor implements IConvertor {
 			}
 			return line;
 		}).collect(Collectors.toList());
-	}
-
-	private boolean isFileValid(final File file) {
-		return file != null && file.exists() && !file.isDirectory() && file.getName().equals("database.yml");
 	}
 
 	private Location parseLocation(YamlConfiguration config, String name) {

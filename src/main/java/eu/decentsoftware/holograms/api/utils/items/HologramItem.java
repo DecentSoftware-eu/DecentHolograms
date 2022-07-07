@@ -33,8 +33,7 @@ public class HologramItem {
 	public ItemStack parse() {
 		return this.parse(null);
 	}
-
-	@SuppressWarnings("deprecation")
+	
 	public ItemStack parse(Player player) {
 		ItemBuilder itemBuilder = new ItemBuilder(material);
 		if (durability > 0) itemBuilder.withDurability(durability);
@@ -51,6 +50,7 @@ public class HologramItem {
 					} else {
 						itemBuilder.withSkullTexture(extrasFinal);
 					}
+					//noinspection deprecation
 					itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
 				}
 			}
@@ -59,6 +59,7 @@ public class HologramItem {
 		ItemStack itemStack = itemBuilder.toItemStack();
 		if (nbt != null) {
 			try {
+				// noinspection deprecation
 				Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
 			} catch (Throwable ignored) {}
 		}

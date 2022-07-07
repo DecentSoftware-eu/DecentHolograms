@@ -22,43 +22,34 @@ public class GHoloConverter implements IConvertor {
     private static final Pattern GRADIENT = Pattern.compile("\\[(#[0-9a-f]{6}) (\\w+) (#[0-9a-f]{6})]", Pattern.CASE_INSENSITIVE);
     
     @Override
-    public ConvertorRest convert(){
+    public ConvertorResult convert(){
         return convert(new File("plugins/GHolo/data/h.data"));
     }
     
     @Override
-    public ConvertorRest convert(File file) {
+    public ConvertorResult convert(File file) {
         Common.log("Converting GHolo holograms...");
         if (!this.isFileValid(file)) {
             Common.log("Invalid file! Need 'h.data'");
-            return new ConvertorRest(false, 0);
+            return ConvertorResult.createFailed();
         }
-        int count = 0;
+        
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
+        ConvertorResult convertorResult = new ConvertorResult();
         for (String name : config.getConfigurationSection("H").getKeys(false)) {
             String path = "H." + name;
             
             Location location = LocationUtils.asLocation(config.getString(path + ".l"));
             if(location == null){
-                Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+                Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+                convertorResult.addFailed();
                 continue;
             }
             
             List<String> lines = prepareLines(config.getStringList(path + ".c"));
-            
-            count = ConverterCommon.createHologram(count, name, location, lines, PLUGIN);
+            ConverterCommon.createHologram(convertorResult, name, location, lines, PLUGIN);
         }
-        Common.log("Successfully converted %d GHolo holograms!", count);
-        return new ConvertorRest(true, count);
-    }
-    
-    @Override
-    public ConvertorRest convert(File... files) {
-        int summary = 0;
-        for (File file : files) {
-            summary += this.convert(file).getCount();
-        }
-        return new ConvertorRest(true, summary);
+        return convertorResult;
     }
     
     private boolean isFileValid(final File file) {

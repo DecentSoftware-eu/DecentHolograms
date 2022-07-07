@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.plugin.commands;
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.*;
+import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
@@ -288,61 +289,40 @@ public class HologramsCommand extends DecentCommand {
                 }
 
                 long startTime = System.currentTimeMillis();
-
-                switch (convertorType) {
-                    case HOLOGRAPHIC_DISPLAYS:
-                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
-                        if (path != null) {
-                            File file = new File(path);
-
-                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert(file);
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        } else {
-                            ConvertorRest convertorRest = new HolographicDisplaysConvertor().convert();
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        }
-                    
-                    case GHOLO:
-                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
-                        if (path != null) {
-                            File file = new File(path);
-
-                            ConvertorRest convertorRest = new GHoloConverter().convert(file);
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        } else {
-                            ConvertorRest convertorRest = new GHoloConverter().convert();
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        }
-                    
-                    case CMI:
-                        Common.tell(sender, "%sConverting from %s", Common.PREFIX, convertorType.getName());
-                        Common.tell(sender, "%sNOTE: CMI support is limited!", Common.PREFIX);
-                        if (path != null) {
-                            File file = new File(path);
-
-                            ConvertorRest convertorRest = new CMIConverter().convert(file);
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        } else {
-                            ConvertorRest convertorRest = new CMIConverter().convert();
-                            sendComplete(sender, startTime, convertorRest);
-                            return convertorRest.getSuccess();
-                        }
-                        
-                    default:
-                        break;
+                IConvertor convertor = convertorType.getConvertor();
+                
+                if (convertor == null) {
+                    Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
+                    return true;
                 }
-                Common.tell(sender, Common.PREFIX + "Plugin '" + args[0] + "' couldn't be found.");
-                return true;
+                
+                Common.tell(sender, "%sConverting holograms from %s...", Common.PREFIX, convertorType.getName());
+                
+                if ((convertor instanceof CMIConverter) || (convertor instanceof FutureHologramsConverter)) {
+                    Common.tell(sender, "%s&6NOTE: %s support is limited!", Common.PREFIX, convertorType.getName());
+                }
+                
+                if (path != null) {
+                    File file = new File(path);
+                    
+                    ConvertorResult result = convertor.convert(file);
+                    sendResult(sender, startTime, result);
+                    
+                    return result.isSuccessful();
+                } else {
+                    ConvertorResult result = convertor.convert();
+                    sendResult(sender, startTime, result);
+    
+                    return result.isSuccessful();
+                }
             };
         }
 
-        public void sendComplete(CommandSender sender, long startTime, ConvertorRest convertorRest) {
-            Common.tell(sender, "%sSuccessfully converted &a%s &7holograms in &a%s", Common.PREFIX, convertorRest.getCount(), (System.currentTimeMillis() - startTime) / 1000f + "s.");
+        public void sendResult(CommandSender sender, long startTime, ConvertorResult result) {
+            Common.tell(sender, "%sConverted %d holograms in %ss", Common.PREFIX, result.getTotalCount(), (System.currentTimeMillis() - startTime) / 1000f);
+            Common.tell(sender, "%s- &a%d successful", Common.PREFIX, result.getSuccessCount());
+            Common.tell(sender, "%s- &e%d skipped", Common.PREFIX, result.getSkippedCount());
+            Common.tell(sender, "%s- &c%d failed", Common.PREFIX, result.getFailedCount());
         }
 
         @Override
