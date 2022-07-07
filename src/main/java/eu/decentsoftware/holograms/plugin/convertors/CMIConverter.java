@@ -20,47 +20,40 @@ public class CMIConverter implements IConvertor {
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
     
     @Override
-    public ConvertorRest convert() {
+    public ConvertorResult convert() {
         return convert(new File("plugins/CMI/holograms.yml"));
     }
     
     @Override
-    public ConvertorRest convert(File file) {
+    public ConvertorResult convert(File file) {
         Common.log("Converting CMI holograms...");
         if(!ConverterCommon.isValidFile(file, "holograms.yml")){
             Common.log("Invalid file! Need 'holograms.yml'");
-            return new ConvertorRest(false, 0);
+            return ConvertorResult.createFailed();
         }
-        int count = 0;
+        
         Configuration config = new Configuration(PLUGIN.getPlugin(), file);
+        ConvertorResult convertorResult = new ConvertorResult();
         for(String name : config.getKeys(false)) {
             // Skip Auto-generated holograms to change pages.
             if(name.endsWith("#>") || name.endsWith("#<")) {
                 Common.log("Skipping auto-generated next/prev page hologram '%s'...", name);
+                convertorResult.addSkipped();
                 continue;
             }
             
             Location loc = LocationUtils.asLocation(config.getString(name + ".Loc").replace(";", ":"));
             if(loc == null){
-                Common.log(Level.WARNING, "Skipping hologram '%s' with null location...", name);
+                Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+                convertorResult.addFailed();
                 continue;
             }
             
             List<List<String>> pages = createPages(config.getStringList(name + ".Lines"));
-            
-            count = ConverterCommon.createHologramPages(count, name, loc, pages, PLUGIN);
-        }
-        Common.log("Successfully converted %d CMI Holograms!", count);
-        return new ConvertorRest(true, count);
-    }
     
-    @Override
-    public ConvertorRest convert(File... files) {
-        int summary = 0;
-        for (File file : files) {
-            summary += this.convert(file).getCount();
+            ConverterCommon.createHologramPages(convertorResult, name, loc, pages, PLUGIN);
         }
-        return new ConvertorRest(true, summary);
+        return convertorResult;
     }
     
     @Override
