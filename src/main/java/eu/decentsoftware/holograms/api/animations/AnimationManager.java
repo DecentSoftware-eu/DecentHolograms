@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
 import eu.decentsoftware.holograms.api.animations.text.*;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import org.apache.commons.lang.Validate;
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.bukkit.entity.Player;
 
 public class AnimationManager extends Ticked {
 
@@ -55,10 +57,11 @@ public class AnimationManager extends Ticked {
         return step.get();
     }
 
-    public String parseTextAnimations(String string) {
+    public String parseTextAnimations(Player player, String string, boolean updatePlaceholders) {
         Validate.notNull(string);
 
         Matcher matcher = ANIMATION_PATTERN.matcher(string);
+        boolean anyParsed = false;
         while (matcher.find()) {
             String animationName = matcher.group(1);
             String args = matcher.group(2);
@@ -68,6 +71,7 @@ public class AnimationManager extends Ticked {
             if (animation != null) {
                 string = string.replace(matcher.group(), animation.animate(text, getStep(), args == null ? null : args.substring(1).split(",")));
                 matcher = ANIMATION_PATTERN.matcher(string);
+                anyParsed = true;
             }
         }
 
@@ -75,9 +79,13 @@ public class AnimationManager extends Ticked {
             TextAnimation animation = getAnimation("colors");
             if (animation != null) {
                 string = string.replace("&u", animation.animate("", getStep()));
+                anyParsed = true;
             }
         }
 
+        if (anyParsed && updatePlaceholders) {
+            string = PAPI.setPlaceholders(player, string);
+        }
         return string;
     }
 

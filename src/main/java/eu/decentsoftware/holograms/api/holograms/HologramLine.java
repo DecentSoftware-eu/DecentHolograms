@@ -284,7 +284,8 @@ public class HologramLine extends HologramObject {
         }
         // Replace Animations
         if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(string);
+            boolean updatePlaceholders = update && !hasFlag(EnumFlag.DISABLE_PLACEHOLDERS);
+            string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(player, string, updatePlaceholders);
         }
         return Common.colorize(string);
     }
