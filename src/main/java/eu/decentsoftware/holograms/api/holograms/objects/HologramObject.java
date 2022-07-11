@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -75,10 +76,10 @@ public abstract class HologramObject extends FlagHolder {
      * 
      * @param cause The cause for why the Hologram was disabled.
      * 
-     * @throws IllegalArgumentException When {@link DisableCause#NONE NONE} is used as the disable cause.
+     * @throws IllegalArgumentException When {@link DisableCause#NONE} is used as disable cause.
      */
-    public void disable(DisableCause cause) {
-        if (cause.equals(DisableCause.NONE))
+    public void disable(@NotNull DisableCause cause) {
+        if (cause == DisableCause.NONE)
             throw new IllegalArgumentException("Cannot use DisableCause NONE while disabling Hologram!");
         
         this.cause = cause;
@@ -87,9 +88,9 @@ public abstract class HologramObject extends FlagHolder {
     
     /**
      * The cause for disabling the hologram.
-     * <br>May return {@link DisableCause#NONE NONE} if the Hologram is still enabled.
+     * <br>May return {@link DisableCause#NONE} if the Hologram is still enabled.
      * 
-     * @return The cause of why the Hologram is disabled, or {@link DisableCause#NONE NONE} if it is still enabled.
+     * @return The cause of why the Hologram is disabled, or {@link DisableCause#NONE} if it is still enabled.
      */
     public DisableCause getDisableCause() {
         return cause;

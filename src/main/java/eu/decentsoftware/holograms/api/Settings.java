@@ -86,9 +86,9 @@ public class Settings {
 		tmp.put("[x]", "\u2588");
 		tmp.put("[X]", "\u2588");
 		tmp.put("[/]", "\u258C");
-		tmp.put("[.]", "\u2591");
-		tmp.put("[..]", "\u2592");
-		tmp.put("[...]", "\u2593");
+		tmp.put("[,]", "\u2591");
+		tmp.put("[,,]", "\u2592");
+		tmp.put("[,,,]", "\u2593");
 		tmp.put("[p]", "\u2022");
 		tmp.put("[P]", "\u2022");
 		tmp.put("[|]", "\u23B9");

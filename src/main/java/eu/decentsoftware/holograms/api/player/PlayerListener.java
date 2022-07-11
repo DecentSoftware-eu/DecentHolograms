@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.player;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -14,18 +15,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerListener implements Listener {
 
-    private final DecentHolograms decentHolograms;
-
-    public PlayerListener(DecentHolograms decentHolograms) {
-        this.decentHolograms = decentHolograms;
-    }
+    private static final DecentHolograms DH = DecentHologramsAPI.get();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        decentHolograms.getHologramManager().updateVisibility(player);
-        S.sync(() -> decentHolograms.getPacketListener().hook(player));
-        if (player.hasPermission("dh.admin") && decentHolograms.isUpdateAvailable()) {
+        DH.getHologramManager().updateVisibility(player);
+        S.sync(() -> DH.getPacketListener().hook(player));
+        if (player.hasPermission("dh.admin") && DH.isUpdateAvailable()) {
             Lang.sendUpdateMessage(player);
         }
     }
@@ -33,8 +30,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        decentHolograms.getHologramManager().onQuit(player);
-        decentHolograms.getPacketListener().unhook(player);
+        DH.getHologramManager().onQuit(player);
+        DH.getPacketListener().unhook(player);
     }
 
     @EventHandler
@@ -46,7 +43,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
         Player player = e.getPlayer();
-        decentHolograms.getHologramManager().updateVisibility(player);
+        DH.getHologramManager().updateVisibility(player);
     }
 
 }

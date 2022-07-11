@@ -6,10 +6,10 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
 import eu.decentsoftware.holograms.api.nms.NMS;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.experimental.FieldNameConstants;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -34,7 +34,8 @@ public class HologramPage extends FlagHolder {
     private Location location;
     protected boolean alwaysFacePlayer;
 
-    @FieldNameConstants.Exclude
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     protected final AtomicBoolean hasOffsets;
 
     /*

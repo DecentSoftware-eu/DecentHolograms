@@ -68,8 +68,8 @@ public final class DecentHolograms {
 		packetListener = new PacketListener();
 
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerListener(this), plugin);
-		pm.registerEvents(new WorldListener(this), plugin);
+		pm.registerEvents(new PlayerListener(), plugin);
+		pm.registerEvents(new WorldListener(), plugin);
 //		pm.registerEvents(hologramManager.getOffsetListener(), plugin);
 
 		// Setup metrics
