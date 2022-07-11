@@ -268,24 +268,30 @@ public class HologramLine extends HologramObject {
      */
 
     private String getText(Player player, boolean update) {
-        if (!HologramLineType.TEXT.equals(type)) return "";
+        if (type != HologramLineType.TEXT) {
+            return "";
+        }
+
         UUID uuid = player.getUniqueId();
-        String string = playerTextMap.get(uuid);
-        if (update || string == null) {
-            string = this.text;
-            // Parse placeholders
-            if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
-                string = PAPI.setPlaceholders(player, string);
-            }
-            string = string.replace("{player}", player.getName())
-                    .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1))
-                    .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+        String string = playerTextMap.getOrDefault(uuid, text);
+
+        // Update cache
+        if (update && !hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
+            // Parse placeholders.
+            string = parsePlaceholders(string, player);
+            // Update the cached text.
             playerTextMap.put(uuid, string);
         }
-        // Replace Animations
+
+        // Parse animations
         if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
             string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(string);
+            // Parse placeholders.
+            if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
+                string = parsePlaceholders(string, player);
+            }
         }
+
         return Common.colorize(string);
     }
 
@@ -298,16 +304,25 @@ public class HologramLine extends HologramObject {
         }
         return playerList;
     }
-    
+
+    private String parsePlaceholders(String string, Player player) {
+        string = PAPI.setPlaceholders(player, string);
+        string = string
+                .replace("{player}", player.getName())
+                .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1))
+                .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+        return string;
+    }
+
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
         for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.getValue().entrySet()) {
             content = content.replace(replacement.getKey(), replacement.getValue());
         }
-        
+
         return content;
     }
-    
+
     /**
      * Show this line for given players.
      *
@@ -321,14 +336,15 @@ public class HologramLine extends HologramObject {
             if (player == null) {
                 continue;
             }
-            
+
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                 switch (type) {
                     case TEXT:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
                         nms.updateFakeEntityCustomName(player, getText(player, true), entityIds[0]);
                         break;
-                    case HEAD: case SMALLHEAD:
+                    case HEAD:
+                    case SMALLHEAD:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
                         ItemStack itemStack = PAPI.containsPlaceholders(getItem().getContent()) ? HologramItem.parseItemStack(getItem().getContent(), player) : getItem().parse();
                         nms.helmetFakeEntity(player, itemStack, entityIds[0]);
@@ -350,7 +366,8 @@ public class HologramLine extends HologramObject {
                         }
                         nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
                         break;
-                    default: break;
+                    default:
+                        break;
                 }
                 viewers.add(player.getUniqueId());
             }
@@ -400,8 +417,8 @@ public class HologramLine extends HologramObject {
             }
         }
     }
-    
-    public void updateAnimations(boolean updatePlaceholders, Player... players) {
+
+    public void updateAnimations(Player... players) {
         if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) return;
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
@@ -410,7 +427,7 @@ public class HologramLine extends HologramObject {
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, updatePlaceholders);
+                String text = getText(player, false);
                 if (!text.equals(lastText)) {
                     lastTextMap.put(uuid, text);
                     nms.updateFakeEntityCustomName(player, text, entityIds[0]);
