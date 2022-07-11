@@ -276,9 +276,11 @@ public class HologramLine extends HologramObject {
         String string = playerTextMap.getOrDefault(uuid, text);
 
         // Update cache
-        if (update && !hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
+        if (update) {
             // Parse placeholders.
-            string = parsePlaceholders(string, player);
+            if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
+                string = parsePlaceholders(string, player);
+            }
             // Update the cached text.
             playerTextMap.put(uuid, string);
         }
