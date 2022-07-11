@@ -37,6 +37,7 @@ public class Lang {
 	// Hologram Edit
 	public static final Phrase HOLOGRAM_DOES_NOT_EXIST = new Phrase(CONFIG, "hologram.does_not_exist", "{prefix}&cHologram with that name doesn't exist.");
 	public static final Phrase HOLOGRAM_ALREADY_EXISTS = new Phrase(CONFIG, "hologram.already_exists", "{prefix}&cHologram with that name already exists.");
+	public static final Phrase HOLOGRAM_INVALID_NAME = new Phrase(CONFIG, "hologram.invalid_name", "{prefix}&cInvalid name '%1$s', only use alphanumerical characters, underscore and dash.");
 	public static final Phrase HOLOGRAM_CREATED = new Phrase(CONFIG, "hologram.created", "{prefix}Hologram has been created!");
 	public static final Phrase HOLOGRAM_CLONED = new Phrase(CONFIG, "hologram.cloned", "{prefix}Hologram has been cloned!");
 	public static final Phrase HOLOGRAM_DELETED = new Phrase(CONFIG, "hologram.deleted", "{prefix}Hologram has been deleted!");

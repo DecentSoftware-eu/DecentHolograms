@@ -295,6 +295,11 @@ public class HologramSubCommand extends DecentCommand {
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
 				final String hologramName = args[0];
+				// Check if the name is valid.
+				if (!hologramName.matches("[a-zA-Z0-9_-]+")) {
+					Lang.HOLOGRAM_INVALID_NAME.send(sender, hologramName);
+					return true;
+				}
 				if (PLUGIN.getHologramManager().containsHologram(hologramName)) {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, hologramName);
 					return true;
