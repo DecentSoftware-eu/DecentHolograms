@@ -107,7 +107,7 @@ public class HologramManager extends Ticked {
 		}
 
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			if (!hologram.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+			if (!hologram.getLocation().getWorld().equals(player.getLocation().getWorld())) {
 				continue;
 			}
 			if (hologram.onClick(player, entityId, clickType)) {

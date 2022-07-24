@@ -483,7 +483,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean isInDisplayRange(Player player) {
         return  player != null &&
-                player.getWorld().getName().equals(location.getWorld().getName()) &&
+                player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (displayRange * displayRange);
     }
 
@@ -496,7 +496,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(Player player) {
         return  player != null &&
-                player.getWorld().getName().equals(location.getWorld().getName()) &&
+                player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (updateRange * updateRange);
     }
 
