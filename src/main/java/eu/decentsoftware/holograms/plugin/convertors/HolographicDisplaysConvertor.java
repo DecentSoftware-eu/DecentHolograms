@@ -53,6 +53,9 @@ public class HolographicDisplaysConvertor implements IConvertor {
 			if (line.toUpperCase().startsWith("ICON: ")) {
 				return "#" + line;
 			}
+			if (line.trim().equalsIgnoreCase("{empty}")) {
+				return "";
+			}
 			return line;
 		}).collect(Collectors.toList());
 	}
