@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
+import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
@@ -287,8 +288,9 @@ public class HologramLine extends HologramObject {
         }
 
         // Parse animations
-        if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(string);
+        AnimationManager animationManager = DECENT_HOLOGRAMS.getAnimationManager();
+        if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS) && animationManager.containsAnimations(string)) {
+            string = animationManager.parseTextAnimations(string);
             // Parse placeholders.
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
                 string = parsePlaceholders(string, player);
