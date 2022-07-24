@@ -2,9 +2,10 @@
 # Decent Holograms
 A lightweight yet very powerful hologram plugin with many features and configuration options.
 
-- **SpigotMC:** https://www.spigotmc.org/resources/96927/
-- **Discord:** https://discord.decentsoftware.eu/
-- **Wiki:** https://wiki.decentholograms.eu/
+**Links:**
+- [SpigotMC (Download)](https://www.spigotmc.org/resources/96927/)
+- [Discord (Support)](https://discord.decentsoftware.eu/)
+- [Wiki (Documentation)](https://wiki.decentholograms.eu/)
 
 ## Support
 We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
@@ -30,7 +31,7 @@ How to get DecentHolograms API into your project:
 Replace TAG with the current version of DecentHolograms. (Latest release)
 
 ### Gradle:
-```java
+```groovy
 repositories {
     maven { url 'https://jitpack.io' }
 }
