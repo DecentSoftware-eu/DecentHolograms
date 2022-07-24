@@ -151,7 +151,7 @@ public abstract class ActionType {
 		@Override
 		public boolean execute(Player player, String... args) {
 			if (args == null || args.length == 0) return true;
-			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(args[0]);
+			Hologram hologram = Hologram.getCachedHologram(args[0]);
 			if (hologram == null) return true;
 			int nextPage = hologram.getPlayerPage(player) + 1;
 			if (nextPage < 0 || hologram.size() <= nextPage) return true;
@@ -164,7 +164,7 @@ public abstract class ActionType {
 		@Override
 		public boolean execute(Player player, String... args) {
 			if (args == null || args.length == 0) return true;
-			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(args[0]);
+			Hologram hologram = Hologram.getCachedHologram(args[0]);
 			if (hologram == null) return true;
 			int prevPage = hologram.getPlayerPage(player) - 1;
 			if (prevPage < 0 || hologram.size() <= prevPage) return true;
@@ -178,7 +178,7 @@ public abstract class ActionType {
 		public boolean execute(Player player, String... args) {
 			if (args == null || args.length == 0) return true;
 			String[] spl = args[0].split(":");
-			Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(spl[0]);
+			Hologram hologram = Hologram.getCachedHologram(spl[0]);
 			if (hologram == null) return true;
 			int page = CommandValidator.getInteger(spl[1]);
 			if (page < 1 || page > hologram.size()) return true;
