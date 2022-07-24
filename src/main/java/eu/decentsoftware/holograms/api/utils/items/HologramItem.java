@@ -134,8 +134,10 @@ public class HologramItem {
 		if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
 			String owner = itemBuilder.getSkullOwner();
 			String texture = itemBuilder.getSkullTexture();
-			if (texture != null || owner != null) {
-				stringBuilder.append("(").append(texture != null ? texture : owner).append(")");
+			if (owner != null) {
+				stringBuilder.append("(").append(owner).append(")");
+			} else if (texture != null) {
+				stringBuilder.append("(").append(texture).append(")");
 			}
 		}
 		return new HologramItem(stringBuilder.toString());

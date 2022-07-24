@@ -18,11 +18,10 @@ public enum ClickType {
     }
 
     public static ClickType fromString(String string) {
-        switch (string) {
-            case "LEFT": return ClickType.LEFT;
-            case "SHIFT_LEFT": return ClickType.SHIFT_LEFT;
-            case "RIGHT": return ClickType.RIGHT;
-            case "SHIFT_RIGHT": return ClickType.SHIFT_RIGHT;
+        for (ClickType value : values()) {
+            if (value.name().equalsIgnoreCase(string)) {
+                return value;
+            }
         }
         return null;
     }
