@@ -335,12 +335,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return false;
         }
         HologramPage page = getPage(player);
-        if (page != null && page.isClickable()) {
-            if (page.getClickableEntityIds().contains(entityId) || page.getLines().stream().anyMatch(line -> line.getEntityIds()[1] == entityId)) {
-                if (EventFactory.handleHologramInteractEvent(player, this, page, clickType, entityId)) {
+        if (page != null && page.hasEntity(entityId)) {
+            if (EventFactory.handleHologramInteractEvent(player, this, page, clickType, entityId)) {
+                if (page.isClickable()) {
                     page.executeActions(player, clickType);
+                    return true;
                 }
-                return true;
             }
         }
         return false;

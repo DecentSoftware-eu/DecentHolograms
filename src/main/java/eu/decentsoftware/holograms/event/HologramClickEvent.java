@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class HologramClickEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private boolean cancel = false;
+    private boolean cancelled = false;
     private final @NotNull Player player;
     private final @NotNull Hologram hologram;
     private final @NotNull HologramPage page;
@@ -31,12 +31,12 @@ public class HologramClickEvent extends Event implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return this.cancel;
+        return this.cancelled;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
+        this.cancelled = cancel;
     }
 
     @Override
