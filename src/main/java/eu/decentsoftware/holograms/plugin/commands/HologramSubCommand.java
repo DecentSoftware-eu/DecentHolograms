@@ -259,7 +259,7 @@ public class HologramSubCommand extends DecentCommand {
 				clone.showAll();
 				clone.realignLines();
 				
-				if (!hologram.save()) {
+				if (!clone.save()) {
 					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return false;
 				}
