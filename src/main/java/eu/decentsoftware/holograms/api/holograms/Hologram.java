@@ -395,7 +395,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void update(Player player) {
-        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) return;
+        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) {
+            return;
+        }
+
         HologramPage page = getPage(player);
         if (page != null) {
             page.getLines().forEach(line -> line.update(player));
@@ -409,7 +412,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
     
     public void updateAnimations(Player player) {
-        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) return;
+        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) {
+            return;
+        }
         
         HologramPage page = getPage(player);
         if (page != null) {
@@ -442,7 +447,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showClickableEntities(Player player) {
         HologramPage page = getPage(player);
-        if (page == null || !page.isClickable()) return;
+        if (page == null || !page.isClickable()) {
+            return;
+        }
 
         // Spawn clickable entities
         NMS nms = NMS.getInstance();

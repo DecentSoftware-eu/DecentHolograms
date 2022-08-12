@@ -12,6 +12,7 @@ import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,9 +46,10 @@ public class HologramManager extends Ticked {
 	@Override
 	public void tick() {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			if (!hologram.isEnabled()) continue;
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				updateVisibility(player, hologram);
+			if (hologram.isEnabled()) {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					updateVisibility(player, hologram);
+				}
 			}
 		}
 
@@ -62,14 +64,16 @@ public class HologramManager extends Ticked {
 //		}
 	}
 
-	public void updateVisibility(Player player) {
+	public void updateVisibility(@NotNull Player player) {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			if (!hologram.isEnabled()) continue;
+			if (!hologram.isEnabled()) {
+				continue;
+			}
 			updateVisibility(player, hologram);
 		}
 	}
 
-	public void updateVisibility(Player player, Hologram hologram) {
+	public void updateVisibility(@NotNull Player player, @NotNull Hologram hologram) {
 		if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
 			hologram.show(player, hologram.getPlayerPage(player));
 		} else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {

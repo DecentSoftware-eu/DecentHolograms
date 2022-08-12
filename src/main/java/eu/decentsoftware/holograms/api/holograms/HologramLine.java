@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -268,7 +269,8 @@ public class HologramLine extends HologramObject {
      *	Visibility Methods
      */
 
-    private String getText(Player player, boolean update) {
+    @NonNull
+    private String getText(@NotNull Player player, boolean update) {
         if (type != HologramLineType.TEXT) {
             return "";
         }
@@ -310,7 +312,8 @@ public class HologramLine extends HologramObject {
         return playerList;
     }
 
-    private String parsePlaceholders(String string, Player player) {
+    @NonNull
+    private String parsePlaceholders(@NonNull String string, @NonNull Player player) {
         string = PAPI.setPlaceholders(player, string);
         string = string
                 .replace("{player}", player.getName())
@@ -329,12 +332,39 @@ public class HologramLine extends HologramObject {
     }
 
     /**
+     * Check if the given player has the permission to see this line, if any.
+     *
+     * @param player The player.
+     * @return True if the player has the permission to see this line, false otherwise.
+     */
+    public boolean hasPermission(@NotNull Player player) {
+        return permission == null || permission.isEmpty() || player.hasPermission(permission);
+    }
+
+    /**
+     * Update the visibility of this line for the given player. This method checks
+     * if the player has the permission to see this line and if they are in the display
+     * range. Then it updates the visibility accordingly.
+     *
+     * @param player The player to update visbility for.
+     */
+    public void updateVisibility(@NotNull Player player) {
+        if (isVisible(player) && !(hasPermission(player) || isInDisplayRange(player))) {
+            hide(player);
+        } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
+            show(player);
+        }
+    }
+
+    /**
      * Show this line for given players.
      *
      * @param players Given players.
      */
     public void show(Player... players) {
-        if (!isEnabled()) return;
+        if (!isEnabled()) {
+            return;
+        }
         List<Player> playerList = getPlayers(false, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
@@ -385,11 +415,18 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void update(Player... players) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) return;
+        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) {
+            return;
+        }
+
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
-            if (!isVisible(player) || !isInUpdateRange(player)) continue;
+            updateVisibility(player);
+
+            if (!isVisible(player) || !isInUpdateRange(player)) {
+                continue;
+            }
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
@@ -410,10 +447,14 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void updateLocation(boolean updateRotation, Player... players) {
-        if (!isEnabled()) return;
+        if (!isEnabled()) {
+            return;
+        }
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (!isVisible(player) || !isInUpdateRange(player)) continue;
+            if (!isVisible(player) || !isInUpdateRange(player)) {
+                continue;
+            }
             if (HologramLineType.ENTITY.equals(type) && updateRotation) {
                 this.hide();
                 this.show();
@@ -424,11 +465,15 @@ public class HologramLine extends HologramObject {
     }
 
     public void updateAnimations(Player... players) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) return;
+        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+            return;
+        }
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
-            if (!isVisible(player) || !isInUpdateRange(player)) continue;
+            if (!isVisible(player) || !isInUpdateRange(player)) {
+                continue;
+            }
             if (HologramLineType.TEXT.equals(type)) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
