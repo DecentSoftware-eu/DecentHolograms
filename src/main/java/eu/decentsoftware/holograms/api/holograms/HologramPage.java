@@ -6,7 +6,6 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Getter
@@ -34,10 +32,6 @@ public class HologramPage extends FlagHolder {
     private Location location;
     protected boolean alwaysFacePlayer;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    protected final AtomicBoolean hasOffsets;
-
     /*
      *	Constructors
      */
@@ -49,7 +43,6 @@ public class HologramPage extends FlagHolder {
         this.clickableEntityIds = new ArrayList<>();
         this.lines = new ArrayList<>();
         this.actions = new EnumMap<>(ClickType.class);
-        this.hasOffsets = new AtomicBoolean(false);
         this.alwaysFacePlayer = parent.isAlwaysFacePlayer();
     }
 
@@ -59,17 +52,7 @@ public class HologramPage extends FlagHolder {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasOffsets() {
-        return hasOffsets.get();
-    }
-
-    public void updateHasOffsets() {
-        for (HologramLine hLine : getLines()) {
-            if (hLine.hasOffsets()) {
-                hasOffsets.set(true);
-                return;
-            }
-        }
-        hasOffsets.set(false);
+        return true; // Not used, just ignore.
     }
 
     /**
@@ -158,8 +141,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Re-Align the lines in this hologram page putting them to the right place.
      * <p>
-     *     This method is good to use after teleporting the hologram page.
-     * </p>
+     * This method is good to use after teleporting the hologram page.
      */
     public void realignLines() {
         Location currentLocation = getLocation().clone();
@@ -175,9 +157,6 @@ public class HologramPage extends FlagHolder {
 
             line.setLocation(lineLocation);
             line.updateLocation(true);
-            if (line.hasOffsets() && !hasOffsets()) {
-                hasOffsets.set(true);
-            }
             currentLocation.subtract(0, line.getHeight(), 0);
         }
     }
@@ -199,7 +178,7 @@ public class HologramPage extends FlagHolder {
      * Insert a new line into this hologram page.
      *
      * @param index Index of the new line.
-     * @param line New line.
+     * @param line  New line.
      * @return Boolean whether the operation was successful.
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
@@ -215,7 +194,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Set new content of a line in this hologram page.
      *
-     * @param index Index of the line.
+     * @param index   Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
      */

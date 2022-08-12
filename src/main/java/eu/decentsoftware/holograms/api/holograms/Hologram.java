@@ -21,6 +21,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -517,7 +518,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Viewer Methods
      */
 
-    public int getPlayerPage(Player player) {
+    public int getPlayerPage(@NotNull Player player) {
         return viewerPages.getOrDefault(player.getUniqueId(), 0);
     }
 

@@ -150,10 +150,6 @@ public class HologramLine extends HologramObject {
         this.update();
     }
 
-    public boolean hasOffsets() {
-        return getOffsetX() != 0d || getOffsetZ() != 0d;
-    }
-
     /**
      * Enable updating and showing to players automatically.
      */
@@ -524,9 +520,6 @@ public class HologramLine extends HologramObject {
 
     public void setOffsetX(double offsetX) {
         this.offsetX.set(offsetX);
-        if (this.hasParent()) {
-            this.getParent().updateHasOffsets();
-        }
     }
 
     public void setOffsetY(double offsetY) {
@@ -535,9 +528,6 @@ public class HologramLine extends HologramObject {
 
     public void setOffsetZ(double offsetZ) {
         this.offsetZ.set(offsetZ);
-        if (this.hasParent()) {
-            this.getParent().updateHasOffsets();
-        }
     }
 
     /*
