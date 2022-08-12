@@ -270,6 +270,24 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     @Override
+    public void setFacing(float facing) {
+        float prev = this.facing;
+
+        super.setFacing(facing);
+
+        // Update the facing for all lines, that don't already have a different facing set.
+        // We want to keep the hologram facing working as a "default" value, but we don't want
+        // it to override custom line facing.
+        for (HologramPage page : this.pages) {
+            page.getLines().forEach((line) -> {
+                if (line.getFacing() == prev) {
+                    line.setFacing(facing);
+                }
+            });
+        }
+    }
+
+    @Override
     public void setLocation(Location location) {
         super.setLocation(location);
         this.hideClickableEntitiesAll();
