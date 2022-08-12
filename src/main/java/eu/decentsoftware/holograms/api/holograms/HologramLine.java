@@ -57,6 +57,9 @@ public class HologramLine extends HologramObject {
         if (config.isDouble("offsetZ")) {
             line.setOffsetZ(config.getDouble("offsetZ"));
         }
+        if (config.isDouble("facing")) {
+            line.setFacing((float) config.getDouble("facing"));
+        }
         return line;
     }
 
@@ -75,7 +78,8 @@ public class HologramLine extends HologramObject {
             if (flags instanceof List) {
                 try {
                     line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
         if (map.containsKey("permission")) {
@@ -94,6 +98,12 @@ public class HologramLine extends HologramObject {
             Object offsetZ = map.get("offsetZ");
             if (offsetZ instanceof Double) {
                 line.setOffsetZ((Double) offsetZ);
+            }
+        }
+        if (map.containsKey("facing")) {
+            Object facing = map.get("facing");
+            if (facing instanceof Double) {
+                line.setFacing(((Double) facing).floatValue());
             }
         }
         return line;
@@ -231,6 +241,7 @@ public class HologramLine extends HologramObject {
         if (permission != null && !permission.trim().isEmpty()) map.put("permission", permission);
         if (getOffsetX() != 0.0d) map.put("offsetX", offsetX);
         if (getOffsetZ() != 0.0d) map.put("offsetZ", offsetZ);
+        if (parent == null || getFacing() != parent.getParent().getFacing()) map.put("facing", facing);
         return map;
     }
 
@@ -345,7 +356,7 @@ public class HologramLine extends HologramObject {
      * @param player The player to update visbility for.
      */
     public void updateVisibility(@NotNull Player player) {
-        if (isVisible(player) && !(hasPermission(player) || isInDisplayRange(player))) {
+        if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
             hide(player);
         } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
             show(player);

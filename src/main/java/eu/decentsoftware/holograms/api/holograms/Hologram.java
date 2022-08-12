@@ -91,7 +91,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE.getValue()));
         hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL.getValue()));
         hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-        hologram.setFacing((float) config.getDouble("facing", 0.0f));
         if (config.isBoolean("down-origin")) {
             hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
         }
@@ -157,6 +156,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             }
              */
         }
+        hologram.setFacing((float) config.getDouble("facing", 0.0f));
         return hologram;
     }
 
@@ -283,6 +283,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 if (line.getFacing() == prev) {
                     line.setFacing(facing);
                 }
+                page.realignLines();
             });
         }
     }
@@ -343,8 +344,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             HologramPage clonePage = page.clone(hologram, i);
             if (hologram.pages.size() > i) {
                 hologram.pages.set(i, clonePage);
+            } else {
+                hologram.pages.add(clonePage);
             }
-            hologram.pages.add(clonePage);
         }
         return hologram;
     }

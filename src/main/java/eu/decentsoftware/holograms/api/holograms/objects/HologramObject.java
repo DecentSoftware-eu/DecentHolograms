@@ -125,6 +125,7 @@ public abstract class HologramObject extends FlagHolder {
 
     public void setLocation(Location location) {
         this.location = location;
+        this.location.setYaw(facing);
         this.location.setPitch(0.0f);
     }
 

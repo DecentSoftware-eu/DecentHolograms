@@ -29,7 +29,6 @@ public class HologramPage extends FlagHolder {
     private final List<Integer> clickableEntityIds;
     private final List<HologramLine> lines;
     private final Map<ClickType, List<Action>> actions;
-    private Location location;
     protected boolean alwaysFacePlayer;
 
     /*
@@ -37,7 +36,6 @@ public class HologramPage extends FlagHolder {
      */
 
     public HologramPage(@Nonnull Hologram parent, int index) {
-        this.location = parent.getLocation();
         this.parent = parent;
         this.index = index;
         this.clickableEntityIds = new ArrayList<>();
@@ -85,7 +83,7 @@ public class HologramPage extends FlagHolder {
     }
 
     public Location getCenter() {
-        Location center = getLocation().clone();
+        Location center = parent.getLocation().clone();
         if (parent.isDownOrigin()) {
             center.add(0, getHeight() / 2, 0);
         } else {
@@ -130,7 +128,7 @@ public class HologramPage extends FlagHolder {
                 page.addAction(entry.getKey(), action);
             }
         }
-        page.setAlwaysFacePlayer(isAlwaysFacePlayer());
+//        page.setAlwaysFacePlayer(isAlwaysFacePlayer());
         return page;
     }
 
@@ -144,7 +142,7 @@ public class HologramPage extends FlagHolder {
      * This method is good to use after teleporting the hologram page.
      */
     public void realignLines() {
-        Location currentLocation = getLocation().clone();
+        Location currentLocation = parent.getLocation().clone();
         if (parent.isDownOrigin()) {
             currentLocation.add(0, getHeight(), 0);
         }
@@ -264,7 +262,7 @@ public class HologramPage extends FlagHolder {
      */
     public Location getNextLineLocation() {
         if (size() == 0) {
-            return getLocation().clone();
+            return parent.getLocation().clone();
         }
         HologramLine line = lines.get(lines.size() - 1);
         return line.getLocation().clone().subtract(0, line.getHeight(), 0);
