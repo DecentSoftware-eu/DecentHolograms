@@ -14,9 +14,9 @@ public class PacketHandler__ProtocolLib {
 
     public PacketHandler__ProtocolLib() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(DecentHologramsAPI.get().getPlugin(), ListenerPriority.NORMAL, PacketType.Play.Client.USE_ENTITY) {
+        protocolManager.addPacketListener(new PacketAdapter(PacketAdapter.params(DecentHologramsAPI.get().getPlugin(), PacketType.Play.Client.USE_ENTITY).optionAsync().listenerPriority(ListenerPriority.NORMAL)){
             @Override
-            public void onPacketReceiving(PacketEvent event) {
+            public void onPacketReceiving(PacketEvent event){
                 if (event.getPacketType().equals(PacketType.Play.Client.USE_ENTITY)) {
                     PacketContainer packetContainer = event.getPacket();
                     Object packet = packetContainer.getHandle();
