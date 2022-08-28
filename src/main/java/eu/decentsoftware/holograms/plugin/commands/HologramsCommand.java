@@ -10,6 +10,8 @@ import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.*;
+import eu.decentsoftware.holograms.plugin.convertors.impl.CMIConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.FutureHologramsConverter;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

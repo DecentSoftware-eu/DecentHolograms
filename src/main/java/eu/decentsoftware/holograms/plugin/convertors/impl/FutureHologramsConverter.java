@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.plugin.convertors;
+package eu.decentsoftware.holograms.plugin.convertors.impl;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
@@ -6,6 +6,8 @@ import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.Configuration;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 

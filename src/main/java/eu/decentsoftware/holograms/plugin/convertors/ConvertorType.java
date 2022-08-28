@@ -1,6 +1,10 @@
 package eu.decentsoftware.holograms.plugin.convertors;
 
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
+import eu.decentsoftware.holograms.plugin.convertors.impl.CMIConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.FutureHologramsConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.GHoloConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.HolographicDisplaysConvertor;
 
 import java.util.Arrays;
 import java.util.Collections;
