@@ -36,7 +36,7 @@ public class HologramManager extends Ticked {
 		this.temporaryLines = Collections.synchronizedSet(new HashSet<>());
 		this.offsetListener = null;
 		this.register();
-		S.sync(this::reload); // Reload when worlds are ready
+		S.async(this::reload); // Reload when worlds are ready
 	}
 
 	public OffsetListener getOffsetListener() {

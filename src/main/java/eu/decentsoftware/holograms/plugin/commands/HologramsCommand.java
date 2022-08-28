@@ -7,6 +7,7 @@ import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.*;
 import org.bukkit.Location;
@@ -150,8 +151,12 @@ public class HologramsCommand extends DecentCommand {
         @Override
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
-                PLUGIN.reload();
-                Lang.RELOADED.send(sender);
+                S.async(() -> {
+                    long start = System.currentTimeMillis();
+                    PLUGIN.reload();
+                    long end = System.currentTimeMillis();
+                    Lang.RELOADED.send(sender, end - start);
+                });
                 return true;
             };
         }
