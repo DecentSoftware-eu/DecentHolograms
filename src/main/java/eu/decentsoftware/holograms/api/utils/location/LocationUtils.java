@@ -26,8 +26,12 @@ public class LocationUtils {
 	}
 	
 	public static @Nullable Location asLocation(String string) {
+		return asLocation(string, ":");
+	}
+
+	public static @Nullable Location asLocation(String string, String separator) {
 		try {
-			return asLocationE(string);
+			return asLocationE(string, separator);
 		} catch (LocationParseException e) {
 			Common.log(Level.WARNING, "Error while parsing Location %s: %s", string, e.getMessage());
 			return null;
@@ -35,8 +39,12 @@ public class LocationUtils {
 	}
 
 	public static Location asLocationE(String string) throws LocationParseException {
+		return asLocationE(string, ":");
+	}
+
+	public static Location asLocationE(String string, String separator) throws LocationParseException {
 		if (string == null || string.trim().isEmpty()) return null;
-		String[] spl = string.replace(",", ".").split(":");
+		String[] spl = string.replace(",", ".").split(separator);
 		Location location;
 		if (spl.length >= 4) {
 			World world = getWorld(spl[0]);

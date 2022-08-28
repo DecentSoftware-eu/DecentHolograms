@@ -39,7 +39,7 @@ public class HologramsConvertor implements IConvertor {
         ConfigurationSection hologramsSection = config.getConfigurationSection("holograms");
         if (hologramsSection != null) {
             for (String id : hologramsSection.getKeys(false)) {
-                Location location = LocationUtils.asLocation(hologramsSection.getString(id + ".location"));
+                Location location = LocationUtils.asLocation(hologramsSection.getString(id + ".location"), ";");
                 if (location == null) {
                     Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", id);
                     convertorResult.addFailed();
