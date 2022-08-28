@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -292,14 +293,18 @@ public class Validator {
 		return 0;
 	}
 
-	public static double getLocationValue(String string, double initialValue) {
-		if (isDouble(string)) {
-			return getDouble(string);
-		} else if (string.matches("~-?[0-9]+")) {
-			double diff = getDouble(string.substring(1));
-			return initialValue + diff;
+	public static double getLocationValue(@NotNull String string, double initialValue) {
+		boolean isDiff = false;
+		if (string.startsWith("~")) {
+			isDiff = true;
+			string = string.substring(1);
 		}
-		return initialValue;
+
+		double number = getDouble(string);
+		if (isDiff) {
+			return initialValue + number;
+		}
+		return number;
 	}
 
 }
