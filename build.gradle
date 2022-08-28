@@ -62,9 +62,6 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
-    filesMatching('version.properties') {
-        expand props
-    }
 }
 
 jar {

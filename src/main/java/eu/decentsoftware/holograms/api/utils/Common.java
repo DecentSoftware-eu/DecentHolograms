@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.Settings;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
@@ -147,7 +147,7 @@ public class Common {
 		if (version == null || !version.matches("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(\\d+))?")) {
 			return false;
 		}
-		String current = Settings.getAPIVersion();
+		String current = DecentHologramsAPI.get().getPlugin().getDescription().getVersion();
 		int[] i1 = splitVersion(version);
 		int[] i2 = splitVersion(current);
 		if (i1 == null || i1.length < 3 || i2 == null || i2.length < 3) {
