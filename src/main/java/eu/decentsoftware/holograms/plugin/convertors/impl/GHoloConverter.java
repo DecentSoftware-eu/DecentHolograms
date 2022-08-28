@@ -31,7 +31,7 @@ public class GHoloConverter implements IConvertor {
     @Override
     public ConvertorResult convert(File file) {
         Common.log("Converting GHolo holograms...");
-        if (!this.isFileValid(file)) {
+        if (!ConverterCommon.notValidFile(file, "h.data")) {
             Common.log("Invalid file! Need 'h.data'");
             return ConvertorResult.createFailed();
         }
@@ -52,10 +52,6 @@ public class GHoloConverter implements IConvertor {
             ConverterCommon.createHologram(convertorResult, name, location, lines, PLUGIN);
         }
         return convertorResult;
-    }
-    
-    private boolean isFileValid(final File file) {
-        return file != null && file.exists() && !file.isDirectory() && file.getName().equals("h.data");
     }
     
     @Override

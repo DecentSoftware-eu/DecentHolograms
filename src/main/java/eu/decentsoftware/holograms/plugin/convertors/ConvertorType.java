@@ -56,19 +56,14 @@ public enum ConvertorType {
 		switch(this) {
 			case CMI:
 				return new CMIConverter();
-
 			case FUTURE_HOLOGRAMS:
 				return new FutureHologramsConverter();
-
 			case GHOLO:
 				return new GHoloConverter();
-
 			case HOLOGRAPHIC_DISPLAYS:
 				return new HolographicDisplaysConvertor();
-
 			case HOLOGRAMS:
 				return new HologramsConvertor();
-
 			default:
 				return null;
 		}

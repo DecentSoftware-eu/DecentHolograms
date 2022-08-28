@@ -27,7 +27,7 @@ public class FutureHologramsConverter implements IConvertor {
     @Override
     public ConvertorResult convert(File file){
         Common.log("Converting FutureHolograms holograms...");
-        if(!ConverterCommon.isValidFile(file, "holograms.yml")){
+        if(ConverterCommon.notValidFile(file, "holograms.yml")){
             Common.log("Invalid file! Need 'holograms.yml");
             return ConvertorResult.createFailed();
         }

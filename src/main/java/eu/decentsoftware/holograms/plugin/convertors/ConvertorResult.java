@@ -20,10 +20,6 @@ public class ConvertorResult {
         return new ConvertorResult();
     }
 
-    public boolean isSuccessful() {
-        return successCount > 0 || getTotalCount() == 0;
-    }
-
     public int getTotalCount() {
         return successCount + skippedCount + failedCount;
     }

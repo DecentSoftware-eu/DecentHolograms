@@ -28,7 +28,7 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	@Override
 	public ConvertorResult convert(final File file) {
 		Common.log("Converting HolographicDisplays holograms...");
-		if (!ConverterCommon.isValidFile(file, "database.yml")) {
+		if (ConverterCommon.notValidFile(file, "database.yml")) {
 			Common.log("Invalid file! Need 'database.yml'");
 			return ConvertorResult.createFailed();
 		}

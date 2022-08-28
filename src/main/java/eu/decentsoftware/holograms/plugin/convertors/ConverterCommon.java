@@ -57,8 +57,8 @@ public class ConverterCommon {
         convertorResult.addSuccess();
     }
     
-    public static boolean isValidFile(final File file, final String fileName) {
-        return file != null && file.exists() && !file.isDirectory() && file.getName().equals(fileName);
+    public static boolean notValidFile(final File file, final String fileName) {
+        return file == null || !file.exists() || file.isDirectory() || !file.getName().equals(fileName);
     }
 
 }

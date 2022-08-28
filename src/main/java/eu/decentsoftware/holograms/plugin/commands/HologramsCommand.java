@@ -9,9 +9,8 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.plugin.Validator;
-import eu.decentsoftware.holograms.plugin.convertors.*;
-import eu.decentsoftware.holograms.plugin.convertors.impl.CMIConverter;
-import eu.decentsoftware.holograms.plugin.convertors.impl.FutureHologramsConverter;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -208,12 +207,12 @@ public class HologramsCommand extends DecentCommand {
                 if (args.length != 1) {
                     return null;
                 }
-    
+
                 int holograms = PLUGIN.getHologramManager().getHolograms().size();
                 if (holograms == 0) {
                     return null;
                 }
-    
+
                 List<String> pages = new ArrayList<>();
                 int page = 0;
                 while(holograms > 0) {
@@ -221,7 +220,7 @@ public class HologramsCommand extends DecentCommand {
                     pages.add(String.valueOf(page));
                     holograms -= 15;
                 }
-    
+
                 return TabCompleteHandler.getPartialMatches(args[0], pages);
             };
         }
@@ -300,7 +299,7 @@ public class HologramsCommand extends DecentCommand {
                     Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
                     return true;
                 }
-                
+
                 Common.tell(sender, "%sConverting holograms from %s...", Common.PREFIX, convertorType.getName());
                 if (convertorType.isLimited()) {
                     Common.tell(sender, "%s&6NOTE: %s support is limited!", Common.PREFIX, convertorType.getName());
@@ -319,7 +318,7 @@ public class HologramsCommand extends DecentCommand {
         }
 
         public void sendResult(CommandSender sender, long startTime, ConvertorResult result) {
-            Common.tell(sender, "%sConverted %d holograms in %ss", Common.PREFIX, result.getTotalCount(), (System.currentTimeMillis() - startTime) / 1000f);
+            Common.tell(sender, "%sConverted %d holograms in %s ms!", Common.PREFIX, result.getTotalCount(), System.currentTimeMillis() - startTime);
             Common.tell(sender, "%s- &a%d successful", Common.PREFIX, result.getSuccessCount());
             Common.tell(sender, "%s- &e%d skipped", Common.PREFIX, result.getSkippedCount());
             Common.tell(sender, "%s- &c%d failed", Common.PREFIX, result.getFailedCount());
