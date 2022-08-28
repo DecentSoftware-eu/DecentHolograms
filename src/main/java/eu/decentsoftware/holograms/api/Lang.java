@@ -27,7 +27,7 @@ public class Lang {
 	public static final Phrase PREFIX = new Phrase(CONFIG, "prefix", Common.PREFIX);
 	public static final Phrase NO_PERM = new Phrase(CONFIG, "no_perm", "{prefix}&cYou are not allowed to use this.");
 	public static final Phrase ONLY_PLAYER = new Phrase(CONFIG, "only_player", "{prefix}&cThis action can only be executed by player.");
-	public static final Phrase RELOADED = new Phrase(CONFIG, "reloaded", "{prefix}Successfully reloaded!");
+	public static final Phrase RELOADED = new Phrase(CONFIG, "reloaded", "{prefix}&aSuccessfully reloaded in %1$d ms!");
 
 	// Commands
 	public static final Phrase USE_HELP = new Phrase(CONFIG, "command.use_help", "{prefix}Use &b/holograms help&7 to view possible commands.");
