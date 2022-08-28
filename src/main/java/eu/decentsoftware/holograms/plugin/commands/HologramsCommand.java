@@ -289,7 +289,6 @@ public class HologramsCommand extends DecentCommand {
             return (sender, args) -> {
                 final ConvertorType convertorType = ConvertorType.fromString(args[0]);
                 final String path = args.length >= 2 ? args[0] : null;
-                
                 if (convertorType == null) {
                     Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
                     return true;
@@ -297,31 +296,25 @@ public class HologramsCommand extends DecentCommand {
 
                 long startTime = System.currentTimeMillis();
                 IConvertor convertor = convertorType.getConvertor();
-                
                 if (convertor == null) {
                     Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
                     return true;
                 }
                 
                 Common.tell(sender, "%sConverting holograms from %s...", Common.PREFIX, convertorType.getName());
-                
-                if ((convertor instanceof CMIConverter) || (convertor instanceof FutureHologramsConverter)) {
+                if (convertorType.isLimited()) {
                     Common.tell(sender, "%s&6NOTE: %s support is limited!", Common.PREFIX, convertorType.getName());
                 }
-                
+
+                ConvertorResult result;
                 if (path != null) {
                     File file = new File(path);
-                    
-                    ConvertorResult result = convertor.convert(file);
-                    sendResult(sender, startTime, result);
-                    
-                    return result.isSuccessful();
+                    result = convertor.convert(file);
                 } else {
-                    ConvertorResult result = convertor.convert();
-                    sendResult(sender, startTime, result);
-    
-                    return result.isSuccessful();
+                    result = convertor.convert();
                 }
+                sendResult(sender, startTime, result);
+                return true;
             };
         }
 

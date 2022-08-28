@@ -2,17 +2,15 @@ package eu.decentsoftware.holograms.plugin.convertors;
 
 public class ConvertorResult {
     
-    private int totalCount = 0;
-    private int successCount = 0;
-    private int skippedCount = 0;
-    private int failedCount = 0;
+    private int successCount;
+    private int skippedCount;
+    private int failedCount;
 
     public ConvertorResult() {
-        this(0, 0, 0, 0);
+        this(0, 0, 0);
     }
     
-    public ConvertorResult(int totalCount, int successCount, int skippedCount, int failedCount) {
-        this.totalCount = totalCount;
+    public ConvertorResult(int successCount, int skippedCount, int failedCount) {
         this.successCount = successCount;
         this.skippedCount = skippedCount;
         this.failedCount = failedCount;
@@ -23,11 +21,11 @@ public class ConvertorResult {
     }
 
     public boolean isSuccessful() {
-        return successCount > 0;
+        return successCount > 0 || getTotalCount() == 0;
     }
 
     public int getTotalCount() {
-        return totalCount;
+        return successCount + skippedCount + failedCount;
     }
     
     public int getSuccessCount() {
@@ -43,17 +41,14 @@ public class ConvertorResult {
     }
     
     public void addSuccess() {
-        totalCount++;
         successCount++;
     }
     
     public void addSkipped() {
-        totalCount++;
         skippedCount++;
     }
     
     public void addFailed() {
-        totalCount++;
         failedCount++;
     }
 }
