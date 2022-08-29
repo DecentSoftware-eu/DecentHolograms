@@ -95,7 +95,7 @@ public class HologramItem {
 		}
 
 		// Parse material
-		String materialString = string.trim().substring(0, string.indexOf(' '));
+		String materialString = string.trim().split(" ", 2)[0];
 		String materialName = materialString;
 		if (materialString.contains(":")) {
 			String[] materialStringSpl = materialString.split(":", 2);
