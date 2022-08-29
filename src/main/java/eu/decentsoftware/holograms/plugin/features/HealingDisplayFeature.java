@@ -65,15 +65,19 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDamage(EntityRegainHealthEvent e) {
-		if (e.isCancelled()) return;
-		Entity entity = e.getEntity();
-		double heal = e.getAmount();
-
-		if (heal > 0d) {
-			Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-			String text = String.format(appearance.replace("{heal}", "%.1f"), heal);
-			PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		if (e.isCancelled()) {
+			return;
 		}
+
+		double heal = e.getAmount();
+		if (heal <= 0d) {
+			return;
+		}
+
+		Entity entity = e.getEntity();
+		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+		String text = appearance.replace("{heal}", FeatureCommons.formatNumber(heal));
+		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 
 }

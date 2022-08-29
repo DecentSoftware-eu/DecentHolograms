@@ -15,6 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
@@ -65,15 +68,19 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDamage(EntityDamageEvent e) {
-		if (e.isCancelled()) return;
-		Entity entity = e.getEntity();
-		double damage = e.getFinalDamage();
-
-		if (damage > 0d) {
-			Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
-			String text = String.format(appearance.replace("{damage}", "%.1f"), damage);
-			PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
+		if (e.isCancelled()) {
+			return;
 		}
+
+		double damage = e.getFinalDamage();
+		if (damage <= 0d) {
+			return;
+		}
+
+		Entity entity = e.getEntity();
+		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+		String text = appearance.replace("{damage}", FeatureCommons.formatNumber(damage));
+		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 
 }
