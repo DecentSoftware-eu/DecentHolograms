@@ -318,7 +318,7 @@ public class HologramsCommand extends DecentCommand {
         }
 
         public void sendResult(CommandSender sender, long startTime, ConvertorResult result) {
-            Common.tell(sender, "%sConverted %d holograms in %s ms!", Common.PREFIX, result.getTotalCount(), System.currentTimeMillis() - startTime);
+            Common.tell(sender, "%sConverted %d hologram(s) in %s ms!", Common.PREFIX, result.getTotalCount(), System.currentTimeMillis() - startTime);
             Common.tell(sender, "%s- &a%d successful", Common.PREFIX, result.getSuccessCount());
             Common.tell(sender, "%s- &e%d skipped", Common.PREFIX, result.getSkippedCount());
             Common.tell(sender, "%s- &c%d failed", Common.PREFIX, result.getFailedCount());

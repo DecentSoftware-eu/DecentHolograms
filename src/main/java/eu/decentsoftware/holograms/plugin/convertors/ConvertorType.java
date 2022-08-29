@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.plugin.convertors;
 
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.plugin.convertors.impl.*;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,10 +10,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Getter
 public enum ConvertorType {
-	CMI(true, "cmi"),
+	CMI(true, "CMI"),
 	FUTURE_HOLOGRAMS(true, "FutureHolograms", "fh", "fholograms"),
-	GHOLO(false, "GHolo", "gholo", "gh"),
+	GHOLO(false, "GHolo", "gh"),
 	HOLOGRAPHIC_DISPLAYS(false, "HolographicDisplays", "HD", "hd"),
 	HOLOGRAMS(true, "Holograms"),
 	;
@@ -35,20 +37,6 @@ public enum ConvertorType {
 		this.limited = limited;
 		this.name = name;
 		this.aliases = aliases == null ? Collections.emptyList() : Arrays.asList(aliases);
-	}
-
-	@NotNull
-	public String getName() {
-		return name;
-	}
-
-	@NotNull
-	public List<String> getAliases() {
-		return aliases;
-	}
-
-	public boolean isLimited() {
-		return limited;
 	}
 
 	@Nullable
