@@ -32,18 +32,17 @@ dependencies {
     annotationProcessor 'org.jetbrains:annotations:23.0.0'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 compileJava {
     options.encoding = 'UTF-8'
 }
 
-javadoc {
-    failOnError false
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
+java {
+    def javaVersion = JavaVersion.VERSION_1_8
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
 }
 
 publishing {
@@ -61,15 +60,6 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
-    }
-}
-
-jar {
-    dependsOn configurations.runtimeClasspath
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archivesBaseName = rootProject.name
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     }
 }
 
