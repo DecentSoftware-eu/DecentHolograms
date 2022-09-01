@@ -58,7 +58,7 @@ public final class DecentHolograms {
 		NMS.init();
 		Settings.reload();
 		Lang.reload();
-		DExecutor.init(4);
+		DExecutor.init(1);
 
 		ticker = new Ticker();
 		hologramManager = new HologramManager();

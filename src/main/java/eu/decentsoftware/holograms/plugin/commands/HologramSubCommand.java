@@ -246,6 +246,11 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
+				if (PLUGIN.getHologramManager().containsHologram(args[1])) {
+					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, args[1]);
+					return true;
+				}
+
 				boolean containsLocation = false;
 				boolean temp = false;
 				Location loc = null;
@@ -264,6 +269,7 @@ public class HologramSubCommand extends DecentCommand {
 						}
 					}
 				}
+
 				if (!(sender instanceof Player) && !containsLocation) {
 					Lang.ONLY_PLAYER.send(sender);
 					return true;
@@ -275,19 +281,13 @@ public class HologramSubCommand extends DecentCommand {
 				}
 
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
-				if (PLUGIN.getHologramManager().containsHologram(args[1])) {
-					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, args[1]);
-					return true;
-				}
 				Hologram clone = hologram.clone(args[1], loc, temp);
-				clone.showAll();
-				clone.realignLines();
-				
 				if (!clone.save()) {
 					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
+					return true;
 				}
-				
+				clone.showAll();
+				clone.realignLines();
 				PLUGIN.getHologramManager().registerHologram(clone);
 				Lang.HOLOGRAM_CLONED.send(sender);
 				return true;
@@ -338,7 +338,7 @@ public class HologramSubCommand extends DecentCommand {
 				
 				if (!hologram.save()) {
 					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
+					return true;
 				}
 
 				PLUGIN.getHologramManager().registerHologram(hologram);
