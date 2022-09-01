@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
+import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
@@ -231,7 +232,7 @@ public class HologramSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permission = "dh.admin",
-			usage = "/dh hologram clone <hologram> <name> [temp]",
+			usage = "/dh hologram clone <hologram> <name> [temp] [-l:<world:x:y:z>]",
 			description = "Clone an existing Hologram.",
 			aliases = {"copy"},
 			minArgs = 2
@@ -245,17 +246,40 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
+				boolean containsLocation = false;
 				boolean temp = false;
+				Location loc = null;
 				if (args.length >= 3) {
-					temp = Validator.getBoolean(args[2], "Value of temp must be true or false.");
+					for (int i = 2; i < args.length; i++) {
+						String s = args[i];
+						if (s.toLowerCase().startsWith("-l:")) {
+							String locationString = s.substring(3);
+							loc = LocationUtils.asLocation(locationString);
+							if (loc != null) {
+								containsLocation = true;
+								break;
+							}
+						} else {
+							temp = Validator.getBoolean(args[2], "Value of temp must be true or false.");
+						}
+					}
 				}
-				Player player = (Player) sender;
+				if (!(sender instanceof Player) && !containsLocation) {
+					Lang.ONLY_PLAYER.send(sender);
+					return true;
+				} else {
+					if (loc == null) {
+						Player player = (Player) sender;
+						loc = player.getLocation();
+					}
+				}
+
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				if (PLUGIN.getHologramManager().containsHologram(args[1])) {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, args[1]);
 					return true;
 				}
-				Hologram clone = hologram.clone(args[1], player.getLocation(), temp);
+				Hologram clone = hologram.clone(args[1], loc, temp);
 				clone.showAll();
 				clone.realignLines();
 				
