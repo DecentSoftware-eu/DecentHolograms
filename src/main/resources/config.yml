@@ -43,6 +43,13 @@ update-checker: true
 # Click cooldown in ticks
 click-cooldown: 20
 
+# Do we want to replace placeholders inside animation frames?
+#
+# WARNING! Setting this to true will have a negative impact
+# on CPU usage, so if you don't NEED to use placeholders inside
+# animation frames, keep this disabled.
+allow-placeholders-inside-animations: false
+
 
 
 # # # # # # # # # # # # # # # # #
