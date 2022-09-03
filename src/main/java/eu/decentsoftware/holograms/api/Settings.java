@@ -5,7 +5,9 @@ import eu.decentsoftware.holograms.api.utils.config.CFG;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.config.Key;
 import lombok.experimental.UtilityClass;
+import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @UtilityClass
@@ -38,7 +40,7 @@ public class Settings {
     public static int DEFAULT_UPDATE_INTERVAL = 20;
     @Key("allow-placeholders-inside-animations")
     public static boolean ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS = false;
-    @Key("custom-replacement")
+
     public static Map<String, String> CUSTOM_REPLACEMENTS = ImmutableMap.<String, String>builder()
             .put("[x]", "\u2588")
             .put("[X]", "\u2588")
@@ -60,6 +62,16 @@ public class Settings {
         CONFIG.reload();
 
         CFG.load(DECENT_HOLOGRAMS.getPlugin(), Settings.class, CONFIG.getFile());
+
+        // -- Load custom replacements
+        ConfigurationSection customReplacementsSection = CONFIG.getConfigurationSection("custom-replacements");
+        if (customReplacementsSection != null) {
+            Map<String, String> replacements = new HashMap<>();
+            for (String key : customReplacementsSection.getKeys(false)) {
+                replacements.put(key, customReplacementsSection.getString(key));
+            }
+            CUSTOM_REPLACEMENTS = replacements;
+        }
     }
 
     public static FileConfig getConfig() {
