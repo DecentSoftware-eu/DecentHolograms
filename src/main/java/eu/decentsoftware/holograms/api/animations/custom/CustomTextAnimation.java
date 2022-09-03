@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.api.animations.custom;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CustomTextAnimation extends TextAnimation {
     }
 
     public static CustomTextAnimation fromFile(String fileName) {
-        Configuration config = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "animations/" + fileName);
+        FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "animations/" + fileName);
 
         // Parse animation name
         String name;

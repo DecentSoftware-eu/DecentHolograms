@@ -5,7 +5,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.config.Phrase;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class Lang {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-	private static final Configuration CONFIG = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "lang.yml");
+	private static final FileConfig CONFIG = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "lang.yml");
 
 	// General
 	public static final Phrase PREFIX = new Phrase(CONFIG, "prefix", Common.PREFIX);

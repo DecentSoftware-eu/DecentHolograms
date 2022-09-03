@@ -10,10 +10,9 @@ import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
 import lombok.Getter;
@@ -63,7 +62,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     @SuppressWarnings("unchecked")
     public static @Nullable Hologram fromFile(final String fileName) {
-        final Configuration config = new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), "holograms/" + fileName);
+        final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + fileName);
 
         // Get hologram location
         String locationString = config.getString("location");
@@ -87,16 +86,13 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         if (config.isString("permission")) {
             hologram.setPermission(config.getString("permission"));
         }
-        hologram.setDisplayRange(config.getInt("display-range", Settings.DEFAULT_DISPLAY_RANGE.getValue()));
-        hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE.getValue()));
-        hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL.getValue()));
+        hologram.setDisplayRange(config.getInt("display-range", Settings.DEFAULT_DISPLAY_RANGE));
+        hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE));
+        hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL));
         hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
         if (config.isBoolean("down-origin")) {
-            hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN.getValue()));
+            hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN));
         }
-//        if (config.isBoolean("always-face-player")) {
-//            hologram.setAlwaysFacePlayer(config.getBoolean("always-face-player", Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue()));
-//        }
 
         if (!config.contains("pages") && config.contains("lines")) {
             // Old Config
@@ -146,15 +142,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                     page.addLine(line);
                 }
             }
-
-            /*
-            if (map.containsKey("always-face-player")) {
-                Object afp = map.get("always-face-player");
-                if (afp instanceof Boolean) {
-                    page.setAlwaysFacePlayer((boolean) afp);
-                }
-            }
-             */
         }
         hologram.setFacing((float) config.getDouble("facing", 0.0f));
         return hologram;
@@ -166,11 +153,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     protected final String name;
     protected boolean saveToFile;
-    protected final Configuration config;
+    protected final FileConfig config;
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
     protected final DList<HologramPage> pages = new DList<>();
-    protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN.getValue();
-    protected boolean alwaysFacePlayer = false; //Settings.DEFAULT_ALWAYS_FACE_PLAYER.getValue();
+    protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
+    protected boolean alwaysFacePlayer = false;
     private final AtomicInteger tickCounter;
 
     /*
@@ -182,14 +169,14 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public Hologram(String name, Location location, boolean saveToFile) {
-        this(name, location, saveToFile ? new Configuration(DECENT_HOLOGRAMS.getPlugin(), DECENT_HOLOGRAMS.getDataFolder(), String.format("holograms/hologram_%s.yml", name)) : null);
+        this(name, location, saveToFile ? new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name)) : null);
     }
 
-    public Hologram(String name, Location location, Configuration config) {
+    public Hologram(String name, Location location, FileConfig config) {
         this(name, location, config, true);
     }
 
-    public Hologram(String name, Location location, Configuration config, boolean enabled) {
+    public Hologram(String name, Location location, FileConfig config, boolean enabled) {
         super(location);
         this.name = name;
         this.config = config;
@@ -309,7 +296,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean save() {
         if (!saveToFile) return true;
-        config.setLocation("location", location, false);
+        config.set("location", LocationUtils.asString(location, false));
         config.set("enabled", enabled);
         config.set("permission", permission == null || permission.isEmpty() ? null : permission);
         config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
@@ -318,10 +305,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         config.set("update-interval", updateInterval);
         config.set("facing", facing);
         config.set("down-origin", downOrigin);
-//        config.set("always-face-player", alwaysFacePlayer);
         config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-        
-        return config.saveData() && config.reload();
+        config.saveData();
+        config.reload();
+        return true;
     }
 
     /**
@@ -379,7 +366,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Show this hologram for given player on a given page.
      *
-     * @param player Given player.
+     * @param player    Given player.
      * @param pageIndex Given page.
      */
     public boolean show(Player player, int pageIndex) {

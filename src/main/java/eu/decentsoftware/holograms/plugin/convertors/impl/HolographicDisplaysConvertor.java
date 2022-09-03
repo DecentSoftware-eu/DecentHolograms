@@ -4,7 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
@@ -32,8 +32,8 @@ public class HolographicDisplaysConvertor implements IConvertor {
 			Common.log("Invalid file! Need 'database.yml'");
 			return ConvertorResult.createFailed();
 		}
-		
-		Configuration config = new Configuration(PLUGIN.getPlugin(), file);
+
+		FileConfig config = new FileConfig(PLUGIN.getPlugin(), file);
 		ConvertorResult convertorResult = new ConvertorResult();
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config, name);

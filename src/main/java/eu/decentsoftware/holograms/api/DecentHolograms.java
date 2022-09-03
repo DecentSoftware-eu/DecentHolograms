@@ -77,7 +77,7 @@ public final class DecentHolograms {
 		metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
 
 		// Setup update checker
-		if (Settings.CHECK_UPDATES.getValue()) {
+		if (Settings.CHECK_FOR_UPDATES) {
 			UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
 			updateChecker.getVersion((ver) -> {
 				if (Common.isVersionHigher(ver)) {

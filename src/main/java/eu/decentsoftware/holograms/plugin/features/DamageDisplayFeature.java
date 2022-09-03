@@ -4,7 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
-import eu.decentsoftware.holograms.api.utils.config.Configuration;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,9 +14,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
@@ -33,7 +30,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 	public void reload() {
 		this.disable();
 
-		Configuration config = Settings.CONFIG;
+		FileConfig config = Settings.getConfig();
 		enabled = config.getBoolean("damage-display.enabled", enabled);
 		duration = config.getInt("damage-display.duration", duration);
 		appearance = config.getString("damage-display.appearance", appearance);

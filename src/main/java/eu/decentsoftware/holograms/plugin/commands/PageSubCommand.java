@@ -131,7 +131,7 @@ public class PageSubCommand extends DecentCommand {
                 Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
                 HologramPage page = hologram.addPage();
                 if (page != null) {
-                    String content = Settings.DEFAULT_TEXT.getValue();
+                    String content = Settings.DEFAULT_TEXT;
                     if (args.length > 1) {
                         content = sender instanceof Player ? Validator.getLineContent((Player) sender, args, 1) : Validator.getLineContent(args, 1);
                     }
@@ -181,7 +181,7 @@ public class PageSubCommand extends DecentCommand {
                 Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
                 HologramPage page = hologram.insertPage(Validator.getInteger(args[1], Lang.PAGE_DOES_NOT_EXIST.getValue()) - 1);
                 if (page != null) {
-                    String content = Settings.DEFAULT_TEXT.getValue();
+                    String content = Settings.DEFAULT_TEXT;
                     if (args.length > 2) {
                         content = Validator.getLineContent(args, 2);
                     }

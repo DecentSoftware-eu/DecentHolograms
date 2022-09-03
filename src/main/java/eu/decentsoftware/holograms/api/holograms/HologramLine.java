@@ -40,7 +40,7 @@ public class HologramLine extends HologramObject {
      */
 
     public static HologramLine fromFile(ConfigurationSection config, HologramPage parent, Location location) {
-        HologramLine line = new HologramLine(parent, location, config.getString("content", Settings.DEFAULT_TEXT.getValue()));
+        HologramLine line = new HologramLine(parent, location, config.getString("content", Settings.DEFAULT_TEXT));
         if (config.isString("permission")) {
             line.setPermission(config.getString("permission", null));
         }
@@ -64,7 +64,7 @@ public class HologramLine extends HologramObject {
 
     @SuppressWarnings("unchecked")
     public static HologramLine fromMap(@NonNull Map<String, Object> map, HologramPage parent, Location location) {
-        String content = (String) map.getOrDefault("content", Settings.DEFAULT_TEXT.getValue());
+        String content = (String) map.getOrDefault("content", Settings.DEFAULT_TEXT);
         HologramLine line = new HologramLine(parent, location, content);
         if (map.containsKey("height")) {
             Object height = map.get("height");
@@ -141,7 +141,7 @@ public class HologramLine extends HologramObject {
         this.entityIds[1] = nms.getFreeEntityId();
         this.content = content;
         this.type = HologramLineType.UNKNOWN;
-        this.height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
+        this.height = Settings.DEFAULT_HEIGHT_TEXT;
         this.parseContent();
     }
 
@@ -204,19 +204,21 @@ public class HologramLine extends HologramObject {
         if (contentU.startsWith("#ICON:")) {
             type = HologramLineType.ICON;
             if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_ICON.getValue();
+                height = Settings.DEFAULT_HEIGHT_ICON;
             }
             item = new HologramItem(content.substring("#ICON:".length()));
+
+            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
         } else if (contentU.startsWith("#SMALLHEAD:")) {
             type = HologramLineType.SMALLHEAD;
             if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_SMALLHEAD.getValue();
+                height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
             }
             item = new HologramItem(content.substring("#SMALLHEAD:".length()));
         } else if (contentU.startsWith("#HEAD:")) {
             type = HologramLineType.HEAD;
             if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_HEAD.getValue();
+                height = Settings.DEFAULT_HEIGHT_HEAD;
             }
             item = new HologramItem(content.substring("#HEAD:".length()));
         } else if (contentU.startsWith("#ENTITY:")) {
@@ -228,7 +230,7 @@ public class HologramLine extends HologramObject {
         } else {
             type = HologramLineType.TEXT;
             if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
+                height = Settings.DEFAULT_HEIGHT_TEXT;
             }
             text = parseCustomReplacements();
 
@@ -338,7 +340,7 @@ public class HologramLine extends HologramObject {
 
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
-        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.getValue().entrySet()) {
+        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
             content = content.replace(replacement.getKey(), replacement.getValue());
         }
 

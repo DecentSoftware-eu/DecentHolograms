@@ -97,7 +97,7 @@ public class LineSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				HologramPage page = Validator.getHologramPage(hologram, args[1], Lang.PAGE_DOES_NOT_EXIST.getValue());
-				String content = args.length > 2 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 2) : Validator.getLineContent(args, 2) : Settings.DEFAULT_TEXT.getValue();
+				String content = args.length > 2 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 2) : Validator.getLineContent(args, 2) : Settings.DEFAULT_TEXT;
 				HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
 				if (page.addLine(line)) {
 					hologram.save();
@@ -469,7 +469,7 @@ public class LineSubCommand extends DecentCommand {
 				HologramPage page = Validator.getHologramPage(hologram, args[1], Lang.PAGE_DOES_NOT_EXIST.getValue());
 				int index = Validator.getInteger(args[2], Lang.LINE_DOES_NOT_EXIST.getValue());
 				HologramLine prevLine = Validator.getHologramLine(page, index);
-				String content = args.length > 3 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 3) : Validator.getLineContent(args, 3) : Settings.DEFAULT_TEXT.getValue();
+				String content = args.length > 3 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 3) : Validator.getLineContent(args, 3) : Settings.DEFAULT_TEXT;
 				HologramLine line = new HologramLine(page, prevLine.getLocation(), content);
 
 				if (page.insertLine(index - 1, line)) {

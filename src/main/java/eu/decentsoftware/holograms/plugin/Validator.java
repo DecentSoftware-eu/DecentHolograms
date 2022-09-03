@@ -95,7 +95,7 @@ public class Validator {
 	}
 
 	public static String getLineContent(String[] args, int beginIndex) {
-		String text = Settings.DEFAULT_TEXT.getValue();
+		String text = Settings.DEFAULT_TEXT;
 		if (args.length > beginIndex) {
 			String[] textArray = Arrays.copyOfRange(args, beginIndex, args.length);
 			text = textArray.length == 1 ? textArray[0] : String.join(" ", textArray);
@@ -104,7 +104,7 @@ public class Validator {
 	}
 
 	public static String getLineContent(Player player, String[] args, int beginIndex) {
-		String text = Settings.DEFAULT_TEXT.getValue();
+		String text = Settings.DEFAULT_TEXT;
 		if (args.length > beginIndex) {
 			String[] textArray = Arrays.copyOfRange(args, beginIndex, args.length);
 			text = textArray.length == 1 ? textArray[0] : String.join(" ", textArray);

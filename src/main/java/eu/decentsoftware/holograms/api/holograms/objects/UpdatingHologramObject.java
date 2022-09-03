@@ -13,9 +13,9 @@ public abstract class UpdatingHologramObject extends HologramObject {
      *	Fields
      */
 
-    protected int displayRange = Settings.DEFAULT_DISPLAY_RANGE.getValue();
-    protected int updateRange = Settings.DEFAULT_UPDATE_RANGE.getValue();
-    protected volatile int updateInterval = Settings.DEFAULT_UPDATE_INTERVAL.getValue();
+    protected int displayRange = Settings.DEFAULT_DISPLAY_RANGE;
+    protected int updateRange = Settings.DEFAULT_UPDATE_RANGE;
+    protected volatile int updateInterval = Settings.DEFAULT_UPDATE_INTERVAL;
 
     /*
      *	Constructors

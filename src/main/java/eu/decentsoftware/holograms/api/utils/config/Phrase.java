@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 
 public class Phrase extends ConfigValue<String> {
 
-	public Phrase(Configuration config, String path, String defaultValue) {
+	public Phrase(FileConfig config, String path, String defaultValue) {
 		super(config, path, defaultValue);
 	}
 

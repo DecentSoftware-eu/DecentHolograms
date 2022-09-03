@@ -115,8 +115,8 @@ public class HologramManager extends Ticked {
 				continue;
 			}
 			if (hologram.onClick(player, entityId, clickType)) {
-				clickCooldowns.put(uid, Settings.CLICK_COOLDOWN.getValue());
-				S.async(() -> clickCooldowns.remove(uid), Settings.CLICK_COOLDOWN.getValue());
+				clickCooldowns.put(uid, Settings.CLICK_COOLDOWN);
+				S.async(() -> clickCooldowns.remove(uid), Settings.CLICK_COOLDOWN);
 				return true;
 			}
 		}
