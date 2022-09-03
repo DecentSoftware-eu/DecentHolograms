@@ -67,7 +67,6 @@ public class AnimationManager extends Ticked {
             TextAnimation animation = getAnimation(animationName);
             if (animation != null) {
                 string = string.replace(matcher.group(), animation.animate(text, getStep(), args == null ? null : args.substring(1).split(",")));
-                matcher = ANIMATION_PATTERN.matcher(string);
             }
         }
 
