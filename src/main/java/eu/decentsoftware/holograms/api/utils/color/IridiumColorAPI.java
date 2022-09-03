@@ -1,6 +1,8 @@
 package eu.decentsoftware.holograms.api.utils.color;
 
 import com.google.common.collect.ImmutableMap;
+import eu.decentsoftware.holograms.api.Settings;
+import eu.decentsoftware.holograms.api.utils.color.caching.LruCache;
 import eu.decentsoftware.holograms.api.utils.color.patterns.GradientPattern;
 import eu.decentsoftware.holograms.api.utils.color.patterns.Pattern;
 import eu.decentsoftware.holograms.api.utils.color.patterns.RainbowPattern;
@@ -19,6 +21,8 @@ public class IridiumColorAPI {
 
     private static final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
     public static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
+
+    private static final LruCache LRU_CACHE = new LruCache(Settings.DEFAULT_LRU_CACHE_SIZE);
 
     /**
      * Cached result of all legacy colors.
@@ -60,10 +64,16 @@ public class IridiumColorAPI {
      */
     @Nonnull
     public static String process(@Nonnull String string) {
+        String result = LRU_CACHE.getResult(string);
+        if (result != null) {
+            return result;
+        }
+        String input = string;
         for (Pattern pattern : PATTERNS) {
             string = pattern.process(string);
         }
         string = ChatColor.translateAlternateColorCodes('&', string);
+        LRU_CACHE.put(input, string);
         return string;
     }
 

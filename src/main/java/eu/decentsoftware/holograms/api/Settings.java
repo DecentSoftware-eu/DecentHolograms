@@ -38,6 +38,8 @@ public class Settings {
     public static int DEFAULT_UPDATE_RANGE = 48;
     @Key(value = "defaults.update-interval", min = 1, max = 1200)
     public static int DEFAULT_UPDATE_INTERVAL = 20;
+    @Key(value = "defaults.lru-cache-size", min = 5, max = 1e4)
+    public static int DEFAULT_LRU_CACHE_SIZE = 500;
     @Key("allow-placeholders-inside-animations")
     public static boolean ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS = false;
 

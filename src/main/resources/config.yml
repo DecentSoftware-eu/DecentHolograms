@@ -28,6 +28,12 @@ defaults:
   update-range: 48
   # Default Hologram update interval in ticks.
   update-interval: 20
+  # Maximum amount of cached pattern processing results
+  # Do not change if you do not know what it means
+  # Increasing this number will result in higher memory usage
+  # Range: 5 - 10000
+  # Default: 500
+  lru-cache-size: 500
   # Default heights of different hologram line types.
   height:
     text: 0.3
