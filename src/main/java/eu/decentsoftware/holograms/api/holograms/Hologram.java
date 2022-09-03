@@ -383,7 +383,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param pageIndex Given page.
      */
     public boolean show(Player player, int pageIndex) {
-        if (!isEnabled()) return false;
+        if (!enabled) {
+            return false;
+        }
         HologramPage page = getPage(pageIndex);
         if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
             if (isVisible(player)) {
@@ -410,7 +412,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void showAll() {
-        if (isEnabled()) {
+        if (enabled) {
             Bukkit.getOnlinePlayers().forEach(player -> show(player, getPlayerPage(player)));
         }
     }
@@ -427,7 +429,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void updateAll() {
-        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
+        if (enabled && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
             getViewerPlayers().forEach(this::update);
         }
     }
@@ -444,7 +446,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void updateAnimationsAll() {
-        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+        if (enabled && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
             getViewerPlayers().forEach(this::updateAnimations);
         }
     }
@@ -461,7 +463,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void hideAll() {
-        if (isEnabled()) {
+        if (enabled) {
             getViewerPlayers().forEach(this::hide);
         }
     }
@@ -485,7 +487,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void showClickableEntitiesAll() {
-        if (isEnabled()) {
+        if (enabled) {
             getViewerPlayers().forEach(this::showClickableEntities);
         }
     }
@@ -498,7 +500,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void hideClickableEntitiesAll() {
-        if (isEnabled()) {
+        if (enabled) {
             getViewerPlayers().forEach(this::hideClickableEntities);
         }
     }

@@ -37,7 +37,6 @@ public class HologramItem {
 	public ItemStack parse(Player player) {
 		ItemBuilder itemBuilder = new ItemBuilder(material);
 		if (durability > 0) itemBuilder.withDurability(durability);
-		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
 		if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
 			if (extras != null) {
 				String extrasFinal = player == null ? extras.trim() : PAPI.setPlaceholders(player, extras).trim();
@@ -55,6 +54,7 @@ public class HologramItem {
 				}
 			}
 		}
+		if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
 
 		ItemStack itemStack = itemBuilder.toItemStack();
 		if (nbt != null) {
@@ -90,7 +90,7 @@ public class HologramItem {
 		}
 
 		if (string.contains("!ENCHANTED")) {
-			string = string.replace("!ENCHANTED", "").trim();
+			string = string.replace("!ENCHANTED", "");
 			this.enchanted = true;
 		}
 

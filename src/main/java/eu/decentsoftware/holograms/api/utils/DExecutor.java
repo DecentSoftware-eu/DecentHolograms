@@ -24,7 +24,7 @@ public class DExecutor {
         service = Executors.newFixedThreadPool(threads, (runnable) -> {
             Thread thread = new Thread(runnable);
             thread.setName("DecentHolograms Thread #" + ++threadId);
-            thread.setPriority(Thread.MAX_PRIORITY);
+            thread.setPriority(Thread.NORM_PRIORITY);
             thread.setUncaughtExceptionHandler((t, ex) -> {
                 Common.log("Exception encountered in " + t.getName());
                 ex.printStackTrace();

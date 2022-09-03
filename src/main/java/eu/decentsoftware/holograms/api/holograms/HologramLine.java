@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.AtomicDouble;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
-import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
@@ -127,6 +126,9 @@ public class HologramLine extends HologramObject {
     private HologramItem item;
     private HologramEntity entity;
 
+    private volatile boolean containsAnimations;
+    private volatile boolean containsPlaceholders;
+
     /*
      *	Constructors
      */
@@ -229,6 +231,9 @@ public class HologramLine extends HologramObject {
                 height = Settings.DEFAULT_HEIGHT_TEXT.getValue();
             }
             text = parseCustomReplacements();
+
+            containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
+            containsPlaceholders = PAPI.containsPlaceholders(text);
         }
         setOffsetY(type.getOffsetY());
     }
@@ -276,8 +281,8 @@ public class HologramLine extends HologramObject {
      *	Visibility Methods
      */
 
-    @NonNull
-    private String getText(@NotNull Player player, boolean update) {
+    @NotNull
+    private String getText(@NonNull Player player, boolean update) {
         if (type != HologramLineType.TEXT) {
             return "";
         }
@@ -290,19 +295,19 @@ public class HologramLine extends HologramObject {
             string = text;
             // Parse placeholders.
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
-                string = parsePlaceholders(string, player);
+                string = parsePlaceholders(string, player, containsPlaceholders);
             }
             // Update the cached text.
             playerTextMap.put(uuid, string);
         }
 
         // Parse animations
-        AnimationManager animationManager = DECENT_HOLOGRAMS.getAnimationManager();
-        if (!hasFlag(EnumFlag.DISABLE_ANIMATIONS) && animationManager.containsAnimations(string)) {
-            string = animationManager.parseTextAnimations(string);
+        if (containsAnimations && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+            string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(string);
             // Parse placeholders.
-            if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
-                string = parsePlaceholders(string, player);
+            if (Settings.ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS && !hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
+                // This has been done to allow the use of placeholders in animation frames.
+                string = parsePlaceholders(string, player, true);
             }
         }
 
@@ -319,13 +324,15 @@ public class HologramLine extends HologramObject {
         return playerList;
     }
 
-    @NonNull
-    private String parsePlaceholders(@NonNull String string, @NonNull Player player) {
-        string = PAPI.setPlaceholders(player, string);
+    @NotNull
+    private String parsePlaceholders(@NonNull String string, @NonNull Player player, boolean papi) {
         string = string
                 .replace("{player}", player.getName())
                 .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1))
                 .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+        if (papi) {
+            string = PAPI.setPlaceholders(player, string);
+        }
         return string;
     }
 
@@ -369,7 +376,7 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void show(Player... players) {
-        if (!isEnabled()) {
+        if (!enabled) {
             return;
         }
         List<Player> playerList = getPlayers(false, players);
@@ -388,12 +395,13 @@ public class HologramLine extends HologramObject {
                     case HEAD:
                     case SMALLHEAD:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
-                        ItemStack itemStack = PAPI.containsPlaceholders(getItem().getContent()) ? HologramItem.parseItemStack(getItem().getContent(), player) : getItem().parse();
+                        ItemStack itemStack = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
                         nms.helmetFakeEntity(player, itemStack, entityIds[0]);
                         break;
                     case ICON:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
-                        nms.showFakeEntityItem(player, getLocation(), HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
+                        ItemStack itemStack1 = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
+                        nms.showFakeEntityItem(player, getLocation(), itemStack1, entityIds[1]);
                         nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
                         break;
                     case ENTITY:
@@ -422,7 +430,7 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void update(Player... players) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) {
+        if (!enabled || hasFlag(EnumFlag.DISABLE_UPDATING)) {
             return;
         }
 
@@ -454,7 +462,7 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void updateLocation(boolean updateRotation, Player... players) {
-        if (!isEnabled()) {
+        if (!enabled) {
             return;
         }
         List<Player> playerList = getPlayers(true, players);
@@ -472,7 +480,7 @@ public class HologramLine extends HologramObject {
     }
 
     public void updateAnimations(Player... players) {
-        if (!isEnabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+        if (!enabled || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
             return;
         }
         List<Player> playerList = getPlayers(true, players);
