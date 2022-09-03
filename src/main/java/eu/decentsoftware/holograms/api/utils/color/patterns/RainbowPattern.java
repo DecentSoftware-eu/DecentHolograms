@@ -20,6 +20,7 @@ public class RainbowPattern implements Pattern {
         while (matcher.find()) {
             String saturation = matcher.group(1);
             String content = matcher.group(2);
+
             string = string.replace(matcher.group(), IridiumColorAPI.rainbow(content, Float.parseFloat(saturation)));
         }
         return string;

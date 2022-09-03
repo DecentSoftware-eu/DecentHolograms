@@ -390,7 +390,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return false;
     }
 
-    private void showPageTo(Player player, HologramPage page, int pageIndex){
+    private void showPageTo(Player player, HologramPage page, int pageIndex) {
         page.getLines().forEach(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
@@ -420,12 +420,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             getViewerPlayers().forEach(this::update);
         }
     }
-    
+
     public void updateAnimations(Player player) {
         if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) {
             return;
         }
-        
+
         HologramPage page = getPage(player);
         if (page != null) {
             page.getLines().forEach(line -> line.updateAnimations(player));
@@ -499,7 +499,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @return Boolean whether the given player is in display range of this hologram object.
      */
     public boolean isInDisplayRange(Player player) {
-        return  player != null &&
+        return player != null &&
                 player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (displayRange * displayRange);
     }
@@ -512,7 +512,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(Player player) {
-        return  player != null &&
+        return player != null &&
                 player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (updateRange * updateRange);
     }
@@ -548,7 +548,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Re-Align the lines in this hologram putting them to the right place.
      * <p>
-     *     This method is good to use after teleporting the hologram.
+     * This method is good to use after teleporting the hologram.
      * </p>
      */
     public void realignLines() {
@@ -639,6 +639,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Get the list of all pages in this hologram.
+     *
      * @return List of all pages in this hologram.
      */
     public List<HologramPage> getPages() {

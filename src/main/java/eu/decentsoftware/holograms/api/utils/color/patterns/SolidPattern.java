@@ -19,7 +19,9 @@ public class SolidPattern implements Pattern {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String color = matcher.group(1);
-            if (color == null) color = matcher.group(2);
+            if (color == null) {
+                color = matcher.group(2);
+            }
 
             string = string.replace(matcher.group(), IridiumColorAPI.getColor(color) + "");
         }

@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -42,6 +41,12 @@ public class PAPI {
 		return stringList;
 	}
 
+	/**
+	 * Check if the given string contains any placeholders.
+	 *
+	 * @param string The string.
+	 * @return True if the string contains any placeholders, false otherwise.
+	 */
 	public static boolean containsPlaceholders(String string) {
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			return PlaceholderAPI.containsPlaceholders(string);

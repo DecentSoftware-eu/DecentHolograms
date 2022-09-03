@@ -25,7 +25,15 @@ public class GradientPattern implements Pattern {
             String start = matcher.group(1);
             String content = matcher.group(2);
             String end = matcher.group(4);
-            string = string.replace(matcher.group(), IridiumColorAPI.color(content, new Color(Integer.parseInt(start, 16)), new Color(Integer.parseInt(end, 16))));
+
+            string = string.replace(
+                    matcher.group(),
+                    IridiumColorAPI.color(
+                            content,
+                            new Color(Integer.parseInt(start, 16)),
+                            new Color(Integer.parseInt(end, 16))
+                    )
+            );
         }
         return string;
     }
