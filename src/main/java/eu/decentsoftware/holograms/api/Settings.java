@@ -70,6 +70,9 @@ public class Settings {
         if (customReplacementsSection != null) {
             Map<String, String> replacements = new HashMap<>();
             for (String key : customReplacementsSection.getKeys(false)) {
+                if (!customReplacementsSection.isString(key)) {
+                    continue;
+                }
                 replacements.put(key, customReplacementsSection.getString(key));
             }
             CUSTOM_REPLACEMENTS = replacements;
