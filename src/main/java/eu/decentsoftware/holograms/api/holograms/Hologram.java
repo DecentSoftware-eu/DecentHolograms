@@ -137,7 +137,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                     Map<String, Object> values = null;
                     try {
                         values = (Map<String, Object>) lineMap;
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) { }
                     if (values == null) continue;
                     HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
                     page.addLine(line);
@@ -357,6 +357,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void onQuit(Player player) {
         hide(player);
+        removeHidePlayer(player);
         viewerPages.remove(player.getUniqueId());
     }
 
@@ -374,6 +375,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         if (!enabled) {
             return false;
         }
+        if (!isVisibleState()) {
+            if (!isShowState(player)) {
+                return false;
+            }
+        }
         HologramPage page = getPage(pageIndex);
         if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
             if (isVisible(player)) {
@@ -386,6 +392,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
                 S.sync(() -> showPageTo(player, page, pageIndex), 0L);
             }
+            setShowPlayer(player);
+            removeHidePlayer(player);
             return true;
         }
         return false;
@@ -441,6 +449,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void hide(Player player) {
         if (isVisible(player)) {
+            setHidePlayer(player);
+            removeShowPlayer(player);
             HologramPage page = getPage(player);
             if (page != null) {
                 page.getLines().forEach(line -> line.hide(player));
