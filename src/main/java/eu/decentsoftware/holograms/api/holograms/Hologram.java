@@ -400,6 +400,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     private void showPageTo(Player player, HologramPage page, int pageIndex) {
+        if (isHideState(player)) {
+            return;
+        }
         page.getLines().forEach(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
