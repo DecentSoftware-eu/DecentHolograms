@@ -52,7 +52,7 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	@Override
 	public List<String> prepareLines(List<String> lines){
 		return lines.stream().map(line -> {
-			if (line.toUpperCase().startsWith("ICON: ")) {
+			if (line.toUpperCase().startsWith("ICON:")) {
 				return "#" + line;
 			}
 			if (line.trim().equalsIgnoreCase("{empty}")) {
