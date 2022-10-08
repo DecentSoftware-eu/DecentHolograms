@@ -594,9 +594,8 @@ public final class DHAPI {
         line.setContent(content);
 
         // If the new type is the same as the previous type, just update.
-        if (prevType == HologramLineType.TEXT && prevType == line.getType()) {
+        if ((prevType == HologramLineType.TEXT || prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD) && prevType == line.getType()) {
             line.update();
-            return;
         }
 
         // If the type changed, respawn the line.
