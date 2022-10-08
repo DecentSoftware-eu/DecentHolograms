@@ -73,24 +73,24 @@ public class Ticker {
         DExecutor e = DExecutor.create(tickedObjects.size());
         synchronized (tickedObjects) {
             for (ITicked ticked : tickedObjects) {
-                e.queue(() -> {
-                    if (ticked.shouldTick(ticks.get())) {
+                if (ticked.shouldTick(ticks.get())) {
+                    e.queue(() -> {
                         try {
                             ticked.tick();
-                        } catch(Throwable t) {
+                        } catch (Throwable t) {
                             t.printStackTrace();
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
         // Remove ticked objects
-        synchronized(removeTickedObjects) {
-            while(removeTickedObjects.hasElements()) {
+        synchronized (removeTickedObjects) {
+            while (removeTickedObjects.hasElements()) {
                 String id = removeTickedObjects.popRandom();
                 for (int i = 0; i < tickedObjects.size(); i++) {
-                    if(tickedObjects.get(i).getId().equals(id)) {
+                    if (tickedObjects.get(i).getId().equals(id)) {
                         tickedObjects.remove(i);
                         break;
                     }
