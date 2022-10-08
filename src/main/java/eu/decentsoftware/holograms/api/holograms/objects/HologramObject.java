@@ -24,6 +24,9 @@ public abstract class HologramObject extends FlagHolder {
     protected boolean enabled = true;
     protected DisableCause cause = DisableCause.NONE;
     protected final Set<UUID> viewers = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<UUID> showPlayers = Collections.synchronizedSet(new HashSet<>());
+    protected boolean defaultVisibleState = true;
     protected Location location;
     protected String permission = null;
     protected float facing = 0.0f;
@@ -94,6 +97,79 @@ public abstract class HologramObject extends FlagHolder {
      */
     public DisableCause getDisableCause() {
         return cause;
+    }
+
+    /**
+     * Set player hide state
+     * @param player player
+     */
+    public void setHidePlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        if (!hidePlayers.contains(uniqueId)) {
+            hidePlayers.add(player.getUniqueId());
+        }
+    }
+
+    /**
+     * Remove a player hide state
+     * @param player player
+     */
+    public void removeHidePlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        hidePlayers.remove(uniqueId);
+    }
+
+    /**
+     * Determine if the player can't see the hologram
+     * @param player player
+     * @return state
+     */
+    public boolean isHideState(Player player) {
+        return hidePlayers.contains(player.getUniqueId());
+    }
+
+    /**
+     * Set player visible
+     * @param player player
+     */
+    public void setShowPlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        if (!showPlayers.contains(uniqueId)) {
+            showPlayers.add(player.getUniqueId());
+        }
+    }
+
+    /**
+     * Remove a player visible
+     * @param player player
+     */
+    public void removeShowPlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        showPlayers.remove(uniqueId);
+    }
+
+    /**
+     * Determine if the player can see the hologram
+     * @param player player
+     * @return state
+     */
+    public boolean isShowState(Player player) {
+        return showPlayers.contains(player.getUniqueId());
+    }
+
+    /**
+     * Set default display state
+     * @param state state
+     */
+    public void setDefaultVisibleState(boolean state) {
+        this.defaultVisibleState = state;
+    }
+
+    /**
+     * @return Default display state
+     */
+    public boolean isVisibleState() {
+        return defaultVisibleState;
     }
 
     /**
