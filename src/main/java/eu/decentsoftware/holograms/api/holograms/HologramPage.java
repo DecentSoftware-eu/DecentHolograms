@@ -121,13 +121,14 @@ public class HologramPage extends FlagHolder {
     public HologramPage clone(Hologram parent, int index) {
         HologramPage page = new HologramPage(parent, index);
         for (HologramLine line : getLines()) {
-            page.addLine(line.clone(page.getNextLineLocation()));
+            page.addLine(line.clone(page, page.getNextLineLocation()));
         }
         for (Map.Entry<ClickType, List<Action>> entry : getActions().entrySet()) {
             for (Action action : entry.getValue()) {
                 page.addAction(entry.getKey(), action);
             }
         }
+        page.addFlags(this.getFlags().toArray(new EnumFlag[0]));
 //        page.setAlwaysFacePlayer(isAlwaysFacePlayer());
         return page;
     }

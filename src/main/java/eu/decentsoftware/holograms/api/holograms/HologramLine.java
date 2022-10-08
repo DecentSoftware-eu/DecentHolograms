@@ -258,7 +258,7 @@ public class HologramLine extends HologramObject {
      * @param location Location of the clone.
      * @return Cloned instance of this line.
      */
-    public HologramLine clone(Location location) {
+    public HologramLine clone(HologramPage parent, Location location) {
         HologramLine line = new HologramLine(parent, location, this.getContent());
         line.setHeight(this.getHeight());
         line.setOffsetY(this.getOffsetY());
@@ -446,7 +446,8 @@ public class HologramLine extends HologramObject {
             if (!isVisible(player) || !isInUpdateRange(player)) {
                 continue;
             }
-            if (HologramLineType.TEXT.equals(type)) {
+
+            if (type == HologramLineType.TEXT) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
                 String text = getText(player, true);
@@ -454,7 +455,7 @@ public class HologramLine extends HologramObject {
                     lastTextMap.put(uuid, text);
                     nms.updateFakeEntityCustomName(player, text, entityIds[0]);
                 }
-            } else if (HologramLineType.HEAD.equals(type) || HologramLineType.SMALLHEAD.equals(type)) {
+            } else if (type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
             }
         }
@@ -474,7 +475,7 @@ public class HologramLine extends HologramObject {
             if (!isVisible(player) || !isInUpdateRange(player)) {
                 continue;
             }
-            if (HologramLineType.ENTITY.equals(type) && updateRotation) {
+            if (type == HologramLineType.ENTITY && updateRotation) {
                 this.hide();
                 this.show();
             } else {
@@ -493,7 +494,7 @@ public class HologramLine extends HologramObject {
             if (!isVisible(player) || !isInUpdateRange(player)) {
                 continue;
             }
-            if (HologramLineType.TEXT.equals(type)) {
+            if (type == HologramLineType.TEXT) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
                 String text = getText(player, false);

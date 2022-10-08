@@ -318,11 +318,13 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Create a new instance of this hologram object that's identical to this one.
      *
+     * @param name     Name of the clone.
      * @param location Location of the clone.
+     * @param temp     True if the clone should only exist until the next reload. (Won't save to file)
      * @return Cloned instance of this line.
      */
     public Hologram clone(String name, Location location, boolean temp) {
-        Hologram hologram = new Hologram(name, location, !temp);
+        Hologram hologram = new Hologram(name, location.clone(), !temp);
         hologram.setDownOrigin(this.isDownOrigin());
         hologram.setPermission(this.getPermission());
         hologram.setFacing(this.getFacing());
