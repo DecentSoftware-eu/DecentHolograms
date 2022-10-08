@@ -137,7 +137,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                     Map<String, Object> values = null;
                     try {
                         values = (Map<String, Object>) lineMap;
-                    } catch (Exception ignored) { }
+                    } catch (Exception ignored) {
+                    }
                     if (values == null) continue;
                     HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
                     page.addLine(line);
@@ -156,6 +157,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean saveToFile;
     protected final FileConfig config;
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
+    protected final Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
+    protected boolean defaultVisibleState = true;
     protected final DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
@@ -366,19 +369,62 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     /**
+     * Set default display state
+     *
+     * @param state state
+     */
+    public void setDefaultVisibleState(boolean state) {
+        this.defaultVisibleState = state;
+    }
+
+    /**
+     * @return Default display state
+     */
+    public boolean isVisibleState() {
+        return defaultVisibleState;
+    }
+
+    /**
+     * Set player hide state
+     *
+     * @param player player
+     */
+    public void setHidePlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        if (!hidePlayers.contains(uniqueId)) {
+            hidePlayers.add(player.getUniqueId());
+        }
+    }
+
+    /**
+     * Remove a player hide state
+     *
+     * @param player player
+     */
+    public void removeHidePlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        hidePlayers.remove(uniqueId);
+    }
+
+    /**
+     * Determine if the player can't see the hologram
+     *
+     * @param player player
+     * @return state
+     */
+    public boolean isHideState(Player player) {
+        return hidePlayers.contains(player.getUniqueId());
+    }
+
+    /**
      * Show this hologram for given player on a given page.
      *
      * @param player    Given player.
      * @param pageIndex Given page.
      */
     public boolean show(Player player, int pageIndex) {
-        if (!enabled) {
+        if (!enabled || isHideState(player)) {
             return false;
-        }
-        if (!isVisibleState()) {
-            if (!isShowState(player)) {
-                return false;
-            }
         }
         HologramPage page = getPage(pageIndex);
         if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
@@ -392,17 +438,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
                 S.sync(() -> showPageTo(player, page, pageIndex), 0L);
             }
-            setShowPlayer(player);
-            removeHidePlayer(player);
             return true;
         }
         return false;
     }
 
     private void showPageTo(Player player, HologramPage page, int pageIndex) {
-        if (isHideState(player)) {
-            return;
-        }
         page.getLines().forEach(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
@@ -417,7 +458,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void update(Player player) {
-        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player)) {
+        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
             return;
         }
 
@@ -434,7 +475,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void updateAnimations(Player player) {
-        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player)) {
+        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
             return;
         }
 
@@ -452,8 +493,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void hide(Player player) {
         if (isVisible(player)) {
-            setHidePlayer(player);
-            removeShowPlayer(player);
             HologramPage page = getPage(player);
             if (page != null) {
                 page.getLines().forEach(line -> line.hide(player));
