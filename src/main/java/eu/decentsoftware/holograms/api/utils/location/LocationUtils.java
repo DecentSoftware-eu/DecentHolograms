@@ -60,7 +60,7 @@ public class LocationUtils {
 					e.printStackTrace();
 				}
 			}
-			throw new LocationParseException(String.format("World '%s' not found.", spl[0]));
+			throw new LocationParseException(String.format("World '%s' not found.", spl[0]), LocationParseException.Reason.WORLD);
 		}
 		throw new LocationParseException(String.format("Wrong location format: %s", string));
 	}

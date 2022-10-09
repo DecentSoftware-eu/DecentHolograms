@@ -12,6 +12,7 @@ import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
+import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -62,13 +63,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     @SuppressWarnings("unchecked")
-    public static @Nullable Hologram fromFile(final String fileName) {
-        final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + fileName);
-
-        // Get hologram location
-        String locationString = config.getString("location");
-        Location location = LocationUtils.asLocation(locationString);
-        if (location == null) return null;
+    @Nullable
+    public static Hologram fromFile(@NotNull String fileName) throws LocationParseException {
+        FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + fileName);
 
         // Parse hologram name
         String name;
@@ -77,6 +74,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         } else {
             name = fileName.substring(0, fileName.length() - 4);
         }
+
+        // Get hologram location
+        String locationString = config.getString("location");
+        Location location = LocationUtils.asLocationE(locationString);
 
         boolean enabled = true;
         if (config.isBoolean("enabled")) {

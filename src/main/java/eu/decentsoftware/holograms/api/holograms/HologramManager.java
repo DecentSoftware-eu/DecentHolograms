@@ -6,6 +6,7 @@ import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.offset.OffsetListener;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
@@ -29,13 +30,29 @@ public class HologramManager extends Ticked {
 	private final Set<HologramLine> temporaryLines;
 	private final OffsetListener offsetListener;
 
+	/**
+	 * Map of holograms to load, when their respective worls loads.
+	 * <p>
+	 * There were issues with world management plugins loading worlds
+	 * after holograms. Due to that, holograms in these worlds were skipped
+	 * as we can't load holograms, that don't have their world all loaded.
+	 * <p>
+	 * Key is the name of the world, and Value is a set of file names
+	 * of all holograms, that couldn't be loaded due to this world problem.
+	 *
+	 * @since 2.7.4
+	 */
+	private final Map<String, Set<String>> toLoad;
+
 	public HologramManager() {
 		super(20L);
 		this.hologramMap = new ConcurrentHashMap<>();
 		this.clickCooldowns = new ConcurrentHashMap<>();
 		this.temporaryLines = Collections.synchronizedSet(new HashSet<>());
+		this.toLoad = new ConcurrentHashMap<>();
 		this.offsetListener = null;
 		this.register();
+
 		S.async(this::reload); // Reload when worlds are ready
 	}
 
@@ -52,16 +69,6 @@ public class HologramManager extends Ticked {
 				}
 			}
 		}
-
-//		// Update click cooldowns
-//		for (UUID uid : clickCooldowns.keySet()) {
-//			int current = clickCooldowns.get(uid);
-//			if (current == Settings.CLICK_COOLDOWN.getValue()) {
-//				clickCooldowns.remove(uid);
-//			} else {
-//				clickCooldowns.put(uid, current + 1);
-//			}
-//		}
 	}
 
 	public void updateVisibility(@NotNull Player player) {
@@ -250,6 +257,10 @@ public class HologramManager extends Ticked {
 		return hologramMap.values();
 	}
 
+	public Map<String, Set<String>> getToLoad() {
+		return toLoad;
+	}
+
 	private void loadHolograms() {
 		hologramMap.clear();
 
@@ -268,6 +279,11 @@ public class HologramManager extends Ticked {
 					counter++;
 				}
 			} catch (Exception e) {
+				if (e instanceof LocationParseException && ((LocationParseException) e).getReason() == LocationParseException.Reason.WORLD) {
+					// This hologram will load when its world loads.
+					counter++;
+					continue;
+				}
 				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", fileName);
 				e.printStackTrace();
 			}
