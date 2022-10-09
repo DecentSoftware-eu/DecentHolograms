@@ -297,22 +297,25 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /**
-     * Save this hologram to a file.
+     * Save this hologram to a file asynchronously.
      */
     public boolean save() {
-        if (!saveToFile) return true;
-        config.set("location", LocationUtils.asString(location, false));
-        config.set("enabled", enabled);
-        config.set("permission", permission == null || permission.isEmpty() ? null : permission);
-        config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
-        config.set("display-range", displayRange);
-        config.set("update-range", updateRange);
-        config.set("update-interval", updateInterval);
-        config.set("facing", facing);
-        config.set("down-origin", downOrigin);
-        config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-        config.saveData();
-        config.reload();
+        if (saveToFile) {
+            S.async(() -> {
+                config.set("location", LocationUtils.asString(location, false));
+                config.set("enabled", enabled);
+                config.set("permission", permission == null || permission.isEmpty() ? null : permission);
+                config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
+                config.set("display-range", displayRange);
+                config.set("update-range", updateRange);
+                config.set("update-interval", updateInterval);
+                config.set("facing", facing);
+                config.set("down-origin", downOrigin);
+                config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
+                config.saveData();
+                config.reload();
+            });
+        }
         return true;
     }
 
