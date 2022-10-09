@@ -15,7 +15,7 @@ import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.api.world.WorldListener;
 import lombok.Getter;
-import org.apache.commons.lang.Validate;
+import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -27,103 +27,101 @@ import java.io.File;
 @Getter
 public final class DecentHolograms {
 
-	private final JavaPlugin plugin;
-	private HologramManager hologramManager;
-	private CommandManager commandManager;
-	private FeatureManager featureManager;
-	private AnimationManager animationManager;
-	private PacketListener packetListener;
-	private Ticker ticker;
-	private File dataFolder;
-	private boolean updateAvailable;
+    private final JavaPlugin plugin;
+    private HologramManager hologramManager;
+    private CommandManager commandManager;
+    private FeatureManager featureManager;
+    private AnimationManager animationManager;
+    private PacketListener packetListener;
+    private Ticker ticker;
+    private File dataFolder;
+    private boolean updateAvailable;
 
-	/*
-	 *	Constructors
-	 */
+    /*
+     *	Constructors
+     */
 
-	DecentHolograms(JavaPlugin plugin) {
-		Validate.notNull(plugin);
-		this.plugin = plugin;
-	}
+    DecentHolograms(@NonNull JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	/*
-	 *	General Methods
-	 */
+    /*
+     *	General Methods
+     */
 
-	protected void load() {
+    protected void load() {
 
-	}
+    }
 
-	protected void enable() {
-		NMS.init();
-		Settings.reload();
-		Lang.reload();
-		DExecutor.init();
+    protected void enable() {
+        NMS.init();
+        Settings.reload();
+        Lang.reload();
+        DExecutor.init();
 
-		ticker = new Ticker();
-		hologramManager = new HologramManager();
-		commandManager = new CommandManager();
-		featureManager = new FeatureManager();
-		animationManager = new AnimationManager();
-		packetListener = new PacketListener();
+        this.ticker = new Ticker();
+        this.hologramManager = new HologramManager();
+        this.commandManager = new CommandManager();
+        this.featureManager = new FeatureManager();
+        this.animationManager = new AnimationManager();
+        this.packetListener = new PacketListener();
 
-		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerListener(), plugin);
-		pm.registerEvents(new WorldListener(), plugin);
-//		pm.registerEvents(hologramManager.getOffsetListener(), plugin);
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new PlayerListener(), this.plugin);
+        pm.registerEvents(new WorldListener(), this.plugin);
 
-		// Setup metrics
-		Metrics metrics = new Metrics(plugin, 12797);
-		metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
+        // Setup metrics
+        Metrics metrics = new Metrics(this.plugin, 12797);
+        metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
 
-		// Setup update checker
-		if (Settings.CHECK_FOR_UPDATES) {
-			UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
-			updateChecker.getVersion((ver) -> {
-				if (Common.isVersionHigher(ver)) {
-					Lang.sendUpdateMessage(Bukkit.getConsoleSender());
-					updateAvailable = true;
-				}
-			});
-		}
+        // Setup update checker
+        if (Settings.CHECK_FOR_UPDATES) {
+            UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
+            updateChecker.getVersion((ver) -> {
+                if (Common.isVersionHigher(ver)) {
+                    Lang.sendUpdateMessage(Bukkit.getConsoleSender());
+                    this.updateAvailable = true;
+                }
+            });
+        }
 
-		BungeeUtils.init();
-	}
+        BungeeUtils.init();
+    }
 
-	protected void disable() {
-		packetListener.destroy();
-		featureManager.destroy();
-		hologramManager.destroy();
-		animationManager.destroy();
-		ticker.destroy();
+    protected void disable() {
+        this.packetListener.destroy();
+        this.featureManager.destroy();
+        this.hologramManager.destroy();
+        this.animationManager.destroy();
+        this.ticker.destroy();
 
-		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			hologram.destroy();
-		}
+        for (Hologram hologram : Hologram.getCachedHolograms()) {
+            hologram.destroy();
+        }
 
-		BungeeUtils.destroy();
-		DExecutor.shutdown();
-	}
+        BungeeUtils.destroy();
+        DExecutor.shutdown();
+    }
 
-	public void reload() {
-		Settings.reload();
-		Lang.reload();
+    public void reload() {
+        Settings.reload();
+        Lang.reload();
 
-		animationManager.reload();
-		hologramManager.reload();
-		featureManager.reload();
-	}
+        this.animationManager.reload();
+        this.hologramManager.reload();
+        this.featureManager.reload();
+    }
 
-	/**
-	 * Get the data folder for DecentHolograms files.
-	 *
-	 * @return the file.
-	 */
-	public File getDataFolder() {
-		if (dataFolder == null) {
-			dataFolder = new File("plugins/DecentHolograms");
-		}
-		return dataFolder;
-	}
+    /**
+     * Get the data folder for DecentHolograms files.
+     *
+     * @return the file.
+     */
+    public File getDataFolder() {
+        if (this.dataFolder == null) {
+            this.dataFolder = new File("plugins/DecentHolograms");
+        }
+        return this.dataFolder;
+    }
 
 }
