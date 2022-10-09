@@ -387,7 +387,7 @@ public class HologramLine extends HologramObject {
             if (player == null) {
                 continue;
             }
-            if (getParent().getParent().isHideState(player)) {
+            if (parent != null && parent.getParent().isHideState(player)) {
                 continue;
             }
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
