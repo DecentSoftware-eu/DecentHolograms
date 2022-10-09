@@ -15,23 +15,31 @@ public class DExecutor {
 
     /**
      * Initialize DExecutor. This method will set up ExecutorService for DecentHolograms.
-     *
-     * @param threads The amount of threads in the service.
      */
-    public static void init(int threads) {
-        if (initialized) return;
-        threadId = 0;
-        service = Executors.newFixedThreadPool(threads, (runnable) -> {
-            Thread thread = new Thread(runnable);
-            thread.setName("DecentHolograms Thread #" + ++threadId);
-            thread.setPriority(Thread.NORM_PRIORITY);
-            thread.setUncaughtExceptionHandler((t, ex) -> {
-                Common.log("Exception encountered in " + t.getName());
-                ex.printStackTrace();
+    public static void init() {
+        if (!initialized) {
+            threadId = 0;
+            service = Executors.newCachedThreadPool((runnable) -> {
+                Thread thread = new Thread(runnable);
+                thread.setName("DecentHolograms Thread #" + ++threadId);
+                thread.setPriority(Thread.NORM_PRIORITY);
+                thread.setDaemon(true);
+                thread.setUncaughtExceptionHandler((t, ex) -> {
+                    Common.log("Exception encountered in " + t.getName());
+                    ex.printStackTrace();
+                });
+                return thread;
             });
-            return thread;
-        });
-        initialized = true;
+            initialized = true;
+        }
+    }
+
+    /**
+     * Complete all tasks and shutdown the service.
+     */
+    public static void shutdown() {
+        service.shutdown();
+        initialized = false;
     }
 
     /**

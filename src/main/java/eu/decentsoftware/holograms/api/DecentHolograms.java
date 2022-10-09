@@ -58,7 +58,7 @@ public final class DecentHolograms {
 		NMS.init();
 		Settings.reload();
 		Lang.reload();
-		DExecutor.init(1);
+		DExecutor.init();
 
 		ticker = new Ticker();
 		hologramManager = new HologramManager();
@@ -102,6 +102,7 @@ public final class DecentHolograms {
 		}
 
 		BungeeUtils.destroy();
+		DExecutor.shutdown();
 	}
 
 	public void reload() {
