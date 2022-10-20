@@ -82,7 +82,7 @@ public class HologramManager extends Ticked {
 
 	public void updateVisibility(@NotNull Player player, @NotNull Hologram hologram) {
 		// Determine the player's display state of this hologram.
-		if (hologram.isHideState(player)) {
+		if (hologram.isHideState(player) || (!hologram.isDefaultVisibleState() && !hologram.isShowState(player))) {
 			if (hologram.isVisible(player)) {
 				hologram.hide(player);
 			}

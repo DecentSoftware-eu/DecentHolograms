@@ -159,6 +159,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected final FileConfig config;
     protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
     protected final Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<UUID> showPlayers = Collections.synchronizedSet(new HashSet<>());
     protected boolean defaultVisibleState = true;
     protected final DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
@@ -336,6 +337,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         hologram.setUpdateRange(this.getUpdateRange());
         hologram.setUpdateInterval(this.getUpdateInterval());
         hologram.addFlags(this.getFlags().toArray(new EnumFlag[0]));
+        hologram.setDefaultVisibleState(this.isDefaultVisibleState());
+        hologram.showPlayers.addAll(this.showPlayers);
+        hologram.hidePlayers.addAll(this.hidePlayers);
+
         for (int i = 0; i < size(); i++) {
             HologramPage page = getPage(i);
             HologramPage clonePage = page.clone(hologram, i);
@@ -423,13 +428,45 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /**
+     * Set player show state
+     *
+     * @param player player
+     */
+    public void setShowPlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        if (!showPlayers.contains(uniqueId)) {
+            showPlayers.add(player.getUniqueId());
+        }
+    }
+
+    /**
+     * Remove a player show state
+     *
+     * @param player player
+     */
+    public void removeShowPlayer(Player player) {
+        UUID uniqueId = player.getUniqueId();
+        showPlayers.remove(uniqueId);
+    }
+
+    /**
+     * Determine if the player can see the hologram
+     *
+     * @param player player
+     * @return state
+     */
+    public boolean isShowState(Player player) {
+        return showPlayers.contains(player.getUniqueId());
+    }
+
+    /**
      * Show this hologram for given player on a given page.
      *
      * @param player    Given player.
      * @param pageIndex Given page.
      */
     public boolean show(Player player, int pageIndex) {
-        if (!enabled || isHideState(player)) {
+        if (!enabled || isHideState(player) || (!isDefaultVisibleState() && !isShowState(player))) {
             return false;
         }
         HologramPage page = getPage(pageIndex);
