@@ -2,15 +2,16 @@ package eu.decentsoftware.holograms.api.utils.items;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -278,25 +279,12 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder withSkullOwner(String playerName) {
-        try {
-            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-            if (meta != null) meta.setOwner(playerName);
-            itemStack.setItemMeta(meta);
-            if (Version.before(13)) {
-                this.withDurability((short) SkullType.PLAYER.ordinal());
-            }
-        } catch (ClassCastException ignored) {
-        }
+        SkullUtils.setSkullOwner(itemStack, playerName);
         return this;
     }
 
     public String getSkullOwner() {
-        try {
-            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-            if (meta != null) return meta.getOwner();
-        } catch (ClassCastException ignored) {
-        }
-        return null;
+        return SkullUtils.getSkullOwner(itemStack);
     }
 
     public ItemBuilder withSkullTexture(String texture) {
@@ -304,8 +292,13 @@ public class ItemBuilder implements Cloneable {
         return this;
     }
 
+    public ItemBuilder withSkullTextureFromURL(String url) {
+        SkullUtils.setSkullTextureFromURL(itemStack, url);
+        return this;
+    }
+
     public String getSkullTexture() {
-        return SkullUtils.getTexture(itemStack);
+        return SkullUtils.getSkullTexture(itemStack);
     }
 
     public ItemBuilder withData(MaterialData data) {
