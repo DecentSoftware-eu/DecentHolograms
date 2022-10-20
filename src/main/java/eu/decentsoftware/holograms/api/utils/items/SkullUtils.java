@@ -1,86 +1,107 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
-import com.google.common.collect.ForwardingMultimap;
-import eu.decentsoftware.holograms.api.utils.reflect.*;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Base64;
+import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Utility class for modifying the textures or owners or skull ItemStacks.
+ * All ItemStacks modified by this class have to be of type either SKULL_ITEM
+ * or PLAYER_HEAD in versions 1.13 and up.
+ *
+ * @author d0by
+ */
 @UtilityClass
 public final class SkullUtils {
 
-    /*
-     * TODO:
-     *  - Get/Set owner
-     *  - Get textures of owners from the mojang api
+    private static Field PROFILE_FIELD;
+    private static Method SET_PROFILE_METHOD;
+
+    /**
+     * Get the Base64 texture of the given skull ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @return The skull texture. (Base64)
      */
-
-    private static boolean initialized = false;
-    private static ReflectField<?> PROFILE_FIELD;
-    private static ReflectMethod PROFILE_GET_PROPERTIES_METHOD;
-    private static ReflectConstructor PROFILE_CONSTRUCTOR;
-    private static ReflectMethod PROPERTY_GET_VALUE_METHOD;
-    private static ReflectConstructor PROPERTY_CONSTRUCTOR;
-
-    private static void init() {
-        Class<?> craftMetaSkullClass = ReflectionUtil.getObcClass("inventory.CraftMetaSkull");
-        Class<?> gameProfileClass = ReflectionUtil.getClass("com.mojang.authlib.GameProfile");
-        Class<?> propertyClass = ReflectionUtil.getClass("com.mojang.authlib.properties.Property");
-        PROFILE_FIELD = new ReflectField<>(craftMetaSkullClass, "profile");
-        PROFILE_GET_PROPERTIES_METHOD = new ReflectMethod(gameProfileClass, "getProperties");
-        PROFILE_CONSTRUCTOR = new ReflectConstructor(gameProfileClass, UUID.class, String.class);
-        PROPERTY_GET_VALUE_METHOD = new ReflectMethod(propertyClass, "getValue");
-        PROPERTY_CONSTRUCTOR = new ReflectConstructor(propertyClass, String.class, String.class);
-        initialized = true;
-    }
-
     @Nullable
-    public static String getTexture(@NonNull ItemStack itemStack) {
+    public static String getSkullTexture(@NonNull ItemStack itemStack) {
         try {
-            if (!initialized) {
-                init();
-            }
-
-            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-            if (meta == null) {
+            ItemMeta meta = itemStack.getItemMeta();
+            if (!(meta instanceof SkullMeta)) {
                 return null;
             }
 
-            Object profile = PROFILE_FIELD.getValue(meta);
+            if (PROFILE_FIELD == null) {
+                PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
+                PROFILE_FIELD.setAccessible(true);
+            }
+
+            GameProfile profile = (GameProfile) PROFILE_FIELD.get(meta);
             if (profile == null) {
                 return null;
             }
 
-            ForwardingMultimap<String, Object> properties = PROFILE_GET_PROPERTIES_METHOD.invoke(profile);
-            Object property = properties.get("textures");
-            if (property != null) {
-                return PROPERTY_GET_VALUE_METHOD.invoke(property);
+            PropertyMap properties = profile.getProperties();
+            Collection<Property> property = properties.get("textures");
+            if (property != null && !property.isEmpty()) {
+                return property.stream().findFirst().get().getValue();
             }
-        } catch (ClassCastException ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * Get the Base64 texture of the given skull ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @return The skull texture. (Base64)
+     * @deprecated Use {@link #getSkullTexture(ItemStack)} instead.
+     */
+    @Deprecated
+    @Nullable
+    public static String getTexture(@NonNull ItemStack itemStack) {
+        return getSkullTexture(itemStack);
+    }
+
+    /**
+     * Set the Base64 texture of the given skull ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @param texture   The new skull texture (Base64).
+     */
     public static void setSkullTexture(@NonNull ItemStack itemStack, @NonNull String texture) {
         try {
-            if (!initialized) {
-                init();
-            }
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof SkullMeta) {
+                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+                Property property = new Property("textures", texture);
 
-            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-            if (meta != null) {
-                Object profile = PROFILE_CONSTRUCTOR.newInstance(UUID.randomUUID(), null);
-                Object property = PROPERTY_CONSTRUCTOR.newInstance("textures", texture);
-
-                ForwardingMultimap<String, Object> properties = PROFILE_GET_PROPERTIES_METHOD.invoke(profile);
+                PropertyMap properties = profile.getProperties();
                 properties.put("textures", property);
 
-                PROFILE_FIELD.setValue(meta, profile);
+                if (SET_PROFILE_METHOD == null) {
+                    SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                    SET_PROFILE_METHOD.setAccessible(true);
+                }
+                SET_PROFILE_METHOD.invoke(meta, profile);
             }
             itemStack.setItemMeta(meta);
 
@@ -88,8 +109,77 @@ public final class SkullUtils {
                 // noinspection deprecation
                 itemStack.setDurability((short) SkullType.PLAYER.ordinal());
             }
-        } catch (ClassCastException ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Set the texture of the given skull ItemStack from URL.
+     *
+     * @param itemStack The ItemStack.
+     * @param url       The URL to get the texture from.
+     * @since 2.7.5
+     */
+    public static void setSkullTextureFromURL(@NonNull ItemStack itemStack, @NonNull String url) {
+        setSkullTexture(itemStack, getTextureFromURL(url));
+    }
+
+    /**
+     * Get the owner of the given skull ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @return The skull owner.
+     * @since 2.7.5
+     */
+    @Nullable
+    public static String getSkullOwner(@NonNull ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta instanceof SkullMeta) {
+            return ((SkullMeta) meta).getOwner();
+        }
+        return null;
+    }
+
+    /**
+     * Set the owner of the given skull ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @param owner     The new skull owner.
+     * @since 2.7.5
+     */
+    public static void setSkullOwner(@NonNull ItemStack itemStack, @NonNull String owner) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta instanceof SkullMeta) {
+            ((SkullMeta) meta).setOwner(owner);
+
+            itemStack.setItemMeta(meta);
+
+            if (Version.before(13)) {
+                // noinspection deprecation
+                itemStack.setDurability((short) SkullType.PLAYER.ordinal());
+            }
+        }
+    }
+
+    /**
+     * Get a Base64 skull texture from URL.
+     *
+     * @param url The URL.
+     * @return The Base64 texture or null if the URL is invalid.
+     * @since 2.7.5
+     */
+    @Nullable
+    public static String getTextureFromURL(String url) {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+        String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + uri.toString() + "\"}}}";
+        return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }
 
 }
