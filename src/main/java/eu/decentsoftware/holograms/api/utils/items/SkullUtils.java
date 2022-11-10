@@ -32,6 +32,7 @@ public final class SkullUtils {
 
     private static Field PROFILE_FIELD;
     private static Method SET_PROFILE_METHOD;
+    private static boolean INITIALIZED = false;
 
     /**
      * Get the Base64 texture of the given skull ItemStack.
@@ -97,11 +98,27 @@ public final class SkullUtils {
                 PropertyMap properties = profile.getProperties();
                 properties.put("textures", property);
 
-                if (SET_PROFILE_METHOD == null) {
-                    SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-                    SET_PROFILE_METHOD.setAccessible(true);
+                if (SET_PROFILE_METHOD == null && !INITIALIZED) {
+                    try {
+                        // This method only exists in versions 1.16 and up. For older versions we use reflection
+                        // to set the profile field directly.
+                        SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                        SET_PROFILE_METHOD.setAccessible(true);
+                    } catch (NoSuchMethodException e) {
+                        // Server is running an older version.
+                    }
+                    INITIALIZED = true;
                 }
-                SET_PROFILE_METHOD.invoke(meta, profile);
+
+                if (SET_PROFILE_METHOD != null) {
+                    SET_PROFILE_METHOD.invoke(meta, profile);
+                } else {
+                    if (PROFILE_FIELD == null) {
+                        PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
+                        PROFILE_FIELD.setAccessible(true);
+                    }
+                    PROFILE_FIELD.set(meta, profile);
+                }
             }
             itemStack.setItemMeta(meta);
 
