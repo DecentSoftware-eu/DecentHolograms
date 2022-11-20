@@ -299,7 +299,7 @@ public class HologramLine extends HologramObject {
 
         // Update cache
         if (update || string == null) {
-            string = text;
+            string = text == null ? "" : null;
             // Parse placeholders.
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
                 string = parsePlaceholders(string, player, containsPlaceholders);
@@ -340,6 +340,12 @@ public class HologramLine extends HologramObject {
                 .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
         if (papi) {
             string = PAPI.setPlaceholders(player, string);
+            if (string == null) {
+                // Some PlacehoderAPI placeholders might be replaced with null, so if the line content
+                // is just a single placeholder, there is a possibility that the line will be null. So,
+                // if that happens, just replace the null with an empty string.
+                string = "";
+            }
         }
         return string;
     }
