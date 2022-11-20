@@ -299,7 +299,7 @@ public class HologramLine extends HologramObject {
 
         // Update cache
         if (update || string == null) {
-            string = text == null ? "" : null;
+            string = text == null ? "" : text;
             // Parse placeholders.
             if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
                 string = parsePlaceholders(string, player, containsPlaceholders);
