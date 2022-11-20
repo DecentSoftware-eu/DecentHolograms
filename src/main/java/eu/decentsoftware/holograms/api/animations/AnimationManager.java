@@ -8,7 +8,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
-import org.apache.commons.lang.Validate;
+import lombok.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,9 +58,8 @@ public class AnimationManager extends Ticked {
         return step.get();
     }
 
-    public String parseTextAnimations(String string) {
-        Validate.notNull(string);
-
+    @NonNull
+    public String parseTextAnimations(@NonNull String string) {
         Matcher matcher = ANIMATION_PATTERN.matcher(string);
         while (matcher.find()) {
             String animationName = matcher.group(1);
@@ -83,24 +82,24 @@ public class AnimationManager extends Ticked {
         return string;
     }
 
-    public boolean containsAnimations(String string) {
+    public boolean containsAnimations(@NonNull String string) {
         Matcher matcher = ANIMATION_PATTERN.matcher(string);
         return matcher.find() || string.contains("&u");
     }
 
-    public TextAnimation registerAnimation(String name, TextAnimation animation) {
+    public TextAnimation registerAnimation(@NonNull String name, @NonNull TextAnimation animation) {
         return this.animationMap.put(name, animation);
     }
 
-    public TextAnimation registerAnimation(TextAnimation animation) {
+    public TextAnimation registerAnimation(@NonNull TextAnimation animation) {
         return this.animationMap.put(animation.getName(), animation);
     }
 
-    public TextAnimation unregisterAnimation(String name) {
+    public TextAnimation unregisterAnimation(@NonNull String name) {
         return animationMap.remove(name);
     }
 
-    public TextAnimation getAnimation(String name) {
+    public TextAnimation getAnimation(@NonNull String name) {
         return animationMap.get(name);
     }
 

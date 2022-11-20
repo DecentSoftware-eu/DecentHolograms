@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.animations.text;
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
+import lombok.NonNull;
 
 public class BurnAnimation extends TextAnimation {
 
@@ -11,7 +12,7 @@ public class BurnAnimation extends TextAnimation {
     }
 
     @Override
-    public String animate(String string, long step, String... args) {
+    public String animate(@NonNull String string, long step, String... args) {
         StringBuilder specialColors = new StringBuilder();
         for (String color : IridiumColorAPI.SPECIAL_COLORS) {
             if (string.contains(color)) {

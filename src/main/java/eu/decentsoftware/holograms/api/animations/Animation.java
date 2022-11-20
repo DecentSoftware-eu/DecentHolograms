@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.animations;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,16 +9,16 @@ import java.util.List;
 @Getter
 public abstract class Animation {
 
-    private final String name;
+    private final @NonNull String name;
     private final List<String> aliases;
     private final int speed;
     private final int pause;
 
-    public Animation(String name, int speed, int pause) {
+    public Animation(@NonNull String name, int speed, int pause) {
         this(name, speed, pause, new String[0]);
     }
 
-    public Animation(String name, int speed, int pause, String... aliases) {
+    public Animation(@NonNull String name, int speed, int pause, String... aliases) {
         this.name = name;
         this.speed = speed;
         this.pause = pause;
@@ -33,7 +34,7 @@ public abstract class Animation {
         return Math.min(currentStep, maxSteps);
     }
 
-    public boolean isIdentifier(String string) {
+    public boolean isIdentifier(@NonNull String string) {
         return name.equalsIgnoreCase(string) || aliases.contains(string.toLowerCase());
     }
 

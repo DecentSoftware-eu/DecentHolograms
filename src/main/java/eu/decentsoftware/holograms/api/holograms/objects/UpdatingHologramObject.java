@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.holograms.objects;
 
 import eu.decentsoftware.holograms.api.Settings;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Location;
 
@@ -21,7 +22,7 @@ public abstract class UpdatingHologramObject extends HologramObject {
      *	Constructors
      */
 
-    public UpdatingHologramObject(Location location) {
+    public UpdatingHologramObject(@NonNull Location location) {
         super(location);
     }
 

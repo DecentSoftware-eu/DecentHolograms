@@ -18,6 +18,7 @@ import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,7 +41,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Hologram Cache
      */
 
-    private static final Map<String, Hologram> CACHED_HOLOGRAMS;
+    private static final @NonNull Map<String, Hologram> CACHED_HOLOGRAMS;
 
     static {
         CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
@@ -154,35 +155,35 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Fields
      */
 
-    protected final String name;
+    protected final @NonNull String name;
     protected boolean saveToFile;
-    protected final FileConfig config;
-    protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
-    protected final Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
-    protected final Set<UUID> showPlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final @Nullable FileConfig config;
+    protected final @NonNull Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
+    protected final @NonNull Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final @NonNull Set<UUID> showPlayers = Collections.synchronizedSet(new HashSet<>());
     protected boolean defaultVisibleState = true;
-    protected final DList<HologramPage> pages = new DList<>();
+    protected final @NonNull DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
-    private final AtomicInteger tickCounter;
+    private final @NonNull AtomicInteger tickCounter;
 
     /*
      *	Constructors
      */
 
-    public Hologram(String name, Location location) {
+    public Hologram(@NonNull String name, @NonNull Location location) {
         this(name, location, true);
     }
 
-    public Hologram(String name, Location location, boolean saveToFile) {
+    public Hologram(@NonNull String name, @NonNull Location location, boolean saveToFile) {
         this(name, location, saveToFile ? new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name)) : null);
     }
 
-    public Hologram(String name, Location location, FileConfig config) {
+    public Hologram(@NonNull String name, @NonNull Location location, @Nullable FileConfig config) {
         this(name, location, config, true);
     }
 
-    public Hologram(String name, Location location, FileConfig config, boolean enabled) {
+    public Hologram(@NonNull String name, @NonNull Location location, @Nullable FileConfig config, boolean enabled) {
         super(location);
         this.name = name;
         this.config = config;
@@ -282,7 +283,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     @Override
-    public void setLocation(Location location) {
+    public void setLocation(@NonNull Location location) {
         super.setLocation(location);
         this.hideClickableEntitiesAll();
         this.showClickableEntitiesAll();
@@ -328,7 +329,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param temp     True if the clone should only exist until the next reload. (Won't save to file)
      * @return Cloned instance of this line.
      */
-    public Hologram clone(String name, Location location, boolean temp) {
+    public Hologram clone(@NonNull String name, @NonNull Location location, boolean temp) {
         Hologram hologram = new Hologram(name, location.clone(), !temp);
         hologram.setDownOrigin(this.isDownOrigin());
         hologram.setPermission(this.getPermission());
@@ -353,7 +354,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return hologram;
     }
 
-    public boolean onClick(Player player, int entityId, ClickType clickType) {
+    public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
         if (this.hasFlag(EnumFlag.DISABLE_ACTIONS)) {
             return false;
         }
@@ -369,7 +370,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return false;
     }
 
-    public void onQuit(Player player) {
+    public void onQuit(@NonNull Player player) {
         hide(player);
         removeHidePlayer(player);
         viewerPages.remove(player.getUniqueId());
@@ -400,7 +401,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *
      * @param player player
      */
-    public void setHidePlayer(Player player) {
+    public void setHidePlayer(@NonNull Player player) {
         UUID uniqueId = player.getUniqueId();
         if (!hidePlayers.contains(uniqueId)) {
             hidePlayers.add(player.getUniqueId());
@@ -412,7 +413,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *
      * @param player player
      */
-    public void removeHidePlayer(Player player) {
+    public void removeHidePlayer(@NonNull Player player) {
         UUID uniqueId = player.getUniqueId();
         hidePlayers.remove(uniqueId);
     }
@@ -423,7 +424,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player player
      * @return state
      */
-    public boolean isHideState(Player player) {
+    public boolean isHideState(@NonNull Player player) {
         return hidePlayers.contains(player.getUniqueId());
     }
 
@@ -432,7 +433,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *
      * @param player player
      */
-    public void setShowPlayer(Player player) {
+    public void setShowPlayer(@NonNull Player player) {
         UUID uniqueId = player.getUniqueId();
         if (!showPlayers.contains(uniqueId)) {
             showPlayers.add(player.getUniqueId());
@@ -444,7 +445,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *
      * @param player player
      */
-    public void removeShowPlayer(Player player) {
+    public void removeShowPlayer(@NonNull Player player) {
         UUID uniqueId = player.getUniqueId();
         showPlayers.remove(uniqueId);
     }
@@ -455,7 +456,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player player
      * @return state
      */
-    public boolean isShowState(Player player) {
+    public boolean isShowState(@NonNull Player player) {
         return showPlayers.contains(player.getUniqueId());
     }
 
@@ -465,7 +466,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player    Given player.
      * @param pageIndex Given page.
      */
-    public boolean show(Player player, int pageIndex) {
+    public boolean show(@NonNull Player player, int pageIndex) {
         if (!enabled || isHideState(player) || (!isDefaultVisibleState() && !isShowState(player))) {
             return false;
         }
@@ -486,7 +487,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return false;
     }
 
-    private void showPageTo(Player player, HologramPage page, int pageIndex) {
+    private void showPageTo(@NonNull Player player, @NonNull HologramPage page, int pageIndex) {
         page.getLines().forEach(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
@@ -500,7 +501,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void update(Player player) {
+    public void update(@NonNull Player player) {
         if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
             return;
         }
@@ -517,7 +518,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void updateAnimations(Player player) {
+    public void updateAnimations(@NonNull Player player) {
         if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
             return;
         }
@@ -534,7 +535,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void hide(Player player) {
+    public void hide(@NonNull Player player) {
         if (isVisible(player)) {
             HologramPage page = getPage(player);
             if (page != null) {
@@ -551,7 +552,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void showClickableEntities(Player player) {
+    public void showClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
         if (page == null || !page.isClickable()) {
             return;
@@ -575,7 +576,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void hideClickableEntities(Player player) {
+    public void hideClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
         if (page == null || !page.isClickable()) return;
         NMS nms = NMS.getInstance();
@@ -594,7 +595,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player Given player.
      * @return Boolean whether the given player is in display range of this hologram object.
      */
-    public boolean isInDisplayRange(Player player) {
+    public boolean isInDisplayRange(@NonNull Player player) {
         return player != null &&
                 player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (displayRange * displayRange);
@@ -607,7 +608,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @return Boolean whether the given player is in update range of this hologram object.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isInUpdateRange(Player player) {
+    public boolean isInUpdateRange(@NonNull Player player) {
         return player != null &&
                 player.getWorld().equals(location.getWorld()) &&
                 player.getLocation().distanceSquared(location) < (updateRange * updateRange);
@@ -623,7 +624,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Viewer Methods
      */
 
-    public int getPlayerPage(@NotNull Player player) {
+    public int getPlayerPage(@NonNull Player player) {
         return viewerPages.getOrDefault(player.getUniqueId(), 0);
     }
 
@@ -681,7 +682,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return pages.get(index);
     }
 
-    public HologramPage getPage(Player player) {
+    public HologramPage getPage(@NonNull Player player) {
         if (isVisible(player)) {
             return getPage(getPlayerPage(player));
         }

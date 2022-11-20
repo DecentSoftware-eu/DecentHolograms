@@ -10,6 +10,7 @@ import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,9 +26,9 @@ import java.util.logging.Level;
 public class HologramManager extends Ticked {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-	private final Map<String, Hologram> hologramMap;
-	private final Map<UUID, Integer> clickCooldowns;
-	private final Set<HologramLine> temporaryLines;
+	private final @NonNull Map<String, Hologram> hologramMap;
+	private final @NonNull Map<UUID, Integer> clickCooldowns;
+	private final @NonNull Set<HologramLine> temporaryLines;
 	private final OffsetListener offsetListener;
 
 	/**
@@ -42,7 +43,7 @@ public class HologramManager extends Ticked {
 	 *
 	 * @since 2.7.4
 	 */
-	private final Map<String, Set<String>> toLoad;
+	private final @NonNull Map<String, Set<String>> toLoad;
 
 	public HologramManager() {
 		super(20L);
@@ -104,7 +105,7 @@ public class HologramManager extends Ticked {
 	 * @param duration Duration to disappear after. (in ticks)
 	 * @return The Hologram Line.
 	 */
-	public HologramLine spawnTemporaryHologramLine(Location location, String content, long duration) {
+	public HologramLine spawnTemporaryHologramLine(@NonNull Location location, @NonNull String content, long duration) {
 		HologramLine line = new HologramLine(null, location, content);
 		temporaryLines.add(line);
 		line.show();
@@ -115,7 +116,7 @@ public class HologramManager extends Ticked {
 		return line;
 	}
 
-	public boolean onClick(Player player, int entityId, ClickType clickType) {
+	public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
 		if (player == null || clickType == null) {
 			return false;
 		}
@@ -138,7 +139,7 @@ public class HologramManager extends Ticked {
 		return false;
 	}
 
-	public void onQuit(Player player) {
+	public void onQuit(@NonNull Player player) {
 		Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player));
 	}
 
@@ -174,7 +175,7 @@ public class HologramManager extends Ticked {
 	 *
 	 * @param player Given player.
 	 */
-	public void showAll(Player player) {
+	public void showAll(@NonNull Player player) {
 		for (Hologram hologram : getHolograms()) {
 			if (hologram.isEnabled()) {
 				hologram.show(player, hologram.getPlayerPage(player));
@@ -190,7 +191,7 @@ public class HologramManager extends Ticked {
 	 *
 	 * @param player Given player.
 	 */
-	public void hideAll(Player player) {
+	public void hideAll(@NonNull Player player) {
 		for (Hologram hologram : getHolograms()) {
 			hologram.hideAll();
 		}
@@ -205,7 +206,7 @@ public class HologramManager extends Ticked {
 	 * @param name Name of the hologram.
 	 * @return Boolean whether a hologram with the given name is registered in this manager.
 	 */
-	public boolean containsHologram(String name) {
+	public boolean containsHologram(@NonNull String name) {
 		return hologramMap.containsKey(name);
 	}
 
@@ -215,7 +216,7 @@ public class HologramManager extends Ticked {
 	 * @param hologram New hologram.
 	 * @return The new hologram or null if it wasn't registered successfully.
 	 */
-	public Hologram registerHologram(Hologram hologram) {
+	public Hologram registerHologram(@NonNull Hologram hologram) {
 		return hologramMap.put(hologram.getName(), hologram);
 	}
 
@@ -225,7 +226,7 @@ public class HologramManager extends Ticked {
 	 * @param name Name of the hologram.
 	 * @return The hologram or null if it wasn't found.
 	 */
-	public Hologram getHologram(String name) {
+	public Hologram getHologram(@NonNull String name) {
 		return hologramMap.get(name);
 	}
 
@@ -235,7 +236,7 @@ public class HologramManager extends Ticked {
 	 * @param name Name of the hologram.
 	 * @return The hologram or null if it wasn't found.
 	 */
-	public Hologram removeHologram(String name) {
+	public Hologram removeHologram(@NonNull String name) {
 		return hologramMap.remove(name);
 	}
 
@@ -253,10 +254,12 @@ public class HologramManager extends Ticked {
 	 *
 	 * @return Collection of all registered holograms.
 	 */
+	@NonNull
 	public Collection<Hologram> getHolograms() {
 		return hologramMap.values();
 	}
 
+	@NonNull
 	public Map<String, Set<String>> getToLoad() {
 		return toLoad;
 	}

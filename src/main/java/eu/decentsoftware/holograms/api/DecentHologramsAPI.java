@@ -1,12 +1,13 @@
 package eu.decentsoftware.holograms.api;
 
+import lombok.NonNull;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DecentHologramsAPI {
 
 	private static DecentHolograms implementation;
 
-	public static void onLoad(JavaPlugin plugin) {
+	public static void onLoad(@NonNull JavaPlugin plugin) {
 		if (implementation != null) return;
 		implementation = new DecentHolograms(plugin);
 		implementation.load();

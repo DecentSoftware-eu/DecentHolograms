@@ -24,6 +24,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -112,16 +113,16 @@ public class HologramLine extends HologramObject {
      *	Fields
      */
 
-    private final HologramPage parent;
-    private final Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
-    private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
+    private final @Nullable HologramPage parent;
+    private final @NonNull Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
+    private final @NonNull Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
     private HologramLineType type;
     private int[] entityIds = new int[2];
-    private AtomicDouble offsetX = new AtomicDouble(0d);
-    private AtomicDouble offsetY = new AtomicDouble(0d);
-    private AtomicDouble offsetZ = new AtomicDouble(0d);
+    private final @NonNull AtomicDouble offsetX = new AtomicDouble(0d);
+    private final @NonNull AtomicDouble offsetY = new AtomicDouble(0d);
+    private final @NonNull AtomicDouble offsetZ = new AtomicDouble(0d);
     private double height;
-    private String content;
+    private @NonNull String content;
     private String text;
     private HologramItem item;
     private HologramEntity entity;
@@ -133,7 +134,7 @@ public class HologramLine extends HologramObject {
      *	Constructors
      */
 
-    public HologramLine(HologramPage parent, Location location, String content) {
+    public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NonNull String content) {
         super(location);
         this.parent = parent;
         NMS nms = NMS.getInstance();
@@ -156,7 +157,7 @@ public class HologramLine extends HologramObject {
                 "} " + super.toString();
     }
 
-    public void setContent(String content) {
+    public void setContent(@NonNull String content) {
         this.content = content;
         this.parseContent();
         this.update();
@@ -188,6 +189,7 @@ public class HologramLine extends HologramObject {
         return !hasFlag(EnumFlag.DISABLE_ACTIONS) && (!hasParent() || parent.isClickable());
     }
 
+    @NonNull
     public Location getCenter() {
         Location center = getLocation().clone();
         return hasParent() && parent.getParent().isDownOrigin() ?
@@ -240,6 +242,7 @@ public class HologramLine extends HologramObject {
         setOffsetY(type.getOffsetY());
     }
 
+    @NonNull
     public Map<String, Object> serializeToMap() {
         final Map<String, Object> map = new LinkedHashMap<>();
         map.put("content", content);
@@ -258,7 +261,8 @@ public class HologramLine extends HologramObject {
      * @param location Location of the clone.
      * @return Cloned instance of this line.
      */
-    public HologramLine clone(HologramPage parent, Location location) {
+    @NonNull
+    public HologramLine clone(@Nullable HologramPage parent, @NonNull Location location) {
         HologramLine line = new HologramLine(parent, location, this.getContent());
         line.setHeight(this.getHeight());
         line.setOffsetY(this.getOffsetY());
@@ -275,6 +279,7 @@ public class HologramLine extends HologramObject {
      *
      * @return the type of this line.
      */
+    @NonNull
     public HologramLineType getType() {
         return type != null ? type : HologramLineType.UNKNOWN;
     }
@@ -316,6 +321,7 @@ public class HologramLine extends HologramObject {
         return Common.colorize(string);
     }
 
+    @NonNull
     private List<Player> getPlayers(boolean onlyViewers, Player... players) {
         List<Player> playerList;
         if (players == null || players.length == 0) {
@@ -338,6 +344,7 @@ public class HologramLine extends HologramObject {
         return string;
     }
 
+    @NonNull
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
         for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
@@ -353,7 +360,7 @@ public class HologramLine extends HologramObject {
      * @param player The player.
      * @return True if the player has the permission to see this line, false otherwise.
      */
-    public boolean hasPermission(@NotNull Player player) {
+    public boolean hasPermission(@NonNull Player player) {
         return permission == null || permission.isEmpty() || player.hasPermission(permission);
     }
 
@@ -364,7 +371,7 @@ public class HologramLine extends HologramObject {
      *
      * @param player The player to update visbility for.
      */
-    public void updateVisibility(@NotNull Player player) {
+    public void updateVisibility(@NonNull Player player) {
         if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
             hide(player);
         } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
@@ -521,12 +528,12 @@ public class HologramLine extends HologramObject {
         }
     }
 
-    public boolean isInDisplayRange(Player player) {
+    public boolean isInDisplayRange(@NonNull Player player) {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isInUpdateRange(Player player) {
+    public boolean isInUpdateRange(@NonNull Player player) {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
 
@@ -559,12 +566,12 @@ public class HologramLine extends HologramObject {
      */
 
     @Override
-    public boolean hasFlag(EnumFlag flag) {
+    public boolean hasFlag(@NonNull EnumFlag flag) {
         return super.hasFlag(flag) || (parent != null && parent.getParent().hasFlag(flag));
     }
 
     @Override
-    public boolean canShow(Player player) {
+    public boolean canShow(@NonNull Player player) {
         return super.canShow(player) && (parent == null || parent.getParent().canShow(player));
     }
 

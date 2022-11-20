@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,25 +12,25 @@ import java.util.List;
 public class CustomTextAnimation extends TextAnimation {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-    private final List<String> steps;
+    private final @NonNull List<String> steps;
 
-    public CustomTextAnimation(String name, int speed, int pause, List<String> steps) {
+    public CustomTextAnimation(@NonNull String name, int speed, int pause, @NonNull List<String> steps) {
         super(name, speed, pause);
         this.steps = steps;
     }
 
-    public CustomTextAnimation(String name, int speed, int pause, List<String> steps, String... aliases) {
+    public CustomTextAnimation(@NonNull String name, int speed, int pause, @NonNull List<String> steps, String... aliases) {
         super(name, speed, pause, aliases);
         this.steps = steps;
     }
 
     @Override
-    public String animate(String string, long step, String... args) {
+    public String animate(@NonNull String string, long step, String... args) {
         int currentStep = getCurrentStep(step, steps.size() - 1);
         return steps.get(currentStep);
     }
 
-    public static CustomTextAnimation fromFile(String fileName) {
+    public static CustomTextAnimation fromFile(@NonNull String fileName) {
         FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "animations/" + fileName);
 
         // Parse animation name

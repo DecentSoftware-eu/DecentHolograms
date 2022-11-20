@@ -1,14 +1,15 @@
 package eu.decentsoftware.holograms.api.animations;
 
+import lombok.NonNull;
 import org.bukkit.Location;
 
 public abstract class MoveAnimation extends Animation {
 
-    public MoveAnimation(String name, int speed, int pause) {
+    public MoveAnimation(@NonNull String name, int speed, int pause) {
         super(name, speed, pause);
     }
 
-    public MoveAnimation(String name, int speed, int pause, String... aliases) {
+    public MoveAnimation(@NonNull String name, int speed, int pause, String... aliases) {
         super(name, speed, pause, aliases);
     }
 

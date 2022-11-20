@@ -12,7 +12,6 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,17 +24,17 @@ public class HologramPage extends FlagHolder {
      */
 
     private int index;
-    private final Hologram parent;
-    private final List<Integer> clickableEntityIds;
-    private final List<HologramLine> lines;
-    private final Map<ClickType, List<Action>> actions;
+    private final @NonNull Hologram parent;
+    private final @NonNull List<Integer> clickableEntityIds;
+    private final @NonNull List<HologramLine> lines;
+    private final @NonNull Map<ClickType, List<Action>> actions;
     protected boolean alwaysFacePlayer;
 
     /*
      *	Constructors
      */
 
-    public HologramPage(@Nonnull Hologram parent, int index) {
+    public HologramPage(@NonNull Hologram parent, int index) {
         this.parent = parent;
         this.index = index;
         this.clickableEntityIds = new ArrayList<>();
@@ -58,6 +57,7 @@ public class HologramPage extends FlagHolder {
      *
      * @return the current parent hologram of this page.
      */
+    @NonNull
     public Hologram getParent() {
         return parent;
     }
@@ -82,6 +82,7 @@ public class HologramPage extends FlagHolder {
         return clickableEntityIds.get(index);
     }
 
+    @NonNull
     public Location getCenter() {
         Location center = parent.getLocation().clone();
         if (parent.isDownOrigin()) {
@@ -101,6 +102,7 @@ public class HologramPage extends FlagHolder {
         return this.lines.size();
     }
 
+    @NonNull
     public Map<String, Object> serializeToMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         List<Map<String, Object>> linesMap = new ArrayList<>();
@@ -118,7 +120,8 @@ public class HologramPage extends FlagHolder {
         return map;
     }
 
-    public HologramPage clone(Hologram parent, int index) {
+    @NonNull
+    public HologramPage clone(@NonNull Hologram parent, int index) {
         HologramPage page = new HologramPage(parent, index);
         for (HologramLine line : getLines()) {
             page.addLine(line.clone(page, page.getNextLineLocation()));
@@ -197,7 +200,7 @@ public class HologramPage extends FlagHolder {
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
      */
-    public boolean setLine(int index, String content) {
+    public boolean setLine(int index, @NonNull String content) {
         if (index < 0 || index >= size()) {
             return false;
         }
@@ -297,14 +300,14 @@ public class HologramPage extends FlagHolder {
         return clickableEntityIds.contains(eid) || lines.stream().anyMatch(line -> line.getEntityIds()[1] == eid);
     }
 
-    public void addAction(ClickType clickType, Action action) {
+    public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
         if (!actions.containsKey(clickType)) {
             actions.put(clickType, new ArrayList<>());
         }
         actions.get(clickType).add(action);
     }
 
-    public void executeActions(Player player, ClickType clickType) {
+    public void executeActions(@NonNull Player player, @NonNull ClickType clickType) {
         if (!actions.containsKey(clickType)) return;
         for (Action action : actions.get(clickType)) {
             String actionName = action.getType().getName();
@@ -327,15 +330,15 @@ public class HologramPage extends FlagHolder {
         actions.clear();
     }
 
-    public void clearActions(ClickType clickType) {
+    public void clearActions(@NonNull ClickType clickType) {
         actions.remove(clickType);
     }
 
-    public Action removeAction(ClickType clickType, int index) {
+    public Action removeAction(@NonNull ClickType clickType, int index) {
         return actions.get(clickType).remove(index);
     }
 
-    public List<Action> getActions(ClickType clickType) {
+    public List<Action> getActions(@NonNull ClickType clickType) {
         if (!actions.containsKey(clickType)) {
             return new ArrayList<>();
         }

@@ -3,13 +3,12 @@ package eu.decentsoftware.holograms.api.holograms.objects;
 import com.google.common.collect.ImmutableSet;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,9 +21,9 @@ public abstract class HologramObject extends FlagHolder {
      */
 
     protected boolean enabled = true;
-    protected DisableCause cause = DisableCause.NONE;
-    protected final Set<UUID> viewers = Collections.synchronizedSet(new HashSet<>());
-    protected Location location;
+    protected @NonNull DisableCause cause = DisableCause.NONE;
+    protected final @NonNull Set<UUID> viewers = Collections.synchronizedSet(new HashSet<>());
+    protected @NonNull Location location;
     protected String permission = null;
     protected float facing = 0.0f;
 
@@ -32,7 +31,7 @@ public abstract class HologramObject extends FlagHolder {
      *	Constructors
      */
 
-    public HologramObject(@Nonnull Location location) {
+    public HologramObject(@NonNull Location location) {
         this.location = location;
         this.location.setPitch(0.0f);
     }
@@ -69,29 +68,29 @@ public abstract class HologramObject extends FlagHolder {
     public void disable() {
         disable(DisableCause.API);
     }
-    
+
     /**
      * Disable updating and showing to players automatically.
      * <br>Allows you to set a {@link DisableCause cause} for why the Hologram was disabled.
-     * 
+     *
      * @param cause The cause for why the Hologram was disabled.
-     * 
      * @throws IllegalArgumentException When {@link DisableCause#NONE} is used as disable cause.
      */
-    public void disable(@NotNull DisableCause cause) {
+    public void disable(@NonNull DisableCause cause) {
         if (cause == DisableCause.NONE)
             throw new IllegalArgumentException("Cannot use DisableCause NONE while disabling Hologram!");
-        
+
         this.cause = cause;
         this.enabled = false;
     }
-    
+
     /**
      * The cause for disabling the hologram.
      * <br>May return {@link DisableCause#NONE} if the Hologram is still enabled.
-     * 
+     *
      * @return The cause of why the Hologram is disabled, or {@link DisableCause#NONE} if it is still enabled.
      */
+    @NonNull
     public DisableCause getDisableCause() {
         return cause;
     }
@@ -123,7 +122,7 @@ public abstract class HologramObject extends FlagHolder {
         this.location.setYaw(facing);
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(@NonNull Location location) {
         this.location = location;
         this.location.setYaw(facing);
         this.location.setPitch(0.0f);
@@ -138,6 +137,7 @@ public abstract class HologramObject extends FlagHolder {
      *
      * @return List of all players that currently see this hologram.
      */
+    @NonNull
     public Set<UUID> getViewers() {
         return ImmutableSet.copyOf(viewers);
     }
@@ -147,6 +147,7 @@ public abstract class HologramObject extends FlagHolder {
      *
      * @return List of all players that currently see this hologram.
      */
+    @NonNull
     public List<Player> getViewerPlayers() {
         return getViewers().stream()
                 .map(Bukkit::getPlayer)
@@ -160,7 +161,7 @@ public abstract class HologramObject extends FlagHolder {
      * @param player Given player.
      * @return Boolean whether this hologram object is visible to the given player.
      */
-    public boolean isVisible(Player player) {
+    public boolean isVisible(@NonNull Player player) {
         return viewers.contains(player.getUniqueId());
     }
 

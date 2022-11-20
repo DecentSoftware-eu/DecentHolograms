@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.animations.text;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
+import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ColorsAnimation extends TextAnimation {
     }
 
     @Override
-    public String animate(String string, long step, String... args) {
+    public String animate(@NonNull String string, long step, String... args) {
         List<String> colors = DEFAULT_COLORS;
         if (args != null && args.length > 0) {
             colors.clear();

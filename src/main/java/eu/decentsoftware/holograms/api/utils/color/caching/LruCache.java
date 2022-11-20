@@ -26,7 +26,7 @@ public class LruCache {
     }
 
     public String getResult(String input) {
-        if (MAP.containsKey(input)) {
+        if (input != null && MAP.containsKey(input)) {
             LruElement curr = MAP.get(input);
             QUE.remove(input);
             QUE.addFirst(input);
@@ -37,6 +37,9 @@ public class LruCache {
     }
 
     public void put(String input, String result) {
+        if (input == null || result == null) {
+            return;
+        }
         if (MAP.containsKey(input)) {
             QUE.remove(input);
         } else {
