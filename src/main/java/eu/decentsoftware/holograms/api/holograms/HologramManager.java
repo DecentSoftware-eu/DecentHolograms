@@ -281,6 +281,11 @@ public class HologramManager extends Ticked {
 			} catch (Exception e) {
 				if (e instanceof LocationParseException && ((LocationParseException) e).getReason() == LocationParseException.Reason.WORLD) {
 					// This hologram will load when its world loads.
+					String worldName = ((LocationParseException) e).getWorldName();
+					if (!toLoad.containsKey(worldName)) {
+						toLoad.put(worldName, new HashSet<>());
+					}
+					toLoad.get(worldName).add(fileName);
 					counter++;
 					continue;
 				}
