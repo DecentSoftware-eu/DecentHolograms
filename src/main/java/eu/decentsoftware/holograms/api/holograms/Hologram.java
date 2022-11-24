@@ -133,7 +133,19 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 for (ClickType clickType : ClickType.values()) {
                     if (actionsMap.containsKey(clickType.name())) {
                         List<String> clickTypeActions = actionsMap.get(clickType.name());
-                        clickTypeActions.forEach(action -> page.addAction(clickType, new Action(action)));
+                        for (String clickTypeAction : clickTypeActions) {
+                            try {
+                                page.addAction(clickType, new Action(clickTypeAction));
+                            } catch (Exception e) {
+                                DECENT_HOLOGRAMS.getPlugin().getLogger().warning(String.format(
+                                        "Failed to parse action '%s' for hologram '%s' at page %s! Skipping...",
+                                        clickTypeAction,
+                                        hologram.getName(),
+                                        page.getIndex()
+                                ));
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }

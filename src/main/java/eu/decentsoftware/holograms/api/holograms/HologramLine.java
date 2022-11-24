@@ -80,7 +80,11 @@ public class HologramLine extends HologramObject {
             if (flags instanceof List) {
                 try {
                     line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    DECENT_HOLOGRAMS.getPlugin().getLogger().warning(String.format(
+                            "Flags for line %s seem to be invalid!",
+                            content
+                    ));
                 }
             }
         }
