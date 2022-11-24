@@ -264,6 +264,7 @@ public class HologramPage extends FlagHolder {
      *
      * @return the Location at the bottom of this hologram page that's available for a new line.
      */
+    @NonNull
     public Location getNextLineLocation() {
         if (size() == 0) {
             return parent.getLocation().clone();
@@ -277,6 +278,7 @@ public class HologramPage extends FlagHolder {
      *
      * @return List of all lines in this hologram page.
      */
+    @NonNull
     public List<HologramLine> getLines() {
         return ImmutableList.copyOf(lines);
     }

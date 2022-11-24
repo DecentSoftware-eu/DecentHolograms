@@ -361,10 +361,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         HologramPage page = getPage(player);
         if (page != null && page.hasEntity(entityId)) {
             if (EventFactory.handleHologramInteractEvent(player, this, page, clickType, entityId)) {
-                if (page.isClickable()) {
-                    page.executeActions(player, clickType);
-                    return true;
-                }
+                page.executeActions(player, clickType);
+                return true;
             }
         }
         return false;
