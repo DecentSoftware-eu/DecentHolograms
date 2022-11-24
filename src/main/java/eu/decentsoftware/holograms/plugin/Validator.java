@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -90,11 +91,13 @@ public class Validator {
 	 *	String & Arrays Methods
 	 */
 
+	@NonNull
 	public static String getString(String[] arr, int beginIndex, int endIndex) {
 		return String.join(" ", Arrays.copyOfRange(arr, beginIndex, endIndex));
 	}
 
-	public static String getLineContent(String[] args, int beginIndex) {
+	@NonNull
+	public static String getLineContent(String @NonNull [] args, int beginIndex) {
 		String text = Settings.DEFAULT_TEXT;
 		if (args.length > beginIndex) {
 			String[] textArray = Arrays.copyOfRange(args, beginIndex, args.length);
@@ -103,7 +106,8 @@ public class Validator {
 		return text;
 	}
 
-	public static String getLineContent(Player player, String[] args, int beginIndex) {
+	@NonNull
+	public static String getLineContent(Player player, String @NonNull [] args, int beginIndex) {
 		String text = Settings.DEFAULT_TEXT;
 		if (args.length > beginIndex) {
 			String[] textArray = Arrays.copyOfRange(args, beginIndex, args.length);

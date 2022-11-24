@@ -1,6 +1,8 @@
 package eu.decentsoftware.holograms.api.utils;
 
 import eu.decentsoftware.holograms.api.utils.collection.DList;
+import lombok.NonNull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -50,7 +52,9 @@ public class DExecutor {
      * @param runnables the runnables.
      */
     public static void schedule(Runnable... runnables) {
-        if (!initialized) return;
+        if (!initialized) {
+            throw new IllegalStateException("DExecutor is not initialized!");
+        }
         if (runnables == null || runnables.length == 0) {
             return;
         }
@@ -62,9 +66,14 @@ public class DExecutor {
      *
      * @param estimate The estimated amount of runnables.
      * @return The new instance.
+     * @throws IllegalStateException If the service is not initialized.
      */
+    @NonNull
+    @Contract("_ -> new")
     public static DExecutor create(int estimate) {
-        if (!initialized) return null;
+        if (!initialized) {
+            throw new IllegalStateException("DExecutor is not initialized!");
+        }
         return new DExecutor(service, estimate);
     }
 
@@ -73,14 +82,14 @@ public class DExecutor {
      *
      * @param runnable The runnable.
      */
-    public static void execute(Runnable runnable) {
+    public static void execute(@NonNull Runnable runnable) {
         service.execute(runnable);
     }
 
-    private final ExecutorService executor;
-    private final DList<CompletableFuture<Void>> running;
+    private final @NonNull ExecutorService executor;
+    private final @NonNull DList<CompletableFuture<Void>> running;
 
-    DExecutor(ExecutorService executor, int estimate) {
+    DExecutor(@NonNull ExecutorService executor, int estimate) {
         this.executor = executor;
         this.running = new DList<>(estimate);
     }
@@ -91,8 +100,8 @@ public class DExecutor {
      * @param r The runnable.
      * @return CompletableFuture executing the runnable.
      */
-    public CompletableFuture<Void> queue(Runnable r) {
-        synchronized(running) {
+    public CompletableFuture<Void> queue(@NonNull Runnable r) {
+        synchronized (running) {
             CompletableFuture<Void> c = CompletableFuture.runAsync(r, executor);
             running.add(c);
             return c;
@@ -123,11 +132,11 @@ public class DExecutor {
      * Complete all scheduled runnables.
      */
     public void complete() {
-        synchronized(running) {
+        synchronized (running) {
             try {
                 CompletableFuture.allOf(running.toArray(new CompletableFuture[0])).get();
                 running.clear();
-            } catch(InterruptedException | ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }

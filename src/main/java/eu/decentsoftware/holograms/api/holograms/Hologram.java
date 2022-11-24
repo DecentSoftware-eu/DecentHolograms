@@ -23,6 +23,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,14 +48,18 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
     }
 
-    public static Hologram getCachedHologram(String name) {
+    public static Hologram getCachedHologram(@NonNull String name) {
         return CACHED_HOLOGRAMS.get(name);
     }
 
+    @NonNull
+    @Contract(pure = true)
     public static Set<String> getCachedHologramNames() {
         return CACHED_HOLOGRAMS.keySet();
     }
 
+    @NonNull
+    @Contract(pure = true)
     public static Collection<Hologram> getCachedHolograms() {
         return CACHED_HOLOGRAMS.values();
     }

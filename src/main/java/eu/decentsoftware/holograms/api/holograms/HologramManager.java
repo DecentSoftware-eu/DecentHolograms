@@ -14,7 +14,6 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +26,7 @@ public class HologramManager extends Ticked {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 	private final @NonNull Map<String, Hologram> hologramMap;
-	private final @NonNull Map<UUID, Integer> clickCooldowns;
+	private final @NonNull Map<UUID, Long> clickCooldowns;
 	private final @NonNull Set<HologramLine> temporaryLines;
 	private final OffsetListener offsetListener;
 
@@ -72,7 +71,7 @@ public class HologramManager extends Ticked {
 		}
 	}
 
-	public void updateVisibility(@NotNull Player player) {
+	public void updateVisibility(@NonNull Player player) {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (!hologram.isEnabled()) {
 				continue;
@@ -81,7 +80,7 @@ public class HologramManager extends Ticked {
 		}
 	}
 
-	public void updateVisibility(@NotNull Player player, @NotNull Hologram hologram) {
+	public void updateVisibility(@NonNull Player player, @NonNull Hologram hologram) {
 		// Determine the player's display state of this hologram.
 		if (hologram.isHideState(player) || (!hologram.isDefaultVisibleState() && !hologram.isShowState(player))) {
 			if (hologram.isVisible(player)) {
@@ -105,7 +104,7 @@ public class HologramManager extends Ticked {
 	 * @param duration Duration to disappear after. (in ticks)
 	 * @return The Hologram Line.
 	 */
-	public HologramLine spawnTemporaryHologramLine(@NonNull Location location, @NonNull String content, long duration) {
+	public HologramLine spawnTemporaryHologramLine(@NonNull Location location, String content, long duration) {
 		HologramLine line = new HologramLine(null, location, content);
 		temporaryLines.add(line);
 		line.show();
@@ -117,30 +116,28 @@ public class HologramManager extends Ticked {
 	}
 
 	public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
-		if (player == null || clickType == null) {
-			return false;
-		}
-
 		UUID uid = player.getUniqueId();
-		if (clickCooldowns.containsKey(uid)) {
+
+		// Check if the player is on cooldown.
+		if (clickCooldowns.containsKey(uid) && System.currentTimeMillis() - clickCooldowns.get(uid) < Settings.CLICK_COOLDOWN * 50L) {
 			return false;
 		}
 
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
-			if (!hologram.getLocation().getWorld().equals(player.getLocation().getWorld())) {
-				continue;
-			}
-			if (hologram.onClick(player, entityId, clickType)) {
-				clickCooldowns.put(uid, Settings.CLICK_COOLDOWN);
-				S.async(() -> clickCooldowns.remove(uid), Settings.CLICK_COOLDOWN);
-				return true;
+			if (hologram.getLocation().getWorld().equals(player.getLocation().getWorld())) {
+				if (hologram.onClick(player, entityId, clickType)) {
+					clickCooldowns.put(uid, System.currentTimeMillis());
+					return true;
+				}
 			}
 		}
+
 		return false;
 	}
 
 	public void onQuit(@NonNull Player player) {
 		Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player));
+		clickCooldowns.remove(player.getUniqueId());
 	}
 
 	/**

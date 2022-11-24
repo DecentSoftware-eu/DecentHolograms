@@ -22,7 +22,7 @@ public abstract class Animation {
         this.name = name;
         this.speed = speed;
         this.pause = pause;
-        this.aliases = Arrays.asList(aliases);
+        this.aliases = Arrays.asList(aliases == null ? new String[0] : aliases);
     }
 
     protected int getCurrentStep(long step, int maxSteps) {

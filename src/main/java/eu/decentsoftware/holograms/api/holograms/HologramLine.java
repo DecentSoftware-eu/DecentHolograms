@@ -40,7 +40,8 @@ public class HologramLine extends HologramObject {
      *	Static Methods
      */
 
-    public static HologramLine fromFile(ConfigurationSection config, HologramPage parent, Location location) {
+    @NonNull
+    public static HologramLine fromFile(@NonNull ConfigurationSection config, @Nullable HologramPage parent, @NonNull Location location) {
         HologramLine line = new HologramLine(parent, location, config.getString("content", Settings.DEFAULT_TEXT));
         if (config.isString("permission")) {
             line.setPermission(config.getString("permission", null));
@@ -63,8 +64,9 @@ public class HologramLine extends HologramObject {
         return line;
     }
 
+    @NonNull
     @SuppressWarnings("unchecked")
-    public static HologramLine fromMap(@NonNull Map<String, Object> map, HologramPage parent, Location location) {
+    public static HologramLine fromMap(@NonNull Map<String, Object> map, @Nullable HologramPage parent, @NonNull Location location) {
         String content = (String) map.getOrDefault("content", Settings.DEFAULT_TEXT);
         HologramLine line = new HologramLine(parent, location, content);
         if (map.containsKey("height")) {
@@ -134,13 +136,13 @@ public class HologramLine extends HologramObject {
      *	Constructors
      */
 
-    public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NonNull String content) {
+    public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NotNull String content) {
         super(location);
         this.parent = parent;
         NMS nms = NMS.getInstance();
         this.entityIds[0] = nms.getFreeEntityId();
         this.entityIds[1] = nms.getFreeEntityId();
-        this.content = content;
+        this.content = content == null ? "" : content;
         this.type = HologramLineType.UNKNOWN;
         this.height = Settings.DEFAULT_HEIGHT_TEXT;
         this.parseContent();
@@ -157,8 +159,19 @@ public class HologramLine extends HologramObject {
                 "} " + super.toString();
     }
 
-    public void setContent(@NonNull String content) {
-        this.content = content;
+    /**
+     * Set the content of the line.
+     * <p>
+     * This method also parses the content and updates the line.
+     * <p>
+     * NOTE: The new content can be null but if it is, it will be
+     * replaced with an empty string. It is recommended to not use
+     * null as content.
+     *
+     * @param content The new content of the line.
+     */
+    public void setContent(@NotNull String content) {
+        this.content = content == null ? "" : content;
         this.parseContent();
         this.update();
     }
@@ -333,11 +346,17 @@ public class HologramLine extends HologramObject {
     }
 
     @NotNull
-    private String parsePlaceholders(@NonNull String string, @NonNull Player player, boolean papi) {
-        string = string
-                .replace("{player}", player.getName())
-                .replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1))
-                .replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+    private String parsePlaceholders(@NotNull String string, @NonNull Player player, boolean papi) {
+        if (string == null) {
+            return "";
+        }
+
+        // Replace internal placeholders.
+        string = string.replace("{player}", player.getName());
+        string = string.replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1));
+        string = string.replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+
+        // Replace PlaceholderAPI placeholders.
         if (papi) {
             string = PAPI.setPlaceholders(player, string);
             if (string == null) {
@@ -353,10 +372,11 @@ public class HologramLine extends HologramObject {
     @NonNull
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
-        for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
-            content = content.replace(replacement.getKey(), replacement.getValue());
+        if (content != null && !content.isEmpty()) {
+            for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
+                content = content.replace(replacement.getKey(), replacement.getValue());
+            }
         }
-
         return content;
     }
 
