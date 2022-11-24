@@ -440,10 +440,6 @@ public class PageSubCommand extends DecentCommand {
                 page.clearActions(clickType);
                 hologram.save();
                 Lang.ACTION_CLEARED.send(sender);
-                if (!page.isClickable()) {
-                    hologram.hideAll();
-                    hologram.showAll();
-                }
                 return true;
             };
         }
@@ -475,7 +471,6 @@ public class PageSubCommand extends DecentCommand {
                     Lang.PAGE_DOES_NOT_EXIST.send(sender);
                     return true;
                 }
-                boolean wasClickable = page.isClickable();
                 ClickType clickType = ClickType.fromString(args[2]);
                 if (clickType == null) {
                     Lang.CLICK_TYPE_DOES_NOT_EXIST.send(sender, args[2]);
@@ -490,10 +485,6 @@ public class PageSubCommand extends DecentCommand {
                 page.addAction(clickType, action);
                 hologram.save();
                 Lang.ACTION_ADDED.send(sender);
-                if (!wasClickable) {
-                    hologram.hideAll();
-                    hologram.showAll();
-                }
                 return true;
             };
         }
@@ -536,10 +527,6 @@ public class PageSubCommand extends DecentCommand {
                 page.removeAction(clickType, index - 1);
                 hologram.save();
                 Lang.ACTION_REMOVED.send(sender);
-                if (!page.isClickable()) {
-                    hologram.hideAll();
-                    hologram.showAll();
-                }
                 return true;
             };
         }

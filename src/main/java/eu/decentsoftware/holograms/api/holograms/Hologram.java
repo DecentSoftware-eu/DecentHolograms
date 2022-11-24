@@ -569,7 +569,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null || !page.isClickable()) {
+        if (page == null) {
             return;
         }
 
@@ -593,7 +593,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void hideClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null || !page.isClickable()) return;
+        if (page == null) {
+            return;
+        }
+
+        // Despawn clickable entities
         NMS nms = NMS.getInstance();
         page.getClickableEntityIds().forEach(id -> nms.hideFakeEntities(player, id));
     }
