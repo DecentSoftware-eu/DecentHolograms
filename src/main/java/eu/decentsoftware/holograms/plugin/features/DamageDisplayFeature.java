@@ -36,7 +36,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		enabled = config.getBoolean("damage-display.enabled", enabled);
 		duration = config.getInt("damage-display.duration", duration);
 		appearance = config.getString("damage-display.appearance", appearance);
-		playerOnly = config.getBoolean("damage-display.player-only", playerOnly);
+		playerOnly = config.getBoolean("damage-display.players-only", playerOnly);
 
 		if (enabled) {
 			this.enable();
