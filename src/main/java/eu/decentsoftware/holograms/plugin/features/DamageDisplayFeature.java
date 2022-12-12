@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -20,6 +21,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
 	private int duration = 40;
 	private String appearance = "&c+ {damage}";
+	private boolean playerOnly = true;
 
 	public DamageDisplayFeature() {
 		super("damage_display");
@@ -34,6 +36,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		enabled = config.getBoolean("damage-display.enabled", enabled);
 		duration = config.getInt("damage-display.duration", duration);
 		appearance = config.getString("damage-display.appearance", appearance);
+		playerOnly = config.getBoolean("damage-display.player-only", playerOnly);
 
 		if (enabled) {
 			this.enable();
@@ -75,6 +78,11 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		}
 
 		Entity entity = e.getEntity();
+
+		if(playerOnly && !(entity instanceof Player)) {
+			return;
+		}
+
 		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
 		String text = appearance.replace("{damage}", FeatureCommons.formatNumber(damage));
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
