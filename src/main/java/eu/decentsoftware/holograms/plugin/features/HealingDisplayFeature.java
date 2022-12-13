@@ -23,6 +23,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 	private String appearance = "&a+ {heal}";
 	private boolean displayForPlayers = true;
 	private boolean displayForMobs = true;
+	private double heightOffset = 0.0;
 
 	public HealingDisplayFeature() {
 		super("healing_display");
@@ -37,6 +38,8 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		enabled = config.getBoolean("healing-display.enabled", enabled);
 		duration = config.getInt("healing-display.duration", duration);
 		appearance = config.getString("healing-display.appearance", appearance);
+
+		heightOffset = config.getDouble("healing-display.height", heightOffset);
 
 		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
 		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
@@ -90,7 +93,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 			return;
 		}
 
-		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1 + heightOffset, 0));
 		String text = appearance.replace("{heal}", FeatureCommons.formatNumber(heal));
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}

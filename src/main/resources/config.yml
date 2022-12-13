@@ -80,6 +80,8 @@ damage-display:
   # Damage placeholder: {damage}
   # Animations and Placeholders DO work here
   appearance: '&c{damage}'
+  # Height offset
+  height: 0
 
 
 
@@ -103,7 +105,8 @@ healing-display:
   # Heal placeholder: {heal}
   # Animations and Placeholders DO work here
   appearance: '&a+ {heal}'
-
+  # Height offset
+  height: 0
 
 
 # # # # # # # # # # # # # # # # #
