@@ -70,7 +70,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onDamage(EntityRegainHealthEvent e) {
+	public void onRegain(EntityRegainHealthEvent e) {
 		if (e.isCancelled()) {
 			return;
 		}

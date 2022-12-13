@@ -73,6 +73,8 @@ damage-display:
   players: true
   # Do you want to display damage for mobs? [true/false]
   mobs: true
+  # Do you want to display 0 (or less) damage? [true/false]
+  zero-damage: false
   # How long will the hologram stay in ticks
   duration: 40
   # Damage placeholder: {damage}

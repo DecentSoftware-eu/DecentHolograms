@@ -23,6 +23,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 	private String appearance = "&c+ {damage}";
 	private boolean displayForPlayers = true;
 	private boolean displayForMobs = true;
+	private boolean zeroDamage = false;
 
 	public DamageDisplayFeature() {
 		super("damage_display");
@@ -40,6 +41,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
 		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
 		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
+		zeroDamage = config.getBoolean("damage-display.mobs", zeroDamage);
 
 		if (enabled) {
 			this.enable();
@@ -76,7 +78,8 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		}
 
 		double damage = e.getFinalDamage();
-		if (damage <= 0d) {
+
+		if (damage <= 0d && !zeroDamage) {
 			return;
 		}
 
