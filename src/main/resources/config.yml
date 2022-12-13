@@ -69,8 +69,9 @@ allow-placeholders-inside-animations: false
 damage-display:
   # Do you want this feature enabled? [true/false]
   enabled: false
-  # If true, damage display will be shown only for player damage
+  # Do you want to display damage for players? [true/false]
   players: true
+  # Do you want to display damage for mobs? [true/false]
   mobs: true
   # How long will the hologram stay in ticks
   duration: 40
@@ -91,6 +92,10 @@ damage-display:
 healing-display:
   # Do you want this feature enabled? [true/false]
   enabled: false
+  # Do you want to display healing for players? [true/false]
+  players: true
+  # Do you want to display healing for mobs? [true/false]
+  mobs: true
   # How long will the hologram stay in ticks
   duration: 40
   # Heal placeholder: {heal}
