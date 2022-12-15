@@ -70,7 +70,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static Hologram fromFile(@NotNull String fileName) throws LocationParseException {
+    public static Hologram fromFile(@NotNull String fileName) throws LocationParseException, IllegalArgumentException {
         FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + fileName);
 
         // Parse hologram name
@@ -79,6 +79,15 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             name = fileName.substring("hologram_".length(), fileName.length() - 4);
         } else {
             name = fileName.substring(0, fileName.length() - 4);
+        }
+
+        if (name == null || name.isEmpty()) {
+            // This shouldn't happen when loading holograms from files.
+            throw new IllegalArgumentException("Hologram name cannot be null or empty.");
+        }
+
+        if (Hologram.getCachedHologramNames().contains(name)) {
+            throw new IllegalArgumentException("Hologram with name '" + name + "' already exists.");
         }
 
         // Get hologram location
