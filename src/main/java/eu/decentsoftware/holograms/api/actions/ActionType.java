@@ -122,18 +122,22 @@ public abstract class ActionType {
 		public boolean execute(Player player, String... args) {
 			Validate.notNull(player);
 
-			if (args.length < 1) return true;
+			if (args == null || args.length < 1) {
+				return true;
+			}
+
+			String[] spl = args[0].split(":", 3);
 			Sound sound;
 			try {
-				sound = Sound.valueOf(args[0]);
+				sound = Sound.valueOf(spl[0]);
 			} catch (Throwable ignored) {
 				return true;
 			}
 
-			if (args.length < 3) {
+			if (spl.length < 3) {
 				player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
 			} else {
-				player.playSound(player.getLocation(), sound, Float.parseFloat(args[1]), Float.parseFloat(args[2]));
+				player.playSound(player.getLocation(), sound, Float.parseFloat(spl[1]), Float.parseFloat(spl[2]));
 			}
 			return true;
 		}
