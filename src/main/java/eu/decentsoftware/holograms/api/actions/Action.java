@@ -38,7 +38,7 @@ public class Action {
         }
     }
 
-    public Action(@NonNull ActionType type, @NonNull String data) {
+    public Action(@NonNull ActionType type, @Nullable String data) {
         this.type = type;
         this.data = data;
     }
