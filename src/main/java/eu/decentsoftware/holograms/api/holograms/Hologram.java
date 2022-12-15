@@ -274,10 +274,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     @Override
-    public void disable() {
+    public void disable(@NonNull DisableCause cause) {
+        super.disable();
         this.unregister();
         this.hideAll();
-        super.disable();
     }
 
     @Override
