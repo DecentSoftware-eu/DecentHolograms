@@ -47,7 +47,7 @@ defaults:
 update-checker: true
 
 # Click cooldown in ticks
-click-cooldown: 20
+click-cooldown: 5
 
 # Do we want to replace placeholders inside animation frames?
 #
