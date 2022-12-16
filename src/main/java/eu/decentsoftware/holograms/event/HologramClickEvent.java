@@ -6,13 +6,14 @@ import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This event is called when a player clicks on a Hologram.
+ */
 @Getter
-public class HologramClickEvent extends Event implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
+public class HologramClickEvent extends DecentHologramsEvent implements Cancellable {
+
     private boolean cancelled = false;
     private final @NotNull Player player;
     private final @NotNull Hologram hologram;
@@ -39,12 +40,4 @@ public class HologramClickEvent extends Event implements Cancellable {
         this.cancelled = cancel;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 }
