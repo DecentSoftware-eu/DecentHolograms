@@ -24,7 +24,7 @@ public class ReflectField<T> {
 	@SuppressWarnings("unchecked")
 	public T getValue(Object object) {
 		try {
-			if (field == null) this.init();
+			this.init();
 			return (T) field.get(object);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -34,7 +34,7 @@ public class ReflectField<T> {
 
 	public void setValue(Object object, Object value) {
 		try {
-			if (field == null) this.init();
+			this.init();
 			field.set(object, value);
 		} catch (Exception ignored) {}
 	}
