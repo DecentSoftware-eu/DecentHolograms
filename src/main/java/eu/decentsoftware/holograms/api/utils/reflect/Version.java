@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
+import lombok.NonNull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -24,7 +26,9 @@ public enum Version {
     v1_17_R1(17),
     v1_18_R1(18),
     v1_18_R2(18),
-    v1_19_R1(19);
+    v1_19_R1(19),
+    v1_19_R2(19),
+    ;
 
     /*
      *  Static
@@ -56,20 +60,44 @@ public enum Version {
         return null;
     }
 
+    public static boolean is(int minor) {
+        return CURRENT.getMinor() == minor;
+    }
+
+    public static boolean is(@NonNull Version version) {
+        return CURRENT == version;
+    }
+
     public static boolean after(int minor) {
         return CURRENT.getMinor() > minor;
+    }
+
+    public static boolean after(@NonNull Version version) {
+        return CURRENT.ordinal() > version.ordinal();
     }
 
     public static boolean afterOrEqual(int minor) {
         return CURRENT.getMinor() >= minor;
     }
 
+    public static boolean afterOrEqual(@NonNull Version version) {
+        return CURRENT.ordinal() >= version.ordinal();
+    }
+
     public static boolean before(int minor) {
         return CURRENT.getMinor() < minor;
     }
 
+    public static boolean before(@NonNull Version version) {
+        return CURRENT.ordinal() < version.ordinal();
+    }
+
     public static boolean beforeOrEqual(int minor) {
         return CURRENT.getMinor() <= minor;
+    }
+
+    public static boolean beforeOrEqual(@NonNull Version version) {
+        return CURRENT.ordinal() <= version.ordinal();
     }
 
     public static boolean supportsHex() {
