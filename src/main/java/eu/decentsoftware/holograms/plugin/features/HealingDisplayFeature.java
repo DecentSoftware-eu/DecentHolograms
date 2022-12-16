@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -20,6 +21,9 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
 	private int duration = 40;
 	private String appearance = "&a+ {heal}";
+	private boolean displayForPlayers = true;
+	private boolean displayForMobs = true;
+	private double heightOffset = 0.0;
 
 	public HealingDisplayFeature() {
 		super("healing_display");
@@ -34,6 +38,11 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		enabled = config.getBoolean("healing-display.enabled", enabled);
 		duration = config.getInt("healing-display.duration", duration);
 		appearance = config.getString("healing-display.appearance", appearance);
+
+		heightOffset = config.getDouble("healing-display.height", heightOffset);
+
+		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
+		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
 
 		if (enabled) {
 			this.enable();
@@ -64,7 +73,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onDamage(EntityRegainHealthEvent e) {
+	public void onRegain(EntityRegainHealthEvent e) {
 		if (e.isCancelled()) {
 			return;
 		}
@@ -75,7 +84,16 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		}
 
 		Entity entity = e.getEntity();
-		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1, 0));
+
+		if (entity instanceof Player && !displayForPlayers) {
+			return;
+		}
+
+		if (!(entity instanceof Player) && !displayForMobs) {
+			return;
+		}
+
+		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1 + heightOffset, 0));
 		String text = appearance.replace("{heal}", FeatureCommons.formatNumber(heal));
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
