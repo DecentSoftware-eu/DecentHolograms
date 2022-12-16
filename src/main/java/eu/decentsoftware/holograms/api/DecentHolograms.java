@@ -110,6 +110,8 @@ public final class DecentHolograms {
         this.animationManager.reload();
         this.hologramManager.reload();
         this.featureManager.reload();
+
+        EventFactory.handleReloadEvent();
     }
 
     /**
