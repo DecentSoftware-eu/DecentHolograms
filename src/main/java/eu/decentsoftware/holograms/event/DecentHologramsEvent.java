@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 /**
  * This is the base event for all DecentHolograms events.
  *
- * @author d0by1
+ * @author d0by
  * @since 2.7.8
  */
 public abstract class DecentHologramsEvent extends Event {
