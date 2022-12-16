@@ -299,7 +299,7 @@ public class HologramPage extends FlagHolder {
     }
 
     public boolean hasEntity(int eid) {
-        return clickableEntityIds.contains(eid) || lines.stream().anyMatch(line -> line.getEntityIds()[1] == eid);
+        return clickableEntityIds.contains(eid) || lines.stream().anyMatch(line -> line.getEntityIds()[0] == eid || line.getEntityIds()[1] == eid);
     }
 
     public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
