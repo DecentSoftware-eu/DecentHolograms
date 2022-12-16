@@ -12,6 +12,9 @@ import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
+import eu.decentsoftware.holograms.api.utils.event.EventFactory;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.api.world.WorldListener;
 import lombok.Getter;
@@ -23,6 +26,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.logging.Level;
 
 @Getter
 public final class DecentHolograms {
@@ -50,7 +54,12 @@ public final class DecentHolograms {
      */
 
     protected void load() {
-
+        // Check if NMS version is supported
+        if (Version.CURRENT == null) {
+            Common.log(Level.SEVERE, "Unsupported server version: " + ReflectionUtil.getVersion());
+            Common.log(Level.SEVERE, "Plugin will be disabled.");
+            Bukkit.getPluginManager().disablePlugin(plugin);
+        }
     }
 
     protected void enable() {
