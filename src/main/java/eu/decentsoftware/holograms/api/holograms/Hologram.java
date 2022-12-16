@@ -269,7 +269,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     @Override
     public void destroy() {
-        this.disable();
+        this.disable(DisableCause.API);
         this.viewerPages.clear();
         DECENT_HOLOGRAMS.getHologramManager().removeHologram(getName());
         CACHED_HOLOGRAMS.remove(getName());
@@ -284,9 +284,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     @Override
     public void disable(@NonNull DisableCause cause) {
-        super.disable();
         this.unregister();
         this.hideAll();
+        super.disable(cause);
     }
 
     @Override
