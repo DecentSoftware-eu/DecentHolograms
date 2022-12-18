@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -84,6 +85,10 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		}
 
 		Entity entity = e.getEntity();
+
+		if (!(entity instanceof LivingEntity)) {
+			return;
+		}
 
 		if (entity instanceof Player && !displayForPlayers) {
 			return;
