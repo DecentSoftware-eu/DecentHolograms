@@ -4,7 +4,6 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.holograms.offset.OffsetListener;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
@@ -28,7 +27,6 @@ public class HologramManager extends Ticked {
 	private final @NonNull Map<String, Hologram> hologramMap;
 	private final @NonNull Map<UUID, Long> clickCooldowns;
 	private final @NonNull Set<HologramLine> temporaryLines;
-	private final OffsetListener offsetListener;
 
 	/**
 	 * Map of holograms to load, when their respective worls loads.
@@ -50,14 +48,9 @@ public class HologramManager extends Ticked {
 		this.clickCooldowns = new ConcurrentHashMap<>();
 		this.temporaryLines = Collections.synchronizedSet(new HashSet<>());
 		this.toLoad = new ConcurrentHashMap<>();
-		this.offsetListener = null;
 		this.register();
 
 		S.async(this::reload); // Reload when worlds are ready
-	}
-
-	public OffsetListener getOffsetListener() {
-		return offsetListener;
 	}
 
 	@Override
@@ -100,7 +93,7 @@ public class HologramManager extends Ticked {
 	 * Spawn a temporary line that is going to disappear after the given duration.
 	 *
 	 * @param location Location of the line.
-	 * @param content Content of the line.
+	 * @param content  Content of the line.
 	 * @param duration Duration to disappear after. (in ticks)
 	 * @return The Hologram Line.
 	 */
@@ -115,6 +108,15 @@ public class HologramManager extends Ticked {
 		return line;
 	}
 
+	/**
+	 * Attempts to process a click on an entity. If the entity is part of a hologram,
+	 * that is clickable and enabled, the click will be processed.
+	 *
+	 * @param player    The player who clicked.
+	 * @param entityId  Entity ID of the clicked entity.
+	 * @param clickType Click type.
+	 * @return True if the click was processed, false otherwise.
+	 */
 	public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
 		UUID uid = player.getUniqueId();
 
