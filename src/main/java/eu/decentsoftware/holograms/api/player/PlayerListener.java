@@ -3,7 +3,6 @@ package eu.decentsoftware.holograms.api.player;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Lang;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +19,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        DH.getHologramManager().updateVisibility(player);
+        S.async(() -> DH.getHologramManager().updateVisibility(player));
         S.sync(() -> DH.getPacketListener().hook(player));
         if (player.hasPermission("dh.admin") && DH.isUpdateAvailable()) {
             Lang.sendUpdateMessage(player);
@@ -30,20 +29,20 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        DH.getHologramManager().onQuit(player);
+        S.async(() -> DH.getHologramManager().onQuit(player));
         DH.getPacketListener().unhook(player);
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
-        Hologram.getCachedHolograms().forEach(hologram -> hologram.hide(player));
+        S.async(() -> DH.getHologramManager().updateVisibility(player));
     }
 
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
         Player player = e.getPlayer();
-        DH.getHologramManager().updateVisibility(player);
+        S.async(() -> DH.getHologramManager().updateVisibility(player));
     }
 
 }
