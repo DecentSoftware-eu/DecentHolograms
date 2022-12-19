@@ -17,6 +17,7 @@ import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.api.world.WorldListener;
+import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -112,6 +113,11 @@ public final class DecentHolograms {
         DExecutor.shutdown();
     }
 
+    /**
+     * Reload the plugin, this method also calls the reload event.
+     *
+     * @see DecentHologramsReloadEvent
+     */
     public void reload() {
         Settings.reload();
         Lang.reload();

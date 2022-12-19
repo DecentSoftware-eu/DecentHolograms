@@ -55,6 +55,15 @@ public abstract class HologramObject extends FlagHolder {
     }
 
     /**
+     * Check if this hologram object is disabled.
+     *
+     * @return True if disabled, false otherwise.
+     */
+    public boolean isDisabled() {
+        return !enabled;
+    }
+
+    /**
      * Enable updating and showing to players automatically.
      */
     public void enable() {
