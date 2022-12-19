@@ -625,9 +625,18 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @return Boolean whether the given player is in display range of this hologram object.
      */
     public boolean isInDisplayRange(@NonNull Player player) {
-        return player != null &&
-                player.getWorld().equals(location.getWorld()) &&
-                player.getLocation().distanceSquared(location) < (displayRange * displayRange);
+        /*
+         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
+         * the world of a location, which is not loaded. We catch this exception
+         * and return false, because the player is not in range.
+         */
+        try {
+            if (player != null && player.getWorld().equals(location.getWorld())) {
+                return player.getLocation().distanceSquared(location) <= displayRange * displayRange;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
     /**
@@ -638,9 +647,18 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(@NonNull Player player) {
-        return player != null &&
-                player.getWorld().equals(location.getWorld()) &&
-                player.getLocation().distanceSquared(location) < (updateRange * updateRange);
+        /*
+         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
+         * the world of a location, which is not loaded. We catch this exception
+         * and return false, because the player is not in range.
+         */
+        try {
+            if (player != null && player.getWorld().equals(location.getWorld())) {
+                return player.getLocation().distanceSquared(location) <= updateRange * updateRange;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
     public void setDownOrigin(boolean downOrigin) {
