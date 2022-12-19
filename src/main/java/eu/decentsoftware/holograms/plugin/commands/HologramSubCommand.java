@@ -1280,6 +1280,9 @@ public class HologramSubCommand extends DecentCommand {
 					return false;
 				}
 
+				PLUGIN.getHologramManager().registerHologram(newHologram);
+				newHologram.showAll();
+
 				// Delete the old hologram
 				oldHologram.delete();
 
