@@ -57,6 +57,7 @@ public class HologramSubCommand extends DecentCommand {
 		addSubCommand(new HologramDisplayRangeSub());
 		addSubCommand(new HologramUpdateRangeSub());
 		addSubCommand(new HologramUpdateIntervalSub());
+		addSubCommand(new HologramRenameSub());
 	}
 
 	@Override
@@ -1244,4 +1245,54 @@ public class HologramSubCommand extends DecentCommand {
 		}
 
 	}
+
+	@CommandInfo(
+			permission = "dh.admin",
+			usage = "/dh hologram rename <hologram> <new_name>",
+			description = "Rename a hologram.",
+			minArgs = 2
+	)
+	public static class HologramRenameSub extends DecentCommand {
+
+		public HologramRenameSub() {
+			super("rename");
+		}
+
+		@Override
+		public CommandHandler getCommandHandler() {
+			return (sender, args) -> {
+				Hologram oldHologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
+
+				String oldName = oldHologram.getName();
+				String newName = args[1];
+
+				if (Hologram.getCachedHologramNames().contains(newName)) {
+					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, newName);
+					return false;
+				}
+
+				// Create a new hologram, with the new name
+				Hologram newHologram = oldHologram.clone(newName, oldHologram.getLocation(), false);
+
+				if (!newHologram.save()) {
+					newHologram.delete();
+					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
+					return false;
+				}
+
+				// Delete the old hologram
+				oldHologram.delete();
+
+				Lang.HOLOGRAM_RENAMED.send(sender, oldName, newName);
+				return true;
+			};
+		}
+
+		@Override
+		public TabCompleteHandler getTabCompleteHandler() {
+			return TabCompleteHandler.HOLOGRAM_NAMES;
+		}
+
+	}
+
 }

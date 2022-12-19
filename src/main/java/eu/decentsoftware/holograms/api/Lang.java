@@ -43,7 +43,7 @@ public class Lang {
     public static final Phrase HOLOGRAM_CLONED = new Phrase(CONFIG, "hologram.cloned", "{prefix}Hologram has been cloned!");
     public static final Phrase HOLOGRAM_DELETED = new Phrase(CONFIG, "hologram.deleted", "{prefix}Hologram has been deleted!");
     public static final Phrase HOLOGRAM_UPDATED = new Phrase(CONFIG, "hologram.updated", "{prefix}Hologram has been updated!");
-    public static final Phrase HOLOGRAM_RENAMED = new Phrase(CONFIG, "hologram.renamed", "{prefix}Hologram has been renamed!");
+    public static final Phrase HOLOGRAM_RENAMED = new Phrase(CONFIG, "hologram.renamed", "{prefix}Hologram has been renamed! &7(&b%1$s&7 -> &b%2$s&7)");
     public static final Phrase HOLOGRAM_TELEPORTED = new Phrase(CONFIG, "hologram.teleported", "{prefix}Teleported!");
     public static final Phrase HOLOGRAM_MOVED = new Phrase(CONFIG, "hologram.moved", "{prefix}Hologram has been moved!");
     public static final Phrase HOLOGRAM_ALIGNED = new Phrase(CONFIG, "hologram.aligned", "{prefix}Hologram has been aligned!");
