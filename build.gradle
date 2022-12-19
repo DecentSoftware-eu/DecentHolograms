@@ -28,8 +28,8 @@ dependencies {
     // Annotations
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    compileOnly 'org.jetbrains:annotations:23.0.0'
-    annotationProcessor 'org.jetbrains:annotations:23.0.0'
+    compileOnly 'org.jetbrains:annotations:23.1.0'
+    annotationProcessor 'org.jetbrains:annotations:23.1.0'
 }
 
 sourceCompatibility = 1.8
