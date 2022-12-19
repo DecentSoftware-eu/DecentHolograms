@@ -7,6 +7,7 @@ import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -86,7 +87,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 
 		Entity entity = e.getEntity();
 
-		if (!(entity instanceof LivingEntity)) {
+		if (!(entity instanceof LivingEntity) || entity instanceof ArmorStand) {
 			return;
 		}
 

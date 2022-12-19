@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -95,7 +96,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
 		Entity entity = e.getEntity();
 
-		if (!(entity instanceof LivingEntity)) {
+		if (!(entity instanceof LivingEntity) || entity instanceof ArmorStand) {
 			return;
 		}
 
@@ -137,7 +138,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		}
 		try {
 			// Slow Falling is not in all versions
-			if (player.hasPotionEffect(PotionEffectType.SLOW_FALLING)) {
+			if (player.hasPotionEffect(PotionEffectType.getByName("SLOW_FALLING"))) {
 				return false;
 			}
 		} catch (Exception ignored) {
