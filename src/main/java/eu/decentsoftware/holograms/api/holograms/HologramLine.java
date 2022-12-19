@@ -174,7 +174,7 @@ public class HologramLine extends HologramObject {
      *
      * @param content The new content of the line.
      */
-    public void setContent(@NotNull String content) {
+    public void setContent(@Nullable String content) {
         this.content = content == null ? "" : content;
         this.parseContent();
         this.update();
