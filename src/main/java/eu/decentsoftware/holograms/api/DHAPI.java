@@ -822,7 +822,7 @@ public final class DHAPI {
      */
     public static void setHologramLines(Hologram hologram, int pageIndex, List<String> lines) throws IllegalArgumentException {
         Validate.notNull(hologram);
-        if (lines == null || lines.isEmpty()) {
+        if (lines == null) {
             return;
         }
 
