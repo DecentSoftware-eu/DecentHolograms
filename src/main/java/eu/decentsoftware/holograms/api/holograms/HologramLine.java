@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
@@ -359,6 +360,17 @@ public class HologramLine extends HologramObject {
         string = string.replace("{player}", player.getName());
         string = string.replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1));
         string = string.replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+
+        if (BungeeUtils.isInitialized() && string.contains("{bungeecord:") && string.contains("}")) {
+            try {
+                String server = string.split("bungeecord:")[1].split("}")[0];
+                BungeeUtils.retrieveOnlinePlayers(player, server);
+                string = string.replace("{bungeecord:" + server + "}", "" + BungeeUtils.getServerOnlineCache().getOrDefault(server, 0));
+            } catch (Exception exception) {
+                // invalid placeholder or something went wrong
+                // -> just don't replace it then
+            }
+        }
 
         // Replace PlaceholderAPI placeholders.
         if (papi) {
