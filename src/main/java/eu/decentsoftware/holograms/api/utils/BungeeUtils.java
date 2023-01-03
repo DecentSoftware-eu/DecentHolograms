@@ -24,7 +24,7 @@ public class BungeeUtils {
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     @Getter
     private static final Map<String, Integer> serverOnlineCache = new HashMap<>();
-    private static final Cache<String, Long> lastServerCheck = CacheBuilder.newBuilder()
+    private static final Cache<String, Byte> lastServerCheck = CacheBuilder.newBuilder()
             .expireAfterWrite(3L, TimeUnit.SECONDS) // 3 seconds delay for checking for servers should be okay since we don't want to flood the plugin message channel
             .build();
     @Getter
@@ -63,6 +63,7 @@ public class BungeeUtils {
         if (lastServerCheck.asMap().containsKey(server)) {
             return; // do not check for players
         }
+        lastServerCheck.put(server, (byte) 0);
         S.async(() -> {
             if (!initialized) init();
             try {
