@@ -47,13 +47,16 @@ public class BungeeUtils {
     }
 
     public static void connect(Player player, String server) {
-        if (!initialized) init();
-        try {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("Connect");
-            out.writeUTF(server);
-            player.sendPluginMessage(DECENT_HOLOGRAMS.getPlugin(), "BungeeCord", out.toByteArray());
-        } catch (Exception ignored) {}
+        S.async(() -> {
+            if (!initialized) init();
+            try {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Connect");
+                out.writeUTF(server);
+                player.sendPluginMessage(DECENT_HOLOGRAMS.getPlugin(), "BungeeCord", out.toByteArray());
+            } catch (Exception ignored) {
+            }
+        });
     }
 
     public static void retrieveOnlinePlayers(Player player, String server) {
