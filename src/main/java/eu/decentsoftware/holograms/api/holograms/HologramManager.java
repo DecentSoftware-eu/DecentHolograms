@@ -267,8 +267,14 @@ public class HologramManager extends Ticked {
 	private void loadHolograms() {
 		hologramMap.clear();
 
-		String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/holograms", "[a-zA-Z0-9_-]+\\.yml", true);
-		if (fileNames == null || fileNames.length == 0) return;
+		List<String> fileNames = FileUtils.getFileNamesFromTree(
+				DECENT_HOLOGRAMS.getDataFolder() + "/holograms",
+				"[a-zA-Z0-9_-]+\\.yml",
+				true
+		);
+		if (fileNames == null || fileNames.isEmpty()) {
+			return;
+		}
 
 		int counter = 0;
 		Common.log("Loading holograms... ");
@@ -281,17 +287,15 @@ public class HologramManager extends Ticked {
 					registerHologram(hologram);
 					counter++;
 				}
-			} catch (Exception e) {
-				if (e instanceof LocationParseException && ((LocationParseException) e).getReason() == LocationParseException.Reason.WORLD) {
-					// This hologram will load when its world loads.
-					String worldName = ((LocationParseException) e).getWorldName();
-					if (!toLoad.containsKey(worldName)) {
-						toLoad.put(worldName, new HashSet<>());
-					}
-					toLoad.get(worldName).add(fileName);
-					counter++;
-					continue;
+			} catch (LocationParseException e) {
+				// This hologram will load when its world loads.
+				String worldName = e.getWorldName();
+				if (!toLoad.containsKey(worldName)) {
+					toLoad.put(worldName, new HashSet<>());
 				}
+				toLoad.get(worldName).add(fileName);
+				counter++;
+			} catch (Exception e) {
 				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", fileName);
 				e.printStackTrace();
 			}

@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import lombok.NonNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
@@ -88,11 +89,11 @@ public class AnimationManager extends Ticked {
     }
 
     public TextAnimation registerAnimation(@NonNull String name, @NonNull TextAnimation animation) {
-        return this.animationMap.put(name, animation);
+        return animationMap.put(name, animation);
     }
 
     public TextAnimation registerAnimation(@NonNull TextAnimation animation) {
-        return this.animationMap.put(animation.getName(), animation);
+        return animationMap.put(animation.getName(), animation);
     }
 
     public TextAnimation unregisterAnimation(@NonNull String name) {
@@ -104,8 +105,14 @@ public class AnimationManager extends Ticked {
     }
 
     private void loadCustomAnimations() {
-        String[] fileNames = FileUtils.getFileNames(DECENT_HOLOGRAMS.getDataFolder() + "/animations", "[a-zA-Z0-9_-]+\\.yml", true);
-        if (fileNames == null || fileNames.length == 0) return;
+        List<String> fileNames = FileUtils.getFileNamesFromTree(
+                DECENT_HOLOGRAMS.getDataFolder() + "/animations",
+                "[a-zA-Z0-9_-]+\\.yml",
+                true
+        );
+        if (fileNames == null || fileNames.isEmpty()) {
+            return;
+        }
 
         int counter = 0;
         Common.log("Loading animations...");
@@ -113,7 +120,7 @@ public class AnimationManager extends Ticked {
             try {
                 TextAnimation animation = CustomTextAnimation.fromFile(fileName);
                 if (animation != null) {
-                    this.registerAnimation(animation);
+                    registerAnimation(animation);
                     counter++;
                 }
             } catch (Exception e) {
