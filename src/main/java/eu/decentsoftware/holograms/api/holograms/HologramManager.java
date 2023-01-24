@@ -128,9 +128,12 @@ public class HologramManager extends Ticked {
 
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (hologram.isVisible(player)) {
-				if (hologram.onClick(player, entityId, clickType)) {
-					clickCooldowns.put(uid, System.currentTimeMillis());
-					return true;
+				// Do not process the click if the player is more than 10 blocks away from the hologram.
+				if (hologram.getLocation().distanceSquared(player.getLocation()) < 100) {
+					if (hologram.onClick(player, entityId, clickType)) {
+						clickCooldowns.put(uid, System.currentTimeMillis());
+						return true;
+					}
 				}
 			}
 		}
