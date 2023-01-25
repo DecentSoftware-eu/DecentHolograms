@@ -206,14 +206,6 @@ public class HologramLine extends HologramObject {
         return !hasFlag(EnumFlag.DISABLE_ACTIONS) && (!hasParent() || parent.isClickable());
     }
 
-    @NonNull
-    public Location getCenter() {
-        Location center = getLocation().clone();
-        return hasParent() && parent.getParent().isDownOrigin() ?
-                center.add(0, getHeight() / 2, 0) :
-                center.subtract(0, getHeight() / 2, 0);
-    }
-
     /**
      * Parse the current content String.
      */

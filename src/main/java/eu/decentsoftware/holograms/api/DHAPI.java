@@ -813,18 +813,17 @@ public final class DHAPI {
 
     /**
      * Set the lines of this hologram on the specified page. If there are lines
-     * that are out of the new bounds, they are removed.
+     * that are out of the new bounds, they are removed. You can even use an empty
+     * array list to remove all lines from the page.
      *
      * @param hologram  The hologram.
      * @param pageIndex The page.
      * @param lines     The new lines.
-     * @throws IllegalArgumentException If hologram is null.
+     * @throws IllegalArgumentException If hologram or lines is null.
      */
     public static void setHologramLines(Hologram hologram, int pageIndex, List<String> lines) throws IllegalArgumentException {
         Validate.notNull(hologram);
-        if (lines == null) {
-            return;
-        }
+        Validate.notNull(lines);
 
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {

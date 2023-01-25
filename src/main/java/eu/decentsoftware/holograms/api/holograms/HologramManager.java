@@ -180,9 +180,7 @@ public class HologramManager extends Ticked {
 	 */
 	public void showAll(@NonNull Player player) {
 		for (Hologram hologram : getHolograms()) {
-			if (hologram.isEnabled()) {
-				hologram.show(player, hologram.getPlayerPage(player));
-			}
+			hologram.show(player, hologram.getPlayerPage(player));
 		}
 		for (HologramLine line : temporaryLines) {
 			line.show(player);
@@ -196,10 +194,10 @@ public class HologramManager extends Ticked {
 	 */
 	public void hideAll(@NonNull Player player) {
 		for (Hologram hologram : getHolograms()) {
-			hologram.hideAll();
+			hologram.hide(player);
 		}
 		for (HologramLine line : temporaryLines) {
-			line.hide();
+			line.hide(player);
 		}
 	}
 

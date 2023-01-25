@@ -329,8 +329,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean save() {
         if (saveToFile) {
-            S.async(() -> {
-                config.set("location", LocationUtils.asString(location, false));
+            S.sync(() -> {
+                config.set("location", LocationUtils.asString(getLocation(), false));
                 config.set("enabled", isEnabled());
                 config.set("permission", permission == null || permission.isEmpty() ? null : permission);
                 config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
