@@ -9,7 +9,7 @@ package eu.decentsoftware.holograms.event;
 public class DecentHologramsReloadEvent extends DecentHologramsEvent {
 
     public DecentHologramsReloadEvent() {
-        // Nothing to do here.
+        super(true);
     }
 
 }
