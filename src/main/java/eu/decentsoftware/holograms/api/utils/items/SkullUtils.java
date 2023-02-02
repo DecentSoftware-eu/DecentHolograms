@@ -199,4 +199,16 @@ public final class SkullUtils {
         return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }
 
+    /**
+     * Get a Base64 skull texture from URL by player name.
+     *
+     * @param playerName The player name.
+     * @return The Base64 texture or null if the URL is invalid.
+     * @since 2.7.10
+     */
+    @Nullable
+    public static String getTextureFromURLByPlayerName(String playerName) {
+        return getTextureFromURL("https://minotar.net/helm/" + playerName + "/16.png");
+    }
+
 }

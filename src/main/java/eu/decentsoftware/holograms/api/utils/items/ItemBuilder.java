@@ -2,11 +2,9 @@ package eu.decentsoftware.holograms.api.utils.items;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.utils.Common;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -279,7 +277,19 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder withSkullOwner(String playerName) {
-        SkullUtils.setSkullOwner(itemStack, playerName);
+        Player owner = Bukkit.getPlayer(playerName);
+
+        // If the player is online, we can just use their profile, which the server should have.
+        if (owner != null) {
+            SkullUtils.setSkullOwner(itemStack, playerName);
+            return this;
+        }
+
+        /*
+         * If the player is offline, we want to fetch the texture ourselves. This is because
+         * if the server is NOT in online mode, it will not be able to fetch the texture from Mojang.
+         */
+        SkullUtils.setSkullTexture(itemStack, SkullUtils.getTextureFromURLByPlayerName(playerName));
         return this;
     }
 
