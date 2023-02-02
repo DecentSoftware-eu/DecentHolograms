@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class DecentHologramsAPI {
 
 	private static DecentHolograms implementation;
+	private static boolean enabled = false;
 
 	public static void onLoad(@NonNull JavaPlugin plugin) {
 		if (implementation != null) return;
@@ -19,6 +20,7 @@ public final class DecentHologramsAPI {
 	public static void onEnable() {
 		if (implementation == null) return;
 		implementation.enable();
+		enabled = true;
 	}
 
 	/**
@@ -28,13 +30,14 @@ public final class DecentHologramsAPI {
 		if (implementation == null) return;
 		implementation.disable();
 		implementation = null;
+		enabled = false;
 	}
 
 	/**
 	 * Check whether DecentHologramsAPI is currently running.
 	 */
 	public static boolean isRunning() {
-		return implementation != null;
+		return implementation != null && enabled;
 	}
 
 	/**
@@ -43,8 +46,8 @@ public final class DecentHologramsAPI {
 	 * @return the instance of running DecentHolograms.
 	 */
 	public static DecentHolograms get() {
-		if (implementation == null) {
-			throw new IllegalStateException("There is no running instance of DecentHologramsAPI, enable it first.");
+		if (implementation == null || !enabled) {
+			throw new IllegalStateException("DecentHolograms is not running (yet). Do you have DecentHolograms plugin installed?");
 		}
 		return implementation;
 	}
