@@ -311,8 +311,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void setLocation(@NonNull Location location) {
         super.setLocation(location);
-        this.hideClickableEntitiesAll();
-        this.showClickableEntitiesAll();
+        this.teleportClickableEntitiesAll();
     }
 
     /**
@@ -615,6 +614,30 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     public void hideClickableEntitiesAll() {
         if (isEnabled()) {
             getViewerPlayers().forEach(this::hideClickableEntities);
+        }
+    }
+
+    public void teleportClickableEntities(@NonNull Player player) {
+        HologramPage page = getPage(player);
+        if (page == null) {
+            return;
+        }
+
+        // Spawn clickable entities
+        NMS nms = NMS.getInstance();
+        int amount = (int) (page.getHeight() / 2) + 1;
+        Location location = getLocation().clone();
+        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
+        for (int i = 0; i < amount; i++) {
+            int id = page.getClickableEntityId(i);
+            nms.teleportFakeEntity(player, location, id);
+            location.add(0, 1.8, 0);
+        }
+    }
+
+    public void teleportClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::teleportClickableEntities);
         }
     }
 
