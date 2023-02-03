@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -86,8 +87,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static Hologram fromFile(@NotNull String fileName) throws LocationParseException, IllegalArgumentException {
-        FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + fileName);
+    public static Hologram fromFile(final @NotNull String filePath) throws LocationParseException, IllegalArgumentException {
+        final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + filePath);
+        final String fileName = new File(filePath).getName();
 
         // Parse hologram name
         String name;

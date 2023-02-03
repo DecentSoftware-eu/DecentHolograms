@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -268,20 +269,18 @@ public class HologramManager extends Ticked {
 	private void loadHolograms() {
 		hologramMap.clear();
 
-		List<String> fileNames = FileUtils.getFileNamesFromTree(
-				DECENT_HOLOGRAMS.getDataFolder() + "/holograms",
-				"[a-zA-Z0-9_-]+\\.yml",
-				true
-		);
-		if (fileNames == null || fileNames.isEmpty()) {
+		final File folder = new File(DECENT_HOLOGRAMS.getDataFolder(), "holograms");
+		final List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
+		if (files == null || files.isEmpty()) {
 			return;
 		}
 
 		int counter = 0;
 		Common.log("Loading holograms... ");
-		for (String fileName : fileNames) {
+		for (final File file : files) {
+			final String filePath = FileUtils.getRelativePath(file, folder);
 			try {
-				Hologram hologram = Hologram.fromFile(fileName);
+				final Hologram hologram = Hologram.fromFile(filePath);
 				if (hologram != null && hologram.isEnabled()) {
 					hologram.showAll();
 					hologram.realignLines();
@@ -290,14 +289,14 @@ public class HologramManager extends Ticked {
 				}
 			} catch (LocationParseException e) {
 				// This hologram will load when its world loads.
-				String worldName = e.getWorldName();
+				final String worldName = e.getWorldName();
 				if (!toLoad.containsKey(worldName)) {
 					toLoad.put(worldName, new HashSet<>());
 				}
-				toLoad.get(worldName).add(fileName);
+				toLoad.get(worldName).add(filePath);
 				counter++;
 			} catch (Exception e) {
-				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", fileName);
+				Common.log(Level.WARNING, "Failed to load hologram from file '%s'!", filePath);
 				e.printStackTrace();
 			}
 		}

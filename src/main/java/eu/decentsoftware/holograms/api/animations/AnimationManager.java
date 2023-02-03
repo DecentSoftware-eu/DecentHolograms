@@ -10,6 +10,7 @@ import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import lombok.NonNull;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,20 +106,18 @@ public class AnimationManager extends Ticked {
     }
 
     private void loadCustomAnimations() {
-        List<String> fileNames = FileUtils.getFileNamesFromTree(
-                DECENT_HOLOGRAMS.getDataFolder() + "/animations",
-                "[a-zA-Z0-9_-]+\\.yml",
-                true
-        );
-        if (fileNames == null || fileNames.isEmpty()) {
+        final File folder = new File(DECENT_HOLOGRAMS.getDataFolder(), "animations");
+        final List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
+        if (files == null || files.isEmpty()) {
             return;
         }
 
         int counter = 0;
         Common.log("Loading animations...");
-        for (String fileName : fileNames) {
+        for (final File file : files) {
+            final String fileName = FileUtils.getRelativePath(file, folder);
             try {
-                TextAnimation animation = CustomTextAnimation.fromFile(fileName);
+                final TextAnimation animation = CustomTextAnimation.fromFile(fileName);
                 if (animation != null) {
                     registerAnimation(animation);
                     counter++;
