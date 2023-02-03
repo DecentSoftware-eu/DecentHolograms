@@ -55,7 +55,7 @@ public class HologramManager extends Ticked {
 	}
 
 	@Override
-	public void tick() {
+	public synchronized void tick() {
 		for (Hologram hologram : Hologram.getCachedHolograms()) {
 			if (hologram.isEnabled()) {
 				for (Player player : Bukkit.getOnlinePlayers()) {
@@ -150,7 +150,7 @@ public class HologramManager extends Ticked {
 	/**
 	 * Reload this manager and all the holograms.
 	 */
-	public void reload() {
+	public synchronized void reload() {
 		this.destroy();
 		this.loadHolograms();
 	}
@@ -158,7 +158,7 @@ public class HologramManager extends Ticked {
 	/**
 	 * Destroy this manager and all the holograms.
 	 */
-	public void destroy() {
+	public synchronized void destroy() {
 		// Destroy registered holograms
 		for (Hologram hologram : getHolograms()) {
 			hologram.destroy();

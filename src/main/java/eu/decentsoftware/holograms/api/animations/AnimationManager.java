@@ -37,12 +37,12 @@ public class AnimationManager extends Ticked {
         step.incrementAndGet();
     }
 
-    public void destroy() {
+    public synchronized void destroy() {
         this.unregister();
         this.animationMap.clear();
     }
 
-    public void reload() {
+    public synchronized void reload() {
         this.animationMap.clear();
         this.registerAnimation(new TypewriterAnimation());
         this.registerAnimation(new WaveAnimation());
