@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,6 +47,17 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Hologram Cache
      */
 
+	/**
+	 * This map contains all cached holograms. This map is used to get holograms by name.
+	 * <p>
+	 * Holograms are cached when they are loaded from files or created. They are removed
+	 * from the cache when they are deleted.
+	 * <p>
+	 * Holograms, that are only in this map and not in the {@link HologramManager}, are not
+	 * editable via commands. They are only editable via the API.
+	 *
+	 * @see #getCachedHologram(String)
+	 */
     private static final @NonNull Map<String, Hologram> CACHED_HOLOGRAMS;
 
     static {
@@ -211,18 +223,46 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Constructors
      */
 
+    /**
+     * Creates a new hologram with the given name and location. The hologram will be saved to a file.
+     *
+     * @param name     The name of the hologram.
+     * @param location The location of the hologram.
+     */
     public Hologram(@NonNull String name, @NonNull Location location) {
         this(name, location, true);
     }
 
+    /**
+     * Creates a new hologram with the given name and location.
+     *
+     * @param name        The name of the hologram.
+     * @param location    The location of the hologram.
+     * @param saveToFile  Whether the hologram should be saved to a file.
+     */
     public Hologram(@NonNull String name, @NonNull Location location, boolean saveToFile) {
         this(name, location, saveToFile ? new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name)) : null);
     }
 
+    /**
+     * Creates a new hologram with the given name and location. The hologram will be saved to the given file.
+     *
+     * @param name     The name of the hologram.
+     * @param location The location of the hologram.
+     * @param config   The config of the hologram.
+     */
     public Hologram(@NonNull String name, @NonNull Location location, @Nullable FileConfig config) {
         this(name, location, config, true);
     }
 
+    /**
+     * Creates a new hologram with the given name and location.
+     *
+     * @param name     The name of the hologram.
+     * @param location The location of the hologram.
+     * @param config   The config of the hologram.
+     * @param enabled  Whether the hologram should be enabled.
+     */
     public Hologram(@NonNull String name, @NonNull Location location, @Nullable FileConfig config, boolean enabled) {
         super(location);
         this.name = name;
@@ -273,6 +313,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 "} " + super.toString();
     }
 
+    /**
+     * This method calls {@link #destroy()} before deleting the holograms file.
+     */
     @Override
     public void delete() {
         super.delete();
@@ -281,6 +324,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
+    /**
+     * This method disables the hologram, removes it from the {@link HologramManager},
+     * removes it from the cache and hides it from all players.
+     */
     @Override
     public void destroy() {
         this.disable(DisableCause.API);
@@ -289,6 +336,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         CACHED_HOLOGRAMS.remove(getName());
     }
 
+    /**
+     * This method enables the hologram, calls the {@link #register()} method
+     * to start the update task and shows it to all players.
+     */
     @Override
     public void enable() {
         super.enable();
@@ -296,6 +347,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         this.register();
     }
 
+    /**
+     * This method disables the hologram, calls the {@link #unregister()} method
+     * to stop the update task and hides it from all players.
+     */
     @Override
     public void disable(@NonNull DisableCause cause) {
         this.unregister();
@@ -322,6 +377,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
+    /**
+     * Set the location of this hologram. This method doesn't update the holograms location
+     * for the players, you have to call {@link #realignLines()} for that.
+     *
+     * @param location The new location of this hologram.
+     */
     @Override
     public void setLocation(@NonNull Location location) {
         super.setLocation(location);
@@ -414,6 +475,14 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return hologram;
     }
 
+    /**
+     * Handle a click on this hologram.
+     *
+     * @param player    The player that clicked the hologram.
+     * @param entityId  The id of the clicked entity.
+     * @param clickType The type of the click.
+     * @return True if the click was handled, false otherwise.
+     */
     public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
         if (this.hasFlag(EnumFlag.DISABLE_ACTIONS)) {
             return false;
@@ -428,6 +497,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return false;
     }
 
+	/**
+	 * Handle the player quit event for this hologram. This method will hide the hologram
+	 * from the player and remove the player from the show/hide lists.
+	 *
+	 * @param player The player that quit.
+	 */
     public void onQuit(@NonNull Player player) {
         hide(player);
         removeShowPlayer(player);

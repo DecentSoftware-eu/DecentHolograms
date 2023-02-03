@@ -29,6 +29,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.logging.Level;
 
+/**
+ * This is the main class of DecentHolograms. It contains all the methods
+ * and fields that are used to manage DecentHolograms. You can get the instance
+ * of this class by using {@link DecentHologramsAPI#get()}.
+ *
+ * @author d0by
+ * @see DecentHologramsAPI
+ */
 @Getter
 public final class DecentHolograms {
 
@@ -132,7 +140,7 @@ public final class DecentHolograms {
     /**
      * Get the data folder for DecentHolograms files.
      *
-     * @return the file.
+     * @return The file.
      */
     public File getDataFolder() {
         if (this.dataFolder == null) {
