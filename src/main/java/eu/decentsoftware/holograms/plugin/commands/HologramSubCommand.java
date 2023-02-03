@@ -320,12 +320,36 @@ public class HologramSubCommand extends DecentCommand {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, hologramName);
 					return true;
 				}
-				Player player = Validator.getPlayer(sender);
-				String content = Validator.getLineContent(player, args, 1);
-				Hologram hologram = new Hologram(hologramName, player.getLocation());
-				HologramPage page = hologram.getPage(0);
-				HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
+
+				// Look for the optional location argument.
+				// Format: -l:world:x:y:z
+				boolean containsLocation = false;
+				Location location = null;
+				if (args.length >= 2 && args[1].toLowerCase().startsWith("-l:")) {
+					String locationString = args[1].substring(3);
+					location = LocationUtils.asLocation(locationString);
+					containsLocation = location != null;
+				}
+
+				if (!(sender instanceof Player) && !containsLocation) {
+					Lang.ONLY_PLAYER.send(sender);
+					return true;
+				} else {
+					if (location == null) {
+						final Player player = (Player) sender;
+						location = player.getLocation();
+					}
+				}
+
+				// Get the content of the line.
+				final String content = Validator.getLineContent(args, containsLocation ? 2 : 1);
+				// Create the hologram.
+				final Hologram hologram = new Hologram(hologramName, location);
+				// Add the first line to the hologram.
+				final HologramPage page = hologram.getPage(0);
+				final HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
 				page.addLine(line);
+
 				hologram.showAll();
 				hologram.save();
 
