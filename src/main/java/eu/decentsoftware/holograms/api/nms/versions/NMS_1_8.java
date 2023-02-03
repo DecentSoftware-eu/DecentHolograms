@@ -133,7 +133,7 @@ public class NMS_1_8 extends NMS {
         ReflectionUtil.setFieldValue(teleport, "d", MATH_HELPER_FLOOR_METHOD.invokeStatic(location.getZ() * 32.0D));
         ReflectionUtil.setFieldValue(teleport, "e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
         ReflectionUtil.setFieldValue(teleport, "f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
-        ReflectionUtil.setFieldValue(teleport, "g", true);
+        ReflectionUtil.setFieldValue(teleport, "g", false);
         sendPacket(player, teleport);
     }
 

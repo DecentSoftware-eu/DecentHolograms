@@ -49,7 +49,6 @@ public class HologramSubCommand extends DecentCommand {
 		addSubCommand(new HologramAlignSub());
 		addSubCommand(new HologramNearSub());
 		addSubCommand(new HologramDownOriginSub());
-//		addSubCommand(new HologramAlwaysFacePlayerSub());
 		addSubCommand(new HologramFacingSub());
 		addSubCommand(new HologramFlagAddSub());
 		addSubCommand(new HologramFlagRemoveSub());
@@ -163,11 +162,7 @@ public class HologramSubCommand extends DecentCommand {
 				}
 				hologram.setLocation(location);
 				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_ALIGNED.send(sender);
 				return true;
@@ -213,11 +208,7 @@ public class HologramSubCommand extends DecentCommand {
 
 				hologram.setLocation(location);
 				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -252,17 +243,17 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 
-				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
+				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				boolean containsLocation = false;
 				boolean temp = false;
-				Location loc = null;
+				Location location = null;
 				if (args.length >= 3) {
 					for (int i = 2; i < args.length; i++) {
 						String s = args[i];
 						if (s.toLowerCase().startsWith("-l:")) {
 							String locationString = s.substring(3);
-							loc = LocationUtils.asLocation(locationString);
-							if (loc != null) {
+							location = LocationUtils.asLocation(locationString);
+							if (location != null) {
 								containsLocation = true;
 								break;
 							}
@@ -276,13 +267,13 @@ public class HologramSubCommand extends DecentCommand {
 					Lang.ONLY_PLAYER.send(sender);
 					return true;
 				} else {
-					if (loc == null) {
-						Player player = (Player) sender;
-						loc = player.getLocation();
+					if (location == null) {
+						final Player player = (Player) sender;
+						location = player.getLocation();
 					}
 				}
 
-				Hologram clone = hologram.clone(args[1], loc, temp);
+				final Hologram clone = hologram.clone(args[1], location, temp);
 				if (!clone.save()) {
 					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
 					return true;
@@ -336,11 +327,7 @@ public class HologramSubCommand extends DecentCommand {
 				HologramLine line = new HologramLine(page, page.getNextLineLocation(), content);
 				page.addLine(line);
 				hologram.showAll();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return true;
-				}
+				hologram.save();
 
 				PLUGIN.getHologramManager().registerHologram(hologram);
 
@@ -421,11 +408,7 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.disable(DisableCause.COMMAND);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_DISABLED.send(sender);
 				return true;
@@ -458,11 +441,7 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDisplayRange(range);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_DISPLAY_RANGE_SET.send(sender, range);
 				return true;
@@ -496,11 +475,7 @@ public class HologramSubCommand extends DecentCommand {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setDownOrigin(value);
 				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_DOWN_ORIGIN_SET.send(sender, value);
 				return true;
@@ -511,51 +486,6 @@ public class HologramSubCommand extends DecentCommand {
 		public TabCompleteHandler getTabCompleteHandler() {
 			return (sender, args) -> {
 				if (args.length == 1 || args.length == 3) {
-					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
-				} else if (args.length == 2) {
-					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
-				}
-				return null;
-			};
-		}
-
-	}
-
-	@CommandInfo(
-			permission = "dh.admin",
-			usage = "/dh hologram alwaysfaceplayer <hologram> <true|false>",
-			description = "Set always face player state of the hologram.",
-			aliases = {"setalwaysfaceplayer"},
-			minArgs = 2
-	)
-	public static class HologramAlwaysFacePlayerSub extends DecentCommand {
-
-		public HologramAlwaysFacePlayerSub() {
-			super("alwaysfaceplayer");
-		}
-
-		@Override
-		public CommandHandler getCommandHandler() {
-			return (sender, args) -> {
-				boolean value = Validator.getBoolean(args[1], Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_DOES_NOT_EXIST.getValue());
-				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
-				hologram.setAlwaysFacePlayer(value);
-				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
-				
-				Lang.HOLOGRAM_ALWAYS_FACE_PLAYER_SET.send(sender, value);
-				return true;
-			};
-		}
-
-		@Override
-		public TabCompleteHandler getTabCompleteHandler() {
-			return (sender, args) -> {
-				if (args.length == 1) {
 					return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
 				} else if (args.length == 2) {
 					return TabCompleteHandler.getPartialMatches(args[1], "true", "false");
@@ -588,11 +518,7 @@ public class HologramSubCommand extends DecentCommand {
 					return true;
 				}
 				hologram.enable();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_ENABLED.send(sender);
 				return true;
@@ -634,11 +560,7 @@ public class HologramSubCommand extends DecentCommand {
 						break;
 				}
 				hologram.setFacing(facing);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				hologram.realignLines();
 				Lang.HOLOGRAM_FACING_SET.send(sender, facing);
@@ -678,11 +600,7 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.addFlags(flag);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_FLAG_ADDED.send(sender, flag.name());
 				return true;
@@ -724,11 +642,7 @@ public class HologramSubCommand extends DecentCommand {
 				final EnumFlag flag = Validator.getFlag(args[1], String.format("Flag \"%s\" wasn't found.", args[1]));
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.removeFlags(flag);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_FLAG_REMOVED.send(sender, flag.name());
 				return true;
@@ -930,11 +844,7 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(playerLocation.getZ());
 				hologram.setLocation(location);
 				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -974,11 +884,7 @@ public class HologramSubCommand extends DecentCommand {
 				location.setZ(z);
 				hologram.setLocation(location);
 				hologram.realignLines();
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 
 				Lang.HOLOGRAM_MOVED.send(sender);
 				return true;
@@ -1122,12 +1028,7 @@ public class HologramSubCommand extends DecentCommand {
 					hologram.setPermission(null);
 					Lang.HOLOGRAM_PERMISSION_REMOVED.send(sender);
 				}
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
-				
+				hologram.save();
 				return true;
 			};
 		}
@@ -1191,11 +1092,7 @@ public class HologramSubCommand extends DecentCommand {
 				final int interval = Validator.getInteger(args[1], 1, 1200, "Interval must be a valid number between 1 and 1200.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateInterval(interval);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_UPDATE_INTERVAL_SET.send(sender, interval);
 				return true;
@@ -1228,11 +1125,7 @@ public class HologramSubCommand extends DecentCommand {
 				final int range = Validator.getInteger(args[1], 1, 64, "Range must be a valid number between 1 and 64.");
 				final Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				hologram.setUpdateRange(range);
-				
-				if (!hologram.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				hologram.save();
 				
 				Lang.HOLOGRAM_UPDATE_RANGE_SET.send(sender, range);
 				return true;
@@ -1273,12 +1166,7 @@ public class HologramSubCommand extends DecentCommand {
 
 				// Create a new hologram, with the new name
 				Hologram newHologram = oldHologram.clone(newName, oldHologram.getLocation(), false);
-
-				if (!newHologram.save()) {
-					newHologram.delete();
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return false;
-				}
+				newHologram.save();
 
 				PLUGIN.getHologramManager().registerHologram(newHologram);
 				newHologram.showAll();

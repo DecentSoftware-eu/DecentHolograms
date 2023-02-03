@@ -311,7 +311,7 @@ public class NMS_1_9 extends NMS {
         ReflectionUtil.setFieldValue(teleport, "d", location.getZ());
         ReflectionUtil.setFieldValue(teleport, "e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
         ReflectionUtil.setFieldValue(teleport, "f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
-        ReflectionUtil.setFieldValue(teleport, "g", true);
+        ReflectionUtil.setFieldValue(teleport, "g", false);
         sendPacket(player, teleport);
     }
 
