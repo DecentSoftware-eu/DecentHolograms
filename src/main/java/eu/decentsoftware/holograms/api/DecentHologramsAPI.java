@@ -45,8 +45,8 @@ public final class DecentHologramsAPI {
 		if (implementation == null) {
 			return;
 		}
-		implementation.enable();
 		enabled = true;
+		implementation.enable();
 	}
 
 	/**

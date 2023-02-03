@@ -9,7 +9,6 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
@@ -412,10 +411,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
 	    DExecutor.execute(() -> {
-		    long start = System.currentTimeMillis();
-
 		    try {
-			    lock.tryLock(1, TimeUnit.SECONDS);
+			    lock.tryLock(250, TimeUnit.MILLISECONDS);
 
 			    config.set("location", LocationUtils.asString(getLocation(), false));
 			    config.set("enabled", isEnabled());
@@ -435,11 +432,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 			    // Prevents deadlocks
 			    lock.unlock();
 		    }
-
-		    // TODO: Remove debug
-		    long end = System.currentTimeMillis();
-			long took = end - start;
-		    Common.debug("Saved hologram " + getName() + " in " + took + " ms (~" + (int) (took / 50) + " ticks)!");
 		});
         return true;
     }
@@ -592,6 +584,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player player
      * @return state
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isShowState(@NonNull Player player) {
         return showPlayers.contains(player.getUniqueId());
     }
