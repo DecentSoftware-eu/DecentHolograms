@@ -19,7 +19,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -235,9 +237,12 @@ public final class SkullUtils {
 	@NonNull
 	private static String readUrl(String urlString) throws Exception {
 		BufferedReader reader = null;
+		URLConnection connection = null;
 		try {
-			URL url = new URL(urlString);
-			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			connection = new URL(urlString).openConnection();
+			connection.setConnectTimeout(50);
+			connection.setReadTimeout(50);
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			StringBuilder builder = new StringBuilder();
 			int read;
 			char[] chars = new char[1024];
@@ -246,6 +251,9 @@ public final class SkullUtils {
 			}
 			return builder.toString();
 		} finally {
+			if (connection instanceof HttpURLConnection) {
+				((HttpURLConnection) connection).disconnect();
+			}
 			if (reader != null) {
 				reader.close();
 			}
