@@ -9,6 +9,8 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
@@ -30,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Getter
@@ -181,6 +185,16 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Fields
      */
 
+    /**
+     * The lock used to synchronize the saving process of this hologram.
+     *
+     * @implNote This lock is used to prevent multiple threads from saving
+     * the same hologram at the same time. This is important because the
+     * saving process is not thread-safe in SnakeYAML.
+     * @since 2.7.10
+     */
+    protected final Lock lock = new ReentrantLock();
+
     protected final @NonNull String name;
     protected boolean saveToFile;
     protected final @Nullable FileConfig config;
@@ -325,24 +339,45 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * Save this hologram to a file asynchronously.
+     *
+     * @implNote Always returns true. If the hologram is not persistent,
+     * this method just doesn't do anything.
      */
     public boolean save() {
-        if (saveToFile) {
-            S.sync(() -> {
-                config.set("location", LocationUtils.asString(getLocation(), false));
-                config.set("enabled", isEnabled());
-                config.set("permission", permission == null || permission.isEmpty() ? null : permission);
-                config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
-                config.set("display-range", displayRange);
-                config.set("update-range", updateRange);
-                config.set("update-interval", updateInterval);
-                config.set("facing", facing);
-                config.set("down-origin", downOrigin);
-                config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-                config.saveData();
-                config.reload();
-            });
+        if (!saveToFile) {
+			return true;
         }
+
+	    DExecutor.execute(() -> {
+		    long start = System.currentTimeMillis();
+
+		    try {
+			    lock.tryLock(1, TimeUnit.SECONDS);
+
+			    config.set("location", LocationUtils.asString(getLocation(), false));
+			    config.set("enabled", isEnabled());
+			    config.set("permission", permission == null || permission.isEmpty() ? null : permission);
+			    config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
+			    config.set("display-range", displayRange);
+			    config.set("update-range", updateRange);
+			    config.set("update-interval", updateInterval);
+			    config.set("facing", facing);
+			    config.set("down-origin", downOrigin);
+			    config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
+			    config.saveData();
+			    config.reload();
+		    } catch (InterruptedException ignored) {
+                // Failed to acquire lock, cancel save.
+            } finally {
+			    // Prevents deadlocks
+			    lock.unlock();
+		    }
+
+		    // TODO: Remove debug
+		    long end = System.currentTimeMillis();
+			long took = end - start;
+		    Common.debug("Saved hologram " + getName() + " in " + took + " ms (~" + (int) (took / 50) + " ticks)!");
+		});
         return true;
     }
 
