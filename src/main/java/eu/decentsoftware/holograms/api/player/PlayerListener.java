@@ -14,35 +14,35 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerListener implements Listener {
 
-    private static final DecentHolograms DH = DecentHologramsAPI.get();
+	private static final DecentHolograms DH = DecentHologramsAPI.get();
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        S.async(() -> DH.getHologramManager().updateVisibility(player));
-        S.sync(() -> DH.getPacketListener().hook(player));
-        if (player.hasPermission("dh.admin") && DH.isUpdateAvailable()) {
-            Lang.sendUpdateMessage(player);
-        }
-    }
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player player = e.getPlayer();
+		S.async(() -> DH.getHologramManager().updateVisibility(player));
+		S.sync(() -> DH.getPacketListener().hook(player));
+		if (player.hasPermission("dh.admin") && DH.isUpdateAvailable()) {
+			Lang.sendUpdateMessage(player);
+		}
+	}
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        S.async(() -> DH.getHologramManager().onQuit(player));
-        DH.getPacketListener().unhook(player);
-    }
+	@EventHandler
+	public void onQuit(PlayerQuitEvent e) {
+		Player player = e.getPlayer();
+		S.async(() -> DH.getHologramManager().onQuit(player));
+		DH.getPacketListener().unhook(player);
+	}
 
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-        S.async(() -> DH.getHologramManager().updateVisibility(player));
-    }
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		Player player = e.getPlayer();
+		S.async(() -> DH.getHologramManager().updateVisibility(player));
+	}
 
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        Player player = e.getPlayer();
-        S.async(() -> DH.getHologramManager().updateVisibility(player));
-    }
+	@EventHandler
+	public void onTeleport(PlayerTeleportEvent e) {
+		Player player = e.getPlayer();
+		S.async(() -> DH.getHologramManager().updateVisibility(player));
+	}
 
 }

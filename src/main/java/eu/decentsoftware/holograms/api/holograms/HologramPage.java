@@ -5,7 +5,6 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
-import eu.decentsoftware.holograms.api.nms.NMS;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -25,10 +24,10 @@ public class HologramPage extends FlagHolder {
 
     private int index;
     private final @NonNull Hologram parent;
-    private final @NonNull List<Integer> clickableEntityIds;
     private final @NonNull List<HologramLine> lines;
     private final @NonNull Map<ClickType, List<Action>> actions;
     protected boolean alwaysFacePlayer;
+    protected boolean clickable;
 
     /*
      *	Constructors
@@ -37,7 +36,6 @@ public class HologramPage extends FlagHolder {
     public HologramPage(@NonNull Hologram parent, int index) {
         this.parent = parent;
         this.index = index;
-        this.clickableEntityIds = new ArrayList<>();
         this.lines = new ArrayList<>();
         this.actions = new EnumMap<>(ClickType.class);
         this.alwaysFacePlayer = parent.isAlwaysFacePlayer();
@@ -73,13 +71,6 @@ public class HologramPage extends FlagHolder {
             height += hologramLine.getHeight();
         }
         return height;
-    }
-
-    public int getClickableEntityId(int index) {
-        if (index >= clickableEntityIds.size()) {
-            clickableEntityIds.add(NMS.getInstance().getFreeEntityId());
-        }
-        return clickableEntityIds.get(index);
     }
 
     @NonNull
@@ -288,18 +279,14 @@ public class HologramPage extends FlagHolder {
      */
 
     public boolean isClickable() {
-        if (parent.hasFlag(EnumFlag.DISABLE_ACTIONS)) return false;
-        for (ClickType value : ClickType.values()) {
-            List<Action> list = actions.get(value);
-            if (list != null && !list.isEmpty()) {
-                return true;
-            }
+        if (parent.hasFlag(EnumFlag.DISABLE_ACTIONS)) {
+            return false;
         }
-        return false;
+        return hasActions();
     }
 
     public boolean hasEntity(int eid) {
-        return clickableEntityIds.contains(eid) || lines.stream().anyMatch(line -> line.getEntityIds()[0] == eid || line.getEntityIds()[1] == eid);
+        return lines.stream().anyMatch(line -> line.getEntityIds()[0] == eid || line.getEntityIds()[1] == eid);
     }
 
     public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
@@ -345,6 +332,21 @@ public class HologramPage extends FlagHolder {
             return new ArrayList<>();
         }
         return actions.get(clickType);
+    }
+
+    /**
+     * Check if this page has any actions.
+     *
+     * @return True if this page has any actions, false otherwise.
+     */
+    public boolean hasActions() {
+        for (ClickType value : ClickType.values()) {
+            List<Action> list = actions.get(value);
+            if (list != null && !list.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

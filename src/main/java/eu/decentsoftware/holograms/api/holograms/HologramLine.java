@@ -236,7 +236,7 @@ public class HologramLine extends HologramObject {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
             height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
-            setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)));
+            setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)) + type.getClickableOffsetY());
             return;
         } else {
             type = HologramLineType.TEXT;
@@ -248,7 +248,7 @@ public class HologramLine extends HologramObject {
             containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
             containsPlaceholders = PAPI.containsPlaceholders(text);
         }
-        setOffsetY(type.getOffsetY());
+        setOffsetY(type.getClickableOffsetY());
     }
 
     @NonNull
@@ -422,17 +422,17 @@ public class HologramLine extends HologramObject {
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                 switch (type) {
                     case TEXT:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
+                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, true);
                         nms.updateFakeEntityCustomName(player, getText(player, true), entityIds[0]);
                         break;
                     case HEAD:
                     case SMALLHEAD:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), false);
+                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, !HologramLineType.HEAD.equals(type), true);
                         ItemStack itemStack = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
                         nms.helmetFakeEntity(player, itemStack, entityIds[0]);
                         break;
                     case ICON:
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
+                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, true);
                         ItemStack itemStack1 = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
                         nms.showFakeEntityItem(player, getLocation(), itemStack1, entityIds[1]);
                         nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
@@ -440,7 +440,7 @@ public class HologramLine extends HologramObject {
                     case ENTITY:
                         EntityType entityType = new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType();
                         if (entityType == null || !DecentEntityType.isAllowed(entityType)) break;
-                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
+                        nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, true);
 
                         if (entity.getType().isAlive()) {
                             nms.showFakeEntityLiving(player, getLocation(), entityType, entityIds[1]);
