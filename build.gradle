@@ -8,7 +8,7 @@ defaultTasks 'build'
 
 group 'eu.decentsoftware.holograms'
 version '2.7.10'
-description 'Lightweight yet very powerful hologram plugin with many features and configuration options.'
+description 'A lightweight yet very powerful hologram plugin with many features and configuration options.'
 
 repositories {
     mavenCentral()
@@ -49,7 +49,7 @@ publishing {
 }
 
 processResources {
-    def props = [version: version]
+    def props = [version: version, description: project.description]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {

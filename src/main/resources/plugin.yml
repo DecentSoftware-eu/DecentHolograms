@@ -5,7 +5,7 @@ softdepend:
   - HeadDatabase
   - ProtocolLib
 name: DecentHolograms
-description: Lightweight but powerful hologram plugin with many features and configuration options.
+description: ${description}
 version: ${version}
 author: d0by
 
@@ -17,7 +17,6 @@ commands:
 
 permissions:
   dh.admin:
-    dh.default: true
     description: Allows player to use DecentHolograms.
   dh.default:
     default: true
