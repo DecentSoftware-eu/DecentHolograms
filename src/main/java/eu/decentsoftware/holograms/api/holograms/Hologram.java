@@ -207,6 +207,22 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     protected final Lock lock = new ReentrantLock();
 
+    /**
+     * This object server as a mutex for all visibility related operations.
+     * <p>
+     * For example, when we want to hide a hologram, that's already being
+     * updated on another thread, we would need to wait for the update to
+     * finish before we can hide the hologram. That is because if we didn't,
+     * parts of the hologram might still be visible after the hide operation,
+     * due to the update process.
+     *
+     * @implNote This lock is used to prevent multiple threads from modifying
+     * the visibility of the same hologram at the same time. This is important
+     * because the visibility of a hologram is not thread-safe.
+     * @since 2.7.11
+     */
+    protected final Object visibilityMutex = new Object();
+
     protected final @NonNull String name;
     protected boolean saveToFile;
     protected final @Nullable FileConfig config;
@@ -342,9 +358,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     @Override
     public void enable() {
-        super.enable();
-        this.showAll();
-        this.register();
+        synchronized (visibilityMutex) {
+            super.enable();
+            this.showAll();
+            this.register();
+        }
     }
 
     /**
@@ -353,14 +371,16 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     @Override
     public void disable(@NonNull DisableCause cause) {
-        this.unregister();
-        this.hideAll();
-        super.disable(cause);
+        synchronized (visibilityMutex) {
+            this.unregister();
+            this.hideAll();
+            super.disable(cause);
+        }
     }
 
     @Override
     public void setFacing(float facing) {
-        float prev = this.facing;
+        final float prev = this.facing;
 
         super.setFacing(facing);
 
@@ -594,24 +614,26 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param pageIndex Given page.
      */
     public boolean show(@NonNull Player player, int pageIndex) {
-        if (isDisabled() || isHideState(player) || (!isDefaultVisibleState() && !isShowState(player))) {
+        synchronized (visibilityMutex) {
+            if (isDisabled() || isHideState(player) || (!isDefaultVisibleState() && !isShowState(player))) {
+                return false;
+            }
+            HologramPage page = getPage(pageIndex);
+            if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
+                if (isVisible(player)) {
+                    hide(player);
+                }
+                if (Version.after(8)) {
+                    showPageTo(player, page, pageIndex);
+                } else {
+                    // We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.
+                    // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
+                    S.sync(() -> showPageTo(player, page, pageIndex), 0L);
+                }
+                return true;
+            }
             return false;
         }
-        HologramPage page = getPage(pageIndex);
-        if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
-            if (isVisible(player)) {
-                hide(player);
-            }
-            if (Version.after(8)) {
-                showPageTo(player, page, pageIndex);
-            } else {
-                // We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.
-                // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
-                S.sync(() -> showPageTo(player, page, pageIndex), 0L);
-            }
-            return true;
-        }
-        return false;
     }
 
     private void showPageTo(@NonNull Player player, @NonNull HologramPage page, int pageIndex) {
@@ -622,58 +644,72 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void showAll() {
-        if (isEnabled()) {
-            Bukkit.getOnlinePlayers().forEach(player -> show(player, getPlayerPage(player)));
+        synchronized (visibilityMutex) {
+            if (isEnabled()) {
+                Bukkit.getOnlinePlayers().forEach(player -> show(player, getPlayerPage(player)));
+            }
         }
     }
 
     public void update(@NonNull Player player) {
-        if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
-            return;
-        }
+        synchronized (visibilityMutex) {
+            if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+                return;
+            }
 
-        HologramPage page = getPage(player);
-        if (page != null) {
-            page.getLines().forEach(line -> line.update(player));
+            HologramPage page = getPage(player);
+            if (page != null) {
+                page.getLines().forEach(line -> line.update(player));
+            }
         }
     }
 
     public void updateAll() {
-        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
-            getViewerPlayers().forEach(this::update);
+        synchronized (visibilityMutex) {
+            if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
+                getViewerPlayers().forEach(this::update);
+            }
         }
     }
 
     public void updateAnimations(@NonNull Player player) {
-        if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
-            return;
-        }
+        synchronized (visibilityMutex) {
+            if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+                return;
+            }
 
-        HologramPage page = getPage(player);
-        if (page != null) {
-            page.getLines().forEach(line -> line.updateAnimations(player));
+            HologramPage page = getPage(player);
+            if (page != null) {
+                page.getLines().forEach(line -> line.updateAnimations(player));
+            }
         }
     }
 
     public void updateAnimationsAll() {
-        if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            getViewerPlayers().forEach(this::updateAnimations);
+        synchronized (visibilityMutex) {
+            if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+                getViewerPlayers().forEach(this::updateAnimations);
+            }
         }
     }
 
     public void hide(@NonNull Player player) {
-        if (isVisible(player)) {
-            HologramPage page = getPage(player);
-            if (page != null) {
-                page.getLines().forEach(line -> line.hide(player));
+        synchronized (visibilityMutex) {
+            if (isVisible(player)) {
+                HologramPage page = getPage(player);
+                if (page != null) {
+                    page.getLines().forEach(line -> line.hide(player));
+                }
+                viewers.remove(player.getUniqueId());
             }
-            viewers.remove(player.getUniqueId());
         }
     }
 
     public void hideAll() {
-        if (isEnabled()) {
-            getViewerPlayers().forEach(this::hide);
+        synchronized (visibilityMutex) {
+            if (isEnabled()) {
+                getViewerPlayers().forEach(this::hide);
+            }
         }
     }
 
