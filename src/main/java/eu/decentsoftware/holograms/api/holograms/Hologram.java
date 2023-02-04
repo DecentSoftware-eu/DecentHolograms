@@ -84,7 +84,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     @SuppressWarnings("unchecked")
-    @Nullable
+    @NonNull
     public static Hologram fromFile(final @NotNull String filePath) throws LocationParseException, IllegalArgumentException {
         final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + filePath);
         final String fileName = new File(filePath).getName();

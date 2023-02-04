@@ -281,12 +281,12 @@ public class HologramManager extends Ticked {
 			final String filePath = FileUtils.getRelativePath(file, folder);
 			try {
 				final Hologram hologram = Hologram.fromFile(filePath);
-				if (hologram != null && hologram.isEnabled()) {
+				if (hologram.isEnabled()) {
 					hologram.showAll();
 					hologram.realignLines();
-					registerHologram(hologram);
-					counter++;
 				}
+				registerHologram(hologram);
+				counter++;
 			} catch (LocationParseException e) {
 				// This hologram will load when its world loads.
 				final String worldName = e.getWorldName();
