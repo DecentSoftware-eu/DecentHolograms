@@ -1,9 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
