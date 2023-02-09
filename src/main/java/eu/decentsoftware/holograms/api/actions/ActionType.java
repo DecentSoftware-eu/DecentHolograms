@@ -10,6 +10,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,7 +31,7 @@ public abstract class ActionType {
 	private static final Map<String, ActionType> VALUES = Maps.newHashMap();
 
 	public static ActionType getByName(String name) {
-		return VALUES.get(name);
+		return VALUES.get(name.toUpperCase());
 	}
 
 	public static Collection<ActionType> getActionTypes() {
@@ -198,9 +199,12 @@ public abstract class ActionType {
 	@Getter
 	private final String name;
 
-	public ActionType(String name) {
-		this.name = name;
-		VALUES.put(this.name, this);
+	public ActionType(@NonNull String name) {
+		name = name.toUpperCase();
+		if (VALUES.containsKey(name)) {
+			throw new IllegalArgumentException("ActionType " + name + " already exists!");
+		}
+		VALUES.put(this.name = name, this);
 	}
 
 	public abstract boolean execute(Player player, String... args);
