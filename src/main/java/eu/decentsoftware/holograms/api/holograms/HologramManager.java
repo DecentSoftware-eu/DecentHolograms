@@ -20,7 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 /**
- * This class represents a Manager for handling holograms.
+ * This class is a manager that handles all holograms. It is responsible for
+ * loading, saving, creating, deleting, and updating holograms.
  */
 public class HologramManager extends Ticked {
 
@@ -30,7 +31,7 @@ public class HologramManager extends Ticked {
 	private final @NonNull Set<HologramLine> temporaryLines;
 
 	/**
-	 * Map of holograms to load, when their respective worls loads.
+	 * Map of holograms to load, when their respective world loads.
 	 * <p>
 	 * There were issues with world management plugins loading worlds
 	 * after holograms. Due to that, holograms in these worlds were skipped
@@ -136,6 +137,8 @@ public class HologramManager extends Ticked {
 				continue;
 			}
 
+			// Limit the distance to 5 blocks, this is to prevent
+			// any possible exploits with the entity ID.
 			if (hologram.getLocation().distanceSquared(player.getLocation()) > 25) {
 				continue;
 			}
