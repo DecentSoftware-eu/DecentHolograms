@@ -375,7 +375,6 @@ public class NMS_1_17 extends NMS {
     @Override
     public void helmetFakeEntity(Player player, ItemStack itemStack, int entityId) {
         Validate.notNull(player);
-        Validate.notNull(itemStack);
 
         List<Object> items = new ArrayList<>();
         items.add(PAIR_OF_METHOD.invokeStatic(ENUM_ITEM_SLOT_FROM_NAME_METHOD.invokeStatic("head"), CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack)));

@@ -320,7 +320,6 @@ public class NMS_1_9 extends NMS {
     @Override
     public void helmetFakeEntity(Player player, ItemStack itemStack, int entityId) {
         Validate.notNull(player);
-        Validate.notNull(itemStack);
 
         if (ENUM_ITEM_SLOT_HEAD == null) {
             ENUM_ITEM_SLOT_HEAD = ENUM_ITEM_SLOT_FROM_NAME_METHOD.invokeStatic("head");

@@ -133,6 +133,7 @@ public class HologramLine extends HologramObject {
     private HologramItem item;
     private HologramEntity entity;
 
+    private boolean clearHelmet;
     private volatile boolean containsAnimations;
     private volatile boolean containsPlaceholders;
 
@@ -219,6 +220,7 @@ public class HologramLine extends HologramObject {
             }
             item = new HologramItem(content.substring("#ICON:".length()));
 
+            clearHelmet = prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD;
             containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
         } else if (contentU.startsWith("#SMALLHEAD:")) {
             type = HologramLineType.SMALLHEAD;
@@ -226,17 +228,20 @@ public class HologramLine extends HologramObject {
                 height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
             }
             item = new HologramItem(content.substring("#SMALLHEAD:".length()));
+            clearHelmet = false;
         } else if (contentU.startsWith("#HEAD:")) {
             type = HologramLineType.HEAD;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_HEAD;
             }
             item = new HologramItem(content.substring("#HEAD:".length()));
+            clearHelmet = false;
         } else if (contentU.startsWith("#ENTITY:")) {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
             height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
             setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)));
+            clearHelmet = prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD;
             return;
         } else {
             type = HologramLineType.TEXT;
@@ -245,6 +250,7 @@ public class HologramLine extends HologramObject {
             }
             text = parseCustomReplacements();
 
+            clearHelmet = prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD;
             containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
             containsPlaceholders = PAPI.containsPlaceholders(text);
         }
@@ -487,7 +493,13 @@ public class HologramLine extends HologramObject {
             } else if (type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
             }
+
+            if (clearHelmet) { // Clear the helmet slot if the type no longer a head
+                nms.helmetFakeEntity(player, null, entityIds[0]);
+            }
         }
+
+        clearHelmet = false;
     }
 
     /**
