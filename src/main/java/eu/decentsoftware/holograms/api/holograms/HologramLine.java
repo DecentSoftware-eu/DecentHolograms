@@ -127,6 +127,7 @@ public class HologramLine extends HologramObject {
     private final @NonNull AtomicDouble offsetX = new AtomicDouble(0d);
     private final @NonNull AtomicDouble offsetY = new AtomicDouble(0d);
     private final @NonNull AtomicDouble offsetZ = new AtomicDouble(0d);
+    private boolean dynamicLocation;
     private double height;
     private @NonNull String content;
     private String text;
@@ -141,6 +142,10 @@ public class HologramLine extends HologramObject {
      */
 
     public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NotNull String content) {
+        this(parent, location, content, true);
+    }
+    
+    public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NotNull String content, boolean dynamicLocation) {
         super(location);
         this.parent = parent;
         NMS nms = NMS.getInstance();
@@ -148,7 +153,8 @@ public class HologramLine extends HologramObject {
         this.entityIds[1] = nms.getFreeEntityId();
         this.content = content == null ? "" : content;
         this.type = HologramLineType.UNKNOWN;
-        this.height = Settings.DEFAULT_HEIGHT_TEXT;
+        this.dynamicLocation = dynamicLocation;
+        this.height = dynamicLocation ? Settings.DEFAULT_HEIGHT_TEXT : 0;
         this.parseContent();
     }
 
@@ -214,7 +220,7 @@ public class HologramLine extends HologramObject {
         String contentU = content.toUpperCase(Locale.ROOT);
         if (contentU.startsWith("#ICON:")) {
             type = HologramLineType.ICON;
-            if (prevType != type) {
+            if (isDynamicLocation() && prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_ICON;
             }
             item = new HologramItem(content.substring("#ICON:".length()));
@@ -222,25 +228,27 @@ public class HologramLine extends HologramObject {
             containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
         } else if (contentU.startsWith("#SMALLHEAD:")) {
             type = HologramLineType.SMALLHEAD;
-            if (prevType != type) {
+            if (isDynamicLocation() && prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
             }
             item = new HologramItem(content.substring("#SMALLHEAD:".length()));
         } else if (contentU.startsWith("#HEAD:")) {
             type = HologramLineType.HEAD;
-            if (prevType != type) {
+            if (isDynamicLocation() && prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_HEAD;
             }
             item = new HologramItem(content.substring("#HEAD:".length()));
         } else if (contentU.startsWith("#ENTITY:")) {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
-            height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
-            setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)));
+            if (isDynamicLocation()) {
+                height = NMS.getInstance().getEntityHeight(entity.getType()) + 0.15;
+                setOffsetY(-(height + (Version.afterOrEqual(13) ? 0.1 : 0.2)));
+            }
             return;
         } else {
             type = HologramLineType.TEXT;
-            if (prevType != type) {
+            if (isDynamicLocation() && prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT;
             }
             text = parseCustomReplacements();
@@ -248,7 +256,9 @@ public class HologramLine extends HologramObject {
             containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
             containsPlaceholders = PAPI.containsPlaceholders(text);
         }
-        setOffsetY(type.getClickableOffsetY());
+        if (isDynamicLocation()) {
+            setOffsetY(type.getClickableOffsetY());
+        }
     }
 
     @NonNull
@@ -581,6 +591,14 @@ public class HologramLine extends HologramObject {
 
     public void setOffsetZ(double offsetZ) {
         this.offsetZ.set(offsetZ);
+    }
+
+    public boolean isDynamicLocation() {
+        return this.dynamicLocation;
+    }
+
+    public void setDynamicLocation(boolean dynamicLocation) {
+        this.dynamicLocation = dynamicLocation;
     }
 
     /*
