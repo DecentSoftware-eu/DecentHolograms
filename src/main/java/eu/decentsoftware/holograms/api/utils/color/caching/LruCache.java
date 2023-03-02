@@ -43,7 +43,8 @@ public class LruCache {
         if (MAP.containsKey(input)) {
             QUE.remove(input);
         } else {
-            if (QUE.size() == maxSize) {
+            int size = QUE.size();
+            if (size == maxSize && size > 0) {
                 String temp = QUE.removeLast();
                 MAP.remove(temp);
             }
