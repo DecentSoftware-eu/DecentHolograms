@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
+import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
@@ -234,6 +235,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
     private final @NonNull AtomicInteger tickCounter;
+    private boolean clickable = false;
 
     /*
      *	Constructors
@@ -641,6 +643,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
         viewers.add(player.getUniqueId());
+        if (isClickable() || page.isClickable()) {
+            showClickableEntities(player);
+        }
     }
 
     public void showAll() {
@@ -699,6 +704,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 HologramPage page = getPage(player);
                 if (page != null) {
                     page.getLines().forEach(line -> line.hide(player));
+                    hideClickableEntities(player);
                 }
                 viewers.remove(player.getUniqueId());
             }
@@ -712,6 +718,72 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             }
         }
     }
+
+    public void showClickableEntities(@NonNull Player player) {
+        HologramPage page = getPage(player);
+        if (page == null) {
+            return;
+        }
+
+        // Spawn clickable entities
+        NMS nms = NMS.getInstance();
+        int amount = (int) (page.getHeight() / 2) + 1;
+        Location location = getLocation().clone();
+        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
+        for (int i = 0; i < amount; i++) {
+            int id = page.getClickableEntityId(i);
+            nms.showFakeEntityArmorStand(player, location, id, true, false, true);
+            location.add(0, 1.8, 0);
+        }
+    }
+
+    public void showClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::showClickableEntities);
+        }
+    }
+
+    public void hideClickableEntities(@NonNull Player player) {
+        HologramPage page = getPage(player);
+        if (page == null) {
+            return;
+        }
+
+        // Despawn clickable entities
+        NMS nms = NMS.getInstance();
+        page.getClickableEntityIds().forEach(id -> nms.hideFakeEntities(player, id));
+    }
+
+    public void hideClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::hideClickableEntities);
+        }
+    }
+
+    public void teleportClickableEntities(@NonNull Player player) {
+        HologramPage page = getPage(player);
+        if (page == null) {
+            return;
+        }
+
+        // Spawn clickable entities
+        NMS nms = NMS.getInstance();
+        int amount = (int) (page.getHeight() / 2) + 1;
+        Location location = getLocation().clone();
+        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
+        for (int i = 0; i < amount; i++) {
+            int id = page.getClickableEntityId(i);
+            nms.teleportFakeEntity(player, location, id);
+            location.add(0, 1.8, 0);
+        }
+    }
+
+    public void teleportClickableEntitiesAll() {
+        if (isEnabled()) {
+            getViewerPlayers().forEach(this::teleportClickableEntities);
+        }
+    }
+
 
     /**
      * Check whether the given player is in display range of this hologram object.
@@ -758,6 +830,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void setDownOrigin(boolean downOrigin) {
         this.downOrigin = downOrigin;
+        this.hideClickableEntitiesAll();
+        this.showClickableEntitiesAll();
     }
 
     /*
