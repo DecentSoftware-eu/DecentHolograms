@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public enum HologramLineType {
 	UNKNOWN(0, 0),
-	TEXT(-1.5d, -2.45d),
+	TEXT(-0.5d, -2.45d),
 	HEAD(-2.0d, -2.0d),
 	SMALLHEAD(-1.1875d, -1.1875d),
 	ICON(-0.55d, -1.325d),
