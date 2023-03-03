@@ -408,6 +408,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void setLocation(@NonNull Location location) {
         super.setLocation(location);
+        teleportClickableEntitiesAll();
     }
 
     /**
@@ -643,9 +644,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
         viewers.add(player.getUniqueId());
-        if (isClickable() || page.isClickable()) {
-            showClickableEntities(player);
-        }
+        showClickableEntities(player);
     }
 
     public void showAll() {
@@ -721,7 +720,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null) {
+        if (page == null || (!page.isClickable() && !isClickable())) {
             return;
         }
 
@@ -762,7 +761,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void teleportClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null) {
+        if (page == null || (!page.isClickable() && !isClickable())) {
             return;
         }
 
