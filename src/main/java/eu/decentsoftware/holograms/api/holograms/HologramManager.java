@@ -139,7 +139,9 @@ public class HologramManager extends Ticked {
 
 			// Limit the distance to 5 blocks, this is to prevent
 			// any possible exploits with the entity ID.
-			if (hologram.getLocation().distanceSquared(player.getLocation()) > 25) {
+			double dx = hologram.getLocation().getX() - player.getLocation().getX();
+			double dz = hologram.getLocation().getZ() - player.getLocation().getZ();
+			if (dx > 5 || dx < -5 || dz > 5 || dz < -5) {
 				continue;
 			}
 
