@@ -49,7 +49,9 @@ public class PacketListener {
                 pipeline.addBefore("packet_handler", IDENTIFIER, packetHandler);
             }
             return true;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -72,7 +74,9 @@ public class PacketListener {
                 pipeline.remove(IDENTIFIER);
             }
             return true;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

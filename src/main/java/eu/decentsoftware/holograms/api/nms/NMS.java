@@ -42,22 +42,22 @@ public abstract class NMS {
             craftPlayerClass = ReflectionUtil.getObcClass("entity.CraftPlayer");
             networkManagerClass = ReflectionUtil.getNMClass("network.NetworkManager");
             PACKET_CLASS = ReflectionUtil.getNMClass("network.protocol.Packet");
-            // Because spigot
-            for (Field field : entityPlayerClass.getFields()) {
-                if (field.getType().isAssignableFrom(playerConnectionClass) && ENTITY_PLAYER_CONNECTION_FIELD == null) {
+            // Because NMS has different names for fields in almost every version.
+            for (Field field : entityPlayerClass.getDeclaredFields()) {
+                if (field.getType().isAssignableFrom(playerConnectionClass)) {
                     ENTITY_PLAYER_CONNECTION_FIELD  = new ReflectField<>(entityPlayerClass, field.getName());
                     break;
                 }
             }
-            for (Field field : networkManagerClass.getFields()) {
-                if (field.getType().isAssignableFrom(Channel.class) && NETWORK_MANAGER_CHANNEL_FIELD == null) {
-                    NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, field.getName());
+            for (Field field : playerConnectionClass.getDeclaredFields()) {
+                if (field.getType().isAssignableFrom(networkManagerClass)) {
+                    PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
                     break;
                 }
             }
-            for (Field field : playerConnectionClass.getFields()) {
-                if (field.getType().isAssignableFrom(networkManagerClass) && PLAYER_CONNECTION_NETWORK_MANAGER_FIELD == null) {
-                    PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
+            for (Field field : networkManagerClass.getDeclaredFields()) {
+                if (field.getType().isAssignableFrom(Channel.class)) {
+                    NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, field.getName());
                     break;
                 }
             }

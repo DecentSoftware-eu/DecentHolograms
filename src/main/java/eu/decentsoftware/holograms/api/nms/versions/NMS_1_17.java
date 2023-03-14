@@ -141,7 +141,12 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_18_R2)) {
+            if (Version.afterOrEqual(Version.v1_19_R3)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "an").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aS").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bB").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_18_R2)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "Z").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aM").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aN").getValue(null);
@@ -171,7 +176,13 @@ public class NMS_1_17 extends NMS {
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, Version.afterOrEqual(Version.v1_19_R2) ? "n" : "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");
 
-        ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, Version.CURRENT.equals(Version.v1_18_R2) || Version.afterOrEqual(19) ? "c" : "b");
+        if (Version.afterOrEqual(Version.v1_19_R3)) {
+            ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "d");
+        } else if (Version.CURRENT.equals(Version.v1_18_R2) || Version.afterOrEqual(19)) {
+            ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "c");
+        } else {
+            ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "b");
+        }
         VEC_3D_A = new ReflectField<>(VEC_3D_CLASS, Version.afterOrEqual(19) ? "b" : "a").getValue(null);
     }
 
