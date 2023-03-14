@@ -19,7 +19,7 @@ public class Settings {
     @Key("update-checker")
     public static boolean CHECK_FOR_UPDATES = true;
     @Key(value = "click-cooldown", min = 1, max = 300)
-    public static int CLICK_COOLDOWN = 5;
+    public static int CLICK_COOLDOWN = 1;
     @Key("default.text")
     public static String DEFAULT_TEXT = "Blank Line";
     @Key("defaults.down-origin")
