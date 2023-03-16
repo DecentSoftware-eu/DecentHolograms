@@ -13,11 +13,11 @@ public abstract class DecentHologramsEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    public DecentHologramsEvent() {
+    protected DecentHologramsEvent() {
         super();
     }
 
-    public DecentHologramsEvent(boolean isAsync) {
+    protected DecentHologramsEvent(boolean isAsync) {
         super(isAsync);
     }
 

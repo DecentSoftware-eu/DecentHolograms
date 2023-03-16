@@ -17,7 +17,7 @@ public class PacketListener {
     public PacketListener() {
         if (Common.isPluginEnabled("ProtocolLib")) {
             // If ProtocolLib is present, use it for packet listening.
-            new PacketHandler__ProtocolLib();
+            new PacketHandlerProtocolLib();
             usingProtocolLib = true;
             Common.log("Using ProtocolLib for packet listening.");
         } else {
@@ -45,14 +45,14 @@ public class PacketListener {
         try {
             ChannelPipeline pipeline = nms.getPipeline(player);
             if (pipeline.get(IDENTIFIER) == null) {
-                PacketHandler__Custom packetHandler = new PacketHandler__Custom(player);
+                PacketHandlerCustom packetHandler = new PacketHandlerCustom(player);
                 pipeline.addBefore("packet_handler", IDENTIFIER, packetHandler);
             }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     public void hookAll() {

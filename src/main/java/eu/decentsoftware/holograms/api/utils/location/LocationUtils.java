@@ -82,7 +82,9 @@ public class LocationUtils {
 		UUID uuid = null;
 		try {
 			uuid = UUID.fromString(value);
-		} catch (IllegalArgumentException ignored) {}
+		} catch (IllegalArgumentException ignored) {
+			// Not a UUID
+		}
 		
 		return uuid == null ? Bukkit.getWorld(value) : Bukkit.getWorld(uuid);
 	}

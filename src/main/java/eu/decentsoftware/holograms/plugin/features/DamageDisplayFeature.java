@@ -109,14 +109,14 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		}
 
 		Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1 + heightOffset, 0));
-		String appearance;
 		Entity damager = (e instanceof EntityDamageByEntityEvent) ? ((EntityDamageByEntityEvent) e).getDamager() : null;
+		String currentAppearance;
 		if (damager instanceof Player && isCritical((Player) damager)) {
-			appearance = this.criticalAppearance;
+			currentAppearance = this.criticalAppearance;
 		} else {
-			appearance = this.appearance;
+			currentAppearance = this.appearance;
 		}
-		String text = appearance.replace("{damage}", FeatureCommons.formatNumber(damage));
+		String text = currentAppearance.replace("{damage}", FeatureCommons.formatNumber(damage));
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 
@@ -142,6 +142,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 				return false;
 			}
 		} catch (Exception ignored) {
+			// The effect is not in this version
 		}
 		return true;
 	}

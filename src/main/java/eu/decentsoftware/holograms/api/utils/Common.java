@@ -74,7 +74,7 @@ public class Common {
 	 * @param message The message.
 	 */
 	public static void log(Level level, String message) {
-		Bukkit.getServer().getLogger().log(level, "[DecentHolograms] " + message);
+		Bukkit.getServer().getLogger().log(level, "[DecentHolograms] {0}", message);
 	}
 
 	/**
@@ -89,19 +89,6 @@ public class Common {
 	 */
 	public static void log(Level level, String message, Object... args) {
 		log(level, String.format(message, args));
-	}
-
-	/*
-	 * 	Debug
-	 */
-
-	/**
-	 * Print an object into console.
-	 *
-	 * @param o Object to print.
-	 */
-	public static void debug(Object o) {
-		System.out.println(o);
 	}
 
 	/*
@@ -152,7 +139,7 @@ public class Common {
 		String current = DecentHologramsAPI.get().getPlugin().getDescription().getVersion();
 		int[] i1 = splitVersion(version);
 		int[] i2 = splitVersion(current);
-		if (i1 == null || i1.length < 3 || i2 == null || i2.length < 3) {
+		if (i1.length < 3 || i2.length < 3) {
 			return false;
 		}
 		return i1[0] > i2[0] || // Major version is higher.

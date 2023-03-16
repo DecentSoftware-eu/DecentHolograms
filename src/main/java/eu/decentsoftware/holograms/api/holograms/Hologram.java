@@ -47,17 +47,17 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *	Hologram Cache
      */
 
-	/**
-	 * This map contains all cached holograms. This map is used to get holograms by name.
-	 * <p>
-	 * Holograms are cached when they are loaded from files or created. They are removed
-	 * from the cache when they are deleted.
-	 * <p>
-	 * Holograms, that are only in this map and not in the {@link HologramManager}, are not
-	 * editable via commands. They are only editable via the API.
-	 *
-	 * @see #getCachedHologram(String)
-	 */
+    /**
+     * This map contains all cached holograms. This map is used to get holograms by name.
+     * <p>
+     * Holograms are cached when they are loaded from files or created. They are removed
+     * from the cache when they are deleted.
+     * <p>
+     * Holograms, that are only in this map and not in the {@link HologramManager}, are not
+     * editable via commands. They are only editable via the API.
+     *
+     * @see #getCachedHologram(String)
+     */
     private static final @NonNull Map<String, Hologram> CACHED_HOLOGRAMS;
 
     static {
@@ -183,6 +183,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                     try {
                         values = (Map<String, Object>) lineMap;
                     } catch (Exception ignored) {
+                        // Ignore
                     }
                     if (values == null) continue;
                     HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
@@ -254,9 +255,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Creates a new hologram with the given name and location.
      *
-     * @param name        The name of the hologram.
-     * @param location    The location of the hologram.
-     * @param saveToFile  Whether the hologram should be saved to a file.
+     * @param name       The name of the hologram.
+     * @param location   The location of the hologram.
+     * @param saveToFile Whether the hologram should be saved to a file.
      */
     public Hologram(@NonNull String name, @NonNull Location location, boolean saveToFile) {
         this(name, location, saveToFile ? new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name)) : null);
@@ -390,7 +391,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // We want to keep the hologram facing working as a "default" value, but we don't want
         // it to override custom line facing.
         for (HologramPage page : this.pages) {
-            page.getLines().forEach((line) -> {
+            page.getLines().forEach(line -> {
                 if (line.getFacing() == prev) {
                     line.setFacing(facing);
                 }
@@ -428,32 +429,32 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean save() {
         if (!saveToFile) {
-			return true;
+            return true;
         }
 
-	    DExecutor.execute(() -> {
-		    try {
-			    lock.tryLock(250, TimeUnit.MILLISECONDS);
+        DExecutor.execute(() -> {
+            try {
+                lock.tryLock(250, TimeUnit.MILLISECONDS);
 
-			    config.set("location", LocationUtils.asString(getLocation(), false));
-			    config.set("enabled", isEnabled());
-			    config.set("permission", permission == null || permission.isEmpty() ? null : permission);
-			    config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
-			    config.set("display-range", displayRange);
-			    config.set("update-range", updateRange);
-			    config.set("update-interval", updateInterval);
-			    config.set("facing", facing);
-			    config.set("down-origin", downOrigin);
-			    config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
-			    config.saveData();
-			    config.reload();
-		    } catch (InterruptedException ignored) {
+                config.set("location", LocationUtils.asString(getLocation(), false));
+                config.set("enabled", isEnabled());
+                config.set("permission", permission == null || permission.isEmpty() ? null : permission);
+                config.set("flags", flags.isEmpty() ? null : flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
+                config.set("display-range", displayRange);
+                config.set("update-range", updateRange);
+                config.set("update-interval", updateInterval);
+                config.set("facing", facing);
+                config.set("down-origin", downOrigin);
+                config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
+                config.saveData();
+                config.reload();
+            } catch (InterruptedException ignored) {
                 // Failed to acquire lock, cancel save.
             } finally {
-			    // Prevents deadlocks
-			    lock.unlock();
-		    }
-		});
+                // Prevents deadlocks
+                lock.unlock();
+            }
+        });
         return true;
     }
 
@@ -503,21 +504,21 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return false;
         }
         HologramPage page = getPage(player);
-        if (page != null && page.hasEntity(entityId)) {
-            if (EventFactory.handleHologramInteractEvent(player, this, page, clickType, entityId)) {
-                page.executeActions(player, clickType);
-                return true;
-            }
+        boolean clickedThisHologram = page != null && page.hasEntity(entityId);
+        boolean eventNotCancelled = EventFactory.handleHologramClickEvent(player, this, page, clickType, entityId);
+        if (clickedThisHologram && eventNotCancelled) {
+            page.executeActions(player, clickType);
+            return true;
         }
         return false;
     }
 
-	/**
-	 * Handle the player quit event for this hologram. This method will hide the hologram
-	 * from the player and remove the player from the show/hide lists.
-	 *
-	 * @param player The player that quit.
-	 */
+    /**
+     * Handle the player quit event for this hologram. This method will hide the hologram
+     * from the player and remove the player from the show/hide lists.
+     *
+     * @param player The player that quit.
+     */
     public void onQuit(@NonNull Player player) {
         hide(player);
         removeShowPlayer(player);
@@ -797,10 +798,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
          * and return false, because the player is not in range.
          */
         try {
-            if (player != null && player.getWorld().equals(location.getWorld())) {
+            if (player.getWorld().equals(location.getWorld())) {
                 return player.getLocation().distanceSquared(location) <= displayRange * displayRange;
             }
         } catch (Exception ignored) {
+            // Ignored
         }
         return false;
     }
@@ -819,10 +821,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
          * and return false, because the player is not in range.
          */
         try {
-            if (player != null && player.getWorld().equals(location.getWorld())) {
+            if (player.getWorld().equals(location.getWorld())) {
                 return player.getLocation().distanceSquared(location) <= updateRange * updateRange;
             }
         } catch (Exception ignored) {
+            // Ignored
         }
         return false;
     }
@@ -903,7 +906,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public HologramPage removePage(int index) {
-        if (index < 0 || index > size()) return null;
+        if (index < 0 || index > size()) {
+            return null;
+        }
+
         HologramPage page = pages.remove(index);
         page.getLines().forEach(HologramLine::hide);
 
@@ -911,9 +917,11 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         for (int i = 0; i < pages.size(); i++) {
             pages.get(i).setIndex(i);
         }
+
         // Update all page indexes of current viewers, so they still see the same page.
-        if (pages.size() > 0) {
-            for (UUID uuid : viewerPages.keySet()) {
+        if (pages.isNotEmpty()) {
+            for (Map.Entry<UUID, Integer> entry : viewerPages.entrySet()) {
+                UUID uuid = entry.getKey();
                 int currentPage = viewerPages.get(uuid);
                 if (currentPage == index) {
                     show(Bukkit.getPlayer(uuid), 0);

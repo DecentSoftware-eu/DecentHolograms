@@ -5,9 +5,11 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 
-public class PacketHandlerCommon {
+@UtilityClass
+public final class PacketHandlerCommon {
 
     protected static final Class<?> ENTITY_USE_PACKET_CLASS;
     protected static final ReflectField<Integer> ENTITY_USE_PACKET_ID_FIELD;

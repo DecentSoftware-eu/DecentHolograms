@@ -22,7 +22,7 @@ public abstract class UpdatingHologramObject extends HologramObject {
      *	Constructors
      */
 
-    public UpdatingHologramObject(@NonNull Location location) {
+    protected UpdatingHologramObject(@NonNull Location location) {
         super(location);
     }
 

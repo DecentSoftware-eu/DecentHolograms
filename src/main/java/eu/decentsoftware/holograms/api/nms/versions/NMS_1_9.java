@@ -3,7 +3,6 @@ package eu.decentsoftware.holograms.api.nms.versions;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.RandomUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import org.apache.commons.lang.Validate;
@@ -215,7 +214,7 @@ public class NMS_1_9 extends NMS {
         Object namespacedKey = ENTITY_TYPE_GET_KEY_METHOD.invoke(type);
         String key = NAMESPACED_KEY_GET_KEY_METHOD.invoke(namespacedKey);
         java.util.Optional<?> entityTypes = ENTITY_TYPES_A_METHOD.invokeStatic(key.toLowerCase());
-        return entityTypes.map((entityType) -> {
+        return entityTypes.map(entityType -> {
             Object registryBlocks = I_REGISTRY_ENTITY_TYPE_FIELD.getValue(null);
             return REGISTRY_BLOCKS_GET_ID_METHOD.<Integer>invoke(registryBlocks, entityType);
         }).orElse(-1);
@@ -231,7 +230,7 @@ public class NMS_1_9 extends NMS {
         Object namespacedKey = ENTITY_TYPE_GET_KEY_METHOD.invoke(type);
         String key = NAMESPACED_KEY_GET_KEY_METHOD.invoke(namespacedKey);
         java.util.Optional<?> entityTypes = ENTITY_TYPES_A_METHOD.invokeStatic(key.toLowerCase());
-        return entityTypes.map((entityType) -> {
+        return entityTypes.map(entityType -> {
             Object entitySize = ENTITY_TYPES_GET_SIZE_METHOD.invoke(entityType);
             return ENTITY_SIZE_HEIGHT_FIELD.getValue(entitySize);
         }).orElse(0.0f);

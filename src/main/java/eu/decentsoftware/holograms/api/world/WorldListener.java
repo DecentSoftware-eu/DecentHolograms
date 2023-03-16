@@ -35,7 +35,7 @@ public class WorldListener implements Listener {
 
         S.async(() -> {
             if (hm.getToLoad().containsKey(world.getName())) {
-                hm.getToLoad().get(world.getName()).forEach((fileName) -> {
+                hm.getToLoad().get(world.getName()).forEach(fileName -> {
                     try {
                         Hologram hologram = Hologram.fromFile(fileName);
                         if (hologram != null && hologram.isEnabled()) {
@@ -44,6 +44,7 @@ public class WorldListener implements Listener {
                             hm.registerHologram(hologram);
                         }
                     } catch (LocationParseException ignored) {
+                        // Failed to load the hologram.
                     }
                 });
             }

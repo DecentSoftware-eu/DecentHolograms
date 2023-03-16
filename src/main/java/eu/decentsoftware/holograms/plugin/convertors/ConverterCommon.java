@@ -8,13 +8,15 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.Common;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 
-public class ConverterCommon {
+@UtilityClass
+public final class ConverterCommon {
     
     public static void createHologram(ConvertorResult convertorResult, String name, Location location, List<String> lines, DecentHolograms plugin) {
         if (plugin.getHologramManager().containsHologram(name)) {

@@ -176,7 +176,7 @@ public class Lang {
         info.add(String.format(" &8• &7Update Range: &b%d", hologram.getUpdateRange()));
         info.add(String.format(" &8• &7Display Range: &b%d", hologram.getDisplayRange()));
         if (!hologram.getFlags().isEmpty()) {
-            String.format(" &8• &7Flags: &b%s", hologram.getFlags().stream().map(EnumFlag::name).collect(Collectors.joining(", ")));
+            info.add(String.format(" &8• &7Flags: &b%s", hologram.getFlags().stream().map(EnumFlag::name).collect(Collectors.joining(", "))));
         }
         return info;
     }

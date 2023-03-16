@@ -5,11 +5,11 @@ import org.bukkit.Location;
 
 public abstract class MoveAnimation extends Animation {
 
-    public MoveAnimation(@NonNull String name, int speed, int pause) {
+    protected MoveAnimation(@NonNull String name, int speed, int pause) {
         super(name, speed, pause);
     }
 
-    public MoveAnimation(@NonNull String name, int speed, int pause, String... aliases) {
+    protected MoveAnimation(@NonNull String name, int speed, int pause, String... aliases) {
         super(name, speed, pause, aliases);
     }
 

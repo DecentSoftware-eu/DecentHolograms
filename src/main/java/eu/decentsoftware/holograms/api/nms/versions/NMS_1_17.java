@@ -197,7 +197,7 @@ public class NMS_1_17 extends NMS {
         Object namespacedKey = ENTITY_TYPE_GET_KEY_METHOD.invoke(type);
         String key = NAMESPACED_KEY_GET_KEY_METHOD.invoke(namespacedKey);
         Optional<?> entityTypes = ENTITY_TYPES_A_METHOD.invokeStatic(key.toLowerCase());
-        return entityTypes.map((entityType) -> {
+        return entityTypes.map(entityType -> {
             Object registryBlocks = ENTITY_TYPES_REGISTRY_FIELD.getValue(null);
             return REGISTRY_BLOCKS_GET_ID_METHOD.<Integer>invoke(registryBlocks, entityType);
         }).orElse(-1);
@@ -209,7 +209,7 @@ public class NMS_1_17 extends NMS {
         Object namespacedKey = ENTITY_TYPE_GET_KEY_METHOD.invoke(type);
         String key = NAMESPACED_KEY_GET_KEY_METHOD.invoke(namespacedKey);
         Optional<?> entityTypes = ENTITY_TYPES_A_METHOD.invokeStatic(key.toLowerCase());
-        return entityTypes.map((entityType) -> {
+        return entityTypes.map(entityType -> {
             Object entitySize = ENTITY_TYPES_GET_SIZE_METHOD.invoke(entityType);
             return ENTITY_SIZE_HEIGHT_FIELD.getValue(entitySize);
         }).orElse(0.0f);

@@ -12,7 +12,7 @@ public class ReflectionUtil {
 
 	public static String getVersion() {
 		if (version == null) {
-			version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];;
+			version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		}
 		return version;
 	}
@@ -60,8 +60,9 @@ public class ReflectionUtil {
 			field.setAccessible(true);
 			field.set(object, value);
 			return true;
-		} catch (NoSuchFieldException | IllegalAccessException ignored) {}
-		return false;
+		} catch (NoSuchFieldException | IllegalAccessException ignored) {
+			return false;
+		}
 	}
 
 }

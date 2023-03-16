@@ -8,12 +8,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DExecutor {
 
     private static boolean initialized = false;
     private static ExecutorService service;
-    private static int threadId;
 
     /**
      * Initialize DExecutor. This method will set up ExecutorService for DecentHolograms.
@@ -22,10 +22,10 @@ public class DExecutor {
      */
     public static void init(int threads) {
         if (!initialized) {
-            threadId = 0;
-            service = Executors.newFixedThreadPool(threads, (runnable) -> {
+            AtomicInteger threadId = new AtomicInteger(0);
+            service = Executors.newFixedThreadPool(threads, runnable -> {
                 Thread thread = new Thread(runnable);
-                thread.setName("DecentHolograms Thread #" + ++threadId);
+                thread.setName("DecentHolograms Thread #" + threadId.incrementAndGet());
                 thread.setPriority(Thread.NORM_PRIORITY);
                 thread.setDaemon(true);
                 thread.setUncaughtExceptionHandler((t, ex) -> {

@@ -146,7 +146,7 @@ public class HologramLine extends HologramObject {
         NMS nms = NMS.getInstance();
         this.entityIds[0] = nms.getFreeEntityId();
         this.entityIds[1] = nms.getFreeEntityId();
-        this.content = content == null ? "" : content;
+        this.content = content;
         this.type = HologramLineType.UNKNOWN;
         this.height = Settings.DEFAULT_HEIGHT_TEXT;
         this.parseContent();
@@ -339,10 +339,6 @@ public class HologramLine extends HologramObject {
 
     @NotNull
     private String parsePlaceholders(@NotNull String string, @NonNull Player player, boolean papi) {
-        if (string == null) {
-            return "";
-        }
-
         // Replace internal placeholders.
         string = string.replace("{player}", player.getName());
         string = string.replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1));
@@ -475,10 +471,10 @@ public class HologramLine extends HologramObject {
             if (type == HologramLineType.TEXT) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, true);
-                if (!text.equals(lastText)) {
-                    lastTextMap.put(uuid, text);
-                    nms.updateFakeEntityCustomName(player, text, entityIds[0]);
+                String updatedText = getText(player, true);
+                if (!updatedText.equals(lastText)) {
+                    lastTextMap.put(uuid, updatedText);
+                    nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
                 }
             } else if (type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
@@ -522,10 +518,10 @@ public class HologramLine extends HologramObject {
             if (type == HologramLineType.TEXT) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
-                String text = getText(player, false);
-                if (!text.equals(lastText)) {
-                    lastTextMap.put(uuid, text);
-                    nms.updateFakeEntityCustomName(player, text, entityIds[0]);
+                String updatedText = getText(player, false);
+                if (!updatedText.equals(lastText)) {
+                    lastTextMap.put(uuid, updatedText);
+                    nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
                 }
             }
         }

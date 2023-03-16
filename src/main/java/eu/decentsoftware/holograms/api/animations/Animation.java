@@ -14,11 +14,11 @@ public abstract class Animation {
     private final int speed;
     private final int pause;
 
-    public Animation(@NonNull String name, int speed, int pause) {
+    protected Animation(@NonNull String name, int speed, int pause) {
         this(name, speed, pause, new String[0]);
     }
 
-    public Animation(@NonNull String name, int speed, int pause, String... aliases) {
+    protected Animation(@NonNull String name, int speed, int pause, String... aliases) {
         this.name = name;
         this.speed = speed;
         this.pause = pause;

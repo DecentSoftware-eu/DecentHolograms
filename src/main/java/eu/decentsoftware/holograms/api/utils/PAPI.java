@@ -12,6 +12,15 @@ import java.util.stream.Collectors;
 public class PAPI {
 
 	/**
+	 * Check if PlaceholderAPI is available.
+	 *
+	 * @return True if PlaceholderAPI is available.
+	 */
+	public static boolean isAvailable() {
+		return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+	}
+
+	/**
 	 * Set placeholders to given String for given Player.
 	 *
 	 * @param player The player.
@@ -19,10 +28,8 @@ public class PAPI {
 	 * @return The string with replaced placeholders.
 	 */
 	public static String setPlaceholders(Player player, String string) {
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			try {
-				return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
-			} catch (Exception ignored) {}
+		if (isAvailable()) {
+			return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
 		}
 		return string;
 	}
@@ -35,7 +42,7 @@ public class PAPI {
 	 * @return The string with replaced placeholders.
 	 */
 	public static List<String> setPlaceholders(Player player, List<String> stringList) {
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (isAvailable()) {
 			return stringList.stream().map(s -> setPlaceholders(player, s)).collect(Collectors.toList());
 		}
 		return stringList;
@@ -48,7 +55,7 @@ public class PAPI {
 	 * @return True if the string contains any placeholders, false otherwise.
 	 */
 	public static boolean containsPlaceholders(String string) {
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (isAvailable()) {
 			return PlaceholderAPI.containsPlaceholders(string);
 		}
 		return false;

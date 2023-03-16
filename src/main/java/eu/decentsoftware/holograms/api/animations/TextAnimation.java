@@ -4,11 +4,11 @@ import lombok.NonNull;
 
 public abstract class TextAnimation extends Animation {
 
-    public TextAnimation(@NonNull String name, int speed, int pause) {
+    protected TextAnimation(@NonNull String name, int speed, int pause) {
         super(name, speed, pause);
     }
 
-    public TextAnimation(@NonNull String name, int speed, int pause, String... aliases) {
+    protected TextAnimation(@NonNull String name, int speed, int pause, String... aliases) {
         super(name, speed, pause, aliases);
     }
 

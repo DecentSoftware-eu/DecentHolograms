@@ -31,7 +31,7 @@ public abstract class HologramObject extends FlagHolder {
      *	Constructors
      */
 
-    public HologramObject(@NonNull Location location) {
+    protected HologramObject(@NonNull Location location) {
         this.location = location;
         this.location.setPitch(0.0f);
     }

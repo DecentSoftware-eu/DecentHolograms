@@ -12,8 +12,10 @@ import org.bukkit.entity.Player;
 @UtilityClass
 public class EventFactory {
 
-    public static boolean handleHologramInteractEvent(Player player, Hologram hologram, HologramPage page, ClickType clickType, int entityId) {
-        if (HologramClickEvent.getHandlerList().getRegisteredListeners().length == 0) return true;
+    public static boolean handleHologramClickEvent(Player player, Hologram hologram, HologramPage page, ClickType clickType, int entityId) {
+        if (HologramClickEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return true;
+        }
 
         HologramClickEvent event = new HologramClickEvent(player, hologram, page, clickType, entityId);
         Bukkit.getPluginManager().callEvent(event);
@@ -22,7 +24,9 @@ public class EventFactory {
     }
 
     public static boolean handleReloadEvent() {
-        if (DecentHologramsReloadEvent.getHandlerList().getRegisteredListeners().length == 0) return true;
+        if (DecentHologramsReloadEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return true;
+        }
 
         DecentHologramsReloadEvent event = new DecentHologramsReloadEvent();
         Bukkit.getPluginManager().callEvent(event);
