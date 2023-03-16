@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +23,8 @@ import java.util.List;
  * @author d0by
  * @since 2.0.12
  */
+@SuppressWarnings("unused")
+@UtilityClass
 public final class DHAPI {
 
     /**
@@ -70,15 +73,21 @@ public final class DHAPI {
      * @param saveToFile Boolean: Should the hologram be saved into file?
      * @param lines      The lines of this hologram.
      * @return The new hologram.
-     * @throws IllegalArgumentException If name or location is null or hologram with the given name already exists.
+     * @throws IllegalArgumentException If name or location is null or hologram with the given name already exists
+     *                                  or if the name contains invalid characters.
      */
     public static Hologram createHologram(String name, Location location, boolean saveToFile, List<String> lines) throws IllegalArgumentException {
         Validate.notNull(name);
         Validate.notNull(location);
 
+        if (!name.matches(Common.NAME_REGEX)) {
+            throw new IllegalArgumentException(String.format("Hologram name can only contain alphanumeric characters, underscores and dashes! (%s)", name));
+        }
+
         if (Hologram.getCachedHologramNames().contains(name)) {
             throw new IllegalArgumentException(String.format("Hologram with that name already exists! (%s)", name));
         }
+
         Hologram hologram = new Hologram(name, location, saveToFile);
         HologramPage page = hologram.getPage(0);
         if (lines != null) {
