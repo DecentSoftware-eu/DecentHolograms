@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class Common {
 
+	public static final String NAME_REGEX = "[a-zA-Z0-9_-]+";
+
 	private static final Pattern SPACING_CHARS_REGEX;
 	public static String PREFIX;
 

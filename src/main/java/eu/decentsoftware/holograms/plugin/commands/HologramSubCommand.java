@@ -311,7 +311,7 @@ public class HologramSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				final String hologramName = args[0];
 				// Check if the name is valid.
-				if (!hologramName.matches("[a-zA-Z0-9_-]+")) {
+				if (!hologramName.matches(Common.NAME_REGEX)) {
 					Lang.HOLOGRAM_INVALID_NAME.send(sender, hologramName);
 					return true;
 				}

@@ -282,7 +282,7 @@ public class HologramManager extends Ticked {
 		hologramMap.clear();
 
 		final File folder = new File(DECENT_HOLOGRAMS.getDataFolder(), "holograms");
-		final List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
+		final List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
 		if (files == null || files.isEmpty()) {
 			return;
 		}

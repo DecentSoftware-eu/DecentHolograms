@@ -107,8 +107,8 @@ public class AnimationManager extends Ticked {
 
     private void loadCustomAnimations() {
         final File folder = new File(DECENT_HOLOGRAMS.getDataFolder(), "animations");
-        final List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
-        if (files == null || files.isEmpty()) {
+        final List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
+        if (files.isEmpty()) {
             return;
         }
 
