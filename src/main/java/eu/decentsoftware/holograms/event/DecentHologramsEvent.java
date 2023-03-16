@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.event;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * This is the base event for all DecentHolograms events.
@@ -11,23 +10,12 @@ import org.bukkit.event.HandlerList;
  */
 public abstract class DecentHologramsEvent extends Event {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-
     protected DecentHologramsEvent() {
         super();
     }
 
     protected DecentHologramsEvent(boolean isAsync) {
         super(isAsync);
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
     }
 
 }

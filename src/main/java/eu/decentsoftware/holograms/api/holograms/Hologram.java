@@ -427,9 +427,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @implNote Always returns true. If the hologram is not persistent,
      * this method just doesn't do anything.
      */
-    public boolean save() {
+    public void save() {
         if (!saveToFile) {
-            return true;
+            return;
         }
 
         DExecutor.execute(() -> {
@@ -448,14 +448,13 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 config.set("pages", pages.stream().map(HologramPage::serializeToMap).collect(Collectors.toList()));
                 config.saveData();
                 config.reload();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
                 // Failed to acquire lock, cancel save.
             } finally {
                 // Prevents deadlocks
                 lock.unlock();
             }
         });
-        return true;
     }
 
     /**

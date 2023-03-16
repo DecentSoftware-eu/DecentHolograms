@@ -23,15 +23,13 @@ public class EventFactory {
         return !event.isCancelled();
     }
 
-    public static boolean handleReloadEvent() {
+    public static void handleReloadEvent() {
         if (DecentHologramsReloadEvent.getHandlerList().getRegisteredListeners().length == 0) {
-            return true;
+            return;
         }
 
         DecentHologramsReloadEvent event = new DecentHologramsReloadEvent();
         Bukkit.getPluginManager().callEvent(event);
-
-        return true; // Not cancellable
     }
 
 }

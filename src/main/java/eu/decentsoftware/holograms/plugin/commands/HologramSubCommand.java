@@ -274,10 +274,7 @@ public class HologramSubCommand extends DecentCommand {
 				}
 
 				final Hologram clone = hologram.clone(args[1], location, temp);
-				if (!clone.save()) {
-					Lang.HOLOGRAM_SAVE_FAILED.send(sender);
-					return true;
-				}
+				clone.save();
 				clone.showAll();
 				clone.realignLines();
 				PLUGIN.getHologramManager().registerHologram(clone);

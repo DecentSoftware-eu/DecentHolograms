@@ -29,7 +29,7 @@ public class PAPI {
 	 */
 	public static String setPlaceholders(Player player, String string) {
 		if (isAvailable()) {
-			return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
+			return PlaceholderAPI.setPlaceholders(player, string);
 		}
 		return string;
 	}
