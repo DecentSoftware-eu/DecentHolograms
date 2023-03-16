@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.Validate;
