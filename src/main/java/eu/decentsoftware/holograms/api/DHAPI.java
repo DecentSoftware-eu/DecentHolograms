@@ -114,7 +114,9 @@ public final class DHAPI {
         Validate.notNull(location);
 
         Hologram hologram = getHologram(name);
-        moveHologram(hologram, location);
+        if (hologram != null) {
+            moveHologram(hologram, location);
+        }
     }
 
     /**
@@ -147,7 +149,9 @@ public final class DHAPI {
         Validate.notNull(name);
 
         Hologram hologram = getHologram(name);
-        hologram.updateAll();
+        if (hologram != null) {
+            hologram.updateAll();
+        }
     }
 
     /**
@@ -162,7 +166,9 @@ public final class DHAPI {
         Validate.notNull(name);
 
         Hologram hologram = getHologram(name);
-        hologram.delete();
+        if (hologram != null) {
+            hologram.delete();
+        }
     }
 
     /**
