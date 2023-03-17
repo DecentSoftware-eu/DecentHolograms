@@ -25,4 +25,8 @@ public class DecentHologramsReloadEvent extends DecentHologramsEvent {
         return HANDLERS;
     }
 
+    public static boolean isRegistered() {
+        return HANDLERS.getRegisteredListeners().length > 0;
+    }
+
 }

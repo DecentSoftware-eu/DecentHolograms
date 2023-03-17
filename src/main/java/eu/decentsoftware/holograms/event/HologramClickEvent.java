@@ -51,4 +51,8 @@ public class HologramClickEvent extends DecentHologramsEvent implements Cancella
         return HANDLERS;
     }
 
+    public static boolean isRegistered() {
+        return HANDLERS.getRegisteredListeners().length > 0;
+    }
+
 }

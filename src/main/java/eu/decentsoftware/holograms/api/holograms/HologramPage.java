@@ -272,7 +272,7 @@ public class HologramPage extends FlagHolder {
      */
 
     public boolean isClickable() {
-        return parent.isClickable() || (!parent.hasFlag(EnumFlag.DISABLE_ACTIONS) && hasActions());
+        return !parent.hasFlag(EnumFlag.DISABLE_ACTIONS) && hasActions();
     }
 
     public int getClickableEntityId(int index) {

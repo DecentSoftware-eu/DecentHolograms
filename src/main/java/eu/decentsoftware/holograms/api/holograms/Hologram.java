@@ -18,6 +18,7 @@ import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
+import eu.decentsoftware.holograms.event.HologramClickEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -236,7 +237,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
     private final @NonNull AtomicInteger tickCounter;
-    private boolean clickable = false;
 
     /*
      *	Constructors
@@ -720,7 +720,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null || (!page.isClickable() && !isClickable())) {
+        if (page == null || !(page.isClickable() || HologramClickEvent.isRegistered())) {
             return;
         }
 
@@ -761,7 +761,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void teleportClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
-        if (page == null || (!page.isClickable() && !isClickable())) {
+        if (page == null || !(page.isClickable() || HologramClickEvent.isRegistered())) {
             return;
         }
 
