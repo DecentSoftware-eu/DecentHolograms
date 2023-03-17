@@ -118,7 +118,7 @@ public final class DecentHolograms {
         }
 
         BungeeUtils.destroy();
-        DExecutor.shutdown();
+        DExecutor.shutdownNow();
     }
 
     /**

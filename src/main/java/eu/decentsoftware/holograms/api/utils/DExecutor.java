@@ -47,6 +47,14 @@ public class DExecutor {
     }
 
     /**
+     * Shutdown the service immediately.
+     */
+    public static void shutdownNow() {
+        service.shutdownNow();
+        initialized = false;
+    }
+
+    /**
      * Execute given runnables using the ExecutorService.
      *
      * @param runnables the runnables.
