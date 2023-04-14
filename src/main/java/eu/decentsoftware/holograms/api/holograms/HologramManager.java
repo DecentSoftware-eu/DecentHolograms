@@ -44,13 +44,13 @@ public class HologramManager extends Ticked {
 	 */
 	private final @NonNull Map<String, Set<String>> toLoad;
 
-	public HologramManager() {
-		super(20L);
-		this.hologramMap = new ConcurrentHashMap<>();
-		this.clickCooldowns = new ConcurrentHashMap<>();
-		this.temporaryLines = Collections.synchronizedSet(new HashSet<>());
-		this.toLoad = new ConcurrentHashMap<>();
-		this.register();
+    public HologramManager() {
+        super(20L);
+        this.hologramMap = new ConcurrentHashMap<>();
+        this.clickCooldowns = new ConcurrentHashMap<>();
+        this.temporaryLines = ConcurrentHashMap.newKeySet();
+        this.toLoad = new ConcurrentHashMap<>();
+        this.register();
 
 		S.async(this::reload); // Reload when worlds are ready
 	}

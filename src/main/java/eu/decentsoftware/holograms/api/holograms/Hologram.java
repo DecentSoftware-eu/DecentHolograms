@@ -230,8 +230,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean saveToFile;
     protected final @Nullable FileConfig config;
     protected final @NonNull Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
-    protected final @NonNull Set<UUID> hidePlayers = Collections.synchronizedSet(new HashSet<>());
-    protected final @NonNull Set<UUID> showPlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final @NonNull Set<UUID> hidePlayers = ConcurrentHashMap.newKeySet();
+    protected final @NonNull Set<UUID> showPlayers = ConcurrentHashMap.newKeySet();
     protected boolean defaultVisibleState = true;
     protected final @NonNull DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
