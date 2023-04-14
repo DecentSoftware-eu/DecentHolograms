@@ -206,10 +206,15 @@ public class HologramManager extends Ticked {
      * @param player Given player.
      */
     public void hideAll(@NonNull Player player) {
-        for (Hologram hologram : getHolograms()) {
+        // Create a copy of the hologram collection
+        Collection<Hologram> hologramsCopy = new ArrayList<>(getHolograms());
+        for (Hologram hologram : hologramsCopy) {
             hologram.hide(player);
         }
-        for (HologramLine line : temporaryLines) {
+    
+        // Create a copy of the temporaryLines set
+        Set<HologramLine> temporaryLinesCopy = new HashSet<>(temporaryLines);
+        for (HologramLine line : temporaryLinesCopy) {
             line.hide(player);
         }
     }
