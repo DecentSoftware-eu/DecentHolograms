@@ -28,8 +28,10 @@ public class LruCache {
     public String getResult(String input) {
         if (input != null && MAP.containsKey(input)) {
             LruElement curr = MAP.get(input);
-            QUE.remove(input);
-            QUE.addFirst(input);
+            synchronized (QUE) {
+                QUE.remove(input);
+                QUE.addFirst(input);
+            }
             return curr.getResult();
         }
 
@@ -40,18 +42,20 @@ public class LruCache {
         if (input == null || result == null) {
             return;
         }
-        if (MAP.containsKey(input)) {
-            QUE.remove(input);
-        } else {
-            int size = QUE.size();
-            if (size == maxSize && size > 0) {
-                String temp = QUE.removeLast();
-                MAP.remove(temp);
+        synchronized (QUE) {
+            if (MAP.containsKey(input)) {
+                QUE.remove(input);
+            } else {
+                int size = QUE.size();
+                if (size == maxSize && size > 0) {
+                    String temp = QUE.removeLast();
+                    MAP.remove(temp);
+                }
             }
+            LruElement newObj = new LruElement(input, result);
+            QUE.addFirst(input);
+            MAP.put(input, newObj);
         }
-        LruElement newObj = new LruElement(input, result);
-        QUE.addFirst(input);
-        MAP.put(input, newObj);
     }
 
 }
