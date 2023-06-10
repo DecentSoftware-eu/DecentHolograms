@@ -141,7 +141,12 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_19_R3)) {
+            if (Version.afterOrEqual(Version.v1_20_R1)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "an").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aU").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aV").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bC").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_19_R3)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "an").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aS").getValue(null);
