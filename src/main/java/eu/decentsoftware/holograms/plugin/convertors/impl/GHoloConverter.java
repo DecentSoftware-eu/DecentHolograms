@@ -25,7 +25,7 @@ public class GHoloConverter implements IConvertor {
     
     @Override
     public ConvertorResult convert(){
-        return convert(new File("plugins/GHolo/data/h.data"));
+        return convert(new File(PLUGIN.getDataFolder().getParent() + "/GHolo/data/", "h.data"));
     }
     
     @Override
