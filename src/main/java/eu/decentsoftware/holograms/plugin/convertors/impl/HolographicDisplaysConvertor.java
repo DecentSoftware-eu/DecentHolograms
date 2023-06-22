@@ -54,17 +54,17 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	}
 	
 	@Override
-	public List<String> prepareLines(List<String> lines){
+	public List<String> prepareLines(List<String> lines) {
 		List<String> parsed = new ArrayList<>(lines.size());
 		// Go through each line and convert any {papi: <placeholder>} pattern to %<placeholder>%
-		for(String line : lines){
+		for(String line : lines) {
 			String parsedLine = line;
 			Matcher matcher = PAPI_PATTERN.matcher(line);
-			if(matcher.find()){
+			if(matcher.find()) {
 				StringBuffer buffer = new StringBuffer();
-				do{
+				do {
 					matcher.appendReplacement(buffer, "%" + matcher.group(1) + "%");
-				}while(matcher.find());
+				} while(matcher.find());
 				
 				matcher.appendTail(buffer);
 				parsedLine = buffer.toString();
