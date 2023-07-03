@@ -462,12 +462,6 @@ public class HologramLine extends HologramObject {
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
-            updateVisibility(player);
-
-            if (!isVisible(player) || !isInUpdateRange(player)) {
-                continue;
-            }
-
             if (type == HologramLineType.TEXT) {
                 UUID uuid = player.getUniqueId();
                 String lastText = lastTextMap.get(uuid);
@@ -493,9 +487,6 @@ public class HologramLine extends HologramObject {
         }
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (!isVisible(player) || !isInUpdateRange(player)) {
-                continue;
-            }
             if (type == HologramLineType.ENTITY && updateRotation) {
                 this.hide();
                 this.show();
@@ -506,23 +497,18 @@ public class HologramLine extends HologramObject {
     }
 
     public void updateAnimations(Player... players) {
-        if (isDisabled() || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+        if (isDisabled() || type != HologramLineType.TEXT || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
             return;
         }
         List<Player> playerList = getPlayers(true, players);
         NMS nms = NMS.getInstance();
         for (Player player : playerList) {
-            if (!isVisible(player) || !isInUpdateRange(player)) {
-                continue;
-            }
-            if (type == HologramLineType.TEXT) {
-                UUID uuid = player.getUniqueId();
-                String lastText = lastTextMap.get(uuid);
-                String updatedText = getText(player, false);
-                if (!updatedText.equals(lastText)) {
-                    lastTextMap.put(uuid, updatedText);
-                    nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
-                }
+            UUID uuid = player.getUniqueId();
+            String lastText = lastTextMap.get(uuid);
+            String updatedText = getText(player, false);
+            if (!updatedText.equals(lastText)) {
+                lastTextMap.put(uuid, updatedText);
+                nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
             }
         }
     }
@@ -535,10 +521,8 @@ public class HologramLine extends HologramObject {
     public void hide(Player... players) {
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (isVisible(player)) {
-                NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]);
-                viewers.remove(player.getUniqueId());
-            }
+            NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]);
+            viewers.remove(player.getUniqueId());
         }
     }
 

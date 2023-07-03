@@ -21,7 +21,7 @@ public class FutureHologramsConverter implements IConvertor {
     
     @Override
     public ConvertorResult convert(){
-        return convert(new File("plugins/FutureHolograms/holograms.yml"));
+        return convert(new File(PLUGIN.getDataFolder().getParent() + "/FutureHolograms/", "holograms.yml"));
     }
     
     @Override

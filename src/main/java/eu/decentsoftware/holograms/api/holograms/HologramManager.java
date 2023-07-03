@@ -120,7 +120,7 @@ public class HologramManager extends Ticked {
      * @param clickType Click type.
      * @return True if the click was processed, false otherwise.
      */
-    public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
+    public boolean onClick(final @NonNull Player player, final int entityId, final @NonNull ClickType clickType) {
         final UUID uid = player.getUniqueId();
 
         // Check if the player is on cooldown.

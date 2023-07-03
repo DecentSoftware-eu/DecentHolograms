@@ -25,6 +25,7 @@ import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -47,7 +48,6 @@ public final class DecentHolograms {
     private AnimationManager animationManager;
     private PacketListener packetListener;
     private Ticker ticker;
-    private File dataFolder;
     private boolean updateAvailable;
 
     /*
@@ -137,16 +137,9 @@ public final class DecentHolograms {
         EventFactory.handleReloadEvent();
     }
 
-    /**
-     * Get the data folder for DecentHolograms files.
-     *
-     * @return The file.
-     */
+    @Contract(pure = true)
     public File getDataFolder() {
-        if (this.dataFolder == null) {
-            this.dataFolder = new File("plugins/DecentHolograms");
-        }
-        return this.dataFolder;
+        return plugin.getDataFolder();
     }
 
 }

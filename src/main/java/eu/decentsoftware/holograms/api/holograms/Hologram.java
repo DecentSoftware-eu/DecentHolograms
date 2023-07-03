@@ -498,17 +498,20 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param clickType The type of the click.
      * @return True if the click was handled, false otherwise.
      */
-    public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
-        if (this.hasFlag(EnumFlag.DISABLE_ACTIONS)) {
+    public boolean onClick(final @NonNull Player player, final int entityId, final @NonNull ClickType clickType) {
+        HologramPage page = getPage(player);
+        if (page == null || !page.hasEntity(entityId)) {
             return false;
         }
-        HologramPage page = getPage(player);
-        boolean clickedThisHologram = page != null && page.hasEntity(entityId);
+
         boolean eventNotCancelled = EventFactory.handleHologramClickEvent(player, this, page, clickType, entityId);
-        if (clickedThisHologram && eventNotCancelled) {
-            page.executeActions(player, clickType);
+        if (eventNotCancelled) {
+            if (!hasFlag(EnumFlag.DISABLE_ACTIONS)) {
+                page.executeActions(player, clickType);
+            }
             return true;
         }
+
         return false;
     }
 
