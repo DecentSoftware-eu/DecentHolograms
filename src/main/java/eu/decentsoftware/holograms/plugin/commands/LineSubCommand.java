@@ -191,6 +191,7 @@ public class LineSubCommand extends DecentCommand {
 			usage = "/dh line edit <hologram> <page> <line>",
 			description = "Edit a line.",
 			aliases = {"e"},
+			playerOnly = true,
 			minArgs = 3
 	)
 	static class LineEditSub extends DecentCommand {
