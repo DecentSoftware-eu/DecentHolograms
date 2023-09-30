@@ -222,12 +222,14 @@ public class HologramLine extends HologramObject {
                 height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
             }
             item = new HologramItem(content.substring("#SMALLHEAD:".length()));
+            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
         } else if (contentU.startsWith("#HEAD:")) {
             type = HologramLineType.HEAD;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_HEAD;
             }
             item = new HologramItem(content.substring("#HEAD:".length()));
+            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
         } else if (contentU.startsWith("#ENTITY:")) {
             type = HologramLineType.ENTITY;
             entity = new HologramEntity(content.substring("#ENTITY:".length()));
@@ -470,7 +472,7 @@ public class HologramLine extends HologramObject {
                     lastTextMap.put(uuid, updatedText);
                     nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
                 }
-            } else if (type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) {
+            } else if ((type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) && containsPlaceholders) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
             }
         }
