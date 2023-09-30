@@ -97,7 +97,7 @@ public final class SkullUtils {
 		try {
 			ItemMeta meta = itemStack.getItemMeta();
 			if (meta instanceof SkullMeta) {
-				GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+				GameProfile profile = new GameProfile(UUID.randomUUID(), "");
 				Property property = new Property("textures", texture);
 
 				PropertyMap properties = profile.getProperties();

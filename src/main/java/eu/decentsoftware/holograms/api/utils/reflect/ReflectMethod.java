@@ -20,13 +20,18 @@ public class ReflectMethod {
 	private void init() {
 		if (method != null) return;
 		try {
-			method = clazz.getDeclaredMethod(name, parameterTypes);
+			try {
+				method = clazz.getDeclaredMethod(name, parameterTypes);
+			} catch (NoSuchMethodException e) {
+				method = clazz.getMethod(name, parameterTypes);
+			}
 			method.setAccessible(true);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T invoke(Object instance, Object... args) {
 		this.init();
 
@@ -39,6 +44,7 @@ public class ReflectMethod {
 		return object == null ? null : (T) object;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T invokeStatic(Object... args) {
 		this.init();
 

@@ -111,7 +111,11 @@ public class NMS_1_17 extends NMS {
         // PACKET DATA SERIALIZER
         PACKET_DATA_SERIALIZER_CLASS = ReflectionUtil.getNMClass("network.PacketDataSerializer");
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
-        PACKET_DATA_SERIALIZER_WRITE_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "d", int.class);
+        if (Version.afterOrEqual(Version.v1_20_R2)) {
+            PACKET_DATA_SERIALIZER_WRITE_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "c", int.class);
+        } else {
+            PACKET_DATA_SERIALIZER_WRITE_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "d", int.class);
+        }
         PACKET_DATA_SERIALIZER_WRITE_UUID_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "a", UUID.class);
         PACKET_DATA_SERIALIZER_WRITE_INTS_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "a", int[].class);
         PACKET_DATA_SERIALIZER_WRITE_DOUBLE_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "writeDouble", double.class);
@@ -141,7 +145,12 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_20_R1)) {
+            if (Version.afterOrEqual(Version.v1_20_R2)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ao").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aU").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aV").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bC").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_20_R1)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "an").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aU").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aV").getValue(null);

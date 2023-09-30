@@ -16,7 +16,11 @@ public class ReflectField<T> {
 
 	private void init() throws Exception {
 		if (field == null) {
-			field = clazz.getDeclaredField(name);
+			try {
+				field = clazz.getDeclaredField(name);
+			} catch (Exception e) {
+				field = clazz.getField(name);
+			}
 			field.setAccessible(true);
 		}
 	}

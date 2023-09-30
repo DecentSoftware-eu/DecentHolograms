@@ -49,10 +49,19 @@ public abstract class NMS {
                     break;
                 }
             }
-            for (Field field : playerConnectionClass.getDeclaredFields()) {
-                if (field.getType().isAssignableFrom(networkManagerClass)) {
-                    PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
-                    break;
+            if (Version.afterOrEqual(Version.v1_20_R2)) {
+                for (Field field : playerConnectionClass.getFields()) {
+                    if (field.getType().isAssignableFrom(networkManagerClass)) {
+                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
+                        break;
+                    }
+                }
+            } else {
+                for (Field field : playerConnectionClass.getDeclaredFields()) {
+                    if (field.getType().isAssignableFrom(networkManagerClass)) {
+                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
+                        break;
+                    }
                 }
             }
             for (Field field : networkManagerClass.getDeclaredFields()) {
@@ -72,7 +81,9 @@ public abstract class NMS {
             NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, "channel");
         }
         CRAFT_PLAYER_GET_HANDLE_METHOD = new ReflectMethod(craftPlayerClass, "getHandle");
-        if (Version.afterOrEqual(18)) {
+        if (Version.afterOrEqual(Version.v1_20_R2)) {
+            PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "b", PACKET_CLASS);
+        } else if (Version.afterOrEqual(18)) {
             PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "a", PACKET_CLASS);
         } else {
             PLAYER_CONNECTION_SEND_PACKET_METHOD = new ReflectMethod(playerConnectionClass, "sendPacket", PACKET_CLASS);
