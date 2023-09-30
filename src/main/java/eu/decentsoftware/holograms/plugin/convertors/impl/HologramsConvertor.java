@@ -22,7 +22,7 @@ public class HologramsConvertor implements IConvertor {
 
     @Override
     public ConvertorResult convert() {
-        return convert(new File("plugins/Holograms/holograms.yml"));
+        return convert(new File(PLUGIN.getDataFolder().getParent() + "/Holograms/", "holograms.yml"));
     }
 
     @Override

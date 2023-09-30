@@ -83,7 +83,6 @@ public class LineSubCommand extends DecentCommand {
 			usage = "/dh line add <hologram> <page> [content]",
 			description = "Add a line to Hologram.",
 			aliases = {"append"},
-			playerOnly = true,
 			minArgs = 2
 	)
 	static class LineAddSub extends DecentCommand {

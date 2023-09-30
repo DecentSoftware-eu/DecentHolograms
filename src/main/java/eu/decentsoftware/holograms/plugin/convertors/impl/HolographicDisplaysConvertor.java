@@ -12,17 +12,21 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class HolographicDisplaysConvertor implements IConvertor {
 
 	private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
+	private static final Pattern PAPI_PATTERN = Pattern.compile("\\{papi: (.+)}");
 
 	@Override
 	public ConvertorResult convert() {
-		return convert(new File("plugins/HolographicDisplays/database.yml"));
+		return convert(new File(PLUGIN.getDataFolder().getParent() + "/HolographicDisplays/", "database.yml"));
 	}
 
 	@Override
@@ -50,8 +54,26 @@ public class HolographicDisplaysConvertor implements IConvertor {
 	}
 	
 	@Override
-	public List<String> prepareLines(List<String> lines){
-		return lines.stream().map(line -> {
+	public List<String> prepareLines(List<String> lines) {
+		List<String> parsed = new ArrayList<>(lines.size());
+		// Go through each line and convert any {papi: <placeholder>} pattern to %<placeholder>%
+		for(String line : lines) {
+			String parsedLine = line;
+			Matcher matcher = PAPI_PATTERN.matcher(line);
+			if(matcher.find()) {
+				StringBuffer buffer = new StringBuffer();
+				do {
+					matcher.appendReplacement(buffer, "%" + matcher.group(1) + "%");
+				} while(matcher.find());
+				
+				matcher.appendTail(buffer);
+				parsedLine = buffer.toString();
+			}
+			
+			parsed.add(parsedLine);
+		}
+		
+		return parsed.stream().map(line -> {
 			if (line.toUpperCase().startsWith("ICON:")) {
 				return "#" + line;
 			}
