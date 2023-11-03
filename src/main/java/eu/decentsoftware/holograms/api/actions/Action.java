@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 public class Action {
 
-    private final @NonNull ActionType type;
-    private @Nullable String data;
+    private final ActionType type;
+    private String data;
 
     /**
      * Create a new instance of {@link Action} from string.

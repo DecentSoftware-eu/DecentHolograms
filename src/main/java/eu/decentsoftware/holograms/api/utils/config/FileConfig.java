@@ -21,9 +21,9 @@ import java.util.logging.Level;
 @Getter
 public class FileConfig extends YamlConfiguration {
 
-    protected final @NotNull JavaPlugin plugin;
-    protected final @NotNull String path;
-    protected final @NotNull File file;
+    protected final JavaPlugin plugin;
+    protected final String path;
+    protected final File file;
 
     /**
      * Creates a new instance of {@link FileConfig}.
@@ -74,7 +74,7 @@ public class FileConfig extends YamlConfiguration {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    plugin.getLogger().log(Level.WARNING, "Failed to create config file at path '" + path + "'.", e);
                 }
             } else {
                 plugin.saveResource(this.path, false);
@@ -89,7 +89,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.save(this.file);
         } catch (IOException e) {
-            e.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Failed to save config file at path '" + path + "'.", e);
         }
     }
 
@@ -100,7 +100,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.load(file);
         } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Failed to reload config file at path '" + path + "'.", e);
         }
     }
 

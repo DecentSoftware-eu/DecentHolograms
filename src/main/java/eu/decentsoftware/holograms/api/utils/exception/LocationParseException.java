@@ -33,7 +33,7 @@ public class LocationParseException extends Exception {
         return worldName;
     }
 
-    public static enum Reason {
+    public enum Reason {
         WORLD, FORMAT
     }
 

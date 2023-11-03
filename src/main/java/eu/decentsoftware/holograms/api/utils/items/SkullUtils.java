@@ -143,6 +143,7 @@ public final class SkullUtils {
 	 * @return The skull owner.
 	 * @since 2.7.5
 	 */
+	@SuppressWarnings("deprecation")
 	@Nullable
 	public static String getSkullOwner(@NonNull ItemStack itemStack) {
 		ItemMeta meta = itemStack.getItemMeta();
@@ -159,6 +160,7 @@ public final class SkullUtils {
 	 * @param owner     The new skull owner.
 	 * @since 2.7.5
 	 */
+	@SuppressWarnings("deprecation")
 	public static void setSkullOwner(@NonNull ItemStack itemStack, @NonNull String owner) {
 		ItemMeta meta = itemStack.getItemMeta();
 		if (meta instanceof SkullMeta) {
@@ -207,7 +209,7 @@ public final class SkullUtils {
 	 * Fetch the UUID of a player from Minetools's API.
 	 *
 	 * @param playerName The player name.
-	 * @return
+	 * @return The UUID or null if the operation fails.
 	 */
 	@Nullable
 	public static String getPlayerUUID(String playerName) {
@@ -232,7 +234,7 @@ public final class SkullUtils {
 	 *
 	 * @param urlString The URL.
 	 * @return The content.
-	 * @throws Exception
+	 * @throws Exception If anything goes wrong.
 	 */
 	@NonNull
 	private static String readUrl(String urlString) throws Exception {

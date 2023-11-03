@@ -24,10 +24,10 @@ public class HologramPage extends FlagHolder {
      */
 
     private int index;
-    private final @NonNull Hologram parent;
-    private final @NonNull List<Integer> clickableEntityIds;
-    private final @NonNull List<HologramLine> lines;
-    private final @NonNull Map<ClickType, List<Action>> actions;
+    private final Hologram parent;
+    private final List<Integer> clickableEntityIds = new ArrayList<>();
+    private final List<HologramLine> lines = new ArrayList<>();
+    private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
     /*
      *	Constructors
@@ -36,9 +36,6 @@ public class HologramPage extends FlagHolder {
     public HologramPage(@NonNull Hologram parent, int index) {
         this.parent = parent;
         this.index = index;
-        this.clickableEntityIds = new ArrayList<>();
-        this.lines = new ArrayList<>();
-        this.actions = new EnumMap<>(ClickType.class);
     }
 
     /*
@@ -304,7 +301,7 @@ public class HologramPage extends FlagHolder {
             String actionData = action.getData();
             if (actionName.contains("_PAGE") && actionData == null) {
                 action.setData(getParent().getName());
-            } else if (actionName.equals("PAGE") && actionData.matches("[\\d]+")) {
+            } else if (actionName.equals("PAGE") && actionData != null && actionData.matches("[\\d]+")) {
                 action.setData(getParent().getName() + ":" + actionData);
             }
 
@@ -316,16 +313,12 @@ public class HologramPage extends FlagHolder {
         }
     }
 
-    public void clearActions() {
-        actions.clear();
-    }
-
     public void clearActions(@NonNull ClickType clickType) {
         actions.remove(clickType);
     }
 
-    public Action removeAction(@NonNull ClickType clickType, int index) {
-        return actions.get(clickType).remove(index);
+    public void removeAction(@NonNull ClickType clickType, int index) {
+        actions.get(clickType).remove(index);
     }
 
     public List<Action> getActions(@NonNull ClickType clickType) {

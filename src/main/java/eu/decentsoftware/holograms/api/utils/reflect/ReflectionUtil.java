@@ -111,9 +111,9 @@ public class ReflectionUtil {
     /**
      * Get a class from the {@code net.minecraft} package. The classPath should be the full path to the class,
      * including the package without the {@code net.minecraft} prefix.
-     *
+     * <p>
      * This is a shortcut for {@code getClass("net.minecraft." + classPath)}.
-     *
+     * <p>
      * If you are looking for the old {@code net.minecraft.server.<VERSION>} package,
      * use {@link #getNMSClass(String)}.
      *
@@ -134,9 +134,9 @@ public class ReflectionUtil {
     /**
      * Get a class from the {@code net.minecraft.server.<VERSION>} package. The classPath should be the full path to the class,
      * including the package without the {@code net.minecraft.server.<VERSION>} prefix.
-     *
+     * <p>
      * This is a shortcut for {@code getClass("net.minecraft.server." + getVersion() + "." + classPath)}.
-     *
+     * <p>
      * If you are looking for the new {@code net.minecraft} package, use {@link #getNMClass(String)}.
      *
      * @param classPath The path of the class to get.
@@ -155,7 +155,7 @@ public class ReflectionUtil {
     /**
      * Get a class from the {@code org.bukkit.craftbukkit.<VERSION>} package. The classPath should be the full path to the class,
      * including the package without the {@code org.bukkit.craftbukkit.<VERSION>} prefix.
-     *
+     * <p>
      * This is a shortcut for {@code getClass("org.bukkit.craftbukkit." + getVersion() + "." + name)}.
      *
      * @param classPath The path of the class to get.

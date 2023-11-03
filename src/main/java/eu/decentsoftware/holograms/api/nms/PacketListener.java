@@ -2,19 +2,24 @@ package eu.decentsoftware.holograms.api.nms;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.Common;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Level;
+
 public class PacketListener {
 
     private static final NMS nms = NMS.getInstance();
     private static final String IDENTIFIER = "DecentHolograms";
+    private final DecentHolograms decentHolograms;
     private boolean usingProtocolLib = false;
 
-    public PacketListener() {
+    public PacketListener(DecentHolograms decentHolograms) {
+        this.decentHolograms = decentHolograms;
         if (Common.isPluginEnabled("ProtocolLib")) {
             // If ProtocolLib is present, use it for packet listening.
             new PacketHandlerProtocolLib();
@@ -37,9 +42,9 @@ public class PacketListener {
         }
     }
 
-    public boolean hook(Player player) {
+    public void hook(Player player) {
         if (usingProtocolLib) {
-            return true;
+            return;
         }
 
         try {
@@ -48,11 +53,9 @@ public class PacketListener {
                 PacketHandlerCustom packetHandler = new PacketHandlerCustom(player);
                 pipeline.addBefore("packet_handler", IDENTIFIER, packetHandler);
             }
-            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            decentHolograms.getLogger().log(Level.WARNING, "Failed to hook into player's pipeline. (" + player.getName() + ")", e);
         }
-        return false;
     }
 
     public void hookAll() {
@@ -63,9 +66,9 @@ public class PacketListener {
         }
     }
 
-    public boolean unhook(Player player) {
+    public void unhook(Player player) {
         if (usingProtocolLib) {
-            return true;
+            return;
         }
 
         try {
@@ -73,11 +76,9 @@ public class PacketListener {
             if (pipeline.get(IDENTIFIER) != null) {
                 pipeline.remove(IDENTIFIER);
             }
-            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            decentHolograms.getLogger().log(Level.WARNING, "Failed to unhook from player's pipeline. (" + player.getName() + ")", e);
         }
-        return false;
     }
 
     public void unhookAll() {

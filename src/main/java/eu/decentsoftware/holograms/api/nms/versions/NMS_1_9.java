@@ -3,7 +3,6 @@ package eu.decentsoftware.holograms.api.nms.versions;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.RandomUtils;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -15,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NMS_1_9 extends NMS {
@@ -361,7 +361,7 @@ public class NMS_1_9 extends NMS {
         Object spawn = PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR.newInstance();
         if (spawn == null) return;
         ReflectionUtil.setFieldValue(spawn, "a", entityId);
-        ReflectionUtil.setFieldValue(spawn, "b", MATH_HELPER_A_METHOD.invokeStatic(RandomUtils.RANDOM));
+        ReflectionUtil.setFieldValue(spawn, "b", MATH_HELPER_A_METHOD.invokeStatic(ThreadLocalRandom.current()));
         ReflectionUtil.setFieldValue(spawn, "c", entityTypeId);
         ReflectionUtil.setFieldValue(spawn, "d", location.getX());
         ReflectionUtil.setFieldValue(spawn, "e", location.getY());
@@ -381,7 +381,7 @@ public class NMS_1_9 extends NMS {
         Object spawn = PACKET_SPAWN_ENTITY_CONSTRUCTOR.newInstance();
         if (spawn == null) return;
         ReflectionUtil.setFieldValue(spawn, "a", entityId);
-        ReflectionUtil.setFieldValue(spawn, "b", MATH_HELPER_A_METHOD.invokeStatic(RandomUtils.RANDOM));
+        ReflectionUtil.setFieldValue(spawn, "b", MATH_HELPER_A_METHOD.invokeStatic(ThreadLocalRandom.current()));
         ReflectionUtil.setFieldValue(spawn, "c", location.getX());
         ReflectionUtil.setFieldValue(spawn, "d", location.getY());
         ReflectionUtil.setFieldValue(spawn, "e", location.getZ());

@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.animations;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
 import eu.decentsoftware.holograms.api.animations.text.*;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -21,13 +20,14 @@ import java.util.regex.Pattern;
 
 public class AnimationManager extends Ticked {
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private static final Pattern ANIMATION_PATTERN = Pattern.compile("[<{]#?ANIM:(\\w+)(:\\S+)?[}>](.*?)[<{]/#?ANIM[}>]");
+    private final DecentHolograms decentHolograms;
     private final Map<String, TextAnimation> animationMap = new HashMap<>();
     private final AtomicLong step;
 
-    public AnimationManager() {
+    public AnimationManager(DecentHolograms decentHolograms) {
         super(1L);
+        this.decentHolograms = decentHolograms;
         this.step = new AtomicLong(0);
         this.reload();
     }
@@ -106,25 +106,22 @@ public class AnimationManager extends Ticked {
     }
 
     private void loadCustomAnimations() {
-        final File folder = new File(DECENT_HOLOGRAMS.getDataFolder(), "animations");
-        final List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
+        File folder = new File(decentHolograms.getDataFolder(), "animations");
+        List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
         if (files.isEmpty()) {
             return;
         }
 
         int counter = 0;
         Common.log("Loading animations...");
-        for (final File file : files) {
-            final String fileName = FileUtils.getRelativePath(file, folder);
+        for (File file : files) {
+            String fileName = FileUtils.getRelativePath(file, folder);
             try {
-                final TextAnimation animation = CustomTextAnimation.fromFile(fileName);
-                if (animation != null) {
-                    registerAnimation(animation);
-                    counter++;
-                }
+                TextAnimation animation = CustomTextAnimation.fromFile(fileName);
+                registerAnimation(animation);
+                counter++;
             } catch (Exception e) {
-                Common.log(Level.WARNING, "Failed to load animation from file '%s'!", fileName);
-                e.printStackTrace();
+                decentHolograms.getLogger().log(Level.WARNING, String.format("Failed to load animation from file '%s'!", fileName), e);
             }
         }
         Common.log("Loaded %d animations!", counter);

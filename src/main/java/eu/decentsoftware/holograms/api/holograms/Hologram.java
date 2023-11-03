@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.holograms;
 
-import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
@@ -30,7 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -99,7 +104,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             name = fileName.substring(0, fileName.length() - 4);
         }
 
-        if (name == null || name.isEmpty()) {
+        if (name.isEmpty()) {
             // This shouldn't happen when loading holograms from files.
             throw new IllegalArgumentException("Hologram name cannot be null or empty.");
         }
@@ -955,15 +960,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         viewers1.forEach(player -> show(player, index2));
         viewers2.forEach(player -> show(player, index1));
         return true;
-    }
-
-    /**
-     * Get the list of all pages in this hologram.
-     *
-     * @return List of all pages in this hologram.
-     */
-    public List<HologramPage> getPages() {
-        return ImmutableList.copyOf(pages);
     }
 
 }

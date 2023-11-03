@@ -22,9 +22,9 @@ public abstract class HologramObject extends FlagHolder {
      */
 
     protected boolean enabled = true;
-    protected @NonNull DisableCause cause = DisableCause.NONE;
-    protected final @NonNull Set<UUID> viewers = ConcurrentHashMap.newKeySet();
-    protected @NonNull Location location;
+    protected DisableCause cause = DisableCause.NONE;
+    protected final Set<UUID> viewers = ConcurrentHashMap.newKeySet();
+    protected Location location;
     protected String permission = null;
     protected float facing = 0.0f;
 
@@ -143,9 +143,9 @@ public abstract class HologramObject extends FlagHolder {
      */
 
     /**
-     * Get List of all players that currently see this hologram.
+     * Get all players that currently see this hologram.
      *
-     * @return List of all players that currently see this hologram.
+     * @return Set of all players that currently see this hologram.
      */
     @NonNull
     public Set<UUID> getViewers() {

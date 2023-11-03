@@ -4,11 +4,11 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.entity.Player;
 
-public class PacketHandlerCustom extends ChannelDuplexHandler {
+class PacketHandlerCustom extends ChannelDuplexHandler {
 
     private final Player player;
 
-    public PacketHandlerCustom(Player player) {
+    PacketHandlerCustom(Player player) {
         this.player = player;
     }
 

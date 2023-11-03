@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 @UtilityClass
 public final class PacketHandlerCommon {
 
-    protected static final Class<?> ENTITY_USE_PACKET_CLASS;
-    protected static final ReflectField<Integer> ENTITY_USE_PACKET_ID_FIELD;
+    private static final Class<?> ENTITY_USE_PACKET_CLASS;
+    private static final ReflectField<Integer> ENTITY_USE_PACKET_ID_FIELD;
     private static final Class<?> PACKET_DATA_SERIALIZER_CLASS;
     private static final ReflectConstructor PACKET_DATA_SERIALIZER_CONSTRUCTOR;
     private static final ReflectMethod ENTITY_USE_PACKET_A_METHOD;

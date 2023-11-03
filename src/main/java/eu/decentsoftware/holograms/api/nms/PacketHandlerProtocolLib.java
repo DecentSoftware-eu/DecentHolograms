@@ -10,11 +10,18 @@ import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import org.bukkit.entity.Player;
 
-public class PacketHandlerProtocolLib {
+class PacketHandlerProtocolLib {
 
-    public PacketHandlerProtocolLib() {
+    PacketHandlerProtocolLib() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(PacketAdapter.params(DecentHologramsAPI.get().getPlugin(), PacketType.Play.Client.USE_ENTITY).optionAsync().listenerPriority(ListenerPriority.NORMAL)) {
+        protocolManager.addPacketListener(new PacketAdapter(
+                PacketAdapter.params(
+                                DecentHologramsAPI.get().getPlugin(),
+                                PacketType.Play.Client.USE_ENTITY
+                        )
+                        .listenerPriority(ListenerPriority.NORMAL)
+                        .optionAsync()
+        ) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
                 if (event.getPacketType().equals(PacketType.Play.Client.USE_ENTITY)) {

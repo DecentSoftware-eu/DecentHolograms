@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.collection;
 
-import eu.decentsoftware.holograms.api.utils.RandomUtils;
+import eu.decentsoftware.holograms.api.utils.Common;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -112,7 +112,7 @@ public class DList<T> extends ArrayList<T> {
     }
 
     public int randomIndex() {
-        return RandomUtils.randomInt(0, size() - 1);
+        return Common.randomInt(0, size() - 1);
     }
 
     public boolean hasDuplicates() {
@@ -178,9 +178,9 @@ public class DList<T> extends ArrayList<T> {
 
     public <R> DList<R> convert(Function<T, R> converter) {
         DList<R> list = new DList<>();
-        for(T i : this) {
+        for (T i : this) {
             R r = converter.apply(i);
-            if(r != null) {
+            if (r != null) {
                 list.add(r);
             }
         }

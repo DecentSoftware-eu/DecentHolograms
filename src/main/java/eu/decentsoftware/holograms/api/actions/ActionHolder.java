@@ -9,32 +9,32 @@ import java.util.List;
 
 public abstract class ActionHolder {
 
-	protected final @NonNull List<Action> actions = Lists.newArrayList();
+    protected final List<Action> actions = Lists.newArrayList();
 
-	public void addAction(@NonNull Action action) {
-		actions.add(action);
-	}
+    public void addAction(@NonNull Action action) {
+        actions.add(action);
+    }
 
-	public void executeActions(Player player) {
-		for (Action action : actions) {
-			if (!action.execute(player)) {
-				return;
-			}
-		}
-	}
+    public void executeActions(Player player) {
+        for (Action action : actions) {
+            if (!action.execute(player)) {
+                return;
+            }
+        }
+    }
 
-	public void clearActions() {
-		actions.clear();
-	}
+    public void clearActions() {
+        actions.clear();
+    }
 
-	@Nullable
-	public Action removeAction(int index) {
-		return actions.remove(index);
-	}
+    @Nullable
+    public Action removeAction(int index) {
+        return actions.remove(index);
+    }
 
-	@NonNull
-	public List<Action> getActions() {
-		return actions;
-	}
+    @NonNull
+    public List<Action> getActions() {
+        return actions;
+    }
 
 }

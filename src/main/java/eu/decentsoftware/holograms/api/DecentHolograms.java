@@ -7,7 +7,7 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
-import eu.decentsoftware.holograms.api.player.PlayerListener;
+import eu.decentsoftware.holograms.api.listeners.PlayerListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
@@ -16,7 +16,7 @@ import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
-import eu.decentsoftware.holograms.api.world.WorldListener;
+import eu.decentsoftware.holograms.api.listeners.WorldListener;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import lombok.Getter;
 import lombok.NonNull;
@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is the main class of DecentHolograms. It contains all the methods
@@ -62,7 +63,7 @@ public final class DecentHolograms {
      *	General Methods
      */
 
-    protected void load() {
+    void load() {
         // Check if NMS version is supported
         if (Version.CURRENT == null) {
             Common.log(Level.SEVERE, "Unsupported server version: " + ReflectionUtil.getVersion());
@@ -71,22 +72,22 @@ public final class DecentHolograms {
         }
     }
 
-    protected void enable() {
+    void enable() {
         NMS.init();
         Settings.reload();
         Lang.reload();
         DExecutor.init(3);
 
         this.ticker = new Ticker();
-        this.hologramManager = new HologramManager();
+        this.hologramManager = new HologramManager(this);
         this.commandManager = new CommandManager();
         this.featureManager = new FeatureManager();
-        this.animationManager = new AnimationManager();
-        this.packetListener = new PacketListener();
+        this.animationManager = new AnimationManager(this);
+        this.packetListener = new PacketListener(this);
 
         PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new PlayerListener(), this.plugin);
-        pm.registerEvents(new WorldListener(), this.plugin);
+        pm.registerEvents(new PlayerListener(this), this.plugin);
+        pm.registerEvents(new WorldListener(this), this.plugin);
 
         // Setup metrics
         Metrics metrics = new Metrics(this.plugin, 12797);
@@ -106,7 +107,7 @@ public final class DecentHolograms {
         BungeeUtils.init();
     }
 
-    protected void disable() {
+    void disable() {
         this.packetListener.destroy();
         this.featureManager.destroy();
         this.hologramManager.destroy();
@@ -140,6 +141,11 @@ public final class DecentHolograms {
     @Contract(pure = true)
     public File getDataFolder() {
         return plugin.getDataFolder();
+    }
+
+    @Contract(pure = true)
+    public Logger getLogger() {
+        return plugin.getLogger();
     }
 
 }

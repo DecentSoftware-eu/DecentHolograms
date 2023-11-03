@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public abstract class Animation {
 
-    private final @NonNull String name;
+    private final String name;
     private final List<String> aliases;
     private final int speed;
     private final int pause;

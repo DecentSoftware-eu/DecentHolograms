@@ -198,10 +198,6 @@ public class HologramLine extends HologramObject {
         this.hide();
     }
 
-    public boolean hasParent() {
-        return parent != null;
-    }
-
     /**
      * Parse the current content String.
      */
@@ -343,8 +339,8 @@ public class HologramLine extends HologramObject {
     private String parsePlaceholders(@NotNull String string, @NonNull Player player, boolean papi) {
         // Replace internal placeholders.
         string = string.replace("{player}", player.getName());
-        string = string.replace("{page}", String.valueOf(hasParent() ? parent.getIndex() + 1 : 1));
-        string = string.replace("{pages}", String.valueOf(hasParent() ? parent.getParent().size() : 1));
+        string = string.replace("{page}", String.valueOf(parent != null ? parent.getIndex() + 1 : 1));
+        string = string.replace("{pages}", String.valueOf(parent != null ? parent.getParent().size() : 1));
 
         // Replace PlaceholderAPI placeholders.
         if (papi) {
@@ -362,7 +358,7 @@ public class HologramLine extends HologramObject {
     @NonNull
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
-        if (content != null && !content.isEmpty()) {
+        if (!content.isEmpty()) {
             for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
                 content = content.replace(replacement.getKey(), replacement.getValue());
             }
