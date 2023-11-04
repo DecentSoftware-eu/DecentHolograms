@@ -25,7 +25,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().updateVisibility(player));
-        S.sync(() -> decentHolograms.getPacketListener().hook(player));
+        decentHolograms.getPacketListener().hook(player);
         if (decentHolograms.isUpdateAvailable() && player.hasPermission("dh.admin")) {
             Lang.sendUpdateMessage(player);
         }
