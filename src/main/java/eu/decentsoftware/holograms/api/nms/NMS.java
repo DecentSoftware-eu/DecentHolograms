@@ -5,7 +5,10 @@ import eu.decentsoftware.holograms.api.nms.versions.NMS_1_17;
 import eu.decentsoftware.holograms.api.nms.versions.NMS_1_8;
 import eu.decentsoftware.holograms.api.nms.versions.NMS_1_9;
 import eu.decentsoftware.holograms.api.utils.objects.Pair;
-import eu.decentsoftware.holograms.api.utils.reflect.*;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
@@ -45,7 +48,7 @@ public abstract class NMS {
             // Because NMS has different names for fields in almost every version.
             for (Field field : entityPlayerClass.getDeclaredFields()) {
                 if (field.getType().isAssignableFrom(playerConnectionClass)) {
-                    ENTITY_PLAYER_CONNECTION_FIELD  = new ReflectField<>(entityPlayerClass, field.getName());
+                    ENTITY_PLAYER_CONNECTION_FIELD = new ReflectField<>(entityPlayerClass, field.getName());
                     break;
                 }
             }

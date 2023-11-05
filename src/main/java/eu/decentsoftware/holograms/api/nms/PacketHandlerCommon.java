@@ -2,7 +2,11 @@ package eu.decentsoftware.holograms.api.nms;
 
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.utils.reflect.*;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectConstructor;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;

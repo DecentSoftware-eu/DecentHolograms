@@ -3,7 +3,11 @@ package eu.decentsoftware.holograms.api.nms.versions;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.utils.reflect.*;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectConstructor;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -314,7 +318,7 @@ public class NMS_1_9 extends NMS {
         sendPacket(player, teleport);
     }
 
-   private static Object ENUM_ITEM_SLOT_HEAD;
+    private static Object ENUM_ITEM_SLOT_HEAD;
 
     @Override
     public void helmetFakeEntity(Player player, ItemStack itemStack, int entityId) {
@@ -341,7 +345,7 @@ public class NMS_1_9 extends NMS {
         Object packet = PACKET_MOUNT_CONSTRUCTOR.newInstance();
         if (packet == null) return;
         ReflectionUtil.setFieldValue(packet, "a", vehicleId);
-        ReflectionUtil.setFieldValue(packet, "b", new int[] {entityId});
+        ReflectionUtil.setFieldValue(packet, "b", new int[]{entityId});
         sendPacket(player, packet);
     }
 
