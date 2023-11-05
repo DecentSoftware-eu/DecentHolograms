@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @Getter
@@ -169,13 +170,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                             try {
                                 page.addAction(clickType, new Action(clickTypeAction));
                             } catch (Exception e) {
-                                DECENT_HOLOGRAMS.getPlugin().getLogger().warning(String.format(
+                                DECENT_HOLOGRAMS.getPlugin().getLogger().log(Level.WARNING, String.format(
                                         "Failed to parse action '%s' for hologram '%s' at page %s! Skipping...",
                                         clickTypeAction,
                                         hologram.getName(),
                                         page.getIndex()
-                                ));
-                                e.printStackTrace();
+                                ), e);
                             }
                         }
                     }
