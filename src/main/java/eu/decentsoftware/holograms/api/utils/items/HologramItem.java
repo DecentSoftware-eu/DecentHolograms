@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import lombok.AllArgsConstructor;
@@ -140,6 +141,11 @@ public class HologramItem {
             } else if (texture != null) {
                 stringBuilder.append("(").append(texture).append(")");
             }
+        }
+        NBTItem nbtItem = new NBTItem(itemStack);
+        if (nbtItem.hasTag("CustomModelData")) {
+            int customModelData = nbtItem.getInteger("CustomModelData");
+            stringBuilder.append("{CustomModelData:").append(customModelData).append("}");
         }
         return new HologramItem(stringBuilder.toString());
     }
