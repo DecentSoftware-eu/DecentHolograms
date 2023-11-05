@@ -145,7 +145,7 @@ public class HologramItem {
         NBTItem nbtItem = new NBTItem(itemStack);
         if (nbtItem.hasTag("CustomModelData")) {
             int customModelData = nbtItem.getInteger("CustomModelData");
-            stringBuilder.append("{CustomModelData:").append(customModelData).append("}");
+            stringBuilder.append(" {CustomModelData:").append(customModelData).append("}");
         }
         return new HologramItem(stringBuilder.toString());
     }
