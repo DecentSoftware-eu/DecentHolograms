@@ -639,7 +639,7 @@ public class LineSubCommand extends DecentCommand {
 				final int index = Validator.getInteger(args[2], Lang.LINE_DOES_NOT_EXIST.getValue());
 				page.removeLine(index - 1);
 				if (page.size() == 0) {
-					hologram.removePage(pageIndex);
+					hologram.removePage(pageIndex - 1);
 					Lang.LINE_REMOVED.send(sender);
 					Lang.PAGE_DELETED.send(sender);
 				} else {
