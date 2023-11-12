@@ -598,7 +598,7 @@ public final class DHAPI {
         Validate.notNull(line);
         Validate.notNull(content);
 
-        // If the new content is the same as current content, don't do anyting.
+        // If the new content is the same as current content, don't do anything.
         if (line.getContent().equals(content)) {
             return;
         }

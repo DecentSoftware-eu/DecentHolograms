@@ -42,7 +42,7 @@ public class PlayerListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
         // TODO: All holograms (and entities) get hidden on the client, when the client
-        //  teleports or respawns. This only seems to be happening on some client verions
+        //  teleports or respawns. This only seems to be happening on some client versions
         //  so we need to find which versions are affected and only re-show the holograms
         //  to those clients (or on those server versions).
         //  -
