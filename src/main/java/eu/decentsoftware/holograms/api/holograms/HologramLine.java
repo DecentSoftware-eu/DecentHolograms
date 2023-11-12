@@ -119,16 +119,16 @@ public class HologramLine extends HologramObject {
      *	Fields
      */
 
-    private final @Nullable HologramPage parent;
-    private final @NonNull Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
-    private final @NonNull Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
+    private final HologramPage parent;
+    private final Map<UUID, String> playerTextMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> lastTextMap = new ConcurrentHashMap<>();
     private HologramLineType type;
     private int[] entityIds = new int[2];
-    private final @NonNull AtomicDouble offsetX = new AtomicDouble(0d);
-    private final @NonNull AtomicDouble offsetY = new AtomicDouble(0d);
-    private final @NonNull AtomicDouble offsetZ = new AtomicDouble(0d);
+    private final AtomicDouble offsetX = new AtomicDouble(0d);
+    private final AtomicDouble offsetY = new AtomicDouble(0d);
+    private final AtomicDouble offsetZ = new AtomicDouble(0d);
     private double height;
-    private @NonNull String content;
+    private String content;
     private String text;
     private HologramItem item;
     private HologramEntity entity;

@@ -152,7 +152,7 @@ public class HologramPage extends FlagHolder {
      */
     public boolean addLine(@NonNull HologramLine line) {
         lines.add(line);
-        parent.getViewerPlayers(index).forEach(line::show);
+        parent.getViewerPlayers(this.index).forEach(line::show);
         realignLines();
         return true;
     }
