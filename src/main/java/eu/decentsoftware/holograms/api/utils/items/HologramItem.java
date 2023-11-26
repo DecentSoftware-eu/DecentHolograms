@@ -136,10 +136,10 @@ public class HologramItem {
         if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
             String owner = itemBuilder.getSkullOwner();
             String texture = itemBuilder.getSkullTexture();
-            if (owner != null) {
-                stringBuilder.append("(").append(owner).append(")");
-            } else if (texture != null) {
+            if (texture != null) {
                 stringBuilder.append("(").append(texture).append(")");
+            } else if (owner != null && !owner.isEmpty()) {
+                stringBuilder.append("(").append(owner).append(")");
             }
         }
         NBTItem nbtItem = new NBTItem(itemStack);
