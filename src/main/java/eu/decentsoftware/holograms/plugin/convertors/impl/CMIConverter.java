@@ -23,7 +23,13 @@ public class CMIConverter implements IConvertor {
 
     @Override
     public ConvertorResult convert() {
-        return convert(new File(PLUGIN.getDataFolder().getParent() + "/CMI/", "holograms.yml"));
+        File file = new File(PLUGIN.getDataFolder().getParent() + "/CMI/Saves/", "holograms.yml");
+        if(ConverterCommon.notValidFile(file, "holograms.yml")){
+            // Probably old location...
+            file = new File(PLUGIN.getDataFolder().getParent() + "/CMI/", "holograms.yml");
+        }
+        
+        return convert(file);
     }
 
     @Override
