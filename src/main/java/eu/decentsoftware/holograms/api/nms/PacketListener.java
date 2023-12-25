@@ -57,7 +57,7 @@ public class PacketListener {
                 eventLoop.execute(() -> executeOnPipeline(player, consumer));
             }
         } catch (Exception e) {
-            decentHolograms.getLogger().log(Level.WARNING, "Failed to modify player's pipline. (" + player.getName() + ")");
+            decentHolograms.getLogger().log(Level.WARNING, "Failed to modify player's pipeline. (" + player.getName() + ")", e);
         }
     }
 
