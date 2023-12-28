@@ -18,7 +18,7 @@ public class DExecutor {
     /**
      * Initialize DExecutor. This method will set up ExecutorService for DecentHolograms.
      *
-     * @param threads Amount of threads to use.
+     * @param threads Number of threads to use.
      */
     public static void init(int threads) {
         if (!initialized) {
@@ -94,8 +94,8 @@ public class DExecutor {
         service.execute(runnable);
     }
 
-    private final @NonNull ExecutorService executor;
-    private final @NonNull DList<CompletableFuture<Void>> running;
+    private final ExecutorService executor;
+    private final DList<CompletableFuture<Void>> running;
 
     DExecutor(@NonNull ExecutorService executor, int estimate) {
         this.executor = executor;

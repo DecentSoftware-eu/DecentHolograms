@@ -216,7 +216,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected final Lock lock = new ReentrantLock();
 
     /**
-     * This object server as a mutex for all visibility related operations.
+     * This object server as a mutex for all visibility-related operations.
      * <p>
      * For example, when we want to hide a hologram, that's already being
      * updated on another thread, we would need to wait for the update to
@@ -392,7 +392,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
         super.setFacing(facing);
 
-        // Update the facing for all lines, that don't already have a different facing set.
+        // Update the facing for all lines, that don't yet have a different facing set.
         // We want to keep the hologram facing working as a "default" value, but we don't want
         // it to override custom line facing.
         for (HologramPage page : this.pages) {

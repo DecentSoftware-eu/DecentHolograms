@@ -12,7 +12,7 @@ import java.util.List;
 public class CustomTextAnimation extends TextAnimation {
 
 	private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-	private final @NonNull List<String> steps;
+	private final List<String> steps;
 
 	public CustomTextAnimation(@NonNull String name, int speed, int pause, @NonNull List<String> steps) {
 		super(name, speed, pause);

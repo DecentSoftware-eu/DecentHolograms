@@ -13,7 +13,7 @@ public class SolidPattern implements Pattern {
      * Output might be the same as the input if this pattern is not present.
      *
      * @param string The String to which this pattern should be applied to
-     * @return The new String with applied pattern
+     * @return The new String with an applied pattern
      */
     public String process(String string) {
         Matcher matcher = PATTERN.matcher(string);

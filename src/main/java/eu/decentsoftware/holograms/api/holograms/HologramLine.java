@@ -168,7 +168,7 @@ public class HologramLine extends HologramObject {
      * <p>
      * This method also parses the content and updates the line.
      * <p>
-     * NOTE: The new content can be null but if it is, it will be
+     * NOTE: The new content can be null, but if it is, it will be
      * replaced with an empty string. It is recommended to not use
      * null as content.
      *
@@ -346,9 +346,9 @@ public class HologramLine extends HologramObject {
         if (papi) {
             string = PAPI.setPlaceholders(player, string);
             if (string == null) {
-                // Some PlacehoderAPI placeholders might be replaced with null, so if the line content
+                // Some PlaceholderAPI placeholders might be replaced with null, so if the line content
                 // is just a single placeholder, there is a possibility that the line will be null. So,
-                // if that happens, just replace the null with an empty string.
+                // if that happens, replace the null with an empty string.
                 string = "";
             }
         }
@@ -370,7 +370,7 @@ public class HologramLine extends HologramObject {
      * Check if the given player has the permission to see this line, if any.
      *
      * @param player The player.
-     * @return True if the player has the permission to see this line, false otherwise.
+     * @return True, if the player has the permission to see this line, false otherwise.
      */
     public boolean hasPermission(@NonNull Player player) {
         return permission == null || permission.isEmpty() || player.hasPermission(permission);
@@ -381,7 +381,7 @@ public class HologramLine extends HologramObject {
      * if the player has the permission to see this line and if they are in the display
      * range. Then it updates the visibility accordingly.
      *
-     * @param player The player to update visbility for.
+     * @param player The player to update visibility for.
      */
     public void updateVisibility(@NonNull Player player) {
         if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
@@ -530,7 +530,7 @@ public class HologramLine extends HologramObject {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(@NonNull Player player) {
-        return parent == null || parent.getParent().isInDisplayRange(player);
+        return parent == null || parent.getParent().isInUpdateRange(player);
     }
 
     public double getOffsetX() {

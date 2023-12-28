@@ -30,7 +30,7 @@ public class HologramManager extends Ticked {
     private final Set<HologramLine> temporaryLines = ConcurrentHashMap.newKeySet();
 
     /**
-     * Map of holograms to load, when their respective world loads.
+     * Map of holograms to load when their respective world loads.
      * <p>
      * There were issues with world management plugins loading worlds
      * after holograms. Due to that, holograms in these worlds were skipped
@@ -48,7 +48,7 @@ public class HologramManager extends Ticked {
         this.decentHolograms = decentHolograms;
         this.register();
 
-        S.async(this::reload); // Reload when worlds are ready
+        S.async(this::reload); // Reload when the worlds are ready
     }
 
     @Override
@@ -89,11 +89,11 @@ public class HologramManager extends Ticked {
     }
 
     /**
-     * Spawn a temporary line that is going to disappear after the given duration.
+     * Spawn a temporary line going to disappear after the given duration.
      *
      * @param location Location of the line.
      * @param content  Content of the line.
-     * @param duration Duration to disappear after. (in ticks)
+     * @param duration Duration to disappear after. (In ticks)
      * @return The Hologram Line.
      */
     public HologramLine spawnTemporaryHologramLine(@NonNull Location location, String content, long duration) {

@@ -38,7 +38,7 @@ public class Common {
     }
 
     /**
-     * @return Random float between 0 and 1
+     * @return Random float between zero and one.
      */
     public static float randomFloat() {
         return ThreadLocalRandom.current().nextFloat();
@@ -190,7 +190,7 @@ public class Common {
     /**
      * Check whether the given plugin is enabled.
      *
-     * @param name The plugins name.
+     * @param name The plugin's name.
      * @return The boolean.
      */
     public static boolean isPluginEnabled(String name) {

@@ -301,7 +301,7 @@ public class HologramPage extends FlagHolder {
             String actionData = action.getData();
             if (actionName.contains("_PAGE") && actionData == null) {
                 action.setData(getParent().getName());
-            } else if (actionName.equals("PAGE") && actionData != null && actionData.matches("[\\d]+")) {
+            } else if (actionName.equals("PAGE") && actionData != null && actionData.matches("\\d+")) {
                 action.setData(getParent().getName() + ":" + actionData);
             }
 

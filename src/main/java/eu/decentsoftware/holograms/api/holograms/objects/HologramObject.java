@@ -153,7 +153,7 @@ public abstract class HologramObject extends FlagHolder {
     }
 
     /**
-     * Get List of all players that currently see this hologram.
+     * Get the List of all players that currently see this hologram.
      *
      * @return List of all players that currently see this hologram.
      */

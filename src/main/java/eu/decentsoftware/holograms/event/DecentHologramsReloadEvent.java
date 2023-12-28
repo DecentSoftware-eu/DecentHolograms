@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.event;
 import org.bukkit.event.HandlerList;
 
 /**
- * This event is called after DecentHolograms plugin is reloaded.
+ * This event is called after the DecentHolograms plugin is reloaded.
  *
  * @author d0by
  * @since 2.7.8

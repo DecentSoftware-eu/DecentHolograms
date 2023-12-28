@@ -61,7 +61,7 @@ public interface CommandBase {
 	CommandBase getSubCommand(String name);
 
 	/**
-	 * Get names of all sub commands.
+	 * Get the names of all sub commands.
 	 *
 	 * @return names of all sub commands.
 	 */

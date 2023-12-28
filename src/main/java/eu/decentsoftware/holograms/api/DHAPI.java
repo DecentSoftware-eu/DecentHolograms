@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple access point to the DecentHolograms API. Using this class
- * you can easily manipulate with holograms and their contents.
+ * A simple access point to the DecentHolograms API.
+ * Using this class, you can manipulate with holograms and their contents.
  *
  * @author d0by
  * @since 2.0.12
@@ -411,7 +411,7 @@ public final class DHAPI {
     }
 
     /**
-     * Add a new line into hologram page.
+     * Add a new line into the hologram page.
      *
      * @param page    The page.
      * @param content New lines content.
@@ -432,7 +432,7 @@ public final class DHAPI {
      * @param lineIndex Index of the new line.
      * @param material  Material for new item line content.
      * @return The new line.
-     * @throws IllegalArgumentException If hologram or material is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the hologram or material is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(Hologram hologram, int lineIndex, Material material) throws IllegalArgumentException {
         Validate.notNull(material);
@@ -446,7 +446,7 @@ public final class DHAPI {
      * @param lineIndex Index of the new line.
      * @param item      ItemStack for new item line content.
      * @return The new line.
-     * @throws IllegalArgumentException If hologram or item is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the hologram or item is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(Hologram hologram, int lineIndex, ItemStack item) throws IllegalArgumentException {
         Validate.notNull(item);
@@ -474,7 +474,7 @@ public final class DHAPI {
      * @param lineIndex Index of the new line.
      * @param material  Material for the new line content.
      * @return The new line.
-     * @throws IllegalArgumentException If hologram or material is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the hologram or material is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(Hologram hologram, int pageIndex, int lineIndex, Material material) throws IllegalArgumentException {
         Validate.notNull(material);
@@ -489,7 +489,7 @@ public final class DHAPI {
      * @param lineIndex Index of the new line.
      * @param item      ItemStack for the new line content.
      * @return The new line.
-     * @throws IllegalArgumentException If hologram or item is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the hologram or item is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(Hologram hologram, int pageIndex, int lineIndex, ItemStack item) throws IllegalArgumentException {
         Validate.notNull(item);
@@ -522,7 +522,7 @@ public final class DHAPI {
      * @param index    Index of the new line.
      * @param material Material as new line content.
      * @return The new line.
-     * @throws IllegalArgumentException If page or material is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the page or material is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(HologramPage page, int index, Material material) throws IllegalArgumentException {
         Validate.notNull(material);
@@ -536,7 +536,7 @@ public final class DHAPI {
      * @param index Index of the new line.
      * @param item  ItemStack as new line content.
      * @return The new line.
-     * @throws IllegalArgumentException If page or item is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the page or item is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(HologramPage page, int index, ItemStack item) throws IllegalArgumentException {
         Validate.notNull(item);
@@ -550,7 +550,7 @@ public final class DHAPI {
      * @param index   Index of the new line.
      * @param content New lines content.
      * @return The new line.
-     * @throws IllegalArgumentException If page or content is null or the indexes are invalid.
+     * @throws IllegalArgumentException If the page or content is null or the indexes are invalid.
      */
     public static HologramLine insertHologramLine(HologramPage page, int index, String content) throws IllegalArgumentException {
         HologramLine oldLine = page.getLine(index);
@@ -609,7 +609,7 @@ public final class DHAPI {
         // Set the new content
         line.setContent(content);
 
-        // If the new type is the same as the previous type, just update.
+        // If the new type is the same as the previous type, update.
         if ((prevType == HologramLineType.TEXT || prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD) && prevType == line.getType()) {
             line.update();
         }
@@ -835,7 +835,7 @@ public final class DHAPI {
      * @param hologram  The hologram.
      * @param pageIndex The page.
      * @param lines     The new lines.
-     * @throws IllegalArgumentException If hologram or lines is null.
+     * @throws IllegalArgumentException If hologram or lines are null.
      */
     public static void setHologramLines(Hologram hologram, int pageIndex, List<String> lines) throws IllegalArgumentException {
         Validate.notNull(hologram);
