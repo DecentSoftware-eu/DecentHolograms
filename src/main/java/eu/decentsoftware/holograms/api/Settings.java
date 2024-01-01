@@ -20,7 +20,7 @@ public class Settings {
     public static boolean CHECK_FOR_UPDATES = true;
     @Key(value = "click-cooldown", min = 1, max = 300)
     public static int CLICK_COOLDOWN = 1;
-    @Key("default.text")
+    @Key("defaults.text")
     public static String DEFAULT_TEXT = "Blank Line";
     @Key("defaults.down-origin")
     public static boolean DEFAULT_DOWN_ORIGIN = false;

@@ -115,8 +115,8 @@ public class HologramSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permission = "dh.admin",
-			usage = "/dh hologram align <hologram> <X|Y|Z|XZ> <otherHologram>",
-			description = "Align hologram with other hologram on a specified axis.",
+			usage = "/dh hologram align <hologram> <X|Y|Z|XZ|FACE> <otherHologram>",
+			description = "Align hologram with other hologram on a specified axis or its facing angle.",
 			minArgs = 3
 	)
 	public static class HologramAlignSub extends DecentCommand {
@@ -1095,7 +1095,7 @@ public class HologramSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permission = "dh.admin",
-			usage = "/dh hologram setupdateinterval <hologram> <range>",
+			usage = "/dh hologram setupdateinterval <hologram> <interval>",
 			description = "Set update interval of a hologram.",
 			aliases = {"updateinterval"},
 			minArgs = 2
