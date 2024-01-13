@@ -71,7 +71,7 @@ public class PageSubCommand extends DecentCommand {
 
     @CommandInfo(
             permission = "dh.admin",
-            usage = "/dh page ?",
+            usage = "/dh page help",
             description = "All commands for editing pages.",
             aliases = {"?"}
     )
@@ -360,7 +360,7 @@ public class PageSubCommand extends DecentCommand {
 
     @CommandInfo(
             permission = "dh.admin",
-            usage = "/dh page actions <hologram> <page> <clickType> [page]",
+            usage = "/dh page actions <hologram> <page> <clickType> [listPage]",
             description = "List of click actions.",
             playerOnly = true,
             minArgs = 3

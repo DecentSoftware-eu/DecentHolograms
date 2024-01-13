@@ -114,8 +114,8 @@ public class HologramsCommand extends DecentCommand {
 
     @CommandInfo(
             permission = "dh.admin",
-            aliases = {"ver", "about"},
             usage = "/dh version",
+            aliases = {"ver", "about"},
             description = "Shows some info about your current DecentHolograms version."
     )
     public static class VersionSubCommand extends DecentCommand {
