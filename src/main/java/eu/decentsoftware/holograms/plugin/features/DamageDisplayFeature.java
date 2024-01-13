@@ -82,7 +82,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		return "Spawn a temporary hologram displaying damage.";
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onDamage(EntityDamageEvent e) {
 		if (e.isCancelled()) {
 			return;
