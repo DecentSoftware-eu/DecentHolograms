@@ -3,10 +3,10 @@ package eu.decentsoftware.holograms.api.utils.items;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -83,7 +83,7 @@ public final class SkullUtils {
 						try {
 							return (String) PROPERTY_VALUE_METHOD.invoke(property);
 						} catch (IllegalAccessException | InvocationTargetException e) {
-							Bukkit.getLogger().log(Level.SEVERE, "[DecentHolograms] Failed to invoke Property#value", e);
+							DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Failed to invoke Property#value", e);
 						}
 						return null;
 					};
@@ -96,7 +96,7 @@ public final class SkullUtils {
 				return VALUE_RESOLVER.apply(property.iterator().next());
 			}
 		} catch (Exception e) {
-			Bukkit.getLogger().log(Level.SEVERE, "[DecentHolograms] Unhandled exception while retrieving skull texture", e);
+			DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Unhandled exception while retrieving skull texture", e);
 		}
 		return null;
 	}
@@ -159,7 +159,7 @@ public final class SkullUtils {
 				itemStack.setDurability((short) SkullType.PLAYER.ordinal());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Unhandled exception while setting skull texture", e);
 		}
 	}
 
