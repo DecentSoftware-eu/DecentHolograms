@@ -132,7 +132,7 @@ public final class SkullUtils {
 
 				if (SET_PROFILE_METHOD == null && !INITIALIZED) {
 					try {
-						// This method only exists in versions 1.16 and up. For older versions we use reflection
+						// This method only exists in versions 1.16 and up. For older versions, we use reflection
 						// to set the profile field directly.
 						SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
 						SET_PROFILE_METHOD.setAccessible(true);

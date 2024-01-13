@@ -216,7 +216,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected final Lock lock = new ReentrantLock();
 
     /**
-     * This object server as a mutex for all visibility-related operations.
+     * This object serves as a mutex for all visibility-related operations.
      * <p>
      * For example, when we want to hide a hologram, that's already being
      * updated on another thread, we would need to wait for the update to
