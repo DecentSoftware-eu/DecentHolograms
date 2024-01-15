@@ -20,7 +20,7 @@ import java.util.Map;
 public class IridiumColorAPI {
 
     private static final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
-    public static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
+    public static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m", "§l", "§n", "§o", "§k", "§m");
 
     private static final LruCache LRU_CACHE = new LruCache(Settings.DEFAULT_LRU_CACHE_SIZE);
 
