@@ -639,7 +639,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 } else {
                     // We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.
                     // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
-                    S.sync(() -> showPageTo(player, page, pageIndex), 0L);
+                    S.sync(player, () -> showPageTo(player, page, pageIndex), 0L);
                 }
                 return true;
             }

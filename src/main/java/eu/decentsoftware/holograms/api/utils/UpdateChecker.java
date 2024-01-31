@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class UpdateChecker {
     }
 
     public void getVersion(Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        DecentHologramsAPI.get().getScheduler().runAsync(() -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream();
                  Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext() && consumer != null) {
