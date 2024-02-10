@@ -99,6 +99,7 @@ public final class DHAPI {
         }
         hologram.showAll();
         hologram.save();
+        DecentHologramsAPI.get().getHologramManager().registerHologram(hologram);
         return hologram;
     }
 
