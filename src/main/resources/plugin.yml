@@ -16,8 +16,298 @@ commands:
     description: "The main command of DecentHolograms plugin."
 
 permissions:
+  #
+  # Main permissions
   dh.admin:
     description: "Allows player to use DecentHolograms."
+    children: 
+      dh.command: true
   dh.default:
     default: true
     description: "Allows player to see the version after using '/decentholograms'."
+    children:
+      dh.command.decentholograms: true
+      dh.command.version: true
+  #
+  # Command permissions
+  dh.command:
+    description: "Allows player to use all commands of DecentHolograms"
+    default: op
+    children:
+      dh.command.decentholograms: true
+      dh.command.version: true
+      dh.command.reload: true
+      dh.command.list: true
+      dh.command.help: true
+      dh.command.convert: true
+      dh.command.features: true
+      dh.command.holograms: true
+      dh.command.lines: true
+      dh.command.pages: true
+  #
+  # Main Command permissions
+  dh.command.decentholograms:
+    description: "Allows player to use the command '/decentholograms'"
+  dh.command.version:
+    description: "Allows player to use the command '/dh version'"
+    default: op
+  dh.command.reload:
+    description: "Allows player to use the command '/dh reload'"
+    default: op
+  dh.command.list:
+    description: "Allows player to use the command '/dh list [page]'"
+    default: op
+  dh.command.help:
+    description: "Allows player to use the command '/dh help'"
+    default: op
+  dh.command.convert:
+    description: "Allows player to use the command '/dh convert <plugin>'"
+    default: op
+  #
+  # Feature Sub-command permissions
+  dh.command.features:
+    description: "Allows player to use the command '/dh features' and all its sub-commands"
+    default: op
+    children: 
+      dh.command.features.disable: true
+      dh.command.features.enable: true
+      dh.command.features.help: true
+      dh.command.features.info: true
+      dh.command.features.list: true
+      dh.command.features.reload: true
+  dh.command.features.disable:
+    description: "Allows player to use the command '/dh features disable <feature>'"
+    default: op
+  dh.command.features.enable:
+    description: "Allows player to use the command '/dh features enable <feature>'"
+    default: op
+  dh.command.features.help:
+    description: "Allows player to use the command '/dh features help'"
+    default: op
+  dh.command.features.info:
+    description: "Allows player to use the command '/dh features info <feature>'"
+    default: op
+  dh.command.features.list:
+    description: "Allows player to use the command '/dh features list'"
+    default: op
+  dh.command.features.reload:
+    description: "Allows player to use the command '/dh features reload'"
+    default: op
+  #
+  # Hologram Sub-command permissions
+  dh.command.holograms:
+    description: "Allows player to use the command '/dh holograms' and all its sub-commands"
+    default: op
+    children: 
+      dh.command.holograms.update: true
+      dh.command.holograms.align: true
+      dh.command.holograms.center: true
+      dh.command.holograms.clone: true
+      dh.command.holograms.create: true
+      dh.command.holograms.delete: true
+      dh.command.holograms.disable: true
+      dh.command.holograms.setdisplayrange: true
+      dh.command.holograms.downorigin: true
+      dh.command.holograms.enable: true
+      dh.command.holograms.setfacing: true
+      dh.command.holograms.addflag: true
+      dh.command.holograms.removeflag: true
+      dh.command.holograms.help: true
+      dh.command.holograms.info: true
+      dh.command.holograms.lines: true
+      dh.command.holograms.movehere: true
+      dh.command.holograms.move: true
+      dh.command.holograms.near: true
+      dh.command.holograms.setpermission: true
+      dh.command.holograms.teleport: true
+      dh.command.holograms.setupdateinterval: true
+      dh.command.holograms.setupdaterange: true
+      dh.command.holograms.rename: true
+  dh.command.holograms.update:
+    description: "Allows player to use the command '/dh holograms update <hologram>'"
+    default: op
+  dh.command.holograms.align:
+    description: "Allows player to use the command '/dh holograms align <hologram> <X|Y|Z|XZ|FACE> <otherHologram>'"
+    default: op
+  dh.command.holograms.center:
+    description: "Allows player to use the command '/dh holograms center <hologram>'"
+    default: op
+  dh.command.holograms.clone:
+    description: "Allows player to use the command '/dh holograms clone <hologram> <name> [temp] [-l:<world>:<x>:<y>:<z>]'"
+    default: op
+  dh.command.holograms.create:
+    description: "Allows player to use the command '/dh holograms create <name> [-l:<world>:<x>:<y>:<z>] [content]'"
+    default: op
+  dh.command.holograms.delete:
+    description: "Allows player to use the command '/dh holograms delete <hologram>'"
+    default: op
+  dh.command.holograms.disable:
+    description: "Allows player to use the command '/dh holograms disable <hologram>'"
+    default: op
+  dh.command.holograms.setdisplayrange:
+    description: "Allows player to use the command '/dh holograms setdisplayrange <hologram> <range>'"
+    default: op
+  dh.command.holograms.downorigin:
+    description: "Allows player to use the command '/dh holograms downorigin <hologram> <true|false>'"
+    default: op
+  dh.command.holograms.enable:
+    description: "Allows player to use the command '/dh holograms enable <hologram>'"
+    default: op
+  dh.command.holograms.setfacing:
+    description: "Allows player to use the command '/dh holograms setfacing <hologram> <facing>'"
+    default: op
+  dh.command.holograms.addflag:
+    description: "Allows player to use the command '/dh holograms addflag <hologram> <flag>'"
+    default: op
+  dh.command.holograms.removeflag:
+    description: "Allows player to use the command '/dh holograms removeflag <hologram> <flag>'"
+    default: op
+  dh.command.holograms.help:
+    description: "Allows player to use the command '/dh holograms help'"
+    default: op
+  dh.command.holograms.info:
+    description: "Allows player to use the command '/dh holograms info <hologram>'"
+    default: op
+  dh.command.holograms.lines:
+    description: "Allows player to use the command '/dh holograms lines <hologram> <page> [listPage]'"
+    default: op
+  dh.command.holograms.movehere:
+    description: "Allows player to use the command '/dh holograms movehere <hologram>'"
+    default: op
+  dh.command.holograms.move:
+    description: "Allows player to use the command '/dh holograms move <hologram> <x> <y> <z>'"
+    default: op
+  dh.command.holograms.near:
+    description: "Allows player to use the command '/dh holograms near <range>'"
+    default: op
+  dh.command.holograms.setpermission:
+    description: "Allows player to use the command '/dh holograms setpermission <hologram> [permission]'"
+    default: op
+  dh.command.holograms.teleport:
+    description: "Allows player to use the command '/dh holograms teleport <hologram>'"
+    default: op
+  dh.command.holograms.setupdateinterval:
+    description: "Allows player to use the command '/dh holograms setupdateinterval <hologram> <interval>'"
+    default: op
+  dh.command.holograms.setupdaterange:
+    description: "Allows player to use the command '/dh holograms setupdaterange <hologram> <range>'"
+    default: op
+  dh.command.holograms.rename:
+    description: "Allows player to use the command '/dh holograms rename <hologram> <new_name>'"
+    default: op
+  #
+  # Line Sub-command permissions
+  dh.command.lines:
+    description: "Allows player to use the command '/dh lines' and all its sub-commands"
+    default: op
+    children: 
+      dh.command.lines.add: true
+      dh.command.lines.align: true
+      dh.command.lines.edit: true
+      dh.command.lines.addflag: true
+      dh.command.lines.removeflag: true
+      dh.command.lines.height: true
+      dh.command.lines.help: true
+      dh.command.lines.info: true
+      dh.command.lines.insert: true
+      dh.command.lines.offsetx: true
+      dh.command.lines.offsetz: true
+      dh.command.lines.setpermission: true
+      dh.command.lines.remove: true
+      dh.command.lines.set: true
+      dh.command.lines.swap: true
+      dh.command.lines.setfacing: true
+  dh.command.lines.add:
+    description: "Allows player to use the command '/dh lines add <hologram> <page> [content]'"
+    default: op
+  dh.command.lines.align:
+    description: "Allows player to use the command '/dh lines align <hologram> <page> <line1> <line2> <X|Z|XZ|FACE>'"
+    default: op
+  dh.command.lines.edit:
+    description: "Allows player to use the command '/dh lines edit <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.addflag:
+    description: "Allows player to use the command '/dh lines addflag <hologram> <page> <line> <flag>'"
+    default: op
+  dh.command.lines.removeflag:
+    description: "Allows player to use the command '/dh lines removeflag <hologram> <page> <line> <flag>'"
+    default: op
+  dh.command.lines.height:
+    description: "Allows player to use the command '/dh lines height <hologram> <page> <line> <height>'"
+    default: op
+  dh.command.lines.help:
+    description: "Allows player to use the command '/dh lines help'"
+    default: op
+  dh.command.lines.info:
+    description: "Allows player to use the command '/dh lines info <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.insert:
+    description: "Allows player to use the command '/dh lines insert <hologram> <page> <line> [content]'"
+    default: op
+  dh.command.lines.offsetx:
+    description: "Allows player to use the command '/dh lines offsetx <hologram> <page> <line> <offset>'"
+    default: op
+  dh.command.lines.offsetz:
+    description: "Allows player to use the command '/dh lines offsetz <hologram> <page> <line> <offset>'"
+    default: op
+  dh.command.lines.setpermission:
+    description: "Allows player to use the command '/dh lines setpermission <hologram> <page> <line> [permission]'"
+    default: op
+  dh.command.lines.remove:
+    description: "Allows player to use the command '/dh lines remove <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.set:
+    description: "Allows player to use the command '/dh lines set <hologram> <page> <line> <content>'"
+    default: op
+  dh.command.lines.swap:
+    description: "Allows player to use the command '/dh lines swap <hologram> <page> <line1> <line2>'"
+    default: op
+  dh.command.lines.setfacing:
+    description: "Allows player to use the command '/dh lines setfacing <hologram> <page> <line> <facing>'"
+    default: op
+  #
+  # Pages Sub-command permissions
+  dh.command.pages:
+    description: "Allows player to use the command '/dh pages' and all its sub-commands"
+    default: op
+    children: 
+      dh.command.pages.help: true
+      dh.command.pages.add: true
+      dh.command.pages.insert: true
+      dh.command.pages.remove: true
+      dh.command.pages.swap: true
+      dh.command.pages.switch: true
+      dh.command.pages.actions: true
+      dh.command.pages.clearactions: true
+      dh.command.pages.addaction: true
+      dh.command.pages.removeaction: true
+  dh.command.pages.help:
+    description: "Allows player to use the command '/dh pages help'"
+    default: op
+  dh.command.pages.add:
+    description: "Allows player to use the command '/dh pages add <hologram> [content]'"
+    default: op
+  dh.command.pages.insert:
+    description: "Allows player to use the command '/dh pages insert <hologram> <page> [content]'"
+    default: op
+  dh.command.pages.remove:
+    description: "Allows player to use the command '/dh pages remove <hologram> <page>'"
+    default: op
+  dh.command.pages.swap:
+    description: "Allows player to use the command '/dh pages swap <hologram> <page1> <page2>'"
+    default: op
+  dh.command.pages.switch:
+    description: "Allows player to use the command '/dh pages switch <hologram> <page> [player]'"
+    default: op
+  dh.command.pages.actions:
+    description: "Allows player to use the command '/dh pages actions <hologram> <page> <clickType> [listPage]'"
+    default: op
+  dh.command.pages.clearactions:
+    description: "Allows player to use the command '/dh pages clearactions <hologram> <page> <clickType>'"
+    default: op
+  dh.command.pages.addaction:
+    description: "Allows player to use the command '/dh pages addaction <hologram> <page> <clickType> <action>'"
+    default: op
+  dh.command.pages.removeaction:
+    description: "Allows player to use the command '/dh pages removeaction <hologram> <page> <clickType> <index>'"
+    default: op

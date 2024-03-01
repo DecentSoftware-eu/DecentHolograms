@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 public @interface CommandInfo {
 
 	String[] aliases() default {};
-
-	String permission();
+	
+	String[] permissions() default {};
 
 	boolean playerOnly() default false;
 

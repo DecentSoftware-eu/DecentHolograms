@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @CommandInfo(
-        permission = "",
+        permissions = "dh.command.pages",
         usage = "/dh pages help",
         description = "All commands for editing hologram pages.",
         aliases = {"page", "p"}
@@ -70,7 +70,7 @@ public class PageSubCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.help",
             usage = "/dh page help",
             description = "All commands for editing pages.",
             aliases = {"?"}
@@ -112,7 +112,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.add",
             usage = "/dh page add <hologram> [content]",
             description = "Add a page to Hologram.",
             aliases = {"append"},
@@ -163,7 +163,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.insert",
             usage = "/dh page insert <hologram> <page> [content]",
             description = "Insert a page into Hologram.",
             minArgs = 2
@@ -222,7 +222,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.remove",
             usage = "/dh page remove <hologram> <page>",
             description = "Remove a page from Hologram.",
             aliases = {"rem", "del", "delete"},
@@ -259,7 +259,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.swap",
             usage = "/dh page swap <hologram> <page1> <page2>",
             description = "Swap two pages in a Hologram.",
             minArgs = 3
@@ -318,7 +318,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "",
+            permissions = "dh.command.pages.switch",
             usage = "/dh page switch <hologram> <page> [player]",
             description = "Switch to a page in hologram.",
             aliases = {"go", "view"},
@@ -359,7 +359,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.actions",
             usage = "/dh page actions <hologram> <page> <clickType> [listPage]",
             description = "List of click actions.",
             playerOnly = true,
@@ -406,7 +406,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.clearactions",
             usage = "/dh page clearactions <hologram> <page> <clickType>",
             description = "Clear all click actions.",
             minArgs = 3
@@ -450,7 +450,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.addactions",
             usage = "/dh page addaction <hologram> <page> <clickType> <action>",
             description = "Add a click action.",
             minArgs = 4
@@ -496,7 +496,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.pages.removeaction",
             usage = "/dh page removeaction <hologram> <page> <clickType> <index>",
             description = "Add a click action.",
             aliases = {"remaction"},

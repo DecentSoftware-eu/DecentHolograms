@@ -9,7 +9,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import java.util.List;
 
 @CommandInfo(
-		permission = "dh.admin",
+		permissions = "dh.command.features",
 		usage = "/dh features help",
 		description = "All commands for managing features.",
 		aliases = {"feature", "f"}
@@ -50,7 +50,7 @@ public class FeatureSubCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.disable",
             usage = "/dh feature disable <feature>",
             description = "Disable a Feature.",
             aliases = {"off"},
@@ -93,7 +93,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.enable",
             usage = "/dh feature enable <feature>",
             description = "Enable a Feature.",
             aliases = {"on"},
@@ -136,7 +136,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.help",
             usage = "/dh feature help",
             description = "Show help for features.",
             aliases = {"?"}
@@ -179,7 +179,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.info",
             usage = "/dh feature info <feature>",
             description = "Info about feature.",
             minArgs = 1
@@ -223,7 +223,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.list",
             usage = "/dh feature list",
             description = "List of all features"
     )
@@ -261,7 +261,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.features.reload",
             usage = "/dh feature reload <feature>",
             description = "Reload a Feature.",
             minArgs = 1

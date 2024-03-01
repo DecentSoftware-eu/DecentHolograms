@@ -17,7 +17,7 @@ public interface CommandBase {
 	/**
 	 * @return The permission required to execute this Command.
 	 */
-	String getPermission();
+	String[] getPermissions();
 
 	/**
 	 * @return The aliases for this Command.

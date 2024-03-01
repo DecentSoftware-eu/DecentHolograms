@@ -65,8 +65,8 @@ public abstract class DecentCommand extends Command implements CommandBase {
 	}
 
 	@Override
-	public String getPermission() {
-		return info.permission();
+	public String[] getPermissions() {
+		return info.permissions();
 	}
 
 	@Override

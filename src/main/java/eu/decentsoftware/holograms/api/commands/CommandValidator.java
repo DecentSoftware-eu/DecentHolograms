@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 @UtilityClass
 public class CommandValidator {
-
+	
 	/**
 	 * Get the Player from CommandSender if it is a Player.
 	 * <p>
@@ -24,7 +24,7 @@ public class CommandValidator {
 		}
 		return (Player) sender;
 	}
-
+	
 	/**
 	 * Check if String is a valid identifier of Command.
 	 *
@@ -36,7 +36,7 @@ public class CommandValidator {
 		if (identifier.equalsIgnoreCase(commandBase.getName())) {
 			return true;
 		}
-
+		
 		for (String alias : commandBase.getAliases()) {
 			if (identifier.equalsIgnoreCase(alias)) {
 				return true;
@@ -44,7 +44,7 @@ public class CommandValidator {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Check if CommandSender is allowed to execute Command.
 	 * <p>
@@ -61,15 +61,24 @@ public class CommandValidator {
 			Lang.ONLY_PLAYER.send(sender);
 			return false;
 		}
-
-		String perm = commandBase.getPermission();
-		if (perm != null && !perm.trim().isEmpty() && !sender.hasPermission(perm)) {
+		
+		String[] permissions = commandBase.getPermissions();
+		if (permissions != null && (permissions.length != 0)) {
+			if (sender.hasPermission("dh.admin")) {
+				return true;
+			}
+			
+			for (String permission : permissions) {
+				if (sender.hasPermission(permission))
+					return true;
+			}
+			
 			Lang.NO_PERM.send(sender);
 			return false;
 		}
 		return true;
 	}
-
+	
 	public static int getInteger(String string) {
 		try {
 			return Integer.parseInt(string);
