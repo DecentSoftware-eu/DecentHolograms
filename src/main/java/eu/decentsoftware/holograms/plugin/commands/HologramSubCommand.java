@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @CommandInfo(
-		permission = "dh.admin",
+		permissions = "dh.command.holograms",
 		usage = "/dh holograms help",
 		description = "All commands for editing holograms.",
 		aliases = {"hologram", "holo", "h"}
@@ -82,7 +82,7 @@ public class HologramSubCommand extends DecentCommand {
 	 */
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.holograms.update",
             usage = "/dh hologram update <hologram>",
             description = "Update a Hologram.",
             minArgs = 1
@@ -114,7 +114,7 @@ public class HologramSubCommand extends DecentCommand {
     }
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.align",
 			usage = "/dh hologram align <hologram> <X|Y|Z|XZ|FACE> <otherHologram>",
 			description = "Align hologram with other hologram on a specified axis or its facing angle.",
 			minArgs = 3
@@ -184,7 +184,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.center",
 			usage = "/dh hologram center <hologram>",
 			description = "Move a Hologram into the center of a block.",
 			minArgs = 1
@@ -223,7 +223,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.clone",
 			usage = "/dh hologram clone <hologram> <name> [temp] [-l:<world:x:y:z>]",
 			description = "Clone an existing Hologram.",
 			aliases = {"copy"},
@@ -291,7 +291,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.create",
 			usage = "/dh hologram create <name> [-l:world:x:y:z] [content]",
 			description = "Create new Hologram.",
 			aliases = {"new", "c"},
@@ -374,7 +374,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.delete",
 			usage = "/dh hologram delete <hologram>",
 			description = "Delete a Hologram.",
 			aliases = {"del", "remove", "rem"},
@@ -407,7 +407,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.disable",
 			usage = "/dh hologram disable <hologram>",
 			description = "Disable a hologram.",
 			aliases = {"off"},
@@ -443,7 +443,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.setdisplayrange",
 			usage = "/dh hologram setdisplayrange <hologram> <range>",
 			description = "Set display range of a hologram.",
 			aliases = {"displayrange"},
@@ -476,7 +476,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.downorigin",
 			usage = "/dh hologram downorigin <hologram> <true|false>",
 			description = "Set down origin state of the hologram.",
 			aliases = {"setdownorigin"},
@@ -517,7 +517,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.enable",
 			usage = "/dh hologram enable <hologram>",
 			description = "Enable a hologram.",
 			aliases = {"on"},
@@ -553,7 +553,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.setfacing",
 			usage = "/dh hologram setfacing <hologram> <facing>",
 			description = "Set facing direction of a hologram.",
 			aliases = {"facing", "setface", "face"},
@@ -603,7 +603,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.addflag",
 			usage = "/dh hologram addflag <hologram> <flag>",
 			description = "Add a flag to Hologram.",
 			minArgs = 2
@@ -644,7 +644,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.removeflag",
 			usage = "/dh hologram removeflag <hologram> <flag>",
 			description = "Remove a flag from Hologram.",
 			aliases = {"remflag"},
@@ -686,7 +686,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.help",
 			usage = "/dh hologram help",
 			description = "Show help for holograms",
 			aliases = {"?"}
@@ -729,7 +729,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.info",
 			usage = "/dh hologram info <hologram>",
 			description = "Show info about a Hologram.",
 			minArgs = 1
@@ -765,7 +765,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.lines",
 			usage = "/dh hologram lines <hologram> <page> [listPage]",
 			description = "Lists all lines in a hologram.",
 			aliases = {"line", "l"},
@@ -838,7 +838,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.movehere",
 			usage = "/dh hologram movehere <hologram>",
 			description = "Move a Hologram to yourself.",
 			aliases = {"mvhr"},
@@ -879,7 +879,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.move",
 			usage = "/dh hologram move <hologram> <x> <y> <z>",
 			description = "Move Hologram to a Location.",
 			aliases = {"mv"},
@@ -947,7 +947,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.near",
 			usage = "/dh hologram near <range>",
 			description = "List of holograms near you.",
 			playerOnly = true,
@@ -1025,7 +1025,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.setpermission",
 			usage = "/dh hologram setpermission <hologram> [permission]",
 			description = "Set hologram permission.",
 			aliases = {"permission", "setperm", "perm"},
@@ -1061,7 +1061,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.teleport",
 			usage = "/dh hologram teleport <hologram>",
 			description = "Teleport to a Hologram.",
 			playerOnly = true,
@@ -1094,7 +1094,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.setupdateinterval",
 			usage = "/dh hologram setupdateinterval <hologram> <interval>",
 			description = "Set update interval of a hologram.",
 			aliases = {"updateinterval"},
@@ -1127,7 +1127,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.setupdaterange",
 			usage = "/dh hologram setupdaterange <hologram> <range>",
 			description = "Set update range of a hologram.",
 			aliases = {"updaterange"},
@@ -1160,7 +1160,7 @@ public class HologramSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permission = "dh.admin",
+			permissions = "dh.command.holograms.rename",
 			usage = "/dh hologram rename <hologram> <new_name>",
 			description = "Rename a hologram.",
 			minArgs = 2
