@@ -27,6 +27,7 @@ public abstract class HologramObject extends FlagHolder {
     protected Location location;
     protected String permission = null;
     protected float facing = 0.0f;
+    protected List<String> hoverCommands = new ArrayList<>();
 
     /*
      *	Constructors
@@ -130,6 +131,10 @@ public abstract class HologramObject extends FlagHolder {
     public void setFacing(float facing) {
         this.facing = facing;
         this.location.setYaw(facing);
+    }
+
+    public void setHoverCommands(List<String> hoverCommands) {
+        this.hoverCommands = hoverCommands;
     }
 
     public void setLocation(@NonNull Location location) {

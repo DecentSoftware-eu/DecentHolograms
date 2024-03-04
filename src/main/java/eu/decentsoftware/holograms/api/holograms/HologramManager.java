@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
+import eu.decentsoftware.holograms.event.DecentHologramsRegisterEvent;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -227,6 +228,9 @@ public class HologramManager extends Ticked {
      */
     public void registerHologram(@NonNull Hologram hologram) {
         hologramMap.put(hologram.getName(), hologram);
+        Bukkit.getScheduler().runTask(decentHolograms.getPlugin(), ()->{
+            Bukkit.getServer().getPluginManager().callEvent(new DecentHologramsRegisterEvent());
+        });
     }
 
     /**
