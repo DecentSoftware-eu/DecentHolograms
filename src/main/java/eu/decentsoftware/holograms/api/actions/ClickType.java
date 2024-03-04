@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.api.actions;
 import org.bukkit.event.block.Action;
 
 public enum ClickType {
-    LEFT, RIGHT, SHIFT_LEFT, SHIFT_RIGHT;
+    LEFT, RIGHT, SHIFT_LEFT, SHIFT_RIGHT,HOVER,HOVER_LEAVE;
 
     public static ClickType fromAction(Action action, boolean sneak) {
         switch (action) {
