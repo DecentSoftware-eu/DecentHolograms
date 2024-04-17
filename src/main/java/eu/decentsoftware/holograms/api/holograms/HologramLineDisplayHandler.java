@@ -37,6 +37,7 @@ public class HologramLineDisplayHandler extends Ticked {
     @Override
     public void tick() {
         final Set<UUID> playersUpdated = new LinkedHashSet<>(); // We only want to send the player one item per tick
+        final Set<LineDisplayEntry> reQueue = new LinkedHashSet<>();
 
         while (!queue.isEmpty()) {
             LineDisplayEntry poll = queue.poll();
@@ -52,7 +53,7 @@ public class HologramLineDisplayHandler extends Ticked {
             }
 
             if (playersUpdated.contains(player.getUniqueId())) {
-                queue.add(poll);
+                reQueue.add(poll);
                 continue;
             }
 
@@ -60,9 +61,11 @@ public class HologramLineDisplayHandler extends Ticked {
                 poll.getLine().showItem(player);
                 playersUpdated.add(player.getUniqueId());
             } else {
-                queue.add(poll);
+                reQueue.add(poll);
             }
         }
+
+        queue.addAll(reQueue);
     }
 
     private boolean canDisplay(Player player, HologramLine line) {
