@@ -644,7 +644,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     private void showPageTo(@NonNull Player player, @NonNull HologramPage page, int pageIndex) {
-        if (page.getLines().stream().anyMatch(line -> !line.canShow(player))) {
+        if (page.getLines().stream().anyMatch(line -> line.shouldAwaitDisplay(player))) {
             return;
         }
 

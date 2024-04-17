@@ -569,9 +569,11 @@ public class HologramLine extends HologramObject {
 
     @Override
     public boolean canShow(@NonNull Player player) {
-        return super.canShow(player)
-                && (parent == null || parent.getParent().canShow(player))
-                && (type != HologramLineType.ICON || player.getTicksLived() > Settings.DEFAULT_MINIMUM_TICKS_LIVED_ITEM_LINE); // Could be considered hacky but it works?
+        return super.canShow(player) && (parent == null || parent.getParent().canShow(player));
     }
 
+    // Could be considered hacky but it works?
+    public boolean shouldAwaitDisplay(Player player) {
+        return (type != HologramLineType.ICON || player.getTicksLived() > Settings.DEFAULT_MINIMUM_TICKS_LIVED_ITEM_LINE);
+    }
 }
