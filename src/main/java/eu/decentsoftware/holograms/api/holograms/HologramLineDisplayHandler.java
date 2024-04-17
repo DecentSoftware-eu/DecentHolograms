@@ -57,8 +57,14 @@ public class HologramLineDisplayHandler extends Ticked {
                 continue;
             }
 
-            if (canDisplay(player, poll.getLine())) {
-                poll.getLine().showItem(player);
+            HologramLine line = poll.getLine();
+
+            if (!line.isVisible(player)) {
+                continue;
+            }
+
+            if (canDisplay(player, line)) {
+                line.showItem(player);
                 playersUpdated.add(player.getUniqueId());
             } else {
                 reQueue.add(poll);
