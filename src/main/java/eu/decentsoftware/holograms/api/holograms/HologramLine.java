@@ -409,6 +409,7 @@ public class HologramLine extends HologramObject {
             if (parent != null && parent.getParent().isHideState(player)) {
                 continue;
             }
+
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                 switch (type) {
                     case TEXT:
@@ -568,7 +569,7 @@ public class HologramLine extends HologramObject {
 
     @Override
     public boolean canShow(@NonNull Player player) {
-        return super.canShow(player) && (parent == null || parent.getParent().canShow(player));
+        return super.canShow(player) && (parent == null || parent.getParent().canShow(player)) && (type != HologramLineType.ICON || player.getTicksLived() > 40); // Could be considered hacky but it works?
     }
 
 }
