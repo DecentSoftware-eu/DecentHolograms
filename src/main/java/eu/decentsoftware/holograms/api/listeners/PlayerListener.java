@@ -12,10 +12,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 @SuppressWarnings("unused")
 public class PlayerListener implements Listener {
 
     private final DecentHolograms decentHolograms;
+    private final Map<UUID, Long> playerLoginTime = new ConcurrentHashMap<>(); // Hologram lines can be updated asynchronously
 
     public PlayerListener(DecentHolograms decentHolograms) {
         this.decentHolograms = decentHolograms;
@@ -28,6 +33,8 @@ public class PlayerListener implements Listener {
         if (decentHolograms.isUpdateAvailable() && player.hasPermission("dh.admin")) {
             Lang.sendUpdateMessage(player);
         }
+
+        playerLoginTime.put(player.getUniqueId(), System.currentTimeMillis());
     }
 
     @EventHandler
@@ -58,4 +65,13 @@ public class PlayerListener implements Listener {
         S.async(() -> decentHolograms.getHologramManager().hideAll(player));
     }
 
+    public int getTicksSinceLogin(Player player) {
+        Long epoch = playerLoginTime.get(player.getUniqueId());
+
+        if (epoch == null) {
+            return 0;
+        }
+
+        return (int) ((System.currentTimeMillis() - epoch)) / 50;
+    }
 }

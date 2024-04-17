@@ -58,7 +58,8 @@ public class HologramManager extends Ticked {
         for (Hologram hologram : Hologram.getCachedHolograms()) {
             if (hologram.isEnabled()) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (Settings.LIMIT_HOLOGRAM_UPDATES_PER_TICK && updates.getOrDefault(player.getUniqueId(), 0) >= Settings.MAXIMUM_HOLOGRAM_UPDATES_PER_TICK) {
+                    if (Settings.LIMIT_HOLOGRAM_UPDATES_PER_TICK
+                            && updates.getOrDefault(player.getUniqueId(), 0) >= Settings.MAXIMUM_HOLOGRAM_UPDATES_PER_TICK) {
                         continue;
                     }
 

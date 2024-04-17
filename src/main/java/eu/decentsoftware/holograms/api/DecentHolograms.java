@@ -48,6 +48,7 @@ public final class DecentHolograms {
     private FeatureManager featureManager;
     private AnimationManager animationManager;
     private PacketListener packetListener;
+    private PlayerListener playerListener;
     private Ticker ticker;
     private boolean updateAvailable;
 
@@ -86,7 +87,7 @@ public final class DecentHolograms {
         this.packetListener = new PacketListener(this);
 
         PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new PlayerListener(this), this.plugin);
+        pm.registerEvents((playerListener = new PlayerListener(this)), this.plugin);
         pm.registerEvents(new WorldListener(this), this.plugin);
 
         // Setup metrics
