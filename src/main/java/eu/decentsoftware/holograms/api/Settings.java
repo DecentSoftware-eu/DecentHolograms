@@ -44,10 +44,6 @@ public class Settings {
     public static boolean ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS = false;
     @Key(value = "defaults.minimum-session-ticks-item-line", min = 0)
     public static int DEFAULT_MINIMUM_SESSION_TICKS_ITEM_LINE = 40;
-    @Key(value = "defaults.limit-hologram-updates-per-tick")
-    public static boolean LIMIT_HOLOGRAM_UPDATES_PER_TICK = true;
-    @Key(value = "defaults.maximum-hologram-updates-per-tick", min = 1)
-    public static int MAXIMUM_HOLOGRAM_UPDATES_PER_TICK = 10;
 
     public static Map<String, String> CUSTOM_REPLACEMENTS = ImmutableMap.<String, String>builder()
             .put("[x]", "\u2588")

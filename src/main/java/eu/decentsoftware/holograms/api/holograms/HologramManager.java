@@ -53,19 +53,10 @@ public class HologramManager extends Ticked {
 
     @Override
     public synchronized void tick() {
-        final Map<UUID, Integer> updates = new LinkedHashMap<>();
-
         for (Hologram hologram : Hologram.getCachedHolograms()) {
             if (hologram.isEnabled()) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (Settings.LIMIT_HOLOGRAM_UPDATES_PER_TICK
-                            && updates.getOrDefault(player.getUniqueId(), 0) >= Settings.MAXIMUM_HOLOGRAM_UPDATES_PER_TICK) {
-                        continue;
-                    }
-
-                    if (updateVisibility(player, hologram) && Settings.LIMIT_HOLOGRAM_UPDATES_PER_TICK) {
-                        updates.put(player.getUniqueId(), updates.getOrDefault(player.getUniqueId(), 0) + 1);
-                    }
+                    updateVisibility(player, hologram);
                 }
             }
         }
@@ -84,9 +75,9 @@ public class HologramManager extends Ticked {
      * @param hologram - The hologram to update the visibility for.
      * @return True if the hologram was shown, false otherwise.
      */
-    public boolean updateVisibility(@NonNull Player player, @NonNull Hologram hologram) {
+    public void updateVisibility(@NonNull Player player, @NonNull Hologram hologram) {
         if (hologram.isDisabled()) {
-            return false;
+            return;
         }
 
         // Determine the player's display state of this hologram.
@@ -94,17 +85,14 @@ public class HologramManager extends Ticked {
             if (hologram.isVisible(player)) {
                 hologram.hide(player);
             }
-            return false;
+            return;
         }
 
         if (!hologram.isVisible(player) && hologram.canShow(player) && hologram.isInDisplayRange(player)) {
             hologram.show(player, hologram.getPlayerPage(player));
-            return true;
         } else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
             hologram.hide(player);
         }
-
-        return false;
     }
 
     /**
