@@ -15,6 +15,7 @@ public abstract class UpdatingHologramObject extends HologramObject {
      */
 
     protected int displayRange = Settings.DEFAULT_DISPLAY_RANGE;
+    protected int itemDisplayRange = Settings.DEFAULT_ITEM_DISPLAY_RANGE;
     protected int updateRange = Settings.DEFAULT_UPDATE_RANGE;
     protected volatile int updateInterval = Settings.DEFAULT_UPDATE_INTERVAL;
 

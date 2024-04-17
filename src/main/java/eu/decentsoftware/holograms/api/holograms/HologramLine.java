@@ -410,6 +410,8 @@ public class HologramLine extends HologramObject {
                 continue;
             }
 
+            DECENT_HOLOGRAMS.getLineDisplayHandler().removeFromQueue(this, player);
+
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                 switch (type) {
                     case TEXT:
@@ -419,14 +421,11 @@ public class HologramLine extends HologramObject {
                     case HEAD:
                     case SMALLHEAD:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, HologramLineType.HEAD != type, false);
-                        ItemStack itemStack = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
-                        nms.helmetFakeEntity(player, itemStack, entityIds[0]);
+                        DECENT_HOLOGRAMS.getLineDisplayHandler().queue(this, player);
                         break;
                     case ICON:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
-                        ItemStack itemStack1 = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
-                        nms.showFakeEntityItem(player, getLocation(), itemStack1, entityIds[1]);
-                        nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
+                        DECENT_HOLOGRAMS.getLineDisplayHandler().queue(this, player);
                         break;
                     case ENTITY:
                         EntityType entityType = new HologramEntity(PAPI.setPlaceholders(player, getEntity().getContent())).getType();
@@ -445,6 +444,26 @@ public class HologramLine extends HologramObject {
                 }
                 viewers.add(player.getUniqueId());
             }
+        }
+    }
+
+    protected void showItem(Player player) {
+        if (!viewers.contains(player.getUniqueId())) {
+            return;
+        }
+
+        NMS nms = NMS.getInstance();
+
+        switch (type) {
+            case HEAD:
+            case SMALLHEAD:
+                ItemStack itemStack = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
+                nms.helmetFakeEntity(player, itemStack, entityIds[0]);
+                break;
+            case ICON:
+                ItemStack itemStack1 = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
+                nms.showFakeEntityItem(player, getLocation(), itemStack1, entityIds[1]);
+                nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
         }
     }
 
@@ -520,6 +539,7 @@ public class HologramLine extends HologramObject {
     public void hide(Player... players) {
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
+            DECENT_HOLOGRAMS.getLineDisplayHandler().removeFromQueue(this, player);
             NMS.getInstance().hideFakeEntities(player, entityIds[0], entityIds[1]);
             viewers.remove(player.getUniqueId());
         }
@@ -527,6 +547,10 @@ public class HologramLine extends HologramObject {
 
     public boolean isInDisplayRange(@NonNull Player player) {
         return parent == null || parent.getParent().isInDisplayRange(player);
+    }
+
+    public boolean isInItemDisplayRange(@NonNull Player player) {
+        return parent == null || parent.getParent().isInItemDisplayRange(player);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -565,16 +589,5 @@ public class HologramLine extends HologramObject {
     @Override
     public boolean hasFlag(@NonNull EnumFlag flag) {
         return super.hasFlag(flag) || (parent != null && parent.getParent().hasFlag(flag));
-    }
-
-    @Override
-    public boolean canShow(@NonNull Player player) {
-        return super.canShow(player) && (parent == null || parent.getParent().canShow(player));
-    }
-
-    // Could be considered hacky but it works?
-    public boolean shouldAwaitDisplay(Player player) {
-        return (type == HologramLineType.ICON || type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD)
-                && DecentHologramsAPI.get().getPlayerListener().getTicksSinceLogin(player) < Settings.DEFAULT_MINIMUM_SESSION_TICKS_ITEM_LINE;
     }
 }

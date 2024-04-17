@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.features.FeatureManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLineDisplayHandler;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.nms.PacketListener;
@@ -44,6 +45,7 @@ public final class DecentHolograms {
 
     private final JavaPlugin plugin;
     private HologramManager hologramManager;
+    private HologramLineDisplayHandler lineDisplayHandler;
     private CommandManager commandManager;
     private FeatureManager featureManager;
     private AnimationManager animationManager;
@@ -81,6 +83,7 @@ public final class DecentHolograms {
 
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
+        this.lineDisplayHandler = new HologramLineDisplayHandler();
         this.commandManager = new CommandManager();
         this.featureManager = new FeatureManager();
         this.animationManager = new AnimationManager(this);

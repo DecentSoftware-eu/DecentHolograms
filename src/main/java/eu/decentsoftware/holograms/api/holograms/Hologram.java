@@ -644,10 +644,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     private void showPageTo(@NonNull Player player, @NonNull HologramPage page, int pageIndex) {
-        if (page.getLines().stream().anyMatch(line -> line.shouldAwaitDisplay(player))) {
-            return;
-        }
-
         page.getLines().forEach(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
@@ -807,6 +803,22 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         try {
             if (player.getWorld().equals(location.getWorld())) {
                 return player.getLocation().distanceSquared(location) <= displayRange * displayRange;
+            }
+        } catch (Exception ignored) {
+            // Ignored
+        }
+        return false;
+    }
+
+    public boolean isInItemDisplayRange(@NonNull Player player) {
+        /*
+         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
+         * the world of a location, which is not loaded. We catch this exception
+         * and return false, because the player is not in range.
+         */
+        try {
+            if (player.getWorld().equals(location.getWorld())) {
+                return player.getLocation().distanceSquared(location) <= itemDisplayRange * itemDisplayRange;
             }
         } catch (Exception ignored) {
             // Ignored

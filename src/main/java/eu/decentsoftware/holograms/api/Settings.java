@@ -34,6 +34,8 @@ public class Settings {
     public static double DEFAULT_HEIGHT_SMALLHEAD = 0.6;
     @Key(value = "defaults.display-range", min = 1, max = 48)
     public static int DEFAULT_DISPLAY_RANGE = 48;
+    @Key(value = "defaults.item-display-range", min = 1, max = 48)
+    public static int DEFAULT_ITEM_DISPLAY_RANGE = 16;
     @Key(value = "defaults.update-range", min = 1, max = 48)
     public static int DEFAULT_UPDATE_RANGE = 48;
     @Key(value = "defaults.update-interval", min = 1, max = 1200)
