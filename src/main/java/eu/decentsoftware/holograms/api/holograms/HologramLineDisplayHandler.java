@@ -69,7 +69,7 @@ public class HologramLineDisplayHandler extends Ticked {
     }
 
     private boolean canDisplay(Player player, HologramLine line) {
-        return DecentHologramsAPI.get().getPlayerListener().getTicksSinceLogin(player) < Settings.DEFAULT_MINIMUM_SESSION_TICKS_ITEM_LINE
+        return DecentHologramsAPI.get().getPlayerListener().getTicksSinceLogin(player) >= Settings.DEFAULT_MINIMUM_SESSION_TICKS_ITEM_LINE
                 && line.isInItemDisplayRange(player);
     }
 
