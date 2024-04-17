@@ -42,6 +42,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().onQuit(player));
         decentHolograms.getPacketListener().unhook(player);
+        playerLoginTime.remove(player.getUniqueId());
     }
 
     @EventHandler
