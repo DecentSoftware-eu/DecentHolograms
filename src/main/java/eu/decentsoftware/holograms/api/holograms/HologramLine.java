@@ -574,6 +574,6 @@ public class HologramLine extends HologramObject {
 
     // Could be considered hacky but it works?
     public boolean shouldAwaitDisplay(Player player) {
-        return (type != HologramLineType.ICON || player.getTicksLived() > Settings.DEFAULT_MINIMUM_TICKS_LIVED_ITEM_LINE);
+        return (type == HologramLineType.ICON || type == HologramLineType.HEAD) && player.getTicksLived() < Settings.DEFAULT_MINIMUM_TICKS_LIVED_ITEM_LINE;
     }
 }
