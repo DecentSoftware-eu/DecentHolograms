@@ -42,6 +42,8 @@ public class Settings {
     public static int DEFAULT_LRU_CACHE_SIZE = 500;
     @Key("allow-placeholders-inside-animations")
     public static boolean ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS = false;
+    @Key(value = "defaults.minimum-ticks-lived-item-line")
+    public static int DEFAULT_MINIMUM_TICKS_LIVED_ITEM_LINE = 40;
 
     public static Map<String, String> CUSTOM_REPLACEMENTS = ImmutableMap.<String, String>builder()
             .put("[x]", "\u2588")
