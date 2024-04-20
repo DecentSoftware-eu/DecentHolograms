@@ -12,8 +12,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 public class HologramLineDisplayHandler extends Ticked {
+
+    private static final long TTL = TimeUnit.SECONDS.toMillis(30);
+    private static final int MAX_QUEUE_SIZE = 10_000;
 
     private final Queue<LineDisplayEntry> queue = new ConcurrentLinkedQueue<>();
 
@@ -46,6 +50,10 @@ public class HologramLineDisplayHandler extends Ticked {
                 continue;
             }
 
+            if (System.currentTimeMillis() - poll.getTimestamp() > TTL) {
+                continue;
+            }
+
             Player player = Bukkit.getPlayer(poll.getPlayerId());
 
             if (player == null) {
@@ -63,7 +71,7 @@ public class HologramLineDisplayHandler extends Ticked {
                 continue;
             }
 
-            if (canDisplay(player, line)) {
+            if (canDisplay(player)) {
                 line.showItem(player);
                 playersUpdated.add(player.getUniqueId());
             } else {
@@ -74,6 +82,10 @@ public class HologramLineDisplayHandler extends Ticked {
         queue.addAll(reQueue);
         playersUpdated.clear();
         reQueue.clear();
+
+        if (queue.size() >= MAX_QUEUE_SIZE) {
+            queue.clear();
+        }
     }
 
     private boolean canDisplay(Player player) {
@@ -85,6 +97,7 @@ public class HologramLineDisplayHandler extends Ticked {
 
         private final HologramLine line;
         private final UUID playerId;
+        private final long timestamp = System.currentTimeMillis();
 
         public LineDisplayEntry(HologramLine line, UUID playerId) {
             this.line = line;
