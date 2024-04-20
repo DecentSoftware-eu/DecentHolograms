@@ -549,10 +549,6 @@ public class HologramLine extends HologramObject {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
 
-    public boolean isInItemDisplayRange(@NonNull Player player) {
-        return parent == null || parent.getParent().isInItemDisplayRange(player);
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(@NonNull Player player) {
         return parent == null || parent.getParent().isInUpdateRange(player);

@@ -810,22 +810,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return false;
     }
 
-    public boolean isInItemDisplayRange(@NonNull Player player) {
-        /*
-         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
-         * the world of a location, which is not loaded. We catch this exception
-         * and return false, because the player is not in range.
-         */
-        try {
-            if (player.getWorld().equals(location.getWorld())) {
-                return player.getLocation().distanceSquared(location) <= itemDisplayRange * itemDisplayRange;
-            }
-        } catch (Exception ignored) {
-            // Ignored
-        }
-        return false;
-    }
-
     /**
      * Check whether the given player is in update range of this hologram object.
      *
