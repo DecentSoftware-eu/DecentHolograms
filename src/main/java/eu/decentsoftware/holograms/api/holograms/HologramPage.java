@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import lombok.Getter;
@@ -12,7 +13,12 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -182,14 +188,20 @@ public class HologramPage extends FlagHolder {
      * @return Boolean whether the operation was successful.
      */
     public boolean setLine(int index, @NonNull String content) {
-        if (index < 0 || index >= size()) {
+        HologramLine line = getLine(index);
+        if (line == null) {
             return false;
         }
-        HologramLine line = getLine(index);
-        line.hide();
+
+        HologramLineType previousType = line.getType();
+
         line.setContent(content);
-        line.show();
-        realignLines();
+
+        if (line.getType() != previousType || line.getType() == HologramLineType.ENTITY) {
+            line.hide();
+            line.show();
+            realignLines();
+        }
         return true;
     }
 
