@@ -282,6 +282,8 @@ public abstract class NMS {
 
     public abstract void updateFakeEntityCustomName(Player player, String name, int entityId);
 
+    public abstract void updateFakeEntityItem(Player player, ItemStack itemStack, int entityId);
+
     public abstract void teleportFakeEntity(Player player, Location location, int entityId);
 
     public abstract void helmetFakeEntity(Player player, ItemStack itemStack, int entityId);

@@ -606,18 +606,16 @@ public final class DHAPI {
         HologramLineType prevType = line.getType();
         HologramPage parent = line.getParent();
 
-        // Set the new content
+        // Set the new content to update the line type.
         line.setContent(content);
 
-        // If the new type is the same as the previous type, update.
-        if ((prevType == HologramLineType.TEXT || prevType == HologramLineType.HEAD || prevType == HologramLineType.SMALLHEAD) && prevType == line.getType()) {
-            line.update();
-        }
-
         // If the type changed, respawn the line.
-        else {
+        //
+        // Otherwise, we don't need to do anything as HologramLine#setContent already updated the line.
+        if (prevType != line.getType() || cannotBeUpdated(prevType)) {
             Player[] viewers = line.getViewerPlayers().toArray(new Player[0]);
             line.hide();
+            line.setContent(content);
             line.show(viewers);
 
             // Realign lines in case the heights changed.
@@ -630,6 +628,10 @@ public final class DHAPI {
         if (parent != null) {
             parent.getParent().save();
         }
+    }
+
+    private static boolean cannotBeUpdated(HologramLineType lineType) {
+        return lineType == HologramLineType.ENTITY;
     }
 
     /**

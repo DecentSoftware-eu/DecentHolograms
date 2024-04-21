@@ -302,6 +302,22 @@ public class NMS_1_9 extends NMS {
     }
 
     @Override
+    public void updateFakeEntityItem(Player player, ItemStack itemStack, int entityId) {
+        Validate.notNull(player);
+        Validate.notNull(itemStack);
+
+        Object nmsItemStack = CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack);
+        Object dataWatcher = DATA_WATCHER_CONSTRUCTOR.newInstance(ENTITY_CLASS.cast(null));
+        if (nmsItemStack == null || dataWatcher == null) return;
+        if (Version.before(11)) {
+            DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ITEM, Optional.fromNullable(nmsItemStack));
+        } else {
+            DATA_WATCHER_REGISTER_METHOD.invoke(dataWatcher, DWO_ITEM, nmsItemStack);
+        }
+        sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(entityId, dataWatcher, true));
+    }
+
+    @Override
     public void teleportFakeEntity(Player player, Location location, int entityId) {
         Validate.notNull(player);
         Validate.notNull(location);

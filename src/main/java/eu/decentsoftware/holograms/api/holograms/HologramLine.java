@@ -26,7 +26,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -470,6 +476,8 @@ public class HologramLine extends HologramObject {
                 }
             } else if ((type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) && containsPlaceholders) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
+            } else if (type == HologramLineType.ICON && containsPlaceholders) {
+                nms.updateFakeEntityItem(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
             }
         }
     }
