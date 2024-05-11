@@ -631,9 +631,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             }
             HologramPage page = getPage(pageIndex);
             if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
-                if (isVisible(player)) {
-                    hide(player);
+                // First hide the current page
+                HologramPage currentPage = getPage(player);
+                if (currentPage != null) {
+                    hidePageFrom(player, currentPage);
                 }
+
                 if (Version.after(8)) {
                     showPageTo(player, page, pageIndex);
                 } else {
@@ -710,12 +713,16 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             if (isVisible(player)) {
                 HologramPage page = getPage(player);
                 if (page != null) {
-                    page.getLines().forEach(line -> line.hide(player));
-                    hideClickableEntities(player);
+                    hidePageFrom(player, page);
                 }
                 viewers.remove(player.getUniqueId());
             }
         }
+    }
+
+    private void hidePageFrom(@NonNull Player player, @NonNull HologramPage page) {
+        page.getLines().forEach(line -> line.hide(player));
+        hideClickableEntities(player);
     }
 
     public void hideAll() {
