@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-@SuppressWarnings("unused")
 public class PlayerListener implements Listener {
 
     private final DecentHolograms decentHolograms;
@@ -25,7 +24,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().updateVisibility(player));
-        decentHolograms.getPacketListener().hook(player);
+        S.sync(() -> decentHolograms.getPacketListener().hook(player), 20L);
         if (decentHolograms.isUpdateAvailable() && player.hasPermission("dh.admin")) {
             Lang.sendUpdateMessage(player);
         }
@@ -35,7 +34,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().onQuit(player));
-        decentHolograms.getPacketListener().unhook(player);
+        S.sync(() -> decentHolograms.getPacketListener().unhook(player));
     }
 
     @EventHandler
