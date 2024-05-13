@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 /**
  * Enum of supported NMS versions.
  */
+@SuppressWarnings("java:S115") // SonarLint: Enum values naming convention
 public enum Version {
     v1_8_R1(8, "1.8"),
     v1_8_R2(8, "1.8.3"),
