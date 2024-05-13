@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @CommandInfo(
 		aliases = {"holograms", "hologram", "dh", "holo"},
-		permission = "dh.default",
+		permissions = {"dh.default", "dh.command.decentholograms"},
 		usage = "/dh <args>",
 		description = "The main DecentHolograms Command."
 )
@@ -86,7 +86,7 @@ public class HologramsCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.test",
             usage = "/dh test",
             playerOnly = true,
             minArgs = 1,
@@ -113,7 +113,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = {"dh.default", "dh.command.version"},
             usage = "/dh version",
             aliases = {"ver", "about"},
             description = "Shows some info about your current DecentHolograms version."
@@ -139,7 +139,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.reload",
             usage = "/dh reload",
             description = "Reload the plugin."
     )
@@ -170,7 +170,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.list",
             usage = "/dh list [page]",
             description = "Show list of all Holograms.",
             playerOnly = true
@@ -228,7 +228,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.help",
             usage = "/dh help",
             description = "Show general help.",
             aliases = {"?"}
@@ -272,7 +272,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permission = "dh.admin",
+            permissions = "dh.command.convert",
             usage = "/dh convert <plugin> [file]",
             description = "Convert holograms from given plugin.",
             minArgs = 1
