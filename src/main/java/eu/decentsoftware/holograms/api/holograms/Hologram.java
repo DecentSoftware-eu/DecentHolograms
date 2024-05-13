@@ -668,43 +668,59 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void update(@NonNull Player player) {
         synchronized (visibilityMutex) {
-            if (hasFlag(EnumFlag.DISABLE_UPDATING) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+            if (hasFlag(EnumFlag.DISABLE_UPDATING)) {
                 return;
             }
 
-            HologramPage page = getPage(player);
-            if (page != null) {
-                page.getLines().forEach(line -> line.update(player));
-            }
+            performUpdate(player);
         }
     }
 
     public void updateAll() {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
-                getViewerPlayers().forEach(this::update);
+                getViewerPlayers().forEach(this::performUpdate);
             }
+        }
+    }
+
+    private void performUpdate(@NotNull Player player) {
+        if (!isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+            return;
+        }
+
+        HologramPage page = getPage(player);
+        if (page != null) {
+            page.getLines().forEach(line -> line.update(player));
         }
     }
 
     public void updateAnimations(@NonNull Player player) {
         synchronized (visibilityMutex) {
-            if (hasFlag(EnumFlag.DISABLE_ANIMATIONS) || !isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+            if (hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
                 return;
             }
 
-            HologramPage page = getPage(player);
-            if (page != null) {
-                page.getLines().forEach(line -> line.updateAnimations(player));
-            }
+            performUpdateAnimations(player);
         }
     }
 
     public void updateAnimationsAll() {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-                getViewerPlayers().forEach(this::updateAnimations);
+                getViewerPlayers().forEach(this::performUpdateAnimations);
             }
+        }
+    }
+
+    private void performUpdateAnimations(@NotNull Player player) {
+        if (!isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
+            return;
+        }
+
+        HologramPage page = getPage(player);
+        if (page != null) {
+            page.getLines().forEach(line -> line.updateAnimations(player));
         }
     }
 
