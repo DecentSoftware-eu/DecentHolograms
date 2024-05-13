@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +44,15 @@ public enum Version {
     public static final Version CURRENT;
 
     static {
-        CURRENT = Version.fromString(ReflectionUtil.getVersion());
+        CURRENT = getCurrentVersion();
+    }
+
+    private static Version getCurrentVersion() {
+        // Bukkit version (e.g., 1.20.6-R0.1-SNAPSHOT)
+        String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        // Minecraft version (e.g., 1.20.6)
+        String minecraftVersion = bukkitVersion.split("-", 2)[0];
+        return fromMinecraftVersion(minecraftVersion);
     }
 
     /**

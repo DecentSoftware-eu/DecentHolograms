@@ -66,7 +66,7 @@ public final class DecentHolograms {
     void load() {
         // Check if NMS version is supported
         if (Version.CURRENT == null) {
-            Common.log(Level.SEVERE, "Unsupported server version: " + ReflectionUtil.getVersion());
+            Common.log(Level.SEVERE, "Unsupported server version: " + Bukkit.getServer().getVersion());
             Common.log(Level.SEVERE, "Plugin will be disabled.");
             Bukkit.getPluginManager().disablePlugin(plugin);
         }
