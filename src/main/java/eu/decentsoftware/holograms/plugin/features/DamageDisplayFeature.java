@@ -52,7 +52,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 
 		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
 		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
-		zeroDamage = config.getBoolean("damage-display.mobs", zeroDamage);
+		zeroDamage = config.getBoolean("damage-display.zero-damage", zeroDamage);
 
 		if (enabled) {
 			this.enable();
