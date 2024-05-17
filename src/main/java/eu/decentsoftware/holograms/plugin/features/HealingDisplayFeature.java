@@ -91,6 +91,11 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 			return;
 		}
 
+		LivingEntity livingEntity = (LivingEntity) entity;
+		if (livingEntity.getHealth() == livingEntity.getMaxHealth()) {
+			return;
+		}
+
 		if (entity instanceof Player && !displayForPlayers) {
 			return;
 		}
