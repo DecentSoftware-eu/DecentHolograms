@@ -76,10 +76,10 @@ public enum Version {
     }
 
     @Nullable
-    public static Version fromMinecraftVersion(String humanVersion) {
+    public static Version fromMinecraftVersion(String minecraftVersion) {
         for (Version version : Version.values()) {
-            for (String human : version.getMinecraftVersions()) {
-                if (human.equals(humanVersion)) {
+            for (String candidateMinecraftVersion : version.getMinecraftVersions()) {
+                if (candidateMinecraftVersion.equals(minecraftVersion)) {
                     return version;
                 }
             }

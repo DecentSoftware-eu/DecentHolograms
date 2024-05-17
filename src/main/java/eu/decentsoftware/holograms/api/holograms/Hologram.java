@@ -823,7 +823,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean isInDisplayRange(@NonNull Player player) {
         /*
-         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
+         * Some forks (e.g., Pufferfish) throw an exception, when we try to get
          * the world of a location, which is not loaded. We catch this exception
          * and return false, because the player is not in range.
          */
@@ -846,7 +846,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(@NonNull Player player) {
         /*
-         * Some forks (e.g. Pufferfish) throw an exception, when we try to get
+         * Some forks (e.g., Pufferfish) throw an exception, when we try to get
          * the world of a location, which is not loaded. We catch this exception
          * and return false, because the player is not in range.
          */
