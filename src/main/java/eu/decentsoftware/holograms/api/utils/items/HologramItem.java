@@ -41,6 +41,7 @@ public class HologramItem {
         if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
             if (extras != null) {
                 String extrasFinal = player == null ? extras.trim() : PAPI.setPlaceholders(player, extras).trim();
+                extrasFinal = extrasFinal.replace("{player}", player == null ? "" : player.getName());
                 if (!extrasFinal.isEmpty()) {
                     if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
                         String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
@@ -71,16 +72,6 @@ public class HologramItem {
     private void parseContent() {
         String string = this.content;
 
-        // Find NBT tag
-        if (string.contains("{") && string.contains("}")) {
-            int nbtStart = string.indexOf('{');
-            int nbtEnd = string.lastIndexOf('}');
-            if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
-                this.nbt = string.substring(nbtStart, nbtEnd + 1);
-                string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
-            }
-        }
-
         // Find extras
         if (string.contains("(") && string.contains(")")) {
             int extrasStart = string.indexOf('(');
@@ -88,6 +79,16 @@ public class HologramItem {
             if (extrasStart > 0 && extrasEnd > 0 && extrasEnd > extrasStart) {
                 this.extras = string.substring(extrasStart + 1, extrasEnd);
                 string = string.substring(0, extrasStart) + string.substring(extrasEnd + 1);
+            }
+        }
+
+        // Find NBT tag
+        if (string.contains("{") && string.contains("}")) {
+            int nbtStart = string.indexOf('{');
+            int nbtEnd = string.lastIndexOf('}');
+            if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
+                this.nbt = string.substring(nbtStart, nbtEnd + 1);
+                string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
             }
         }
 
@@ -152,7 +153,7 @@ public class HologramItem {
 
     public static ItemStack parseItemStack(String string, Player player) {
         string = PAPI.setPlaceholders(player, string);
-        return new HologramItem(string).parse();
+        return new HologramItem(string).parse(player);
     }
 
 }

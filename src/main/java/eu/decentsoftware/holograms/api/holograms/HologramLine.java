@@ -424,12 +424,12 @@ public class HologramLine extends HologramObject {
                     case HEAD:
                     case SMALLHEAD:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, HologramLineType.HEAD != type, false);
-                        ItemStack itemStack = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
+                        ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
                         nms.helmetFakeEntity(player, itemStack, entityIds[0]);
                         break;
                     case ICON:
                         nms.showFakeEntityArmorStand(player, getLocation(), entityIds[0], true, true, false);
-                        ItemStack itemStack1 = containsPlaceholders ? HologramItem.parseItemStack(item.getContent(), player) : item.parse();
+                        ItemStack itemStack1 = HologramItem.parseItemStack(item.getContent(), player);
                         nms.showFakeEntityItem(player, getLocation(), itemStack1, entityIds[1]);
                         nms.attachFakeEntity(player, entityIds[0], entityIds[1]);
                         break;
