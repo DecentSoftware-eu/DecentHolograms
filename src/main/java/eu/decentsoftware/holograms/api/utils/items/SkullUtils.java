@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Function;
@@ -118,17 +120,25 @@ public final class SkullUtils {
 	 * Set the Base64 texture of the given skull ItemStack.
 	 *
 	 * @param itemStack The ItemStack.
-	 * @param texture   The new skull texture (Base64).
+	 * @param texture   The new skull texture (Base64 or URL).
 	 */
 	public static void setSkullTexture(@NonNull ItemStack itemStack, @NonNull String texture) {
 		try {
 			ItemMeta meta = itemStack.getItemMeta();
 			if (meta instanceof SkullMeta) {
 				GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-				Property property = new Property("textures", texture);
 
-				PropertyMap properties = profile.getProperties();
-				properties.put("textures", property);
+				String json = Base64.getDecoder().decode(texture);
+				if(!json.contains("\"url\":\"")){
+					// Decoded json does not contain a skin URL, so check if the 'texture' argument is a URL.
+					if(texture.startsWith("http://")); // We are all set.
+					// Check if the texture is a hexidecimal (like the skinfiles on Minecraft's servers)
+					else if(texture.matches("^[0-9a-fA-F]+$")) texture = "http://textures.minecraft.net/texture/"+texture;
+					else; // TODO: Texture invalid, print a warning or something?
+					json = "{\"textures\":{\"SKIN\":{\"url\":\""+texture+"\"}}}"; // (Stable for all MC versions with custom skins.)
+					texture = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.ISO_8859_1));
+				}
+				profile.getProperties().put("textures", new Property("textures", texture));
 
 				if (SET_PROFILE_METHOD == null && !INITIALIZED) {
 					try {
