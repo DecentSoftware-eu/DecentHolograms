@@ -129,9 +129,9 @@ public final class SkullUtils {
 				GameProfile profile = new GameProfile(UUID.randomUUID(), "");
 
 				String json = Base64.getDecoder().decode(texture);
-				if(!json.contains("\"url\":\"")){
-					// Decoded json does not contain a skin URL, so check if the 'texture' argument is a URL.
-					if(texture.startsWith("http://")); // We are all set.
+				if(!json.contains("\"url\":\"http://textures.minecraft.net/texture/")){
+					// Decoded json does not contain a valid skin URL, so check if the 'texture' argument is a valid URL.
+					if(texture.startsWith("http://textures.minecraft.net/texture/")); // We are all set.
 					// Check if the texture is a hexidecimal (like the skinfiles on Minecraft's servers)
 					else if(texture.matches("^[0-9a-fA-F]+$")) texture = "http://textures.minecraft.net/texture/"+texture;
 					else; // TODO: Texture invalid, print a warning or something?
