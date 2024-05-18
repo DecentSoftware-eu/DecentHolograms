@@ -422,7 +422,7 @@ public class NMS_1_17 extends NMS {
             if (Version.afterOrEqual(Version.v1_20_R4)) {
                 Object codec = DWS_GET_CODEC_METHOD.invoke(serializer);
                 CODEC_ENCODE_METHOD.invoke(codec, packetDataSerializer, value);
-            } else if (Version.afterOrEqual(Version.v1_20_R3)) {
+            } else {
                 DWS_SERIALIZE_METHOD.invoke(serializer, packetDataSerializer, value);
             }
         }
