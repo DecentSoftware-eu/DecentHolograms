@@ -18,6 +18,7 @@ public class ReflectionUtil {
      * Class -> (Field Name -> Field)
      */
     private static final Map<Class<?>, Map<String, Field>> FIELD_CACHE = new ConcurrentHashMap<>();
+    private static final String CRAFTBUKKIT_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
     private static String version;
 
     /**
@@ -39,10 +40,34 @@ public class ReflectionUtil {
                 field.set(object, value);
                 return true;
             } catch (IllegalAccessException ignored) {
-                // Field is not accessible
+                // The field is not accessible
             }
         }
         return false;
+    }
+
+    /**
+     * Get the value of a field with the given name from the given object.
+     * <p>
+     * If the field is not found, or is not accessible, this method will return null.
+     *
+     * @param object    The object to get the field from.
+     * @param fieldName The name of the field to get.
+     * @param <T>       The type of the field.
+     * @return The value of the field, or null if the field was not found.
+     */
+    @Nullable
+    public static <T> T getFieldValue(final @NotNull Object object, final @NotNull String fieldName) {
+        Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();
+        Field field = getCachedField(clazz, fieldName);
+        if (field != null) {
+            try {
+                return (T) field.get(object);
+            } catch (IllegalAccessException ignored) {
+                // The field is not accessible
+            }
+        }
+        return null;
     }
 
     /**
@@ -164,7 +189,7 @@ public class ReflectionUtil {
     @Nullable
     public static Class<?> getObcClass(final @NotNull String classPath) {
         try {
-            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + classPath);
+            return Class.forName(CRAFTBUKKIT_PACKAGE + "." + classPath);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;

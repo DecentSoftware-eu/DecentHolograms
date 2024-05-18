@@ -53,23 +53,25 @@ public abstract class NMS {
                 }
             }
             if (Version.afterOrEqual(Version.v1_20_R2)) {
-                for (Field field : playerConnectionClass.getFields()) {
+                // Since 1.20, the field is in a parent class.
+                Class<?> playerConnectionParentClass = ReflectionUtil.getNMClass("server.network.ServerCommonPacketListenerImpl");
+                for (Field field : playerConnectionParentClass.getDeclaredFields()) {
                     if (field.getType().isAssignableFrom(networkManagerClass)) {
-                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
+                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(field);
                         break;
                     }
                 }
             } else {
                 for (Field field : playerConnectionClass.getDeclaredFields()) {
                     if (field.getType().isAssignableFrom(networkManagerClass)) {
-                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(playerConnectionClass, field.getName());
+                        PLAYER_CONNECTION_NETWORK_MANAGER_FIELD = new ReflectField<>(field);
                         break;
                     }
                 }
             }
             for (Field field : networkManagerClass.getDeclaredFields()) {
                 if (field.getType().isAssignableFrom(Channel.class)) {
-                    NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(networkManagerClass, field.getName());
+                    NETWORK_MANAGER_CHANNEL_FIELD = new ReflectField<>(field);
                     break;
                 }
             }

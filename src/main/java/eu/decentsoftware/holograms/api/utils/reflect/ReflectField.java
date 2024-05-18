@@ -14,6 +14,14 @@ public class ReflectField<T> {
 		this.name = name;
 	}
 
+	public ReflectField(Field field) {
+		this.field = field;
+		this.clazz = field.getDeclaringClass();
+		this.name = field.getName();
+
+		this.field.setAccessible(true);
+	}
+
 	private void init() throws Exception {
 		if (field == null) {
 			try {

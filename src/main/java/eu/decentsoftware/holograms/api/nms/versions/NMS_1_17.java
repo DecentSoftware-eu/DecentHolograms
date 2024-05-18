@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -54,7 +55,6 @@ public class NMS_1_17 extends NMS {
     // PACKETS
     private static final ReflectConstructor PACKET_SPAWN_ENTITY_CONSTRUCTOR;
     private static final ReflectConstructor PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR;
-    private static final ReflectConstructor PACKET_ENTITY_METADATA_CONSTRUCTOR;
     private static final ReflectConstructor PACKET_ENTITY_TELEPORT_CONSTRUCTOR;
     private static final ReflectConstructor PACKET_MOUNT_CONSTRUCTOR;
     private static final ReflectConstructor PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR;
@@ -143,8 +143,6 @@ public class NMS_1_17 extends NMS {
             PACKET_SPAWN_ENTITY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutSpawnEntity"),
                     int.class, UUID.class, double.class, double.class, double.class, float.class, float.class, ENTITY_TYPES_CLASS, int.class, VEC_3D_CLASS, double.class);
         }
-        PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityMetadata"),
-                PACKET_DATA_SERIALIZER_CLASS);
         PACKET_ENTITY_TELEPORT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityTeleport"),
                 PACKET_DATA_SERIALIZER_CLASS);
         PACKET_MOUNT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutMount"),
@@ -155,7 +153,12 @@ public class NMS_1_17 extends NMS {
                 int[].class);
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_20_R2)) {
+            if (Version.afterOrEqual(Version.v1_20_R4)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ap").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aS").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aT").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bG").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_20_R2)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ao").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aU").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aV").getValue(null);
@@ -187,7 +190,11 @@ public class NMS_1_17 extends NMS {
             DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aK").getValue(null);
             DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bG").getValue(null);
         }
-        DWO_ITEM = new ReflectField<>(ENTITY_ITEM_CLASS, "c").getValue(null);
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            DWO_ITEM = new ReflectField<>(ENTITY_ITEM_CLASS, "d").getValue(null);
+        } else {
+            DWO_ITEM = new ReflectField<>(ENTITY_ITEM_CLASS, "c").getValue(null);
+        }
         // ENTITY TYPES
         ENTITY_TYPES_A_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, "a", String.class);
         ENTITY_TYPE_GET_KEY_METHOD = new ReflectMethod(EntityType.class, "getKey");
@@ -200,7 +207,9 @@ public class NMS_1_17 extends NMS {
         ENTITY_TYPES_GET_SIZE_METHOD = new ReflectMethod(ENTITY_TYPES_CLASS, Version.afterOrEqual(Version.v1_19_R2) ? "n" : "m");
         ENTITY_SIZE_HEIGHT_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("world.entity.EntitySize"), "b");
 
-        if (Version.afterOrEqual(Version.v1_19_R3)) {
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "c");
+        } else if (Version.afterOrEqual(Version.v1_19_R3)) {
             ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "d");
         } else if (Version.CURRENT.equals(Version.v1_18_R2) || Version.afterOrEqual(19)) {
             ENTITY_COUNTER_FIELD = new ReflectField<>(ENTITY_CLASS, "c");
@@ -320,20 +329,81 @@ public class NMS_1_17 extends NMS {
         sendPacket(player, PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR.newInstance(packetDataSerializer));
     }
 
-    private static final Class<?> DWR_CLASS = ReflectionUtil.getNMClass("network.syncher.DataWatcherRegistry");
-    private static final ReflectMethod DWI_GET_OBJECT_METHOD = new ReflectMethod(DWI_CLASS, "a");
-    private static final ReflectMethod DWI_GET_VALUE_METHOD = new ReflectMethod(DWI_CLASS, "b");
-    private static final ReflectMethod DWO_GET_SERIALIZER_METHOD = new ReflectMethod(DWO_CLASS, "b");
-    private static final ReflectMethod DWO_GET_INDEX_METHOD = new ReflectMethod(DWO_CLASS, "a");
-    private static final ReflectMethod DWS_GET_TYPE_ID_METHOD = new ReflectMethod(DWR_CLASS, "b", DWS_CLASS);
-    private static final ReflectMethod DWS_SERIALIZE_METHOD = new ReflectMethod(DWS_CLASS, "a",
-            PACKET_DATA_SERIALIZER_CLASS, Object.class);
+    private static final Class<?> REGISTRY_FRIENDLY_BYTE_BUF_CLASS;
+    private static final Class<?> IREGISTRYCUSTOM_CLASS;
+    private static final Class<?> BUILTINREGISTRIES_CLASS;
+    private static final Class<?> IREGISTRYCUSTOM_C_CLASS;
+    private static final ReflectConstructor REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR;
+    private static final ReflectConstructor IREGISTRYCUSTOM_C_CONSTRUCTOR;
+    private static final Class<?> CODEC_CLASS;
+    private static final ReflectMethod DWS_GET_CODEC_METHOD;
+    private static final ReflectMethod CODEC_ENCODE_METHOD;
+    private static final Object ITEM_REGISTRY;
+    private static final Object DATA_COMPONENT_TYPE_REGISTRY;
+
+    private static final Class<?> DWR_CLASS;
+    private static final ReflectMethod DWI_GET_OBJECT_METHOD;
+    private static final ReflectMethod DWI_GET_VALUE_METHOD;
+    private static final ReflectMethod DWO_GET_SERIALIZER_METHOD;
+    private static final ReflectMethod DWO_GET_INDEX_METHOD;
+    private static final ReflectMethod DWS_GET_TYPE_ID_METHOD;
+    private static final ReflectMethod DWS_SERIALIZE_METHOD;
+    private static final ReflectConstructor PACKET_ENTITY_METADATA_CONSTRUCTOR;
+
+    static {
+        Class<?> metadataPacketClass = ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityMetadata");
+
+        DWR_CLASS = ReflectionUtil.getNMClass("network.syncher.DataWatcherRegistry");
+        DWI_GET_OBJECT_METHOD = new ReflectMethod(DWI_CLASS, "a");
+        DWI_GET_VALUE_METHOD = new ReflectMethod(DWI_CLASS, "b");
+        DWO_GET_SERIALIZER_METHOD = new ReflectMethod(DWO_CLASS, "b");
+        DWO_GET_INDEX_METHOD = new ReflectMethod(DWO_CLASS, "a");
+        DWS_GET_TYPE_ID_METHOD = new ReflectMethod(DWR_CLASS, "b", DWS_CLASS);
+
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            REGISTRY_FRIENDLY_BYTE_BUF_CLASS = ReflectionUtil.getNMClass("network.RegistryFriendlyByteBuf");
+            IREGISTRYCUSTOM_CLASS = ReflectionUtil.getNMClass("core.IRegistryCustom");
+            BUILTINREGISTRIES_CLASS = ReflectionUtil.getNMClass("core.registries.BuiltInRegistries");
+            IREGISTRYCUSTOM_C_CLASS = ReflectionUtil.getNMClass("core.IRegistryCustom$c");
+            REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR = new ReflectConstructor(REGISTRY_FRIENDLY_BYTE_BUF_CLASS, ByteBuf.class, IREGISTRYCUSTOM_CLASS);
+            IREGISTRYCUSTOM_C_CONSTRUCTOR = new ReflectConstructor(IREGISTRYCUSTOM_C_CLASS, List.class);
+            CODEC_CLASS = ReflectionUtil.getNMClass("network.codec.StreamCodec");
+            DWS_GET_CODEC_METHOD = new ReflectMethod(DWS_CLASS, "codec");
+            CODEC_ENCODE_METHOD = new ReflectMethod(CODEC_CLASS, "encode", Object.class, Object.class);
+            ITEM_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "h");
+            DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "as");
+
+            DWS_SERIALIZE_METHOD = null;
+            PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, REGISTRY_FRIENDLY_BYTE_BUF_CLASS);
+        } else {
+            REGISTRY_FRIENDLY_BYTE_BUF_CLASS = null;
+            IREGISTRYCUSTOM_CLASS = null;
+            BUILTINREGISTRIES_CLASS = null;
+            IREGISTRYCUSTOM_C_CLASS = null;
+            REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR = null;
+            IREGISTRYCUSTOM_C_CONSTRUCTOR = null;
+            CODEC_CLASS = null;
+            DWS_GET_CODEC_METHOD = null;
+            CODEC_ENCODE_METHOD = null;
+            ITEM_REGISTRY = null;
+            DATA_COMPONENT_TYPE_REGISTRY = null;
+
+            DWS_SERIALIZE_METHOD = new ReflectMethod(DWS_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS, Object.class);
+            PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, PACKET_DATA_SERIALIZER_CLASS);
+        }
+    }
 
     private void sendEntityMetadata(Player player, int entityId, List<Object> items) {
         Validate.notNull(player);
         Validate.notNull(items);
 
-        Object packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
+        Object packetDataSerializer;
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            Object c = IREGISTRYCUSTOM_C_CONSTRUCTOR.newInstance(Arrays.asList(ITEM_REGISTRY, DATA_COMPONENT_TYPE_REGISTRY));
+            packetDataSerializer = REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR.newInstance(Unpooled.buffer(), c);
+        } else {
+            packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
+        }
         PACKET_DATA_SERIALIZER_WRITE_INT_METHOD.invoke(packetDataSerializer, entityId);
         for (Object item : items) {
             if (!item.getClass().isAssignableFrom(DWI_CLASS)) {
@@ -348,8 +418,13 @@ public class NMS_1_17 extends NMS {
 
             PACKET_DATA_SERIALIZER_WRITE_BYTE_METHOD.invoke(packetDataSerializer, (byte) serializerIndex);
             PACKET_DATA_SERIALIZER_WRITE_INT_METHOD.invoke(packetDataSerializer, serializerTypeId);
-            DWS_SERIALIZE_METHOD.invoke(serializer, packetDataSerializer, value);
 
+            if (Version.afterOrEqual(Version.v1_20_R4)) {
+                Object codec = DWS_GET_CODEC_METHOD.invoke(serializer);
+                CODEC_ENCODE_METHOD.invoke(codec, packetDataSerializer, value);
+            } else if (Version.afterOrEqual(Version.v1_20_R3)) {
+                DWS_SERIALIZE_METHOD.invoke(serializer, packetDataSerializer, value);
+            }
         }
         PACKET_DATA_SERIALIZER_WRITE_BYTE_METHOD.invoke(packetDataSerializer, 0xFF);
         sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(packetDataSerializer));

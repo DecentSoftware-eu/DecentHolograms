@@ -30,9 +30,15 @@ public final class PacketHandlerCommon {
             ENTITY_USE_PACKET_CLASS = ReflectionUtil.getNMSClass("PacketPlayInUseEntity");
             PACKET_DATA_SERIALIZER_CLASS = ReflectionUtil.getNMSClass("PacketDataSerializer");
         }
-        ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "a");
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "b");
+        } else {
+            ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "a");
+        }
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
-        if (Version.afterOrEqual(Version.v1_20_R3)) {
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "l");
+        } else if (Version.afterOrEqual(Version.v1_20_R3)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "n");
         } else if (Version.afterOrEqual(Version.v1_19_R3)) {
             PACKET_DATA_SERIALIZER_READ_INT_METHOD = new ReflectMethod(PACKET_DATA_SERIALIZER_CLASS, "m");
