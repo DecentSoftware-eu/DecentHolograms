@@ -9,11 +9,11 @@ description: ${description}
 version: ${version}
 author: d0by
 
-commands:
-  decentholograms:
-    aliases: [dh, holograms, hologram, holo]
-    usage: "/decentholograms <args>"
-    description: "The main command of DecentHolograms plugin."
+#commands:
+#  decentholograms:
+#    aliases: [dh, holograms, hologram, holo]
+#    usage: "/decentholograms <args>"
+#    description: "The main command of DecentHolograms plugin."
 
 permissions:
   #
