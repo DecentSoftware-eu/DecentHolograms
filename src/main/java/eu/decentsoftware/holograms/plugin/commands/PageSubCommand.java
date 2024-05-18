@@ -5,7 +5,11 @@ import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.commands.*;
+import eu.decentsoftware.holograms.api.commands.CommandBase;
+import eu.decentsoftware.holograms.api.commands.CommandHandler;
+import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.DecentCommand;
+import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
@@ -225,7 +229,7 @@ public class PageSubCommand extends DecentCommand {
             permissions = "dh.command.pages.remove",
             usage = "/dh page remove <hologram> <page>",
             description = "Remove a page from Hologram.",
-            aliases = {"rem", "del", "delete"},
+            aliases = {"rm", "rem", "del", "delete"},
             minArgs = 2
     )
     static class PageRemoveSub extends DecentCommand {

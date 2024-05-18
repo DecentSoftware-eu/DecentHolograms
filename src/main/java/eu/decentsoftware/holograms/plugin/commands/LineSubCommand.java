@@ -625,7 +625,7 @@ public class LineSubCommand extends DecentCommand {
 			permissions = "dh.command.lines.remove",
 			usage = "/dh line remove <hologram> <page> <line>",
 			description = "Remove a line from Hologram.",
-			aliases = {"rem", "del", "delete"},
+			aliases = {"rm", "rem", "del", "delete"},
 			minArgs = 3
 	)
 	static class LineRemoveSub extends DecentCommand {
