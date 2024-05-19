@@ -170,7 +170,7 @@ public class FoliaSchedulerAdapter implements SchedulerAdapter {
         @Override
         public void cancel() {
             try {
-                Objects.requireNonNull(SCHEDULED_TASK_CANCEL).invokeExact(task);
+                Objects.requireNonNull(SCHEDULED_TASK_CANCEL).invoke(task);
             } catch (Throwable e) {
                 plugin.getLogger().log(Level.SEVERE, "Error in task canceling by the Folia scheduler adapter", e);
             }
