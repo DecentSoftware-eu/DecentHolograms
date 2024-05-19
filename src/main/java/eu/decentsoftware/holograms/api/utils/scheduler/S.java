@@ -17,6 +17,9 @@ public class S {
         DECENT_HOLOGRAMS.getScheduler().runAtEntityDelayed(entity, runnable, delay);
     }
 
+    public static void sync(Entity entity, Runnable runnable) {
+        DECENT_HOLOGRAMS.getScheduler().executeAtEntity(entity, runnable);
+    }
 
     public static void async(Runnable runnable) {
         try {

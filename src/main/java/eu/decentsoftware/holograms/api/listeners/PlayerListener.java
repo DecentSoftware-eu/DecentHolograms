@@ -24,7 +24,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().updateVisibility(player));
-        S.sync(() -> decentHolograms.getPacketListener().hook(player), 20L);
+        S.sync(player, () -> decentHolograms.getPacketListener().hook(player), 20L);
         if (decentHolograms.isUpdateAvailable() && player.hasPermission("dh.admin")) {
             Lang.sendUpdateMessage(player);
         }
@@ -34,7 +34,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         S.async(() -> decentHolograms.getHologramManager().onQuit(player));
-        S.sync(() -> decentHolograms.getPacketListener().unhook(player));
+        S.sync(player, () -> decentHolograms.getPacketListener().unhook(player));
     }
 
     @EventHandler
