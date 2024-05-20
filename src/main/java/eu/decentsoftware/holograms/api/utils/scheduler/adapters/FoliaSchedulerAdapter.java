@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings("JavaLangInvokeHandleSignature")
 @RequiredArgsConstructor
@@ -61,22 +62,25 @@ public class FoliaSchedulerAdapter implements SchedulerAdapter {
             val entitySchedulerType = Class.forName("io.papermc.paper.threadedregions.scheduler.EntityScheduler");
 
             val getEntityScheduler = lookup.findVirtual(Entity.class, "getScheduler", MethodType.methodType(entitySchedulerType));
-            ENTITY_SCHEDULER_EXECUTE = MethodHandles.foldArguments(
+            ENTITY_SCHEDULER_EXECUTE = MethodHandles.filterArguments(
                     lookup.findVirtual(entitySchedulerType, "execute", MethodType.methodType(
                             boolean.class, Plugin.class, Runnable.class, Runnable.class, long.class
                     )),
+                    0,
                     getEntityScheduler
             );
-            ENTITY_SCHEDULER_RUN_DELAYED = MethodHandles.foldArguments(
+            ENTITY_SCHEDULER_RUN_DELAYED = MethodHandles.filterArguments(
                     lookup.findVirtual(entitySchedulerType, "runDelayed", MethodType.methodType(
                             scheduledTaskType, Plugin.class, Consumer.class, Runnable.class, long.class
                     )),
+                    0,
                     getEntityScheduler
             );
 
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             supporting = false;
-        } catch (Throwable ignored) {
+        } catch (Throwable throwable) {
+            Logger.getLogger(FoliaSchedulerAdapter.class.getName()).log(Level.WARNING, "Error in Folia scheduler adapter initialization", throwable);
         }
         SUPPORTED = supporting;
     }
