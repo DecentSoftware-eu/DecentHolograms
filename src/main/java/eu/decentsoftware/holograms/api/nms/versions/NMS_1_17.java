@@ -149,8 +149,16 @@ public class NMS_1_17 extends NMS {
                 PACKET_DATA_SERIALIZER_CLASS);
         PACKET_ENTITY_EQUIPMENT_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityEquipment"),
                 int.class, List.class);
-        PACKET_ENTITY_DESTROY_CONSTRUCTOR = new ReflectConstructor(ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityDestroy"),
-                int[].class);
+        Class<?> packetEntityDestroyClass = ReflectionUtil.getNMClass("network.protocol.game.PacketPlayOutEntityDestroy");
+        if (Version.CURRENT_MINECRAFT_VERSION.equals("1.17")) {
+            // So it seems that ONLY "1.17" has this constructor.
+            // The NMS version is not even different from "1.17.1", which has the same constructor as all the other versions.
+            // Basically, one of the "v1_17_R1" versions is different from the other.
+            // Working with minecraft is so much fun.
+            PACKET_ENTITY_DESTROY_CONSTRUCTOR = new ReflectConstructor(packetEntityDestroyClass, int.class);
+        } else {
+            PACKET_ENTITY_DESTROY_CONSTRUCTOR = new ReflectConstructor(packetEntityDestroyClass, int[].class);
+        }
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
             if (Version.afterOrEqual(Version.v1_20_R4)) {
@@ -516,7 +524,13 @@ public class NMS_1_17 extends NMS {
     @Override
     public void hideFakeEntities(Player player, int... entityIds) {
         Validate.notNull(player);
-        sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance((Object) entityIds));
+        if (Version.CURRENT_MINECRAFT_VERSION.equals("1.17")) {
+            for (int entityId : entityIds) {
+                sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance(entityId));
+            }
+        } else {
+            sendPacket(player, PACKET_ENTITY_DESTROY_CONSTRUCTOR.newInstance((Object) entityIds));
+        }
     }
 
 }

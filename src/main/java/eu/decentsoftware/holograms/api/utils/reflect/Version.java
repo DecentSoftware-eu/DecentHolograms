@@ -42,17 +42,22 @@ public enum Version {
      */
 
     public static final Version CURRENT;
+    public static final String CURRENT_MINECRAFT_VERSION;
 
     static {
+        CURRENT_MINECRAFT_VERSION = getCurrentMinecraftVersion();
         CURRENT = getCurrentVersion();
     }
 
     private static Version getCurrentVersion() {
+        return fromMinecraftVersion(CURRENT_MINECRAFT_VERSION);
+    }
+
+    private static String getCurrentMinecraftVersion() {
         // Bukkit version (e.g., 1.20.6-R0.1-SNAPSHOT)
         String bukkitVersion = Bukkit.getServer().getBukkitVersion();
         // Minecraft version (e.g., 1.20.6)
-        String minecraftVersion = bukkitVersion.split("-", 2)[0];
-        return fromMinecraftVersion(minecraftVersion);
+        return bukkitVersion.split("-", 2)[0];
     }
 
     /**
