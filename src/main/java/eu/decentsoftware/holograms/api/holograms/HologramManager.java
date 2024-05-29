@@ -14,7 +14,12 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -55,10 +60,14 @@ public class HologramManager extends Ticked {
     public synchronized void tick() {
         for (Hologram hologram : Hologram.getCachedHolograms()) {
             if (hologram.isEnabled()) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    updateVisibility(player, hologram);
-                }
+                updateVisibility(hologram);
             }
+        }
+    }
+
+    public void updateVisibility(@NonNull Hologram hologram) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            updateVisibility(player, hologram);
         }
     }
 
@@ -133,7 +142,7 @@ public class HologramManager extends Ticked {
                 continue;
             }
 
-            // Limit the distance to 5 blocks, this is to prevent
+            // Limit the distance to 5 blocks; this is to prevent
             // any possible exploits with the entity ID.
             double dx = hologram.getLocation().getX() - player.getLocation().getX();
             double dz = hologram.getLocation().getZ() - player.getLocation().getZ();

@@ -25,16 +25,15 @@ public class Common {
         PREFIX = "&8[&3DecentHolograms&8] &7";
     }
 
-
     /**
      * This method generates random Integer between min and max
      *
-     * @param min Minimal random number
-     * @param max Maximum random number
+     * @param min Minimal random number (inclusive)
+     * @param max Maximum random number (inclusive)
      * @return Randomly generated Integer
      */
     public static int randomInt(int min, int max) {
-        return min + (int) (Math.random() * ((max - min) + 1));
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
     /**
@@ -185,16 +184,6 @@ public class Common {
         } catch (NumberFormatException e) {
             return -1;
         }
-    }
-
-    /**
-     * Check whether the given plugin is enabled.
-     *
-     * @param name The plugin's name.
-     * @return The boolean.
-     */
-    public static boolean isPluginEnabled(String name) {
-        return Bukkit.getPluginManager().isPluginEnabled(name);
     }
 
 }
