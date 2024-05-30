@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.tick;
 
 import eu.decentsoftware.holograms.api.utils.DExecutor;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 
@@ -77,8 +78,8 @@ public class Ticker {
                     e.queue(() -> {
                         try {
                             ticked.tick();
-                        } catch (Throwable t) {
-                            t.printStackTrace();
+                        } catch (Exception ex) {
+                            Log.warn("Failed to tick object: %s", ex, ticked.getId());
                         }
                     });
                 }

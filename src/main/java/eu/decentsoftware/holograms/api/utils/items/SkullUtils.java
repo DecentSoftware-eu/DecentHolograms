@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.api.utils.items;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -27,7 +27,6 @@ import java.net.URLConnection;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.logging.Level;
 
 /**
  * Utility class for modifying the textures or owners or skull ItemStacks.
@@ -83,7 +82,7 @@ public final class SkullUtils {
 						try {
 							return (String) PROPERTY_VALUE_METHOD.invoke(property);
 						} catch (IllegalAccessException | InvocationTargetException e) {
-							DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Failed to invoke Property#value", e);
+							Log.error("Failed to invoke Property#value", e);
 						}
 						return null;
 					};
@@ -96,7 +95,7 @@ public final class SkullUtils {
 				return VALUE_RESOLVER.apply(property.iterator().next());
 			}
 		} catch (Exception e) {
-			DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Unhandled exception while retrieving skull texture", e);
+			Log.error("An exception occurred while retrieving skull texture", e);
 		}
 		return null;
 	}
@@ -159,7 +158,7 @@ public final class SkullUtils {
 				itemStack.setDurability((short) SkullType.PLAYER.ordinal());
 			}
 		} catch (Exception e) {
-			DecentHologramsAPI.get().getLogger().log(Level.SEVERE, "Unhandled exception while setting skull texture", e);
+			Log.error("An exception occurred while setting skull texture", e);
 		}
 	}
 
@@ -227,7 +226,8 @@ public final class SkullUtils {
 			JSONObject data = (JSONObject) textures.get(0);
 
 			return data.get("value").toString();
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			Log.warn("Failed to fetch texture for player %s", username, e);
 		}
 		return null;
 	}
@@ -251,7 +251,8 @@ public final class SkullUtils {
 			if (jsonData.get("id") != null) {
 				return jsonData.get("id").toString();
 			}
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			Log.warn("Failed to fetch UUID for player %s", playerName, e);
 		}
 		return null;
 	}

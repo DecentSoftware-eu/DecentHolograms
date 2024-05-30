@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.location;
 
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -11,7 +12,6 @@ import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-import java.util.logging.Level;
 
 @UtilityClass
 public class LocationUtils {
@@ -32,7 +32,7 @@ public class LocationUtils {
         try {
             return asLocationE(string, separator);
         } catch (LocationParseException e) {
-            Common.log(Level.WARNING, "Error while parsing Location %s: %s", string, e.getMessage());
+            Log.warn( "Error while parsing Location %s", e, string);
             return null;
         }
     }
@@ -56,7 +56,7 @@ public class LocationUtils {
                     }
                     return location;
                 } catch (NumberFormatException e) {
-                    e.printStackTrace();
+                    Log.warn("Error while parsing Location %s", e, string);
                 }
             }
             throw new LocationParseException(String.format("World '%s' not found.", spl[0]), LocationParseException.Reason.WORLD, spl[0]);

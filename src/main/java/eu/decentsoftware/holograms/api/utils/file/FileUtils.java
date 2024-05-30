@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.file;
 
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public class FileUtils {
 				}
 			}
 		} else if (createDir && root.mkdirs()) {
-			Common.log("Created directory %s", root.getPath());
+			Log.info("Created directory %s", root.getPath());
 		}
 		return files;
 	}

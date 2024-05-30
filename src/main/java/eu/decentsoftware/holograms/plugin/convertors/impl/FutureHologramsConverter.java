@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.plugin.convertors.impl;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
@@ -25,10 +25,10 @@ public class FutureHologramsConverter implements IConvertor {
     }
 
     @Override
-    public ConvertorResult convert(File file){
-        Common.log("Converting FutureHolograms holograms...");
-        if(ConverterCommon.notValidFile(file, "holograms.yml")){
-            Common.log("Invalid file! Need 'holograms.yml");
+    public ConvertorResult convert(File file) {
+        Log.info("Converting FutureHolograms holograms...");
+        if (ConverterCommon.notValidFile(file, "holograms.yml")) {
+            Log.warn("Invalid file! Need 'holograms.yml");
             return ConvertorResult.createFailed();
         }
 
@@ -37,7 +37,7 @@ public class FutureHologramsConverter implements IConvertor {
         for (String name : config.getKeys(false)) {
             Location loc = LocationUtils.asLocation(config.getString(name + ".location").replace(",", ":"));
             if (loc == null) {
-                Common.log("Skipping auto-generated next/prev page hologram '%s'...", name);
+                Log.info("Skipping auto-generated next/prev page hologram '%s'...", name);
                 convertorResult.addFailed();
                 continue;
             }

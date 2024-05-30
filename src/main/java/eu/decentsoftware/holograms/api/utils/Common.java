@@ -4,12 +4,10 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 @UtilityClass
@@ -58,56 +56,6 @@ public class Common {
 
     public static String stripColors(String string) {
         return ChatColor.stripColor(IridiumColorAPI.stripColorFormatting(string));
-    }
-
-    /*
-     * 	Log
-     */
-
-    /**
-     * Log a message into console.
-     *
-     * @param message The message.
-     */
-    public static void log(String message) {
-        log(Level.INFO, message);
-    }
-
-    /**
-     * Log a message into console.
-     * <p>
-     * This method formats given arguments in the message.
-     * </p>
-     *
-     * @param message The message.
-     * @param args    The arguments
-     */
-    public static void log(String message, Object... args) {
-        log(String.format(message, args));
-    }
-
-    /**
-     * Log a message into console.
-     *
-     * @param level   Level of this message.
-     * @param message The message.
-     */
-    public static void log(Level level, String message) {
-        Bukkit.getServer().getLogger().log(level, "[DecentHolograms] {0}", message);
-    }
-
-    /**
-     * Log a message into console.
-     * <p>
-     * This method formats given arguments in the message.
-     * </p>
-     *
-     * @param level   Level of this message.
-     * @param message The message.
-     * @param args    The arguments.
-     */
-    public static void log(Level level, String message, Object... args) {
-        log(level, String.format(message, args));
     }
 
     /*

@@ -7,20 +7,19 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 
 @UtilityClass
 public final class ConverterCommon {
     
     public static void createHologram(ConvertorResult convertorResult, String name, Location location, List<String> lines, DecentHolograms plugin) {
         if (plugin.getHologramManager().containsHologram(name)) {
-            Common.log(Level.WARNING, "A hologram with name '%s' already exists, skipping...", name);
+            Log.warn("A hologram with name '%s' already exists, skipping...", name);
             convertorResult.addSkipped();
             return ;
         }
@@ -34,7 +33,7 @@ public final class ConverterCommon {
     
     public static void createHologramPages(ConvertorResult convertorResult, String name, Location location, List<List<String>> pages, DecentHolograms plugin) {
         if (plugin.getHologramManager().containsHologram(name)) {
-            Common.log(Level.WARNING, "A hologram with name '%s' already exists, skipping...", name);
+            Log.warn("A hologram with name '%s' already exists, skipping...", name);
             convertorResult.addSkipped();
             return;
         }

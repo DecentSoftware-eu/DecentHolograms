@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
+import eu.decentsoftware.holograms.api.utils.Log;
+
 import java.lang.reflect.Field;
 
 public class ReflectField<T> {
@@ -39,7 +41,7 @@ public class ReflectField<T> {
 			this.init();
 			return (T) field.get(object);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.error("Failed to get field value: %s", e, name);
 			return null;
 		}
 	}
@@ -48,7 +50,9 @@ public class ReflectField<T> {
 		try {
 			this.init();
 			field.set(object, value);
-		} catch (Exception ignored) {}
+		} catch (Exception e) {
+			Log.error("Failed to set field value: %s", e, name);
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -21,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 /**
  * This class is a manager that handles all holograms. It is responsible for
@@ -292,7 +292,7 @@ public class HologramManager extends Ticked {
         }
 
         int counter = 0;
-        Common.log("Loading holograms... ");
+        Log.info("Loading holograms... ");
         for (File file : files) {
             String filePath = FileUtils.getRelativePath(file, folder);
             try {
@@ -312,10 +312,10 @@ public class HologramManager extends Ticked {
                 toLoad.get(worldName).add(filePath);
                 counter++;
             } catch (Exception e) {
-                decentHolograms.getLogger().log(Level.WARNING, String.format("Failed to load hologram from file '%s'!", filePath), e);
+                Log.warn("Failed to load hologram from file '%s'!", e, filePath);
             }
         }
-        Common.log("Loaded %d holograms!", counter);
+        Log.info("Loaded %d holograms!", counter);
     }
 
 }

@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.plugin.convertors.impl;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class CMIConverter implements IConvertor {
@@ -34,9 +33,9 @@ public class CMIConverter implements IConvertor {
 
     @Override
     public ConvertorResult convert(File file) {
-        Common.log("Converting CMI holograms...");
+        Log.info("Converting CMI holograms...");
         if (ConverterCommon.notValidFile(file, "holograms.yml")) {
-            Common.log("Invalid file! Need 'holograms.yml'");
+            Log.warn("Invalid file! Need 'holograms.yml'");
             return ConvertorResult.createFailed();
         }
 
@@ -45,14 +44,14 @@ public class CMIConverter implements IConvertor {
         for (String name : config.getKeys(false)) {
             // Skip Auto-generated holograms to change pages.
             if (name.endsWith("#>") || name.endsWith("#<")) {
-                Common.log("Skipping auto-generated next/prev page hologram '%s'...", name);
+                Log.info("Skipping auto-generated next/prev page hologram '%s'...", name);
                 convertorResult.addSkipped();
                 continue;
             }
 
             Location loc = LocationUtils.asLocation(config.getString(name + ".Loc").replace(";", ":"));
             if (loc == null) {
-                Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+                Log.warn("Cannot convert '%s'! Invalid location.", name);
                 convertorResult.addFailed();
                 continue;
             }

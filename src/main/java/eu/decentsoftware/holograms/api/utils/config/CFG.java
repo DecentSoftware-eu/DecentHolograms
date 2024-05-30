@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
+import eu.decentsoftware.holograms.api.utils.Log;
 import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,7 +58,7 @@ public final class CFG {
             }
             return config;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.warn("Failed to load configuration from file. (%s)", e, file.getName());
         }
         return null;
     }
@@ -115,7 +116,8 @@ public final class CFG {
                     continue;
                 }
                 config.set(key, newValue);
-            } catch (Throwable ignored) {
+            } catch (Exception e) {
+                Log.warn("Failed to save field value to configuration. (%s)", e, f.getName());
             }
         }
         return config;
@@ -174,7 +176,8 @@ public final class CFG {
                     // -- Set the field value
                     CFG.setFieldValue(f, object, o);
                 }
-            } catch (Throwable ignored) {
+            } catch (Exception e) {
+                Log.warn("Failed to load field value from configuration. (%s)", e, f.getName());
             }
         }
     }

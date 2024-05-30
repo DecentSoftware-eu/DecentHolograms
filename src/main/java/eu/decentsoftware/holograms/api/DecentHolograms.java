@@ -12,6 +12,7 @@ import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
@@ -27,7 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -65,8 +65,8 @@ public final class DecentHolograms {
     void load() {
         // Check if NMS version is supported
         if (Version.CURRENT == null) {
-            Common.log(Level.SEVERE, "Unsupported server version: " + Bukkit.getServer().getVersion());
-            Common.log(Level.SEVERE, "Plugin will be disabled.");
+            Log.error("Unsupported server version: %s", Bukkit.getServer().getVersion());
+            Log.error("Plugin will be disabled.");
             Bukkit.getPluginManager().disablePlugin(plugin);
         }
     }
@@ -82,7 +82,7 @@ public final class DecentHolograms {
         this.commandManager = new CommandManager();
         this.featureManager = new FeatureManager();
         this.animationManager = new AnimationManager(this);
-        this.packetListener = new PacketListener(this);
+        this.packetListener = new PacketListener();
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(this), this.plugin);

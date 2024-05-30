@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.plugin.convertors.impl;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,9 +29,9 @@ public class GHoloConverter implements IConvertor {
     
     @Override
     public ConvertorResult convert(File file) {
-        Common.log("Converting GHolo holograms...");
+        Log.info("Converting GHolo holograms...");
         if (!ConverterCommon.notValidFile(file, "h.data")) {
-            Common.log("Invalid file! Need 'h.data'");
+            Log.warn("Invalid file! Need 'h.data'");
             return ConvertorResult.createFailed();
         }
 
@@ -43,7 +42,7 @@ public class GHoloConverter implements IConvertor {
             
             Location location = LocationUtils.asLocation(config.getString(path + ".l"));
             if(location == null){
-                Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+                Log.warn("Cannot convert '%s'! Invalid location.", name);
                 convertorResult.addFailed();
                 continue;
             }

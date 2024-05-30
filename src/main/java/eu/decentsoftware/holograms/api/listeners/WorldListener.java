@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.World;
@@ -48,7 +49,7 @@ public class WorldListener implements Listener {
                             hologramManager.registerHologram(hologram);
                         }
                     } catch (LocationParseException ignored) {
-                        // Failed to load the hologram.
+                        Log.warn("Failed to load hologram from file: " + fileName);
                     }
                 });
             }

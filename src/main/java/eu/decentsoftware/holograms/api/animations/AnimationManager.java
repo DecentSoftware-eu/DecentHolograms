@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.animations.text.ScrollAnimation;
 import eu.decentsoftware.holograms.api.animations.text.TypewriterAnimation;
 import eu.decentsoftware.holograms.api.animations.text.WaveAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,7 +117,7 @@ public class AnimationManager extends Ticked {
         }
 
         int counter = 0;
-        Common.log("Loading animations...");
+        Log.info("Loading animations...");
         for (File file : files) {
             String fileName = FileUtils.getRelativePath(file, folder);
             try {
@@ -125,10 +125,10 @@ public class AnimationManager extends Ticked {
                 registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
-                decentHolograms.getLogger().log(Level.WARNING, String.format("Failed to load animation from file '%s'!", fileName), e);
+                Log.warn("Failed to load animation from file '%s'!", e, fileName);
             }
         }
-        Common.log("Loaded %d animations!", counter);
+        Log.info("Loaded %d animations!", counter);
     }
 
 }

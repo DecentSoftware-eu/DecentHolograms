@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.config.Phrase;
@@ -134,7 +135,7 @@ public class Lang {
                 }
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.warn("Failed to load Lang values.", e);
         }
         Lang.reload();
     }

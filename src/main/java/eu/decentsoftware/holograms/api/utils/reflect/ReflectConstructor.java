@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
+import eu.decentsoftware.holograms.api.utils.Log;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,7 +23,7 @@ public class ReflectConstructor {
             constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.error("Failed to find constructor for class %s with parameter types %s", clazz.getName(), parameterTypes);
         }
     }
 
@@ -32,7 +34,7 @@ public class ReflectConstructor {
         try {
             object = constructor.newInstance(args);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            e.printStackTrace();
+            Log.error("Failed to create new instance of class %s with parameter types %s", clazz.getName(), parameterTypes);
         }
         return object == null ? null : (T) object;
     }

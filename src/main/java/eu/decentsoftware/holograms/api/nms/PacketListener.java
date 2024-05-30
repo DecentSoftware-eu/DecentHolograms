@@ -1,22 +1,19 @@
 package eu.decentsoftware.holograms.api.nms;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.utils.Log;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoop;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 public class PacketListener {
 
     private static final String IDENTIFIER = "DecentHolograms";
-    private final DecentHolograms decentHolograms;
     private final NMS nms;
 
-    public PacketListener(DecentHolograms decentHolograms) {
-        this.decentHolograms = decentHolograms;
+    public PacketListener() {
         this.nms = NMS.getInstance();
         hookAll();
     }
@@ -57,7 +54,7 @@ public class PacketListener {
                 eventLoop.execute(() -> executeOnPipeline(player, consumer));
             }
         } catch (Exception e) {
-            decentHolograms.getLogger().log(Level.WARNING, "Failed to modify player's pipeline. (" + player.getName() + ")", e);
+            Log.warn("Failed to modify player's pipeline. (%s)", e, player.getName());
         }
     }
 

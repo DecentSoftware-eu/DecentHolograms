@@ -5,7 +5,6 @@ import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,10 +27,7 @@ public class DExecutor {
                 thread.setName("DecentHolograms Thread #" + threadId.incrementAndGet());
                 thread.setPriority(Thread.NORM_PRIORITY);
                 thread.setDaemon(true);
-                thread.setUncaughtExceptionHandler((t, ex) -> {
-                    Common.log("Exception encountered in " + t.getName());
-                    ex.printStackTrace();
-                });
+                thread.setUncaughtExceptionHandler((t, ex) -> Log.warn("Exception encountered in %s", ex, t.getName()));
                 return thread;
             });
             initialized = true;

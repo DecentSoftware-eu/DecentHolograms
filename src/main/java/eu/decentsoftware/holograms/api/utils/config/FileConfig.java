@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import lombok.Getter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
+import java.nio.file.Files;
 
 /**
  * This class extends {@link YamlConfiguration} and is used to load and save
@@ -74,7 +74,7 @@ public class FileConfig extends YamlConfiguration {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    plugin.getLogger().log(Level.WARNING, "Failed to create config file at path '" + path + "'.", e);
+                    Log.warn("Failed to create config file at path '%s'.", e, path);
                 }
             } else {
                 plugin.saveResource(this.path, false);
@@ -89,7 +89,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.save(this.file);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to save config file at path '" + path + "'.", e);
+            Log.warn("Failed to save config file at path '%s'.", e, path);
         }
     }
 
@@ -100,7 +100,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.load(file);
         } catch (IOException | InvalidConfigurationException e) {
-            plugin.getLogger().log(Level.WARNING, "Failed to reload config file at path '" + path + "'.", e);
+            Log.warn("Failed to reload config file at path '%s'.", path);
         }
     }
 
@@ -109,8 +109,10 @@ public class FileConfig extends YamlConfiguration {
      */
     public void delete() {
         if (file.exists()) {
-            if (!file.delete()) {
-                Common.log(Level.WARNING, "Cannot delete existing file '%s' (Permission issue?)", file.getName());
+            try {
+                Files.delete(file.toPath());
+            } catch (IOException e) {
+                Log.warn("Failed to delete config file at path '%s'.", e, path);
             }
         }
     }

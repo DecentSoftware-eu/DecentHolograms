@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.plugin.convertors.impl;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
@@ -14,7 +14,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -31,9 +30,9 @@ public class HolographicDisplaysConvertor implements IConvertor {
 
 	@Override
 	public ConvertorResult convert(final File file) {
-		Common.log("Converting HolographicDisplays holograms...");
+		Log.info("Converting HolographicDisplays holograms...");
 		if (ConverterCommon.notValidFile(file, "database.yml")) {
-			Common.log("Invalid file! Need 'database.yml'");
+			Log.warn("Invalid file! Need 'database.yml'");
 			return ConvertorResult.createFailed();
 		}
 
@@ -42,7 +41,7 @@ public class HolographicDisplaysConvertor implements IConvertor {
 		for (String name : config.getKeys(false)) {
 			Location location = parseLocation(config, name);
 			if(location == null){
-				Common.log(Level.WARNING, "Cannot convert '%s'! Invalid location.", name);
+				Log.warn("Cannot convert '%s'! Invalid location.", name);
 				convertorResult.addFailed();
 				continue;
 			}

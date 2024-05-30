@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
+import eu.decentsoftware.holograms.api.utils.Log;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -27,7 +29,7 @@ public class ReflectMethod {
 			}
 			method.setAccessible(true);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			Log.error("Could not find method %s in class %s", name, clazz.getName());
 		}
 	}
 
@@ -39,7 +41,7 @@ public class ReflectMethod {
 		try {
 			object = method.invoke(instance, args);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+			Log.error("Could not invoke method %s in class %s", name, clazz.getName());
 		}
 		return object == null ? null : (T) object;
 	}
@@ -52,7 +54,7 @@ public class ReflectMethod {
 		try {
 			object = method.invoke(null, args);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+			Log.error("Could not invoke static method %s in class %s", name, clazz.getName());
 		}
 		return object == null ? null : (T) object;
 	}

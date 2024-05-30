@@ -9,6 +9,7 @@ import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
 import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
@@ -87,10 +88,7 @@ public class HologramLine extends HologramObject {
                 try {
                     line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
                 } catch (Exception e) {
-                    DECENT_HOLOGRAMS.getPlugin().getLogger().warning(String.format(
-                            "Flags for line %s seem to be invalid!",
-                            content
-                    ));
+                    Log.warn("Flags for line %s seem to be invalid!", content);
                 }
             }
         }
