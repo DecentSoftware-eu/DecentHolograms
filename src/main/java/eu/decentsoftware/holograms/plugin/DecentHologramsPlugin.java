@@ -7,10 +7,8 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.plugin.commands.HologramsCommand;
 import eu.decentsoftware.holograms.plugin.features.DamageDisplayFeature;
 import eu.decentsoftware.holograms.plugin.features.HealingDisplayFeature;
-import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@Getter
 public class DecentHologramsPlugin extends JavaPlugin {
 
 	@Override

@@ -1,7 +1,11 @@
 package eu.decentsoftware.holograms.plugin.convertors;
 
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.plugin.convertors.impl.*;
+import eu.decentsoftware.holograms.plugin.convertors.impl.CMIConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.FutureHologramsConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.GHoloConverter;
+import eu.decentsoftware.holograms.plugin.convertors.impl.HologramsConvertor;
+import eu.decentsoftware.holograms.plugin.convertors.impl.HolographicDisplaysConvertor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,8 +34,8 @@ public enum ConvertorType {
 		return null;
 	}
 
-	private final @NotNull String name;
-	private final @NotNull List<String> aliases;
+	private final String name;
+	private final List<String> aliases;
 	private final boolean limited;
 
 	ConvertorType(boolean limited, @NotNull String name, String... aliases) {

@@ -2,7 +2,11 @@ package eu.decentsoftware.holograms.api.utils.items;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.utils.Common;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;

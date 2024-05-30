@@ -105,7 +105,7 @@ public class HologramItem {
             materialName = materialStringSpl[0];
             try {
                 this.durability = Short.parseShort(materialStringSpl[1]);
-            } catch (Throwable t) {
+            } catch (Exception e) {
                 this.durability = 0;
             }
         }

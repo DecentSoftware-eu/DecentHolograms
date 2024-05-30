@@ -27,7 +27,7 @@ public final class ConverterCommon {
         Hologram hologram = new Hologram(name, location);
         HologramPage page = hologram.getPage(0);
         plugin.getHologramManager().registerHologram(hologram);
-        lines.forEach((line) -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
+        lines.forEach(line -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
         hologram.save();
         convertorResult.addSuccess();
     }
@@ -47,7 +47,7 @@ public final class ConverterCommon {
             
             HologramPage page = hologram.getPage(i);
             List<String> lines = pages.get(i);
-            lines.forEach((line) -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
+            lines.forEach(line -> page.addLine(new HologramLine(page, page.getNextLineLocation(), line)));
             
             page.addAction(ClickType.LEFT, new Action(ActionType.PREV_PAGE, hologram.getName()));
             page.addAction(ClickType.RIGHT, new Action(ActionType.NEXT_PAGE, hologram.getName()));

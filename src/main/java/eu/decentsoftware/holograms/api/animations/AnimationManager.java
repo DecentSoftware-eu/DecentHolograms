@@ -2,7 +2,11 @@ package eu.decentsoftware.holograms.api.animations;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
-import eu.decentsoftware.holograms.api.animations.text.*;
+import eu.decentsoftware.holograms.api.animations.text.BurnAnimation;
+import eu.decentsoftware.holograms.api.animations.text.ColorsAnimation;
+import eu.decentsoftware.holograms.api.animations.text.ScrollAnimation;
+import eu.decentsoftware.holograms.api.animations.text.TypewriterAnimation;
+import eu.decentsoftware.holograms.api.animations.text.WaveAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;

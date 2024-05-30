@@ -10,7 +10,14 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class DecentCommand extends Command implements CommandBase {
 
@@ -18,7 +25,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 	protected final Map<String, CommandBase> subCommands = new LinkedHashMap<>();
 	protected final CommandInfo info;
 
-	public DecentCommand(String name) {
+	protected DecentCommand(String name) {
 		super(name);
 		this.info = getClass().getAnnotation(CommandInfo.class);
 		if (info == null) {
@@ -29,7 +36,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 
 	@Override
 	public Set<String> getSubCommandNames() {
-		return null;
+		return Collections.emptySet();
 	}
 
 	@Override

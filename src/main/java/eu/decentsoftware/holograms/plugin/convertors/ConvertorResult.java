@@ -1,5 +1,8 @@
 package eu.decentsoftware.holograms.plugin.convertors;
 
+import lombok.Getter;
+
+@Getter
 public class ConvertorResult {
     
     private int successCount;
@@ -22,18 +25,6 @@ public class ConvertorResult {
 
     public int getTotalCount() {
         return successCount + skippedCount + failedCount;
-    }
-    
-    public int getSuccessCount() {
-        return successCount;
-    }
-    
-    public int getSkippedCount() {
-        return skippedCount;
-    }
-    
-    public int getFailedCount() {
-        return failedCount;
     }
     
     public void addSuccess() {

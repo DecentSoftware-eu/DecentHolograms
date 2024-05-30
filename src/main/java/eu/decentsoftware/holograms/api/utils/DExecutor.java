@@ -39,34 +39,11 @@ public class DExecutor {
     }
 
     /**
-     * Complete all tasks and shutdown the service.
-     */
-    public static void shutdown() {
-        service.shutdown();
-        initialized = false;
-    }
-
-    /**
      * Shutdown the service immediately.
      */
     public static void shutdownNow() {
         service.shutdownNow();
         initialized = false;
-    }
-
-    /**
-     * Execute given runnables using the ExecutorService.
-     *
-     * @param runnables the runnables.
-     */
-    public static void schedule(Runnable... runnables) {
-        if (!initialized) {
-            throw new IllegalStateException("DExecutor is not initialized!");
-        }
-        if (runnables == null || runnables.length == 0) {
-            return;
-        }
-        create(runnables.length).queue(runnables).complete();
     }
 
     /**
@@ -113,40 +90,6 @@ public class DExecutor {
             CompletableFuture<Void> c = CompletableFuture.runAsync(r, executor);
             running.add(c);
             return c;
-        }
-    }
-
-    /**
-     * Schedule more runnables.
-     *
-     * @param runnables The runnables.
-     * @return This instance. (For chaining)
-     */
-    public DExecutor queue(Runnable... runnables) {
-        if (runnables == null || runnables.length == 0) {
-            return this;
-        }
-
-        synchronized (running) {
-            for (Runnable runnable : runnables) {
-                CompletableFuture<Void> future = CompletableFuture.runAsync(runnable, executor);
-                running.add(future);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * Complete all scheduled runnables.
-     */
-    public void complete() {
-        synchronized (running) {
-            try {
-                CompletableFuture.allOf(running.toArray(new CompletableFuture[0])).get();
-                running.clear();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
         }
     }
 

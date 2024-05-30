@@ -199,12 +199,13 @@ public abstract class ActionType {
     @Getter
     private final String name;
 
-    public ActionType(@NonNull String name) {
+    protected ActionType(@NonNull String name) {
         name = name.toUpperCase();
         if (VALUES.containsKey(name)) {
             throw new IllegalArgumentException("ActionType " + name + " already exists!");
         }
-        VALUES.put(this.name = name, this);
+        this.name = name;
+        VALUES.put(this.name, this);
     }
 
     public abstract boolean execute(Player player, String... args);

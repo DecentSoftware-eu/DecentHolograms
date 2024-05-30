@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FutureHologramsConverter implements IConvertor {
-    
+
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
-    
+
     @Override
-    public ConvertorResult convert(){
+    public ConvertorResult convert() {
         return convert(new File(PLUGIN.getDataFolder().getParent() + "/FutureHolograms/", "holograms.yml"));
     }
-    
+
     @Override
     public ConvertorResult convert(File file){
         Common.log("Converting FutureHolograms holograms...");
@@ -46,32 +46,32 @@ public class FutureHologramsConverter implements IConvertor {
                 if (isNotHologram(page)) {
                     continue;
                 }
-                
+
                 ConfigurationSection section = config.getConfigurationSection(name + "." + page);
                 List<String> lines = section.getStringList("lines");
                 if (lines == null || lines.isEmpty()) {
                     continue;
                 }
-                
+
                 pages.add(lines);
             }
-            
+
             ConverterCommon.createHologramPages(convertorResult, name, loc, pages, PLUGIN);
         }
-        
+
         return convertorResult;
     }
-    
+
     @Override
-    public List<String> prepareLines(List<String> lines){
+    public List<String> prepareLines(List<String> lines) {
         return null;
     }
-    
+
     private boolean isNotHologram(String name) {
-        return name.equals("default") ||
-               name.equals("refresh") ||
-               name.equals("cooldown") ||
-               name.equals("refreshRate") ||
-               name.equals("location");
+        return name.equals("default")
+               || name.equals("refresh")
+               || name.equals("cooldown")
+               || name.equals("refreshRate")
+               || name.equals("location");
     }
 }

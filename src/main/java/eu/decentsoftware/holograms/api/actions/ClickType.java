@@ -13,8 +13,9 @@ public enum ClickType {
             case RIGHT_CLICK_BLOCK:
             case RIGHT_CLICK_AIR:
                 return sneak ? ClickType.SHIFT_RIGHT : ClickType.RIGHT;
+            default:
+                return null;
         }
-        return null;
     }
 
     public static ClickType fromString(String string) {

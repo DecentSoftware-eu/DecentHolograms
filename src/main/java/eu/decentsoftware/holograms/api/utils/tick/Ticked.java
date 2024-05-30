@@ -8,11 +8,11 @@ public abstract class Ticked implements ITicked {
     private final String id;
     private final AtomicLong interval;
 
-    public Ticked(long interval) {
+    protected Ticked(long interval) {
         this(UUID.randomUUID().toString(), interval);
     }
 
-    public Ticked(String id, long interval) {
+    protected Ticked(String id, long interval) {
         this.id = id;
         this.interval = new AtomicLong(interval);
     }
