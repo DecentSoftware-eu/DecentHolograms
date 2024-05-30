@@ -2,9 +2,11 @@ package eu.decentsoftware.holograms.api.utils.items;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,6 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class HologramItem {
 
+    public static final String ENCHANTED_INDICATOR = "!ENCHANTED";
     private final String content;
     private String nbt;
     private String extras;
@@ -31,18 +34,17 @@ public class HologramItem {
         this.parseContent();
     }
 
-    public ItemStack parse() {
-        return this.parse(null);
-    }
-
+    @SuppressWarnings("deprecation")
     public ItemStack parse(Player player) {
-        ItemBuilder itemBuilder = new ItemBuilder(material);
-        if (durability > 0) itemBuilder.withDurability(durability);
-        if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
-            if (extras != null) {
-                String extrasFinal = player == null ? extras.trim() : PAPI.setPlaceholders(player, extras).trim();
-                extrasFinal = extrasFinal.replace("{player}", player == null ? "" : player.getName());
-                if (!extrasFinal.isEmpty()) {
+        try {
+            ItemBuilder itemBuilder = new ItemBuilder(material);
+            if (durability > 0) {
+                itemBuilder.withDurability(durability);
+            }
+
+            if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
+                String extrasFinal = parseExtras(player);
+                if (StringUtils.isNotEmpty(extrasFinal)) {
                     if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
                         String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
                         itemBuilder.withItemStack(HeadDatabaseUtils.getHeadItemStackById(headDatabaseId));
@@ -51,53 +53,58 @@ public class HologramItem {
                     } else {
                         itemBuilder.withSkullTexture(extrasFinal);
                     }
-                    //noinspection deprecation
                     itemBuilder.withDurability((short) SkullType.PLAYER.ordinal());
                 }
             }
-        }
-        if (enchanted) itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
 
-        ItemStack itemStack = itemBuilder.toItemStack();
-        if (nbt != null) {
-            try {
-                // noinspection deprecation
-                Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
-            } catch (Throwable ignored) {
+            if (enchanted) {
+                itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
             }
+
+            ItemStack itemStack = itemBuilder.toItemStack();
+
+            if (nbt != null) {
+                applyNBT(player, itemStack);
+            }
+
+            return itemStack;
+        } catch (Exception e) {
+            Log.warn("Error parsing item: %s", e, content);
+            return new ItemStack(Material.STONE);
         }
-        return itemStack;
+    }
+
+    private String parseExtras(Player player) {
+        if (extras == null) {
+            return null;
+        }
+        String extrasFinal = player == null ? extras.trim() : PAPI.setPlaceholders(player, extras).trim();
+        extrasFinal = extrasFinal.replace("{player}", player == null ? "" : player.getName());
+        return extrasFinal;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void applyNBT(Player player, ItemStack itemStack) {
+        try {
+            Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
+        } catch (Exception e) {
+            Log.warn("Failed to apply NBT tag to item: %s", e, nbt);
+        }
     }
 
     private void parseContent() {
         String string = this.content;
+        string = findExtras(string);
+        string = findNBT(string);
+        string = checkEnchanted(string);
+        parseMaterial(string);
 
-        // Find extras
-        if (string.contains("(") && string.contains(")")) {
-            int extrasStart = string.indexOf('(');
-            int extrasEnd = string.lastIndexOf(')');
-            if (extrasStart > 0 && extrasEnd > 0 && extrasEnd > extrasStart) {
-                this.extras = string.substring(extrasStart + 1, extrasEnd);
-                string = string.substring(0, extrasStart) + string.substring(extrasEnd + 1);
-            }
+        if (this.material == null) {
+            this.material = Material.STONE;
         }
+    }
 
-        // Find NBT tag
-        if (string.contains("{") && string.contains("}")) {
-            int nbtStart = string.indexOf('{');
-            int nbtEnd = string.lastIndexOf('}');
-            if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
-                this.nbt = string.substring(nbtStart, nbtEnd + 1);
-                string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
-            }
-        }
-
-        if (string.contains("!ENCHANTED")) {
-            string = string.replace("!ENCHANTED", "");
-            this.enchanted = true;
-        }
-
-        // Parse material
+    private void parseMaterial(String string) {
         String materialString = string.trim().split(" ", 2)[0];
         String materialName = materialString;
         if (materialString.contains(":")) {
@@ -110,11 +117,38 @@ public class HologramItem {
             }
         }
         this.material = DecentMaterial.parseMaterial(materialName);
+    }
 
-        // Material couldn't be parsed, set it to stone.
-        if (this.material == null) {
-            this.material = Material.STONE;
+    private String checkEnchanted(String string) {
+        if (string.contains(ENCHANTED_INDICATOR)) {
+            string = string.replace(ENCHANTED_INDICATOR, "");
+            this.enchanted = true;
         }
+        return string;
+    }
+
+    private String findNBT(String string) {
+        if (string.contains("{") && string.contains("}")) {
+            int nbtStart = string.indexOf('{');
+            int nbtEnd = string.lastIndexOf('}');
+            if (nbtStart > 0 && nbtEnd > 0 && nbtEnd > nbtStart) {
+                this.nbt = string.substring(nbtStart, nbtEnd + 1);
+                string = string.substring(0, nbtStart) + string.substring(nbtEnd + 1);
+            }
+        }
+        return string;
+    }
+
+    private String findExtras(String string) {
+        if (string.contains("(") && string.contains(")")) {
+            int extrasStart = string.indexOf('(');
+            int extrasEnd = string.lastIndexOf(')');
+            if (extrasStart > 0 && extrasEnd > 0 && extrasEnd > extrasStart) {
+                this.extras = string.substring(extrasStart + 1, extrasEnd);
+                string = string.substring(0, extrasStart) + string.substring(extrasEnd + 1);
+            }
+        }
+        return string;
     }
 
     @SuppressWarnings("deprecation")
@@ -132,7 +166,7 @@ public class HologramItem {
         stringBuilder.append(" ");
         Map<Enchantment, Integer> enchants = itemStack.getEnchantments();
         if (enchants != null && !enchants.isEmpty()) {
-            stringBuilder.append("!ENCHANTED").append(" ");
+            stringBuilder.append(ENCHANTED_INDICATOR).append(" ");
         }
         if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
             String owner = itemBuilder.getSkullOwner();
