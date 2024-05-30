@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
@@ -89,49 +88,52 @@ public class Common {
         tell(player, String.format(message, args));
     }
 
+    /**
+     * Remove spacing characters from the given string.
+     *
+     * <p>Spacing characters: ' ', '-', '_'</p>
+     *
+     * @param string The string.
+     * @return The string without spacing characters.
+     */
     public static String removeSpacingChars(String string) {
+        if (string == null) {
+            return null;
+        }
         return SPACING_CHARS_REGEX.matcher(string).replaceAll("");
     }
 
     /**
      * Check whether the given version is higher than the current version.
      *
-     * @param version The version.
+     * @param currentVersion The current version.
+     * @param newVersion     The new version.
      * @return Boolean.
      */
-    public static boolean isVersionHigher(String version) {
-        if (version == null || !version.matches("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(\\d+))?")) {
+    public static boolean isVersionHigher(String currentVersion, String newVersion) {
+        if (isVersionInvalid(currentVersion) || isVersionInvalid(newVersion)) {
             return false;
         }
-        String current = DecentHologramsAPI.get().getPlugin().getDescription().getVersion();
-        int[] i1 = splitVersion(version);
-        int[] i2 = splitVersion(current);
-        if (i1.length < 3 || i2.length < 3) {
-            return false;
+
+        String[] currentVersionParts = currentVersion.split("\\.");
+        String[] newVersionParts = newVersion.split("\\.");
+
+        for (int i = 0; i < 3; i++) {
+            int currentVersionPart = Integer.parseInt(currentVersionParts[i]);
+            int newVersionPart = Integer.parseInt(newVersionParts[i]);
+
+            if (newVersionPart > currentVersionPart) {
+                return true;
+            } else if (newVersionPart < currentVersionPart) {
+                return false;
+            }
         }
-        return i1[0] > i2[0] || // Major version is higher.
-                i1[0] == i2[0] && i1[1] > i2[1] || // Minor version is higher and major is the same.
-                i1[0] == i2[0] && i1[1] == i2[1] && i1[2] > i2[2]; // Major and minor versions are the same and patch is higher.
+
+        return false;
     }
 
-    private static int[] splitVersion(String version) {
-        String[] spl = version == null ? null : version.split("\\.");
-        if (spl == null || spl.length < 3) {
-            return new int[0];
-        }
-        int[] arr = new int[spl.length];
-        for (int i = 0; i < spl.length; i++) {
-            arr[i] = parseInt(spl[i]);
-        }
-        return arr;
-    }
-
-    private static int parseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+    private static boolean isVersionInvalid(String version2) {
+        return version2 == null || !version2.matches("\\d+\\.\\d+\\.\\d+(\\.\\d+)?");
     }
 
 }

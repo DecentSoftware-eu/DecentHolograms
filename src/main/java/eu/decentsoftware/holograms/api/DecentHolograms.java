@@ -96,7 +96,8 @@ public final class DecentHolograms {
         if (Settings.CHECK_FOR_UPDATES) {
             UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
             updateChecker.getVersion(ver -> {
-                if (Common.isVersionHigher(ver)) {
+                String currentVersion = getPlugin().getDescription().getVersion();
+                if (Common.isVersionHigher(currentVersion, ver)) {
                     Lang.sendUpdateMessage(Bukkit.getConsoleSender());
                     this.updateAvailable = true;
                 }
