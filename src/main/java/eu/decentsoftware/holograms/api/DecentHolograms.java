@@ -48,17 +48,9 @@ public final class DecentHolograms {
     private Ticker ticker;
     private boolean updateAvailable;
 
-    /*
-     *	Constructors
-     */
-
     DecentHolograms(@NonNull JavaPlugin plugin) {
         this.plugin = plugin;
     }
-
-    /*
-     *	General Methods
-     */
 
     void enable() {
         NMS.init();
@@ -111,7 +103,7 @@ public final class DecentHolograms {
         this.hologramManager.reload();
         this.featureManager.reload();
 
-        EventFactory.handleReloadEvent();
+        EventFactory.fireReloadEvent();
     }
 
     private void setupMetrics() {

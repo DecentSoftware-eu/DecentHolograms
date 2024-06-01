@@ -30,7 +30,7 @@ public final class Log {
     }
 
     public static void info(String message, Throwable throwable, Object... args) {
-        LOGGER.log(Level.INFO, String.format(message, args), throwable);
+        LOGGER.log(Level.INFO, throwable, () -> String.format(message, args));
     }
 
     public static void warn(String message) {
@@ -46,7 +46,7 @@ public final class Log {
     }
 
     public static void warn(String message, Throwable throwable, Object... args) {
-        LOGGER.log(Level.WARNING, String.format(message, args), throwable);
+        LOGGER.log(Level.WARNING, throwable, () -> String.format(message, args));
     }
 
     public static void error(String message) {
@@ -62,7 +62,7 @@ public final class Log {
     }
 
     public static void error(String message, Throwable throwable, Object... args) {
-        LOGGER.log(Level.SEVERE, String.format(message, args), throwable);
+        LOGGER.log(Level.SEVERE, throwable, () -> String.format(message, args));
     }
 
 }

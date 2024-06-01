@@ -505,7 +505,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return false;
         }
 
-        boolean eventNotCancelled = EventFactory.handleHologramClickEvent(player, this, page, clickType, entityId);
+        boolean eventNotCancelled = EventFactory.fireHologramClickEvent(player, this, page, clickType, entityId);
         if (eventNotCancelled) {
             if (!hasFlag(EnumFlag.DISABLE_ACTIONS)) {
                 page.executeActions(player, clickType);

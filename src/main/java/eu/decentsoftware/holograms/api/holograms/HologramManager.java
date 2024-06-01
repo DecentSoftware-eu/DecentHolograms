@@ -42,7 +42,7 @@ public class HologramManager extends Ticked {
      * as we can't load holograms, that don't have their world all loaded.
      * <p>
      * Key is the name of the world, and Value is a set of file names
-     * of all holograms, that couldn't be loaded due to this world problem.
+     * of all holograms that couldn't be loaded due to this world problem.
      *
      * @since 2.7.4
      */
@@ -172,6 +172,42 @@ public class HologramManager extends Ticked {
         this.loadHolograms();
     }
 
+    private void loadHolograms() {
+        hologramMap.clear();
+
+        File folder = new File(decentHolograms.getDataFolder(), "holograms");
+        List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
+        if (files.isEmpty()) {
+            return;
+        }
+
+        int counter = 0;
+        Log.info("Loading holograms... ");
+        for (File file : files) {
+            String filePath = FileUtils.getRelativePath(file, folder);
+            try {
+                Hologram hologram = Hologram.fromFile(filePath);
+                if (hologram.isEnabled()) {
+                    hologram.showAll();
+                    hologram.realignLines();
+                }
+                registerHologram(hologram);
+                counter++;
+            } catch (LocationParseException e) {
+                // This hologram will load when its world loads.
+                String worldName = e.getWorldName();
+                if (!toLoad.containsKey(worldName)) {
+                    toLoad.put(worldName, new HashSet<>());
+                }
+                toLoad.get(worldName).add(filePath);
+                counter++;
+            } catch (Exception e) {
+                Log.warn("Failed to load hologram from file '%s'!", e, filePath);
+            }
+        }
+        Log.info("Loaded %d holograms!", counter);
+    }
+
     /**
      * Destroy this manager and all the holograms.
      */
@@ -280,42 +316,6 @@ public class HologramManager extends Ticked {
     @NonNull
     public Map<String, Set<String>> getToLoad() {
         return toLoad;
-    }
-
-    private void loadHolograms() {
-        hologramMap.clear();
-
-        File folder = new File(decentHolograms.getDataFolder(), "holograms");
-        List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
-        if (files.isEmpty()) {
-            return;
-        }
-
-        int counter = 0;
-        Log.info("Loading holograms... ");
-        for (File file : files) {
-            String filePath = FileUtils.getRelativePath(file, folder);
-            try {
-                Hologram hologram = Hologram.fromFile(filePath);
-                if (hologram.isEnabled()) {
-                    hologram.showAll();
-                    hologram.realignLines();
-                }
-                registerHologram(hologram);
-                counter++;
-            } catch (LocationParseException e) {
-                // This hologram will load when its world loads.
-                String worldName = e.getWorldName();
-                if (!toLoad.containsKey(worldName)) {
-                    toLoad.put(worldName, new HashSet<>());
-                }
-                toLoad.get(worldName).add(filePath);
-                counter++;
-            } catch (Exception e) {
-                Log.warn("Failed to load hologram from file '%s'!", e, filePath);
-            }
-        }
-        Log.info("Loaded %d holograms!", counter);
     }
 
 }
