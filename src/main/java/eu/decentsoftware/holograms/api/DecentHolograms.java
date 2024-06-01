@@ -88,21 +88,8 @@ public final class DecentHolograms {
         pm.registerEvents(new PlayerListener(this), this.plugin);
         pm.registerEvents(new WorldListener(this), this.plugin);
 
-        // Setup metrics
-        Metrics metrics = new Metrics(this.plugin, 12797);
-        metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
-
-        // Setup update checker
-        if (Settings.CHECK_FOR_UPDATES) {
-            UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
-            updateChecker.getVersion(ver -> {
-                String currentVersion = getPlugin().getDescription().getVersion();
-                if (Common.isVersionHigher(currentVersion, ver)) {
-                    Lang.sendUpdateMessage(Bukkit.getConsoleSender());
-                    this.updateAvailable = true;
-                }
-            });
-        }
+        setupMetrics();
+        checkForUpdates();
 
         BungeeUtils.init();
     }
@@ -136,6 +123,26 @@ public final class DecentHolograms {
         this.featureManager.reload();
 
         EventFactory.handleReloadEvent();
+    }
+
+    private void setupMetrics() {
+        Metrics metrics = new Metrics(this.plugin, 12797);
+        metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
+    }
+
+    private void checkForUpdates() {
+        if (!Settings.CHECK_FOR_UPDATES) {
+            return;
+        }
+
+        UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
+        updateChecker.getVersion(ver -> {
+            String currentVersion = getPlugin().getDescription().getVersion();
+            if (Common.isVersionHigher(currentVersion, ver)) {
+                Lang.sendUpdateMessage(Bukkit.getConsoleSender());
+                this.updateAvailable = true;
+            }
+        });
     }
 
     @Contract(pure = true)
