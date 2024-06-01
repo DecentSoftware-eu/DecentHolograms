@@ -33,7 +33,6 @@ public final class DecentHologramsAPI {
             return;
         }
         implementation = new DecentHolograms(plugin);
-        implementation.load();
     }
 
     /**

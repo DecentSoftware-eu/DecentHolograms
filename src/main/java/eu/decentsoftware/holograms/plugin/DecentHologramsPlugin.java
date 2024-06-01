@@ -4,20 +4,36 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.plugin.commands.HologramsCommand;
 import eu.decentsoftware.holograms.plugin.features.DamageDisplayFeature;
 import eu.decentsoftware.holograms.plugin.features.HealingDisplayFeature;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DecentHologramsPlugin extends JavaPlugin {
 
+	private boolean unsupportedServerVersion = false;
+
 	@Override
 	public void onLoad() {
+		if (Version.CURRENT == null) {
+			unsupportedServerVersion = true;
+			return;
+		}
+
 		DecentHologramsAPI.onLoad(this);
 	}
 
 	@Override
 	public void onEnable() {
+		if (unsupportedServerVersion) {
+			getLogger().severe("Unsupported server version detected: " + Bukkit.getServer().getVersion());
+			getLogger().severe("Plugin will now be disabled.");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		DecentHologramsAPI.onEnable();
 
 		DecentHolograms decentHolograms = DecentHologramsAPI.get();
@@ -32,6 +48,10 @@ public class DecentHologramsPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		if (unsupportedServerVersion) {
+			return;
+		}
+
 		DecentHologramsAPI.onDisable();
 	}
 
