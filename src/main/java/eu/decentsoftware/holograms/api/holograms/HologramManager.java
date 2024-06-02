@@ -58,10 +58,12 @@ public class HologramManager extends Ticked {
 
     @Override
     public synchronized void tick() {
+        updateVisibility();
+    }
+
+    private void updateVisibility() {
         for (Hologram hologram : Hologram.getCachedHolograms()) {
-            if (hologram.isEnabled()) {
-                updateVisibility(hologram);
-            }
+            updateVisibility(hologram);
         }
     }
 
@@ -170,10 +172,12 @@ public class HologramManager extends Ticked {
     public synchronized void reload() {
         this.destroy();
         this.loadHolograms();
+        S.async(this::updateVisibility);
     }
 
     private void loadHolograms() {
         hologramMap.clear();
+        toLoad.clear();
 
         File folder = new File(decentHolograms.getDataFolder(), "holograms");
         List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
@@ -186,12 +190,7 @@ public class HologramManager extends Ticked {
         for (File file : files) {
             String filePath = FileUtils.getRelativePath(file, folder);
             try {
-                Hologram hologram = Hologram.fromFile(filePath);
-                if (hologram.isEnabled()) {
-                    hologram.showAll();
-                    hologram.realignLines();
-                }
-                registerHologram(hologram);
+                registerHologram(Hologram.fromFile(filePath));
                 counter++;
             } catch (LocationParseException e) {
                 // This hologram will load when its world loads.
