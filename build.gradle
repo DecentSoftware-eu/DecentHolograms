@@ -1,50 +1,50 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
+    id "java"
+    id "maven-publish"
     id "com.github.johnrengelman.shadow" version "4.0.4"
 }
 
-defaultTasks 'build'
+defaultTasks "build"
 
-group 'eu.decentsoftware.holograms'
-version '2.8.9'
-description 'A lightweight yet very powerful hologram plugin with many features and configuration options.'
+group "eu.decentsoftware.holograms"
+version "2.8.9"
+description "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
 repositories {
     mavenCentral()
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url = 'https://repo.codemc.io/repository/nms/' }
-    maven { url = 'https://repo.codemc.io/repository/maven-public/' }
-    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url = "https://repo.codemc.io/repository/nms/" }
+    maven { url = "https://repo.codemc.io/repository/maven-public/" }
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot:1.13-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.6'
-    compileOnly 'com.arcaniax:HeadDatabase-API:1.3.2'
-    implementation 'org.bstats:bstats-bukkit:3.0.2'
-    implementation 'de.tr7zw:item-nbt-api:2.12.4'
-    implementation 'com.github.cryptomorin:XSeries:10.0.0'
+    compileOnly "org.spigotmc:spigot:1.13-R0.1-SNAPSHOT"
+    compileOnly "me.clip:placeholderapi:2.11.6"
+    compileOnly "com.arcaniax:HeadDatabase-API:1.3.2"
+    implementation "org.bstats:bstats-bukkit:3.0.2"
+    implementation "de.tr7zw:item-nbt-api:2.12.4"
+    implementation "com.github.cryptomorin:XSeries:10.0.0"
 
     // Annotations
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
-    compileOnly 'org.jetbrains:annotations:24.1.0'
-    annotationProcessor 'org.jetbrains:annotations:24.1.0'
+    compileOnly "org.projectlombok:lombok:1.18.32"
+    annotationProcessor "org.projectlombok:lombok:1.18.32"
+    compileOnly "org.jetbrains:annotations:24.1.0"
+    annotationProcessor "org.jetbrains:annotations:24.1.0"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 compileJava {
-    options.encoding = 'UTF-8'
+    options.encoding = "UTF-8"
 }
 
 publishing {
     publications {
         shadow(MavenPublication) {
             from components.java
-            artifactId 'decentholograms'
+            artifactId "decentholograms"
         }
     }
 }
@@ -52,8 +52,8 @@ publishing {
 processResources {
     def props = [version: version, description: project.description]
     inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filteringCharset "UTF-8"
+    filesMatching("plugin.yml") {
         expand props
     }
 }
