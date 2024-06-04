@@ -128,7 +128,14 @@ public final class SkullUtils {
 			if (meta instanceof SkullMeta) {
 				GameProfile profile = new GameProfile(UUID.randomUUID(), "");
 
-				String json = Base64.getDecoder().decode(texture);
+				String json;
+				
+				try{
+					json = Base64.getDecoder().decode(texture);
+				}
+				catch(IllegalArgumentException ex){
+					json = "invalid";
+				}
 				if(!json.contains("\"url\":\"http://textures.minecraft.net/texture/")){
 					// Decoded json does not contain a valid skin URL, so check if the 'texture' argument is a valid URL.
 					if(texture.startsWith("http://textures.minecraft.net/texture/")); // We are all set.
