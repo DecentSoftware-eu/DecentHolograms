@@ -663,31 +663,39 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     public void update(@NonNull Player player) {
+        update(false, player);
+    }
+
+    public void update(boolean force, @NonNull Player player) {
         synchronized (visibilityMutex) {
             if (hasFlag(EnumFlag.DISABLE_UPDATING)) {
                 return;
             }
 
-            performUpdate(player);
+            performUpdate(force, player);
         }
     }
 
     public void updateAll() {
+        updateAll(false);
+    }
+
+    public void updateAll(boolean force) {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
-                getViewerPlayers().forEach(this::performUpdate);
+                getViewerPlayers().forEach(player -> performUpdate(force, player));
             }
         }
     }
 
-    private void performUpdate(@NotNull Player player) {
+    private void performUpdate(boolean force, @NotNull Player player) {
         if (!isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
             return;
         }
 
         HologramPage page = getPage(player);
         if (page != null) {
-            page.getLines().forEach(line -> line.update(player));
+            page.getLines().forEach(line -> line.update(force, player));
         }
     }
 

@@ -181,7 +181,7 @@ public class HologramLine extends HologramObject {
     public void setContent(@Nullable String content) {
         this.content = content == null ? "" : content;
         this.parseContent();
-        this.update();
+        this.update(true);
     }
 
     /**
@@ -454,9 +454,21 @@ public class HologramLine extends HologramObject {
     /**
      * Update this line for given players.
      *
+     * <p>This method will update the line only if it needs to be updated.</p>
+     *
      * @param players Given players.
      */
     public void update(Player... players) {
+        update(false, players);
+    }
+
+    /**
+     * Update this line for given players.
+     *
+     * @param force   If true, the line will be updated even if it does not need to be.
+     * @param players Given players.
+     */
+    public void update(boolean force, Player... players) {
         if (isDisabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) {
             return;
         }
@@ -472,9 +484,9 @@ public class HologramLine extends HologramObject {
                     lastTextMap.put(uuid, updatedText);
                     nms.updateFakeEntityCustomName(player, updatedText, entityIds[0]);
                 }
-            } else if ((type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) && containsPlaceholders) {
+            } else if ((type == HologramLineType.HEAD || type == HologramLineType.SMALLHEAD) && (containsPlaceholders || force)) {
                 nms.helmetFakeEntity(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[0]);
-            } else if (type == HologramLineType.ICON && containsPlaceholders) {
+            } else if (type == HologramLineType.ICON && (containsPlaceholders || force)) {
                 nms.updateFakeEntityItem(player, HologramItem.parseItemStack(getItem().getContent(), player), entityIds[1]);
             }
         }

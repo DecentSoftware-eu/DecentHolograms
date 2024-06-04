@@ -150,7 +150,7 @@ public final class DHAPI {
 
         Hologram hologram = getHologram(name);
         if (hologram != null) {
-            hologram.updateAll();
+            hologram.updateAll(true);
         }
     }
 
@@ -862,7 +862,7 @@ public final class DHAPI {
             }
         }
         hologram.realignLines();
-        hologram.updateAll();
+        hologram.updateAll(true);
         hologram.save();
     }
 
