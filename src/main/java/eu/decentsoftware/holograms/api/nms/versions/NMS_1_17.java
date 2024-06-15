@@ -97,7 +97,9 @@ public class NMS_1_17 extends NMS {
         // DATA WATCHER
         DATA_WATCHER_ITEM_CONSTRUCTOR = new ReflectConstructor(DWI_CLASS, DWO_CLASS, Object.class);
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_20_R3)) {
+            if (Version.afterOrEqual(Version.v1_21_R0)) {
+                ENTITY_TYPES_REGISTRY_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.registries.BuiltInRegistries"), "f");
+            } else if (Version.afterOrEqual(Version.v1_20_R3)) {
                 ENTITY_TYPES_REGISTRY_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.registries.BuiltInRegistries"), "g");
             } else if (Version.afterOrEqual(Version.v1_19_R2)) {
                 ENTITY_TYPES_REGISTRY_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.registries.BuiltInRegistries"), "h");
@@ -161,7 +163,12 @@ public class NMS_1_17 extends NMS {
         }
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_20_R4)) {
+            if (Version.afterOrEqual(Version.v1_21_R0)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ap").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aQ").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bH").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_20_R4)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ap").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aS").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aT").getValue(null);
