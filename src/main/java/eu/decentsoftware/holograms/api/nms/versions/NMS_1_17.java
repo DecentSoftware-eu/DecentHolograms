@@ -97,7 +97,7 @@ public class NMS_1_17 extends NMS {
         // DATA WATCHER
         DATA_WATCHER_ITEM_CONSTRUCTOR = new ReflectConstructor(DWI_CLASS, DWO_CLASS, Object.class);
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_21_R0)) {
+            if (Version.afterOrEqual(Version.v1_21_R1)) {
                 ENTITY_TYPES_REGISTRY_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.registries.BuiltInRegistries"), "f");
             } else if (Version.afterOrEqual(Version.v1_20_R3)) {
                 ENTITY_TYPES_REGISTRY_FIELD = new ReflectField<>(ReflectionUtil.getNMClass("core.registries.BuiltInRegistries"), "g");
@@ -163,7 +163,7 @@ public class NMS_1_17 extends NMS {
         }
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_21_R0)) {
+            if (Version.afterOrEqual(Version.v1_21_R1)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ap").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aQ").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
