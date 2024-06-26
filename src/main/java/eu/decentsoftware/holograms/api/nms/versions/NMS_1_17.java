@@ -387,10 +387,11 @@ public class NMS_1_17 extends NMS {
             CODEC_ENCODE_METHOD = new ReflectMethod(CODEC_CLASS, "encode", Object.class, Object.class);
             if (Version.afterOrEqual(Version.v1_21_R1)) {
                 ITEM_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "g");
+                DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "aq");
             } else {
                 ITEM_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "h");
+                DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "as");
             }
-            DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "as");
 
             DWS_SERIALIZE_METHOD = null;
             PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, REGISTRY_FRIENDLY_BYTE_BUF_CLASS);
