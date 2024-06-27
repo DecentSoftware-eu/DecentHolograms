@@ -148,16 +148,18 @@ public class Lang {
 
     public static void sendVersionMessage(@NonNull CommandSender sender) {
         Common.tell(sender,
-                "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
+                "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f: \n&f- &7%s\n&f- &7%s",
                 DecentHologramsAPI.get().getPlugin().getDescription().getVersion(),
-                "https://www.spigotmc.org/resources/96927/"
+                "https://www.spigotmc.org/resources/96927/",
+                "https://modrinth.com/plugin/decentholograms"
         );
     }
 
     public static void sendUpdateMessage(@NonNull CommandSender sender) {
         Common.tell(sender,
-                "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7%s",
-                "https://www.spigotmc.org/resources/96927/"
+                "\n&fA newer version of &3DecentHolograms &fis available. Download it from: \n&f- &7%s\n&f- &7%s",
+                "https://www.spigotmc.org/resources/96927/",
+                "https://modrinth.com/plugin/decentholograms"
         );
     }
 
