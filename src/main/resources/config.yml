@@ -56,6 +56,15 @@ click-cooldown: 1
 # animation frames, keep this disabled.
 allow-placeholders-inside-animations: false
 
+# If true, the visibility of holograms will be updated when a player gets teleported or respawned.
+#
+# By default, this is disabled because it causes visual glitches where even if a player gets teleported
+# by a fraction of a block, the holograms still disappear and reappear for them.
+#
+# Some clients (or client versions?) need this though, so if you are experiencing issues with holograms
+# not showing up after a player gets teleported or respawned, you can enable this.
+update-visibility-on-teleport: false
+
 
 
 # # # # # # # # # # # # # # # # #
