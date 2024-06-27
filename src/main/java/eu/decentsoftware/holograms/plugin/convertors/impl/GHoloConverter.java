@@ -30,7 +30,7 @@ public class GHoloConverter implements IConvertor {
     @Override
     public ConvertorResult convert(File file) {
         Log.info("Converting GHolo holograms...");
-        if (!ConverterCommon.notValidFile(file, "h.data")) {
+        if (ConverterCommon.notValidFile(file, "h.data")) {
             Log.warn("Invalid file! Need 'h.data'");
             return ConvertorResult.createFailed();
         }
