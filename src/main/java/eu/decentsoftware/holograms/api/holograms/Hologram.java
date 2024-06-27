@@ -227,17 +227,17 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     protected final Object visibilityMutex = new Object();
 
-    protected final @NonNull String name;
+    protected final String name;
     protected boolean saveToFile;
-    protected final @Nullable FileConfig config;
-    protected final @NonNull Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
-    protected final @NonNull Set<UUID> hidePlayers = ConcurrentHashMap.newKeySet();
-    protected final @NonNull Set<UUID> showPlayers = ConcurrentHashMap.newKeySet();
+    protected final FileConfig config;
+    protected final Map<UUID, Integer> viewerPages = new ConcurrentHashMap<>();
+    protected final Set<UUID> hidePlayers = ConcurrentHashMap.newKeySet();
+    protected final Set<UUID> showPlayers = ConcurrentHashMap.newKeySet();
     protected boolean defaultVisibleState = true;
-    protected final @NonNull DList<HologramPage> pages = new DList<>();
+    protected final DList<HologramPage> pages = new DList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
-    private final @NonNull AtomicInteger tickCounter;
+    private final AtomicInteger tickCounter;
 
     /*
      *	Constructors
@@ -334,7 +334,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /**
-     * This method calls {@link #destroy()} before deleting the holograms file.
+     * This method calls {@link #destroy()} before deleting the hologram file.
      */
     @Override
     public void delete() {
@@ -499,7 +499,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param clickType The type of the click.
      * @return True if the click was handled, false otherwise.
      */
-    public boolean onClick(final @NonNull Player player, final int entityId, final @NonNull ClickType clickType) {
+    public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
         HologramPage page = getPage(player);
         if (page == null || !page.hasEntity(entityId)) {
             return false;
@@ -783,7 +783,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return;
         }
 
-        // Despawn clickable entities
+        // De-spawn clickable entities
         NMS nms = NMS.getInstance();
         page.getClickableEntityIds().forEach(id -> nms.hideFakeEntities(player, id));
     }
@@ -820,43 +820,35 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
 
     /**
-     * Check whether the given player is in display range of this hologram object.
+     * Check whether the given player is in the display range of this hologram object.
      *
      * @param player Given player.
-     * @return Boolean whether the given player is in display range of this hologram object.
+     * @return Boolean whether the given player is in the display range of this hologram object.
      */
     public boolean isInDisplayRange(@NonNull Player player) {
-        /*
-         * Some forks (e.g., Pufferfish) throw an exception, when we try to get
-         * the world of a location, which is not loaded. We catch this exception
-         * and return false, because the player is not in range.
-         */
-        try {
-            if (player.getWorld().equals(location.getWorld())) {
-                return player.getLocation().distanceSquared(location) <= displayRange * displayRange;
-            }
-        } catch (Exception ignored) {
-            // Ignored
-        }
-        return false;
+        return isInRange(player, displayRange);
     }
 
     /**
-     * Check whether the given player is in update range of this hologram object.
+     * Check whether the given player is in the update range of this hologram object.
      *
      * @param player Given player.
-     * @return Boolean whether the given player is in update range of this hologram object.
+     * @return Boolean whether the given player is in the update range of this hologram object.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInUpdateRange(@NonNull Player player) {
+        return isInRange(player, updateRange);
+    }
+
+    private boolean isInRange(@NonNull Player player, double range) {
         /*
          * Some forks (e.g., Pufferfish) throw an exception, when we try to get
-         * the world of a location, which is not loaded. We catch this exception
-         * and return false, because the player is not in range.
+         * the world of a location, which is not loaded.
+         * We catch this exception and return false, because the player is not in range.
          */
         try {
             if (player.getWorld().equals(location.getWorld())) {
-                return player.getLocation().distanceSquared(location) <= updateRange * updateRange;
+                return player.getLocation().distanceSquared(location) <= range * range;
             }
         } catch (Exception ignored) {
             // Ignored
@@ -893,7 +885,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     /**
-     * Re-Align the lines in this hologram putting them to the right place.
+     * Re-Align the lines in this hologram, putting them to the right place.
      * <p>
      * This method is good to use after teleporting the hologram.
      * </p>

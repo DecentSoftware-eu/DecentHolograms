@@ -21,7 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class HologramItem {
 
-    public static final String ENCHANTED_INDICATOR = "!ENCHANTED";
+    private static final String ENCHANTED_INDICATOR = "!ENCHANTED";
     private final String content;
     private String nbt;
     private String extras;
