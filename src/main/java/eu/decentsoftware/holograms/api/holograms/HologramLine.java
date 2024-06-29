@@ -277,6 +277,7 @@ public class HologramLine extends HologramObject {
         line.setOffsetZ(this.getOffsetZ());
         line.setFacing(this.getFacing());
         line.setPermission(this.getPermission());
+        line.setViewerPredicate(this.getViewerPredicate());
         line.addFlags(this.getFlags().toArray(new EnumFlag[0]));
         return line;
     }

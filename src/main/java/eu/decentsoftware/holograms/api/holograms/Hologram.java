@@ -470,6 +470,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         Hologram hologram = new Hologram(name, location.clone(), !temp);
         hologram.setDownOrigin(this.isDownOrigin());
         hologram.setPermission(this.getPermission());
+        hologram.setViewerPredicate(this.getViewerPredicate());
         hologram.setFacing(this.getFacing());
         hologram.setDisplayRange(this.getDisplayRange());
         hologram.setUpdateRange(this.getUpdateRange());
