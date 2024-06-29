@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
@@ -28,6 +29,7 @@ public abstract class HologramObject extends FlagHolder {
     protected final Set<UUID> viewers = ConcurrentHashMap.newKeySet();
     protected Location location;
     protected String permission = null;
+    protected Predicate<Player> viewerPredicate = null;
     protected float facing = 0.0f;
 
     /*
@@ -114,10 +116,14 @@ public abstract class HologramObject extends FlagHolder {
      * @return Boolean whether the given player is allowed to see this hologram object.
      */
     public boolean canShow(Player player) {
-        if (permission == null || permission.trim().isEmpty()) {
+        if (permission == null || permission.trim().isEmpty() && viewerPredicate == null) {
             return true;
         }
-        return player != null && player.hasPermission(permission);
+        boolean predicatePass = false;
+        if (viewerPredicate != null) {
+            predicatePass = viewerPredicate.test(player);
+        }
+        return player != null && player.hasPermission(permission) && predicatePass;
     }
 
     /*
