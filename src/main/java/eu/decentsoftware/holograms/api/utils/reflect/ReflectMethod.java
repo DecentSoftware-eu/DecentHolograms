@@ -29,7 +29,7 @@ public class ReflectMethod {
 			}
 			method.setAccessible(true);
 		} catch (NoSuchMethodException e) {
-			Log.error("Could not find method %s in class %s", name, clazz.getName());
+			Log.error("Could not find method %s in class %s", e, name, clazz.getName());
 		}
 	}
 
@@ -41,7 +41,7 @@ public class ReflectMethod {
 		try {
 			object = method.invoke(instance, args);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			Log.error("Could not invoke method %s in class %s", name, clazz.getName());
+			Log.error("Could not invoke method %s in class %s", e, name, clazz.getName());
 		}
 		return object == null ? null : (T) object;
 	}
@@ -54,7 +54,7 @@ public class ReflectMethod {
 		try {
 			object = method.invoke(null, args);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			Log.error("Could not invoke static method %s in class %s", name, clazz.getName());
+			Log.error("Could not invoke static method %s in class %s", e, name, clazz.getName());
 		}
 		return object == null ? null : (T) object;
 	}

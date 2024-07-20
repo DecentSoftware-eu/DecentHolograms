@@ -23,7 +23,8 @@ public class ReflectConstructor {
             constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
-            Log.error("Failed to find constructor for class %s with parameter types %s", clazz.getName(), parameterTypes);
+            Log.error("Failed to find constructor for class %s with parameter types %s",
+                    e, clazz.getName(), parameterTypesToString());
         }
     }
 
@@ -34,9 +35,18 @@ public class ReflectConstructor {
         try {
             object = constructor.newInstance(args);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            Log.error("Failed to create new instance of class %s with parameter types %s", clazz.getName(), parameterTypes);
+            Log.error("Failed to create new instance of class %s with parameter types %s",
+                    e, clazz.getName(), parameterTypesToString());
         }
         return object == null ? null : (T) object;
+    }
+
+    private String parameterTypesToString() {
+        StringBuilder builder = new StringBuilder();
+        for (Class<?> parameterType : parameterTypes) {
+            builder.append(parameterType.getName()).append(", ");
+        }
+        return builder.toString();
     }
 
 }
