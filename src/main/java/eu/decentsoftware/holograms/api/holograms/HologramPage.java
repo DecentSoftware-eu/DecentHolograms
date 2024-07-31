@@ -225,9 +225,9 @@ public class HologramPage extends FlagHolder {
     /**
      * Remove a line from this hologram page.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramLine(HologramPage, int)
      * @param index Index of the line.
      * @return The removed line or null if it wasn't found.
+     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramLine(HologramPage, int)
      */
     public HologramLine removeLine(int index) {
         if (index < 0 || index >= size()) {
