@@ -153,6 +153,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Add a new line to the bottom of this hologram page.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      * @param line New line.
      * @return Boolean whether the operation was successful.
      */
@@ -166,6 +167,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Insert a new line into this hologram page.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
      * @param index Index of the new line.
      * @param line  New line.
      * @return Boolean whether the operation was successful.
@@ -183,6 +185,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Set new content of a line in this hologram page.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#setHologramLine(HologramPage, int, String)
      * @param index   Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
@@ -208,6 +211,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Get line on a specified index in this hologram page.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramLine(HologramPage, int)
      * @param index Index of the line.
      * @return The HologramLine or null if it wasn't found.
      */
@@ -221,6 +225,7 @@ public class HologramPage extends FlagHolder {
     /**
      * Remove a line from this hologram page.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramLine(HologramPage, int)
      * @param index Index of the line.
      * @return The removed line or null if it wasn't found.
      */
