@@ -185,10 +185,10 @@ public class HologramPage extends FlagHolder {
     /**
      * Set new content of a line in this hologram page.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#setHologramLine(HologramPage, int, String)
      * @param index   Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#setHologramLine(HologramPage, int, String)
      */
     public boolean setLine(int index, @NonNull String content) {
         HologramLine line = getLine(index);
