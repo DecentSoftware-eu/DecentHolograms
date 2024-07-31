@@ -167,10 +167,10 @@ public class HologramPage extends FlagHolder {
     /**
      * Insert a new line into this hologram page.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
      * @param index Index of the new line.
      * @param line  New line.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
         if (index < 0 || index >= size()) {
