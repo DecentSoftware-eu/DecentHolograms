@@ -249,9 +249,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Creates a new hologram with the given name and location. The hologram will be saved to a file.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#createHologram(String, Location)
      * @param name     The name of the hologram.
      * @param location The location of the hologram.
+     * @see eu.decentsoftware.holograms.api.DHAPI#createHologram(String, Location)
      */
     public Hologram(@NonNull String name, @NonNull Location location) {
         this(name, location, true);
