@@ -412,8 +412,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * Set the location of this hologram. This method doesn't update the hologram's location
      * for the players, you have to call {@link #realignLines()} for that.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#moveHologram(Hologram, Location)
      * @param location The new location of this hologram.
+     * @see eu.decentsoftware.holograms.api.DHAPI#moveHologram(Hologram, Location)
      */
     @Override
     public void setLocation(@NonNull Location location) {
