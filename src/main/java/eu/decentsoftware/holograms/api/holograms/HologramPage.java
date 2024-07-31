@@ -153,9 +153,9 @@ public class HologramPage extends FlagHolder {
     /**
      * Add a new line to the bottom of this hologram page.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      * @param line New line.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      */
     public boolean addLine(@NonNull HologramLine line) {
         lines.add(line);
