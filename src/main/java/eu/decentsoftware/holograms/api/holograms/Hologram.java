@@ -71,6 +71,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         CACHED_HOLOGRAMS = new ConcurrentHashMap<>();
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#getHologram(String)
+     */
     public static Hologram getCachedHologram(@NonNull String name) {
         return CACHED_HOLOGRAMS.get(name);
     }
@@ -246,6 +249,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Creates a new hologram with the given name and location. The hologram will be saved to a file.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#createHologram(String, Location)
      * @param name     The name of the hologram.
      * @param location The location of the hologram.
      */
@@ -256,6 +260,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /**
      * Creates a new hologram with the given name and location.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#createHologram(String, Location, boolean)
      * @param name       The name of the hologram.
      * @param location   The location of the hologram.
      * @param saveToFile Whether the hologram should be saved to a file.
@@ -335,6 +340,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     /**
      * This method calls {@link #destroy()} before deleting the hologram file.
+     *
+     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologram(String)
      */
     @Override
     public void delete() {
@@ -405,6 +412,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * Set the location of this hologram. This method doesn't update the hologram's location
      * for the players, you have to call {@link #realignLines()} for that.
      *
+     * @see eu.decentsoftware.holograms.api.DHAPI#moveHologram(Hologram, Location)
      * @param location The new location of this hologram.
      */
     @Override
@@ -532,15 +540,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     /*
      *	Visibility Methods
      */
-
-    /**
-     * Set default display state
-     *
-     * @param state state
-     */
-    public void setDefaultVisibleState(boolean state) {
-        this.defaultVisibleState = state;
-    }
 
     /**
      * @return Default display state
@@ -680,6 +679,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         updateAll(false);
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#updateHologram(String)
+     * @param force If true, the line will be updated even if it does not need to be.
+     */
     public void updateAll(boolean force) {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
@@ -896,12 +899,18 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramPage(Hologram)
+     */
     public HologramPage addPage() {
         HologramPage page = new HologramPage(this, pages.size());
         pages.add(page);
         return page;
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramPage(Hologram, int)
+     */
     public HologramPage insertPage(int index) {
         if (index < 0 || index > size()) return null;
         HologramPage page = new HologramPage(this, index);
@@ -919,6 +928,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return page;
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramPage(Hologram, int)
+     */
     public HologramPage getPage(int index) {
         if (index < 0 || index >= size()) return null;
         return pages.get(index);
@@ -931,6 +943,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         return null;
     }
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramPage(Hologram, int)
+     */
     public HologramPage removePage(int index) {
         if (index < 0 || index >= size()) {
             return null;
