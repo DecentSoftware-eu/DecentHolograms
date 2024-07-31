@@ -211,9 +211,9 @@ public class HologramPage extends FlagHolder {
     /**
      * Get line on a specified index in this hologram page.
      *
-     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramLine(HologramPage, int)
      * @param index Index of the line.
      * @return The HologramLine or null if it wasn't found.
+     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramLine(HologramPage, int)
      */
     public HologramLine getLine(int index) {
         if (index < 0 || index >= size()) {
