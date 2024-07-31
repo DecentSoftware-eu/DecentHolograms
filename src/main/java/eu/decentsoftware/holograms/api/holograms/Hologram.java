@@ -680,8 +680,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /**
-     * @see eu.decentsoftware.holograms.api.DHAPI#updateHologram(String)
      * @param force If true, the line will be updated even if it does not need to be.
+     * @see eu.decentsoftware.holograms.api.DHAPI#updateHologram(String)
      */
     public void updateAll(boolean force) {
         synchronized (visibilityMutex) {
