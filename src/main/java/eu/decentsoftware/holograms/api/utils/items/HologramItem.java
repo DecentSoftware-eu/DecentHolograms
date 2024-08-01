@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
@@ -14,6 +13,7 @@ import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
@@ -25,6 +25,7 @@ public class HologramItem {
     private final String content;
     private String nbt;
     private String extras;
+    private int modelData;
     private Material material;
     private short durability = 0;
     private boolean enchanted = false;
@@ -32,6 +33,47 @@ public class HologramItem {
     public HologramItem(String string) {
         this.content = string;
         this.parseContent();
+    }
+
+    @SuppressWarnings("deprecation")
+    public static HologramItem fromItemStack(ItemStack itemStack) {
+        Validate.notNull(itemStack);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        ItemBuilder itemBuilder = new ItemBuilder(itemStack);
+        Material material = itemStack.getType();
+        stringBuilder.append(material.name());
+        int durability = itemStack.getDurability();
+        if (durability > 0) {
+            stringBuilder.append(":").append(durability);
+        }
+        stringBuilder.append(" ");
+        Map<Enchantment, Integer> enchants = itemStack.getEnchantments();
+        if (!enchants.isEmpty()) {
+            stringBuilder.append(ENCHANTED_INDICATOR).append(" ");
+        }
+        if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
+            String owner = itemBuilder.getSkullOwner();
+            String texture = itemBuilder.getSkullTexture();
+            if (texture != null) {
+                stringBuilder.append("(").append(texture).append(")");
+            } else if (owner != null && !owner.isEmpty()) {
+                stringBuilder.append("(").append(owner).append(")");
+            }
+        }
+
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            if (meta.hasCustomModelData()) {
+                stringBuilder.append(" {CustomModelData:").append(meta.getCustomModelData()).append("}");
+            }
+        }
+        return new HologramItem(stringBuilder.toString());
+    }
+
+    public static ItemStack parseItemStack(String string, Player player) {
+        string = PAPI.setPlaceholders(player, string);
+        return new HologramItem(string).parse(player);
     }
 
     @SuppressWarnings("deprecation")
@@ -63,9 +105,16 @@ public class HologramItem {
 
             ItemStack itemStack = itemBuilder.toItemStack();
 
-            if (nbt != null) {
-                applyNBT(player, itemStack);
+            if (modelData != 0) {
+                ItemMeta meta = itemStack.getItemMeta();
+                if (meta != null) {
+                    meta.setCustomModelData(modelData);
+                    itemStack.setItemMeta(meta);
+                }
             }
+//            if (nbt != null) {
+//                applyNBT(player, itemStack);
+//            }
 
             return itemStack;
         } catch (Exception e) {
@@ -86,6 +135,7 @@ public class HologramItem {
     @SuppressWarnings("deprecation")
     private void applyNBT(Player player, ItemStack itemStack) {
         try {
+            System.out.println(nbt);
             Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
         } catch (Exception e) {
             Log.warn("Failed to apply NBT tag to item: %s", e, nbt);
@@ -95,13 +145,28 @@ public class HologramItem {
     private void parseContent() {
         String string = this.content;
         string = findExtras(string);
-        string = findNBT(string);
+        //string = findNBT(string);
         string = checkEnchanted(string);
+        string = findModelData(string);
         parseMaterial(string);
 
         if (this.material == null) {
             this.material = Material.STONE;
         }
+    }
+
+    private String findModelData(String string) {
+        String prefix = "{CustomModelData:";
+        int start = string.indexOf(prefix);
+        int end = string.indexOf('}', start);
+
+        if (start != -1 && end != -1) {
+            String modelDataString = string.substring(start + prefix.length(), end);
+            this.modelData = Integer.parseInt(modelDataString);
+            string = string.substring(0, start) + string.substring(end + 1);
+        }
+
+        return string;
     }
 
     private void parseMaterial(String string) {
@@ -149,45 +214,6 @@ public class HologramItem {
             }
         }
         return string;
-    }
-
-    @SuppressWarnings("deprecation")
-    public static HologramItem fromItemStack(ItemStack itemStack) {
-        Validate.notNull(itemStack);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        ItemBuilder itemBuilder = new ItemBuilder(itemStack);
-        Material material = itemStack.getType();
-        stringBuilder.append(material.name());
-        int durability = itemStack.getDurability();
-        if (durability > 0) {
-            stringBuilder.append(":").append(durability);
-        }
-        stringBuilder.append(" ");
-        Map<Enchantment, Integer> enchants = itemStack.getEnchantments();
-        if (enchants != null && !enchants.isEmpty()) {
-            stringBuilder.append(ENCHANTED_INDICATOR).append(" ");
-        }
-        if (material.name().contains("HEAD") || material.name().contains("SKULL")) {
-            String owner = itemBuilder.getSkullOwner();
-            String texture = itemBuilder.getSkullTexture();
-            if (texture != null) {
-                stringBuilder.append("(").append(texture).append(")");
-            } else if (owner != null && !owner.isEmpty()) {
-                stringBuilder.append("(").append(owner).append(")");
-            }
-        }
-        NBTItem nbtItem = new NBTItem(itemStack);
-        if (nbtItem.hasTag("CustomModelData")) {
-            int customModelData = nbtItem.getInteger("CustomModelData");
-            stringBuilder.append(" {CustomModelData:").append(customModelData).append("}");
-        }
-        return new HologramItem(stringBuilder.toString());
-    }
-
-    public static ItemStack parseItemStack(String string, Player player) {
-        string = PAPI.setPlaceholders(player, string);
-        return new HologramItem(string).parse(player);
     }
 
 }
