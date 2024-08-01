@@ -1,5 +1,5 @@
 main: "eu.decentsoftware.holograms.plugin.DecentHologramsPlugin"
-api-version: 1.13
+api-version: 1.15
 softdepend:
   - "PlaceholderAPI"
   - "HeadDatabase"
@@ -20,7 +20,7 @@ permissions:
   # Main permissions
   dh.admin:
     description: "Allows player to use DecentHolograms."
-    children: 
+    children:
       dh.command: true
   dh.default:
     default: true
@@ -68,7 +68,7 @@ permissions:
   dh.command.features:
     description: "Allows player to use the command '/dh features' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.features.disable: true
       dh.command.features.enable: true
       dh.command.features.help: true
@@ -98,7 +98,7 @@ permissions:
   dh.command.holograms:
     description: "Allows player to use the command '/dh holograms' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.holograms.update: true
       dh.command.holograms.align: true
       dh.command.holograms.center: true
@@ -200,7 +200,7 @@ permissions:
   dh.command.lines:
     description: "Allows player to use the command '/dh lines' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.lines.add: true
       dh.command.lines.align: true
       dh.command.lines.edit: true
@@ -270,7 +270,7 @@ permissions:
   dh.command.pages:
     description: "Allows player to use the command '/dh pages' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.pages.help: true
       dh.command.pages.add: true
       dh.command.pages.insert: true
