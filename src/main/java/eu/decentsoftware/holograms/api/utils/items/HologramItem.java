@@ -1,9 +1,13 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -64,7 +68,7 @@ public class HologramItem {
             ItemStack itemStack = itemBuilder.toItemStack();
 
             if (nbt != null) {
-                applyNBT(player, itemStack);
+                itemStack = applyNBT(player, itemStack);
             }
 
             return itemStack;
@@ -84,11 +88,34 @@ public class HologramItem {
     }
 
     @SuppressWarnings("deprecation")
-    private void applyNBT(Player player, ItemStack itemStack) {
-        try {
-            Bukkit.getUnsafe().modifyItemStack(itemStack, player == null ? nbt : PAPI.setPlaceholders(player, nbt));
-        } catch (Exception e) {
-            Log.warn("Failed to apply NBT tag to item: %s", e, nbt);
+    private ItemStack applyNBT(Player player, ItemStack itemStack){
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            // Using NBT API to convert NBT from before 1.20.5 to 1.20.5+ NBT Components.
+            ReadWriteNBT nbtData = NBT.itemStackToNBT(itemStack);
+            nbtData.getOrCreateCompound("tag")
+                .mergeCompound(NBT.parseNBT(player == null ? nbt : PAPI.setPlaceholders(player, nbt)));
+
+            try {
+                /* 1.20.5+ uses "count", while older versions use "Count".
+                 * Since DataFixerUtil expects an old Item NBT to convert while we give a new one does this cause the
+                 * fixer to do nothing. This is a workaround for this minor issue.
+                 */
+                nbtData.setByte("Count", (byte) 1);
+                nbtData = DataFixerUtil.fixUpItemData(nbtData, DataFixerUtil.VERSION1_20_4, DataFixerUtil.getCurrentVersion());
+
+                return NBT.itemStackFromNBT(nbtData);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+                return itemStack;
+            }
+        } else {
+            try {
+                Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
+            } catch (Exception ex) {
+                Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+            }
+
+            return itemStack;
         }
     }
 
