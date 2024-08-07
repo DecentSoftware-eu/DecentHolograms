@@ -155,6 +155,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param line New line.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      */
     public boolean addLine(@NonNull HologramLine line) {
         lines.add(line);
@@ -169,6 +170,7 @@ public class HologramPage extends FlagHolder {
      * @param index Index of the new line.
      * @param line  New line.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
         if (index < 0 || index >= size()) {
@@ -186,6 +188,7 @@ public class HologramPage extends FlagHolder {
      * @param index   Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
+     * @see eu.decentsoftware.holograms.api.DHAPI#setHologramLine(HologramPage, int, String)
      */
     public boolean setLine(int index, @NonNull String content) {
         HologramLine line = getLine(index);
@@ -210,6 +213,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param index Index of the line.
      * @return The HologramLine or null if it wasn't found.
+     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramLine(HologramPage, int)
      */
     public HologramLine getLine(int index) {
         if (index < 0 || index >= size()) {
@@ -223,6 +227,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param index Index of the line.
      * @return The removed line or null if it wasn't found.
+     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramLine(HologramPage, int)
      */
     public HologramLine removeLine(int index) {
         if (index < 0 || index >= size()) {

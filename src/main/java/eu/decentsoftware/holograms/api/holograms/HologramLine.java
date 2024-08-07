@@ -144,6 +144,9 @@ public class HologramLine extends HologramObject {
      *	Constructors
      */
 
+    /**
+     * @see eu.decentsoftware.holograms.api.DHAPI#createHologramLine(HologramPage, Location, String)
+     */
     public HologramLine(@Nullable HologramPage parent, @NonNull Location location, @NotNull String content) {
         super(location);
         this.parent = parent;
