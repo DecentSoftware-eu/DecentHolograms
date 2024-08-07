@@ -61,9 +61,10 @@ public class HologramItem {
                 }
             }
 
-            if (enchanted) {
-                itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 0);
-            }
+            // TODO: Enchants currently break Items! Needs a fix.
+            //if (enchanted) {
+            //    itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 1);
+            //}
 
             ItemStack itemStack = itemBuilder.toItemStack();
 
@@ -90,20 +91,26 @@ public class HologramItem {
     @SuppressWarnings("deprecation")
     private ItemStack applyNBT(Player player, ItemStack itemStack){
         if (Version.afterOrEqual(Version.v1_20_R4)) {
-            // Using NBT API to convert NBT from before 1.20.5 to 1.20.5+ NBT Components.
-            ReadWriteNBT nbtData = NBT.itemStackToNBT(itemStack);
-            nbtData.getOrCreateCompound("tag")
+            ReadWriteNBT originalNBT = NBT.itemStackToNBT(itemStack); // Used later for merge.
+            ReadWriteNBT modifiableNBT = NBT.itemStackToNBT(itemStack);
+            modifiableNBT.getOrCreateCompound("tag")
                 .mergeCompound(NBT.parseNBT(player == null ? nbt : PAPI.setPlaceholders(player, nbt)));
-
-            try {
-                /* 1.20.5+ uses "count", while older versions use "Count".
-                 * Since DataFixerUtil expects an old Item NBT to convert while we give a new one does this cause the
-                 * fixer to do nothing. This is a workaround for this minor issue.
+            try{
+                /*
+                 * DataFixerUtil has an issue where it expects to find "Count", due to expecting pre-1.20.5 NBT data,
+                 * but since we used a 1.20.5+ ItemStack to create the NBT is there only "count", which causes
+                 * DataFixerUtil to not find a valid NBT and does nothing.
+                 * This addition fixes that issue.
                  */
-                nbtData.setByte("Count", (byte) 1);
-                nbtData = DataFixerUtil.fixUpItemData(nbtData, DataFixerUtil.VERSION1_20_4, DataFixerUtil.getCurrentVersion());
+                modifiableNBT.setByte("Count", (byte) 1);
+                modifiableNBT = DataFixerUtil.fixUpItemData(modifiableNBT, DataFixerUtil.VERSION1_20_4, DataFixerUtil.getCurrentVersion());
+                /*
+                 * Updating the NBT removes the modern NBT variants of enchants and alike, as Datafixer discards them.
+                 * So we have to manually merge them in again... Not pretty, but it does the job.
+                 */
+                modifiableNBT.mergeCompound(originalNBT);
 
-                return NBT.itemStackFromNBT(nbtData);
+                return NBT.itemStackFromNBT(modifiableNBT);
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
                 return itemStack;
