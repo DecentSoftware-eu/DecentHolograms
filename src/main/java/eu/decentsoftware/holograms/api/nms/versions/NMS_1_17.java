@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -344,17 +343,9 @@ public class NMS_1_17 extends NMS {
         sendPacket(player, PACKET_SPAWN_ENTITY_LIVING_CONSTRUCTOR.newInstance(packetDataSerializer));
     }
 
-    private static final Class<?> REGISTRY_FRIENDLY_BYTE_BUF_CLASS;
-    private static final Class<?> IREGISTRYCUSTOM_CLASS;
-    private static final Class<?> BUILTINREGISTRIES_CLASS;
-    private static final Class<?> IREGISTRYCUSTOM_C_CLASS;
-    private static final ReflectConstructor REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR;
-    private static final ReflectConstructor IREGISTRYCUSTOM_C_CONSTRUCTOR;
     private static final Class<?> CODEC_CLASS;
     private static final ReflectMethod DWS_GET_CODEC_METHOD;
     private static final ReflectMethod CODEC_ENCODE_METHOD;
-    private static final Object ITEM_REGISTRY;
-    private static final Object DATA_COMPONENT_TYPE_REGISTRY;
 
     private static final Class<?> DWR_CLASS;
     private static final ReflectMethod DWI_GET_OBJECT_METHOD;
@@ -363,6 +354,7 @@ public class NMS_1_17 extends NMS {
     private static final ReflectMethod DWO_GET_INDEX_METHOD;
     private static final ReflectMethod DWS_GET_TYPE_ID_METHOD;
     private static final ReflectMethod DWS_SERIALIZE_METHOD;
+    private static final ReflectMethod DWI_GET_C_METHOD;
     private static final ReflectConstructor PACKET_ENTITY_METADATA_CONSTRUCTOR;
 
     static {
@@ -376,37 +368,18 @@ public class NMS_1_17 extends NMS {
         DWS_GET_TYPE_ID_METHOD = new ReflectMethod(DWR_CLASS, "b", DWS_CLASS);
 
         if (Version.afterOrEqual(Version.v1_20_R4)) {
-            REGISTRY_FRIENDLY_BYTE_BUF_CLASS = ReflectionUtil.getNMClass("network.RegistryFriendlyByteBuf");
-            IREGISTRYCUSTOM_CLASS = ReflectionUtil.getNMClass("core.IRegistryCustom");
-            BUILTINREGISTRIES_CLASS = ReflectionUtil.getNMClass("core.registries.BuiltInRegistries");
-            IREGISTRYCUSTOM_C_CLASS = ReflectionUtil.getNMClass("core.IRegistryCustom$c");
-            REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR = new ReflectConstructor(REGISTRY_FRIENDLY_BYTE_BUF_CLASS, ByteBuf.class, IREGISTRYCUSTOM_CLASS);
-            IREGISTRYCUSTOM_C_CONSTRUCTOR = new ReflectConstructor(IREGISTRYCUSTOM_C_CLASS, List.class);
             CODEC_CLASS = ReflectionUtil.getNMClass("network.codec.StreamCodec");
             DWS_GET_CODEC_METHOD = new ReflectMethod(DWS_CLASS, "codec");
             CODEC_ENCODE_METHOD = new ReflectMethod(CODEC_CLASS, "encode", Object.class, Object.class);
-            if (Version.afterOrEqual(Version.v1_21_R1)) {
-                ITEM_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "g");
-                DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "aq");
-            } else {
-                ITEM_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "h");
-                DATA_COMPONENT_TYPE_REGISTRY = ReflectionUtil.getFieldValue(BUILTINREGISTRIES_CLASS, "as");
-            }
 
+            DWI_GET_C_METHOD = new ReflectMethod(DWI_CLASS, "e");
             DWS_SERIALIZE_METHOD = null;
-            PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, REGISTRY_FRIENDLY_BYTE_BUF_CLASS);
+            PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, int.class, List.class);
         } else {
-            REGISTRY_FRIENDLY_BYTE_BUF_CLASS = null;
-            IREGISTRYCUSTOM_CLASS = null;
-            BUILTINREGISTRIES_CLASS = null;
-            IREGISTRYCUSTOM_C_CLASS = null;
-            REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR = null;
-            IREGISTRYCUSTOM_C_CONSTRUCTOR = null;
             CODEC_CLASS = null;
             DWS_GET_CODEC_METHOD = null;
+            DWI_GET_C_METHOD = null;
             CODEC_ENCODE_METHOD = null;
-            ITEM_REGISTRY = null;
-            DATA_COMPONENT_TYPE_REGISTRY = null;
 
             DWS_SERIALIZE_METHOD = new ReflectMethod(DWS_CLASS, "a", PACKET_DATA_SERIALIZER_CLASS, Object.class);
             PACKET_ENTITY_METADATA_CONSTRUCTOR = new ReflectConstructor(metadataPacketClass, PACKET_DATA_SERIALIZER_CLASS);
@@ -414,16 +387,19 @@ public class NMS_1_17 extends NMS {
     }
 
     private void sendEntityMetadata(Player player, int entityId, List<Object> items) {
+        if (Version.afterOrEqual(Version.v1_20_R4)) {
+            sendEntityMetadataNew(player, entityId, items);
+        } else {
+            sendEntityMetadataOld(player, entityId, items);
+        }
+    }
+
+    private void sendEntityMetadataOld(Player player, int entityId, List<Object> items) {
         Validate.notNull(player);
         Validate.notNull(items);
 
-        Object packetDataSerializer;
-        if (Version.afterOrEqual(Version.v1_20_R4)) {
-            Object c = IREGISTRYCUSTOM_C_CONSTRUCTOR.newInstance(Arrays.asList(ITEM_REGISTRY, DATA_COMPONENT_TYPE_REGISTRY));
-            packetDataSerializer = REGISTRY_FRIENDLY_BYTE_BUF_CONSTRUCTOR.newInstance(Unpooled.buffer(), c);
-        } else {
-            packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
-        }
+        Object packetDataSerializer = PACKET_DATA_SERIALIZER_CONSTRUCTOR.newInstance(Unpooled.buffer());
+
         PACKET_DATA_SERIALIZER_WRITE_INT_METHOD.invoke(packetDataSerializer, entityId);
         for (Object item : items) {
             if (!item.getClass().isAssignableFrom(DWI_CLASS)) {
@@ -446,8 +422,25 @@ public class NMS_1_17 extends NMS {
                 DWS_SERIALIZE_METHOD.invoke(serializer, packetDataSerializer, value);
             }
         }
+
         PACKET_DATA_SERIALIZER_WRITE_BYTE_METHOD.invoke(packetDataSerializer, 0xFF);
         sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(packetDataSerializer));
+    }
+
+    private void sendEntityMetadataNew(Player player, int entityId, List<Object> items) {
+        Validate.notNull(player);
+        Validate.notNull(items);
+
+        List<Object> listOfSomethingCalledc = new ArrayList<>();
+        for (Object item : items) {
+            if (!item.getClass().isAssignableFrom(DWI_CLASS)) {
+                continue;
+            }
+
+            listOfSomethingCalledc.add(DWI_GET_C_METHOD.invoke(item));
+        }
+
+        sendPacket(player, PACKET_ENTITY_METADATA_CONSTRUCTOR.newInstance(entityId, listOfSomethingCalledc));
     }
 
     @Override
