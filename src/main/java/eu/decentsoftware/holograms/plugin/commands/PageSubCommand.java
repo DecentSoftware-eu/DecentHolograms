@@ -502,7 +502,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.removeaction",
             usage = "/dh page removeaction <hologram> <page> <clickType> <index>",
-            description = "Add a click action.",
+            description = "Remove a click action.",
             aliases = {"remaction"},
             minArgs = 4
     )
