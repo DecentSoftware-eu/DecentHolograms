@@ -61,10 +61,9 @@ public class HologramItem {
                 }
             }
 
-            // TODO: Enchants currently break Items! Needs a fix.
-            //if (enchanted) {
-            //    itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 1);
-            //}
+            if (enchanted) {
+                itemBuilder.withUnsafeEnchantment(Enchantment.DURABILITY, 1);
+            }
 
             ItemStack itemStack = itemBuilder.toItemStack();
 
