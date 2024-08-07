@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.plugin;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
@@ -44,6 +45,9 @@ public class DecentHologramsPlugin extends JavaPlugin {
 		DecentCommand mainCommand = new HologramsCommand();
 		commandManager.setMainCommand(mainCommand);
 		commandManager.registerCommand(mainCommand);
+		
+		// Enable NBT API to avoid lag spikes when parsing NBT for the first time.
+		NBT.preloadApi();
 	}
 
 	@Override
