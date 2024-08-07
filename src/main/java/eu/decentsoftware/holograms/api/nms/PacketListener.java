@@ -6,6 +6,8 @@ import io.netty.channel.EventLoop;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class PacketListener {
@@ -54,7 +56,28 @@ public class PacketListener {
                 eventLoop.execute(() -> executeOnPipeline(player, consumer));
             }
         } catch (Exception e) {
-            Log.warn("Failed to modify player's pipeline. (%s)", e, player.getName());
+            List<String> availableElements = getAvailableElements(player);
+            Log.warn("Failed to modify player's pipeline. player: %s, availableElements: %s",
+                    e, player.getName(), availableElements);
+        }
+    }
+
+    /**
+     * Get the available elements in the player's pipeline.
+     *
+     * <p>This is mainly used in case the modification of the pipeline fails.
+     * We can then log the available elements in the pipeline to help debug the issue.</p>
+     *
+     * @param player the player
+     * @return the available elements or an empty list if the elements could not be retrieved
+     */
+    private List<String> getAvailableElements(Player player) {
+        try {
+            ChannelPipeline pipeline = nms.getPipeline(player);
+            return pipeline.names();
+        } catch (Exception e) {
+            Log.warn("Failed to get available elements in player's pipeline.", e);
+            return Collections.emptyList();
         }
     }
 
