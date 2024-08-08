@@ -78,14 +78,22 @@ public class LocationUtils {
 
     // Plugins like GHolo use the world's UUID instead of the name for location.
     private static World getWorld(@NonNull String value) {
-        UUID uuid = null;
-        try {
-            uuid = UUID.fromString(value);
-        } catch (IllegalArgumentException ignored) {
-            // Not a UUID
+        World world = Bukkit.getWorld(value);
+        if (world != null) {
+            return world;
         }
 
-        return uuid == null ? Bukkit.getWorld(value) : Bukkit.getWorld(uuid);
+        try {
+            UUID uuid = UUID.fromString(value);
+            world = Bukkit.getWorld(uuid);
+        } catch (IllegalArgumentException ignored) {}
+
+        // World was neither retrieved from name nor UUID. How is this possible?
+        if (world == null) {
+            Log.warn("Cannot retrieve World from value %s!", value);
+        }
+
+        return world;
     }
 
 }
