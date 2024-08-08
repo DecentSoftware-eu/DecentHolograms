@@ -90,7 +90,7 @@ public class LocationUtils {
 
         // World was neither retrieved from name nor UUID. How is this possible?
         if (world == null) {
-            Log.warn("Cannot retrieve World from value %s!", value);
+            Log.warn("Cannot retrieve World from value %s! It's neither a valid name nor UUID.", value);
         }
 
         return world;
