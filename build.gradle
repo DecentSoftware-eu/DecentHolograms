@@ -62,4 +62,6 @@ shadowJar {
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+
+    archiveClassifier.set('')
 }
