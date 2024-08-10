@@ -3,7 +3,6 @@ api-version: 1.13
 softdepend:
   - "PlaceholderAPI"
   - "HeadDatabase"
-  - "ProtocolLib"
 name: "DecentHolograms"
 description: ${description}
 version: ${version}
