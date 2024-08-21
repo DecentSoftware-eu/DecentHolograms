@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
