@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -50,9 +51,9 @@ public final class SkullUtils {
 
 	static {
 		try {
-			Class<?> resolvableProfileClass = Class.forName("net.minecraft.world.item.component.ResolvableProfile");
-			RESOLVABLE_PROFILE_CONSTRUCTOR = resolvableProfileClass.getConstructor(GameProfile.class);
-		} catch (ClassNotFoundException | NoSuchMethodException ignored) {
+			Class<?> resolvableProfileClass = ReflectionUtil.getNMClass("world.item.component.ResolvableProfile");
+			RESOLVABLE_PROFILE_CONSTRUCTOR = resolvableProfileClass == null ? null : resolvableProfileClass.getConstructor(GameProfile.class);
+		} catch ( NoSuchMethodException ignored) {
 			// old version, no resolvable profile class.
 		}
 	}
