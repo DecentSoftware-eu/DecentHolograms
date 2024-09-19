@@ -44,6 +44,7 @@ public final class SkullUtils {
 	private static Field PROFILE_FIELD;
 	private static Method SET_PROFILE_METHOD;
 	private static boolean INITIALIZED = false;
+	private static boolean INITIALIZED_SET_PROFILE = false;
 	private static Constructor<?> RESOLVABLE_PROFILE_CONSTRUCTOR;
 
 	private static Method PROPERTY_VALUE_METHOD;
@@ -145,7 +146,7 @@ public final class SkullUtils {
 					try {
 						// This method only exists in versions 1.16 and up. For older versions, we use reflection
 						// to set the profile field directly.
-						SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", RESOLVABLE_PROFILE_CONSTRUCTOR == null ? GameProfile.class : RESOLVABLE_PROFILE_CONSTRUCTOR.getClass());
+						SET_PROFILE_METHOD = meta.getClass().getDeclaredMethod("setProfile", RESOLVABLE_PROFILE_CONSTRUCTOR == null ? GameProfile.class : RESOLVABLE_PROFILE_CONSTRUCTOR.getDeclaringClass());
 						SET_PROFILE_METHOD.setAccessible(true);
 					} catch (NoSuchMethodException e) {
 						// Server is running an older version.
