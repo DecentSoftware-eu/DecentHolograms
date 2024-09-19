@@ -44,8 +44,9 @@ public final class SkullUtils {
 	private static Field PROFILE_FIELD;
 	private static Method SET_PROFILE_METHOD;
 	private static boolean INITIALIZED = false;
-	private static boolean INITIALIZED_SET_PROFILE = false;
+
 	private static Constructor<?> RESOLVABLE_PROFILE_CONSTRUCTOR;
+	private static Field GAME_PROFILE_FIELD_RESOLVABLE_PROFILE;
 
 	private static Method PROPERTY_VALUE_METHOD;
 	private static Function<Property, String> VALUE_RESOLVER;
@@ -54,6 +55,9 @@ public final class SkullUtils {
 		try {
 			Class<?> resolvableProfileClass = ReflectionUtil.getNMClass("world.item.component.ResolvableProfile");
 			RESOLVABLE_PROFILE_CONSTRUCTOR = resolvableProfileClass == null ? null : resolvableProfileClass.getConstructor(GameProfile.class);
+
+			// find the game profile field in the resolvable profile class
+			GAME_PROFILE_FIELD_RESOLVABLE_PROFILE = ReflectionUtil.findField(resolvableProfileClass, GameProfile.class);
 		} catch ( NoSuchMethodException ignored) {
 			// old version, no resolvable profile class.
 		}
@@ -72,13 +76,12 @@ public final class SkullUtils {
 			if (!(meta instanceof SkullMeta)) {
 				return null;
 			}
-
 			if (PROFILE_FIELD == null) {
 				PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
 				PROFILE_FIELD.setAccessible(true);
 			}
 
-			GameProfile profile = (GameProfile) PROFILE_FIELD.get(meta);
+			GameProfile profile = (GameProfile) (GAME_PROFILE_FIELD_RESOLVABLE_PROFILE == null ? PROFILE_FIELD.get(meta) : GAME_PROFILE_FIELD_RESOLVABLE_PROFILE.get(PROFILE_FIELD.get(meta)));
 			if (profile == null) {
 				return null;
 			}

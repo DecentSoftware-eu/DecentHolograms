@@ -72,6 +72,28 @@ public class ReflectionUtil {
     }
 
     /**
+     * Find a field with in a class with a specific type.
+     * <p>
+     * If the field is not found, this method will return null.
+     *
+     * @param clazz     The class to get the field from.
+     * @param type      The class type of the field.
+     * @return The field, or null if the field was not found.
+     */
+    public static Field findField(Class<?> clazz, Class<?> type) {
+        if (clazz == null) return null;
+
+        Field[] methods = clazz.getDeclaredFields();
+        for (Field method : methods) {
+            if (!method.getType().equals(type)) continue;
+
+            method.setAccessible(true);
+            return method;
+        }
+        return null;
+    }
+
+    /**
      * Get a field with the given name from the given class.
      * <p>
      * If the field is not found, this method will return null.
