@@ -27,7 +27,7 @@ public class Settings {
     @Key(value = "defaults.height.text", min = 0.0d, max = 2.5d)
     public static double DEFAULT_HEIGHT_TEXT = 0.3;
     @Key(value = "defaults.height.icon", min = 0.0d, max = 2.5d)
-    public static double DEFAULT_HEIGHT_ICON = 0.6;
+    public static double DEFAULT_HEIGHT_ICON = 0.75;
     @Key(value = "defaults.height.head", min = 0.0d, max = 2.5d)
     public static double DEFAULT_HEIGHT_HEAD = 0.75;
     @Key(value = "defaults.height.smallhead", min = 0.0d, max = 2.5d)
