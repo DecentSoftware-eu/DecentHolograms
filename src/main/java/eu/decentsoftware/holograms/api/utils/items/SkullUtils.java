@@ -148,7 +148,17 @@ public final class SkullUtils {
 						PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
 						PROFILE_FIELD.setAccessible(true);
 					}
-					PROFILE_FIELD.set(meta, profile);
+
+					// https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/browse/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSkull.java?at=8d52226914ce4b99f35be3d6954f35616d92476d
+					// SPIGOT-7882, #1467: Fix conversion of name in Profile Component to empty if it is missing
+					try {
+						PROFILE_FIELD.set(meta, profile);
+					} catch (Throwable ignored) {
+						PROFILE_FIELD.set(
+								meta,
+								SkullProfile.getObject(profile)
+						);
+					}
 				}
 			}
 			itemStack.setItemMeta(meta);
