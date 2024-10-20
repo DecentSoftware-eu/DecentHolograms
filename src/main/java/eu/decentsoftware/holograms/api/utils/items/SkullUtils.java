@@ -76,15 +76,17 @@ public final class SkullUtils {
 			if (!(meta instanceof SkullMeta)) {
 				return null;
 			}
+			// private ResolvableProfile profile;
+
 			if (PROFILE_FIELD == null) {
 				PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
 				PROFILE_FIELD.setAccessible(true);
 			}
+			Object profileObject = PROFILE_FIELD.get(meta);
+			if (profileObject == null) return null;
 
-			GameProfile profile = (GameProfile) (GAME_PROFILE_FIELD_RESOLVABLE_PROFILE == null ? PROFILE_FIELD.get(meta) : GAME_PROFILE_FIELD_RESOLVABLE_PROFILE.get(PROFILE_FIELD.get(meta)));
-			if (profile == null) {
-				return null;
-			}
+			GameProfile profile = (GameProfile) (GAME_PROFILE_FIELD_RESOLVABLE_PROFILE == null ? profileObject : GAME_PROFILE_FIELD_RESOLVABLE_PROFILE.get(profileObject));
+			if (profile == null) return null;
 
 			if (VALUE_RESOLVER == null) {
 				try {
