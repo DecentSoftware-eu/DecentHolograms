@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.listeners;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
@@ -13,17 +12,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class WorldListener implements Listener {
 
-    private final DecentHolograms decentHolograms;
+    private final HologramManager hologramManager;
 
-    public WorldListener(DecentHolograms decentHolograms) {
-        this.decentHolograms = decentHolograms;
+    public WorldListener(HologramManager hologramManager) {
+        this.hologramManager = hologramManager;
     }
 
     @EventHandler
     public void onWorldUnload(WorldUnloadEvent event) {
-        HologramManager hologramManager = decentHolograms.getHologramManager();
         World world = event.getWorld();
 
         S.async(() -> hologramManager.getHolograms().stream()
@@ -34,12 +35,12 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {
-        HologramManager hologramManager = decentHolograms.getHologramManager();
         World world = event.getWorld();
 
         S.async(() -> {
-            if (hologramManager.getToLoad().containsKey(world.getName())) {
-                hologramManager.getToLoad().get(world.getName()).forEach(fileName -> {
+            Set<String> hologramsToLoad = getHologramsToLoadByWorld(world);
+            if (!hologramsToLoad.isEmpty()) {
+                hologramsToLoad.forEach(fileName -> {
                     try {
                         Hologram hologram = Hologram.fromFile(fileName);
                         if (hologram.isEnabled()) {
@@ -59,4 +60,16 @@ public class WorldListener implements Listener {
                     .forEach(Hologram::enable);
         });
     }
+
+    private Set<String> getHologramsToLoadByWorld(World world) {
+        Set<String> hologramsToLoad = new HashSet<>();
+        if (hologramManager.getToLoad().containsKey(world.getName())) {
+            hologramsToLoad.addAll(hologramManager.getToLoad().get(world.getName()));
+        }
+        if (hologramManager.getToLoad().containsKey(world.getUID().toString())) {
+            hologramsToLoad.addAll(hologramManager.getToLoad().get(world.getUID().toString()));
+        }
+        return hologramsToLoad;
+    }
+
 }
