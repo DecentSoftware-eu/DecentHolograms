@@ -47,10 +47,6 @@ public class Action {
         return type.execute(player, data);
     }
 
-    public boolean isValid() {
-        return type != null;
-    }
-
     @Override
     public String toString() {
         return data == null ? type.getName() : String.format("%s:%s", type.getName(), data);
