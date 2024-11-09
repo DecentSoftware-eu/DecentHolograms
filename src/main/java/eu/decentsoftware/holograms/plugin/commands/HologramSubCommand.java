@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.*;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
@@ -269,7 +270,7 @@ public class HologramSubCommand extends DecentCommand {
 				} else {
 					if (location == null) {
 						final Player player = (Player) sender;
-						location = player.getLocation();
+						location = Settings.HOLOGRAMS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
 					}
 				}
 
@@ -333,7 +334,7 @@ public class HologramSubCommand extends DecentCommand {
 				} else {
 					if (location == null) {
 						final Player player = (Player) sender;
-						location = player.getLocation();
+						location = Settings.HOLOGRAMS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
 					}
 				}
 
@@ -856,7 +857,7 @@ public class HologramSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				Player player = Validator.getPlayer(sender);
-				Location playerLocation = player.getLocation();
+				Location playerLocation = Settings.HOLOGRAMS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
 				Location location = hologram.getLocation();
 				location.setWorld(playerLocation.getWorld());
 				location.setX(playerLocation.getX());

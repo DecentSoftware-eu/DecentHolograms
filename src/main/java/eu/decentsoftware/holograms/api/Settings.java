@@ -55,6 +55,15 @@ public class Settings {
      */
     @Key("update-visibility-on-teleport")
     public static boolean UPDATE_VISIBILITY_ON_TELEPORT = false;
+    /**
+     * Set this to true if you want holograms to appear at the player's eye level.
+     *
+     * <p>When enabled, holograms will be positioned at the player's eye height when created or moved.</p>
+     *
+     * <p>When disabled, holograms will be positioned at the player's feet height when created or moved (default).</p>
+     */
+    @Key("holograms-eye-level-positioning")
+    public static boolean HOLOGRAMS_EYE_LEVEL_POSITIONING = false;
 
     public static Map<String, String> CUSTOM_REPLACEMENTS = ImmutableMap.<String, String>builder()
             .put("[x]", "\u2588")
