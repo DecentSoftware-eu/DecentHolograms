@@ -96,6 +96,8 @@ damage-display:
   appearance: '&c{damage}'
   # Appearance of the damage, if the damage is critical
   critical-appearance: '&4&lCrit!&4 {damage}'
+  # Do you want to display a shorter number
+  critical-appearance.short: false
   # Height offset
   height: 0
 
