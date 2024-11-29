@@ -295,7 +295,7 @@ public class HologramSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permissions = "dh.command.holograms.create",
-			usage = "/dh hologram create <name> [-l:world:x:y:z] [content]",
+			usage = "/dh hologram create <name> [-l:world:x:y:z] [--center] [content]",
 			description = "Create new Hologram.",
 			aliases = {"new", "c"},
 			minArgs = 1
