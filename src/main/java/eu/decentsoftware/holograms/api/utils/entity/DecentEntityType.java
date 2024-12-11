@@ -85,7 +85,7 @@ public final class DecentEntityType {
         }
         XEntityType entityType = ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
         if (entityType == null) {
-            entityType = XEntityType.of(string);
+            entityType = XEntityType.of(string).orElse(null);
         }
         if (entityType != null && isAllowed(entityType)) {
             return entityType.get();
