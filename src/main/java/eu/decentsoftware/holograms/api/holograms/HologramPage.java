@@ -158,10 +158,7 @@ public class HologramPage extends FlagHolder {
      * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      */
     public boolean addLine(@NonNull HologramLine line) {
-        lines.add(line);
-        parent.getViewerPlayers(this.index).forEach(line::show);
-        realignLines();
-        return true;
+        return insertLine(size(), line);
     }
 
     /**
