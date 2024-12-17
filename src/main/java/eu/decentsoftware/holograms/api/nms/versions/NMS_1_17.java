@@ -181,12 +181,12 @@ public class NMS_1_17 extends NMS {
         }
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-			if (Version.afterOrEqual(Version.v1_21_R2)) {
-				DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "am").getValue(null);
-				DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aO").getValue(null);
-				DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aP").getValue(null);
+            if (Version.afterOrEqual(Version.v1_21_R2)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "am").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aO").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aP").getValue(null);
                 DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bJ").getValue(null);
-			} else if (Version.afterOrEqual(Version.v1_21_R1)) {
+            } else if (Version.afterOrEqual(Version.v1_21_R1)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "ap").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aQ").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
