@@ -219,4 +219,19 @@ public class ReflectionUtil {
         }
     }
 
+    /**
+     * Check if a class exists.
+     *
+     * @param classPath The class path.
+     * @return True if the class exists, false otherwise.
+     */
+    public static boolean checkClassExists(final @NotNull String classPath) {
+        try {
+            Class.forName(classPath);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
 }

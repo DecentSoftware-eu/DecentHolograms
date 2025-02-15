@@ -8,7 +8,6 @@ import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,6 +40,7 @@ import java.util.function.Function;
 @UtilityClass
 public final class SkullUtils {
 
+	private static final String RESOLVABLE_PROFILE_CLASS_PATH = "net.minecraft.world.item.component.ResolvableProfile";
 	private static Field PROFILE_FIELD;
 	private static Method SET_PROFILE_METHOD;
 	private static boolean INITIALIZED = false;
@@ -53,11 +53,13 @@ public final class SkullUtils {
 
 	static {
 		try {
-			Class<?> resolvableProfileClass = ReflectionUtil.getNMClass("world.item.component.ResolvableProfile");
-			RESOLVABLE_PROFILE_CONSTRUCTOR = resolvableProfileClass == null ? null : resolvableProfileClass.getConstructor(GameProfile.class);
+			if (ReflectionUtil.checkClassExists(RESOLVABLE_PROFILE_CLASS_PATH)) {
+				Class<?> resolvableProfileClass = ReflectionUtil.getClass(RESOLVABLE_PROFILE_CLASS_PATH);
+				RESOLVABLE_PROFILE_CONSTRUCTOR = resolvableProfileClass == null ? null : resolvableProfileClass.getConstructor(GameProfile.class);
 
-			// find the game profile field in the resolvable profile class
-			GAME_PROFILE_FIELD_RESOLVABLE_PROFILE = ReflectionUtil.findField(resolvableProfileClass, GameProfile.class);
+				// find the game profile field in the resolvable profile class
+				GAME_PROFILE_FIELD_RESOLVABLE_PROFILE = ReflectionUtil.findField(resolvableProfileClass, GameProfile.class);
+			}
 		} catch ( NoSuchMethodException ignored) {
 			// old version, no resolvable profile class.
 		}
@@ -76,7 +78,6 @@ public final class SkullUtils {
 			if (!(meta instanceof SkullMeta)) {
 				return null;
 			}
-			// private ResolvableProfile profile;
 
 			if (PROFILE_FIELD == null) {
 				PROFILE_FIELD = meta.getClass().getDeclaredField("profile");
