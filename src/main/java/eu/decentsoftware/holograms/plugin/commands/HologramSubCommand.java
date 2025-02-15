@@ -19,8 +19,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @CommandInfo(
@@ -293,7 +295,7 @@ public class HologramSubCommand extends DecentCommand {
 
 	@CommandInfo(
 			permissions = "dh.command.holograms.create",
-			usage = "/dh hologram create <name> [-l:world:x:y:z] [content]",
+			usage = "/dh hologram create <name> [-l:world:x:y:z] [--center] [content]",
 			description = "Create new Hologram.",
 			aliases = {"new", "c"},
 			minArgs = 1
@@ -317,18 +319,31 @@ public class HologramSubCommand extends DecentCommand {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, hologramName);
 					return true;
 				}
-
-				// Look for the optional location argument.
-				// Format: -l:world:x:y:z
-				boolean containsLocation = false;
+				
 				Location location = null;
-				if (args.length >= 2 && args[1].toLowerCase().startsWith("-l:")) {
-					String locationString = args[1].substring(3);
-					location = LocationUtils.asLocation(locationString);
-					containsLocation = location != null;
+				boolean centerHologram = false;
+				
+				List<String> contentArgs = new ArrayList<>();
+				
+				// Iterate through the args to find -l:<world>:<x>:<y>:<z> and/or --center.
+				// If found, set values and skip arg, else add arg to content List.
+				for (int i = 1; i < args.length; i++) {
+					if (args[i].toLowerCase(Locale.ROOT).startsWith("-l:")) {
+						String locationString = args[i].substring(3);
+						location = LocationUtils.asLocation(locationString);
+						
+						// Valid Location, skip this arg.
+						if (location != null)
+							continue;
+					} else if (args[i].equalsIgnoreCase("--center")) {
+						centerHologram = true;
+						continue;
+					}
+					
+					contentArgs.add(args[i]);
 				}
-
-				if (!(sender instanceof Player) && !containsLocation) {
+				
+				if (!(sender instanceof Player) && location == null) {
 					Lang.ONLY_PLAYER.send(sender);
 					return true;
 				} else {
@@ -336,10 +351,17 @@ public class HologramSubCommand extends DecentCommand {
 						final Player player = (Player) sender;
 						location = Settings.HOLOGRAMS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
 					}
+					
+					if (centerHologram) {
+						int x = (int) location.getX();
+						int z = (int) location.getZ();
+						location.setX(x > location.getX() ? x - 0.5d : x + 0.5d);
+						location.setZ(z > location.getZ() ? z - 0.5d : z + 0.5d);
+					}
 				}
 
 				// Get the content of the line.
-				final String content = Validator.getLineContent(args, containsLocation ? 2 : 1);
+				final String content = Validator.getLineContent(contentArgs.toArray(new String[0]), 0);
 				// Create the hologram.
 				final Hologram hologram = new Hologram(hologramName, location);
 				// Add the first line to the hologram.
