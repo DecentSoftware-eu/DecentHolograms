@@ -158,10 +158,7 @@ public class HologramPage extends FlagHolder {
      * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
      */
     public boolean addLine(@NonNull HologramLine line) {
-        lines.add(line);
-        parent.getViewerPlayers(this.index).forEach(line::show);
-        realignLines();
-        return true;
+        return insertLine(size(), line);
     }
 
     /**
@@ -173,7 +170,7 @@ public class HologramPage extends FlagHolder {
      * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
-        if (index < 0 || index >= size()) {
+        if (index < 0 || index > size()) {
             return false;
         }
         lines.add(index, line);
