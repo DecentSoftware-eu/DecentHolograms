@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -257,6 +258,22 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     /**
+     * Creates a FileConfig if saveToFile is set to true
+     *
+     * @param saveToFile Whether the hologram should be saved to a file.
+     * @param name       The name of the hologram.
+     * @return
+     */
+    private static @Nullable FileConfig createConfig(final boolean saveToFile, final String name) {
+        FileConfig conf = null;
+
+        if (saveToFile)
+            conf = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name));
+
+        return conf;
+    }
+
+    /**
      * Creates a new hologram with the given name and location.
      *
      * @param name       The name of the hologram.
@@ -265,7 +282,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @see eu.decentsoftware.holograms.api.DHAPI#createHologram(String, Location, boolean)
      */
     public Hologram(@NonNull String name, @NonNull Location location, boolean saveToFile) {
-        this(name, location, new FileConfig(DECENT_HOLOGRAMS.getPlugin(), String.format("holograms/%s.yml", name)), true, saveToFile);
+        this(name, location, createConfig(saveToFile, name), true, saveToFile);
     }
 
     /**
@@ -300,7 +317,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param enabled    Whether the hologram should be enabled.
      * @param saveToFile Whether the hologram should be saved to a file.
      */
-    public Hologram(@NonNull String name, @NonNull Location location, @NonNull FileConfig config, boolean enabled, boolean saveToFile) {
+    public Hologram(@NonNull String name, @NonNull Location location, @Nullable FileConfig config, boolean enabled, boolean saveToFile) {
         super(location);
         this.config = config;
         this.enabled = enabled;
@@ -358,7 +375,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void delete() {
         super.delete();
-        config.delete();
+
+        if (config != null)
+            config.delete();
     }
 
     /**
