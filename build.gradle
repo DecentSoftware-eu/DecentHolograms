@@ -34,15 +34,18 @@ dependencies {
 java {
     withJavadocJar()
     withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 
-tasks.compileJava {
+compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
     options.encoding = "UTF-8"
 }
 
-tasks.processResources {
+processResources {
     def props = [version: project.version, description: project.description]
     inputs.properties(props)
     filteringCharset = "UTF-8"
@@ -51,7 +54,7 @@ tasks.processResources {
     }
 }
 
-tasks.shadowJar {
+shadowJar {
     archiveClassifier.set("")
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
