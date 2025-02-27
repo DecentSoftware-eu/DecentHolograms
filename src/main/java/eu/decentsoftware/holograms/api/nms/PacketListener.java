@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.nms;
 
-import com.google.common.collect.Iterables;
 import eu.decentsoftware.holograms.api.utils.Log;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoop;
@@ -35,8 +34,9 @@ public class PacketListener {
             try {
                 pipeline.addBefore("packet_handler", IDENTIFIER, new PacketHandlerCustom(player));
             } catch (NoSuchElementException e) {
-                List<String> names = pipeline.names();
-                if (DEFAULT_PIPELINE_TAIL.equals(Iterables.getFirst(names, null))) { // player disconnecting
+                List<String> handlers = pipeline.names();
+                if (handlers.size() == 1 && handlers.iterator().next().equals(DEFAULT_PIPELINE_TAIL)) {
+                    // player disconnecting
                     return;
                 }
                 throw e;
