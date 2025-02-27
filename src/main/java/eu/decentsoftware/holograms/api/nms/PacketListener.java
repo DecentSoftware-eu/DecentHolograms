@@ -8,11 +8,13 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 public class PacketListener {
 
     private static final String IDENTIFIER = "DecentHolograms";
+    private static final String DEFAULT_PIPELINE_TAIL = "DefaultChannelPipeline$TailContext#0";
     private final NMS nms;
 
     public PacketListener() {
@@ -29,7 +31,16 @@ public class PacketListener {
             if (pipeline.get(IDENTIFIER) != null) {
                 pipeline.remove(IDENTIFIER);
             }
-            pipeline.addBefore("packet_handler", IDENTIFIER, new PacketHandlerCustom(player));
+            try {
+                pipeline.addBefore("packet_handler", IDENTIFIER, new PacketHandlerCustom(player));
+            } catch (NoSuchElementException e) {
+                List<String> handlers = pipeline.names();
+                if (handlers.size() == 1 && handlers.iterator().next().equals(DEFAULT_PIPELINE_TAIL)) {
+                    // player disconnecting
+                    return;
+                }
+                throw e;
+            }
         });
     }
 
