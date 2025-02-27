@@ -97,107 +97,115 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @SuppressWarnings("unchecked")
     @NonNull
     public static Hologram fromFile(final @NotNull String filePath) throws LocationParseException, IllegalArgumentException {
-        final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + filePath);
-        final String fileName = new File(filePath).getName();
+        Hologram hologram = null;
+        try {
+            final FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "holograms/" + filePath);
+            final String fileName = new File(filePath).getName();
 
-        // Parse hologram name
-        String name;
-        if (fileName.toLowerCase().startsWith("hologram_") && fileName.length() > "hologram_".length()) {
-            name = fileName.substring("hologram_".length(), fileName.length() - 4);
-        } else {
-            name = fileName.substring(0, fileName.length() - 4);
-        }
-
-        if (name.isEmpty()) {
-            // This shouldn't happen when loading holograms from files.
-            throw new IllegalArgumentException("Hologram name cannot be null or empty.");
-        }
-
-        if (Hologram.getCachedHologramNames().contains(name)) {
-            throw new IllegalArgumentException("Hologram with name '" + name + "' already exists.");
-        }
-
-        // Get hologram location
-        String locationString = config.getString("location");
-        Location location = LocationUtils.asLocationE(locationString);
-
-        boolean enabled = true;
-        if (config.isBoolean("enabled")) {
-            enabled = config.getBoolean("enabled");
-        }
-
-        Hologram hologram = new Hologram(name, location, config, enabled);
-        if (config.isString("permission")) {
-            hologram.setPermission(config.getString("permission"));
-        }
-        hologram.setDisplayRange(config.getInt("display-range", Settings.DEFAULT_DISPLAY_RANGE));
-        hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE));
-        hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL));
-        hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-        if (config.isBoolean("down-origin")) {
-            hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN));
-        }
-
-        if (!config.contains("pages") && config.contains("lines")) {
-            // Old Config
-            HologramPage page = hologram.getPage(0);
-            Set<String> keysLines = config.getConfigurationSection("lines").getKeys(false);
-            for (int j = 1; j <= keysLines.size(); j++) {
-                String path = "lines." + j;
-                HologramLine line = HologramLine.fromFile(config.getConfigurationSection(path), page, page.getNextLineLocation());
-                page.addLine(line);
-            }
-            config.set("lines", null);
-            hologram.save();
-            return hologram;
-        }
-
-        // New Config
-        boolean firstPage = true;
-        for (Map<?, ?> map : config.getMapList("pages")) {
-            HologramPage page;
-            if (firstPage) {
-                page = hologram.getPage(0);
-                firstPage = false;
+            // Parse hologram name
+            String name;
+            if (fileName.toLowerCase().startsWith("hologram_") && fileName.length() > "hologram_".length()) {
+                name = fileName.substring("hologram_".length(), fileName.length() - 4);
             } else {
-                page = hologram.addPage();
+                name = fileName.substring(0, fileName.length() - 4);
             }
 
-            // Load click actions
-            if (map.containsKey("actions")) {
-                Map<String, List<String>> actionsMap = (Map<String, List<String>>) map.get("actions");
-                for (ClickType clickType : ClickType.values()) {
-                    if (actionsMap.containsKey(clickType.name())) {
-                        List<String> clickTypeActions = actionsMap.get(clickType.name());
-                        for (String clickTypeAction : clickTypeActions) {
-                            try {
-                                page.addAction(clickType, new Action(clickTypeAction));
-                            } catch (Exception e) {
-                                Log.warn("Failed to parse action '%s' for hologram '%s' at page %s! Skipping...",
-                                        e, clickTypeAction, hologram.getName(), page.getIndex());
+            if (name.isEmpty()) {
+                // This shouldn't happen when loading holograms from files.
+                throw new IllegalArgumentException("Hologram name cannot be null or empty.");
+            }
+
+            if (Hologram.getCachedHologramNames().contains(name)) {
+                throw new IllegalArgumentException("Hologram with name '" + name + "' already exists.");
+            }
+
+            // Get hologram location
+            String locationString = config.getString("location");
+            Location location = LocationUtils.asLocationE(locationString);
+
+            boolean enabled = true;
+            if (config.isBoolean("enabled")) {
+                enabled = config.getBoolean("enabled");
+            }
+
+            hologram = new Hologram(name, location, config, enabled);
+            if (config.isString("permission")) {
+                hologram.setPermission(config.getString("permission"));
+            }
+            hologram.setDisplayRange(config.getInt("display-range", Settings.DEFAULT_DISPLAY_RANGE));
+            hologram.setUpdateRange(config.getInt("update-range", Settings.DEFAULT_UPDATE_RANGE));
+            hologram.setUpdateInterval(config.getInt("update-interval", Settings.DEFAULT_UPDATE_INTERVAL));
+            hologram.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
+            if (config.isBoolean("down-origin")) {
+                hologram.setDownOrigin(config.getBoolean("down-origin", Settings.DEFAULT_DOWN_ORIGIN));
+            }
+
+            if (!config.contains("pages") && config.contains("lines")) {
+                // Old Config
+                HologramPage page = hologram.getPage(0);
+                Set<String> keysLines = config.getConfigurationSection("lines").getKeys(false);
+                for (int j = 1; j <= keysLines.size(); j++) {
+                    String path = "lines." + j;
+                    HologramLine line = HologramLine.fromFile(config.getConfigurationSection(path), page, page.getNextLineLocation());
+                    page.addLine(line);
+                }
+                config.set("lines", null);
+                hologram.save();
+                return hologram;
+            }
+
+            // New Config
+            boolean firstPage = true;
+            for (Map<?, ?> map : config.getMapList("pages")) {
+                HologramPage page;
+                if (firstPage) {
+                    page = hologram.getPage(0);
+                    firstPage = false;
+                } else {
+                    page = hologram.addPage();
+                }
+
+                // Load click actions
+                if (map.containsKey("actions")) {
+                    Map<String, List<String>> actionsMap = (Map<String, List<String>>) map.get("actions");
+                    for (ClickType clickType : ClickType.values()) {
+                        if (actionsMap.containsKey(clickType.name())) {
+                            List<String> clickTypeActions = actionsMap.get(clickType.name());
+                            for (String clickTypeAction : clickTypeActions) {
+                                try {
+                                    page.addAction(clickType, new Action(clickTypeAction));
+                                } catch (Exception e) {
+                                    Log.warn("Failed to parse action '%s' for hologram '%s' at page %s! Skipping...",
+                                            e, clickTypeAction, hologram.getName(), page.getIndex());
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // Load lines
-            if (map.containsKey("lines")) {
-                for (Map<?, ?> lineMap : (List<Map<?, ?>>) map.get("lines")) {
-                    Map<String, Object> values = null;
-                    try {
-                        values = (Map<String, Object>) lineMap;
-                    } catch (Exception ignored) {
-                        // Ignore
+                // Load lines
+                if (map.containsKey("lines")) {
+                    for (Map<?, ?> lineMap : (List<Map<?, ?>>) map.get("lines")) {
+                        Map<String, Object> values = null;
+                        try {
+                            values = (Map<String, Object>) lineMap;
+                        } catch (Exception ignored) {
+                            // Ignore
+                        }
+                        if (values == null) continue;
+                        HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
+                        page.addLine(line);
                     }
-                    if (values == null) continue;
-                    HologramLine line = HologramLine.fromMap(values, page, page.getNextLineLocation());
-                    page.addLine(line);
                 }
             }
+            hologram.setFacing((float) config.getDouble("facing", 0.0f));
+            return hologram;
+        } catch (Exception e) {
+            if (hologram != null) {
+                hologram.destroy();
+            }
+            throw e;
         }
-        hologram.setFacing((float) config.getDouble("facing", 0.0f));
-        return hologram;
     }
 
     /*
