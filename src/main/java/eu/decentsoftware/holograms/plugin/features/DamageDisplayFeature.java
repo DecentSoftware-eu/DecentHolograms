@@ -32,6 +32,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 	private boolean displayForMobs = true;
 	private boolean zeroDamage = false;
 	private double heightOffset = 0.0;
+	private boolean damageShortened = false;
 
 	public DamageDisplayFeature() {
 		super("damage_display");
@@ -47,6 +48,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		duration = config.getInt("damage-display.duration", duration);
 		appearance = config.getString("damage-display.appearance", appearance);
 		criticalAppearance = config.getString("damage-display.critical-appearance", criticalAppearance);
+		damageShortened = config.getBoolean("damage-display.critical-appearance.short");
 
 		heightOffset = config.getDouble("healing-display.height", heightOffset);
 
@@ -116,7 +118,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		} else {
 			currentAppearance = this.appearance;
 		}
-		String text = currentAppearance.replace("{damage}", FeatureCommons.formatNumber(damage));
+		String text = currentAppearance.replace("{damage}", (damageShortened ? FeatureCommons.formatNumberShort(damage) : FeatureCommons.formatNumber(damage)));
 		PLUGIN.getHologramManager().spawnTemporaryHologramLine(location, text, duration);
 	}
 
