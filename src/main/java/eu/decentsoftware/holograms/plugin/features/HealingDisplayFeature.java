@@ -40,11 +40,9 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 		enabled = config.getBoolean("healing-display.enabled", enabled);
 		duration = config.getInt("healing-display.duration", duration);
 		appearance = config.getString("healing-display.appearance", appearance);
-
 		heightOffset = config.getDouble("healing-display.height", heightOffset);
-
-		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
-		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
+		displayForPlayers = config.getBoolean("healing-display.players", displayForPlayers);
+		displayForMobs = config.getBoolean("healing-display.mobs", displayForMobs);
 
 		if (enabled) {
 			this.enable();

@@ -47,9 +47,7 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 		duration = config.getInt("damage-display.duration", duration);
 		appearance = config.getString("damage-display.appearance", appearance);
 		criticalAppearance = config.getString("damage-display.critical-appearance", criticalAppearance);
-
-		heightOffset = config.getDouble("healing-display.height", heightOffset);
-
+		heightOffset = config.getDouble("damage-display.height", heightOffset);
 		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
 		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
 		zeroDamage = config.getBoolean("damage-display.zero-damage", zeroDamage);
