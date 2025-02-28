@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.holograms;
 
 import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
@@ -155,7 +156,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param line New line.
      * @return Boolean whether the operation was successful.
-     * @see eu.decentsoftware.holograms.api.DHAPI#addHologramLine(HologramPage, String)
+     * @see DHAPI#addHologramLine(HologramPage, String)
      */
     public boolean addLine(@NonNull HologramLine line) {
         return insertLine(size(), line);
@@ -167,7 +168,7 @@ public class HologramPage extends FlagHolder {
      * @param index Index of the new line.
      * @param line  New line.
      * @return Boolean whether the operation was successful.
-     * @see eu.decentsoftware.holograms.api.DHAPI#insertHologramLine(Hologram, int, String)
+     * @see DHAPI#insertHologramLine(Hologram, int, String)
      */
     public boolean insertLine(int index, @NonNull HologramLine line) {
         if (index < 0 || index > size()) {
@@ -185,7 +186,7 @@ public class HologramPage extends FlagHolder {
      * @param index   Index of the line.
      * @param content Line's new content.
      * @return Boolean whether the operation was successful.
-     * @see eu.decentsoftware.holograms.api.DHAPI#setHologramLine(HologramPage, int, String)
+     * @see DHAPI#setHologramLine(HologramPage, int, String)
      */
     public boolean setLine(int index, @NonNull String content) {
         HologramLine line = getLine(index);
@@ -210,7 +211,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param index Index of the line.
      * @return The HologramLine or null if it wasn't found.
-     * @see eu.decentsoftware.holograms.api.DHAPI#getHologramLine(HologramPage, int)
+     * @see DHAPI#getHologramLine(HologramPage, int)
      */
     public HologramLine getLine(int index) {
         if (index < 0 || index >= size()) {
@@ -224,7 +225,7 @@ public class HologramPage extends FlagHolder {
      *
      * @param index Index of the line.
      * @return The removed line or null if it wasn't found.
-     * @see eu.decentsoftware.holograms.api.DHAPI#removeHologramLine(HologramPage, int)
+     * @see DHAPI#removeHologramLine(HologramPage, int)
      */
     public HologramLine removeLine(int index) {
         if (index < 0 || index >= size()) {
