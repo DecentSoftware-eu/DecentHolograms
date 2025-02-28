@@ -38,7 +38,6 @@ processResources {
 
 shadowJar {
     archiveClassifier.set("")
-    archiveFileName.set("DecentHolograms-${version}.jar")
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
