@@ -2,7 +2,11 @@ package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
-import eu.decentsoftware.holograms.api.commands.*;
+import eu.decentsoftware.holograms.api.commands.CommandBase;
+import eu.decentsoftware.holograms.api.commands.CommandHandler;
+import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.DecentCommand;
+import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.utils.Common;
 
