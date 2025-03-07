@@ -1,9 +1,9 @@
 plugins {
     id "maven-publish"
-    id 'com.gradleup.shadow' version '8.3.6'
+    id "com.gradleup.shadow" version "8.3.6"
 }
 
-version = "2.8.15"
+version = "2.9.0"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
 repositories {
@@ -37,7 +37,7 @@ processResources {
 }
 
 shadowJar {
-    archiveClassifier.set("")
+    archiveFileName.set("DecentHolograms-${version}.jar")
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
