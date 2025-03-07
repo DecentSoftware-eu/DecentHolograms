@@ -12,6 +12,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * @deprecated For removal.
+ */
+@Deprecated
 @SuppressWarnings("unused")
 public class NMS_1_8 extends NMS {
 

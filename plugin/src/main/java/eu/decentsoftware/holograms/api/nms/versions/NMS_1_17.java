@@ -25,6 +25,10 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @deprecated For removal.
+ */
+@Deprecated
 public class NMS_1_17 extends NMS {
 
     // UTILITY

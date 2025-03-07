@@ -20,6 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+/**
+ * @deprecated For removal.
+ */
+@Deprecated
 public abstract class NMS {
 
     protected static final Map<String, Pair<Integer, Float>> mapEntityTypes = Maps.newHashMap();

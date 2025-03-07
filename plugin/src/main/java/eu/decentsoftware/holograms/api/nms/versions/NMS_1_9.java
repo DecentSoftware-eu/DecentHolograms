@@ -21,6 +21,10 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @deprecated For removal.
+ */
+@Deprecated
 public class NMS_1_9 extends NMS {
 
     private static final int ARMOR_STAND_ID = Version.before(13) ? 30 : 1;
