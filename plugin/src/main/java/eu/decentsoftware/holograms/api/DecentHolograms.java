@@ -8,7 +8,6 @@ import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.listeners.PlayerListener;
 import eu.decentsoftware.holograms.api.listeners.WorldListener;
 import eu.decentsoftware.holograms.api.nms.NMS;
-import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
@@ -19,6 +18,8 @@ import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
+import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
+import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import lombok.Getter;
@@ -46,11 +47,11 @@ public final class DecentHolograms {
 
     private final JavaPlugin plugin;
     private NmsAdapter nmsAdapter;
+    private NmsPacketListenerService nmsPacketListenerService;
     private HologramManager hologramManager;
     private CommandManager commandManager;
     private FeatureManager featureManager;
     private AnimationManager animationManager;
-    private PacketListener packetListener;
     private Ticker ticker;
     private boolean updateAvailable;
 
@@ -70,7 +71,8 @@ public final class DecentHolograms {
         this.commandManager = new CommandManager();
         this.featureManager = new FeatureManager();
         this.animationManager = new AnimationManager(this);
-        this.packetListener = new PacketListener();
+        DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
+        this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(this), this.plugin);
@@ -83,7 +85,7 @@ public final class DecentHolograms {
     }
 
     void disable() {
-        this.packetListener.destroy();
+        this.nmsPacketListenerService.shutdown();
         this.featureManager.destroy();
         this.hologramManager.destroy();
         this.animationManager.destroy();
