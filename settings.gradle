@@ -18,4 +18,5 @@ pluginManagement {
 
 rootProject.name = 'DecentHolograms'
 
+include ':shared'
 include ':plugin'

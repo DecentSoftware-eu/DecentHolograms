@@ -8,6 +8,12 @@ subprojects {
         maven { url = "https://repo.codemc.io/repository/nms/" }
     }
 
+    dependencies {
+        if (!project.path.endsWith(":shared")) {
+            implementation project(":shared")
+        }
+    }
+
     java {
         withSourcesJar()
         toolchain {
