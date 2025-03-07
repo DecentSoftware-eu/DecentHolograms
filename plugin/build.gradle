@@ -12,6 +12,13 @@ repositories {
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
 }
 
+configurations {
+    // Make compileOnly dependencies available in tests
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
 dependencies {
     implementation project(":nms")
     implementation project(":nms:nms-common")
@@ -28,6 +35,14 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:1.18.36"
     compileOnly "org.jetbrains:annotations:26.0.2"
     annotationProcessor "org.jetbrains:annotations:26.0.2"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.12.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.12.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.12.0"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.12.0"
+    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "org.mockito:mockito-inline:4.11.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:4.11.0"
 }
 
 processResources {
@@ -60,4 +75,8 @@ publishing {
             artifactId = "decentholograms"
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
