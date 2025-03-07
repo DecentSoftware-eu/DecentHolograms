@@ -21,7 +21,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
             EntityPacketsBuilder.create()
                     .withSpawnEntityLiving(entityId, content, offsetPosition(position))
                     .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                            .withNoGravity()
+                            .withSilent()
                             .toWatchableObjects())
                     .sendTo(player);
         } else {
@@ -34,7 +34,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
                             .toWatchableObjects())
                     .withSpawnEntity(entityId, content, offsetPosition(position))
                     .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                            .withNoGravity()
+                            .withSilent()
                             .toWatchableObjects())
                     .withPassenger(armorStandEntityId, entityId)
                     .sendTo(player);

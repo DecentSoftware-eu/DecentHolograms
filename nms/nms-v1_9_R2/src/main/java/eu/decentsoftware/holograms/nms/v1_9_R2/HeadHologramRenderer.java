@@ -26,7 +26,6 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
                 .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, offsetPosition(position))
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
                         .withInvisible()
-                        .withNoGravity()
                         .withArmorStandProperties(small, true)
                         .toWatchableObjects())
                 .withHelmet(entityId, content)

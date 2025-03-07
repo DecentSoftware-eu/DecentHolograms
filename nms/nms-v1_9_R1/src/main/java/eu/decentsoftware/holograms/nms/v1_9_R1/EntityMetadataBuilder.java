@@ -41,7 +41,7 @@ class EntityMetadataBuilder {
         /*
          * Armor Stand Properties:
          * 0x01 - Small
-         * 0x02 - Unused
+         * 0x02 - Has Gravity
          * 0x04 - Has Arms
          * 0x08 - Remove Baseplate
          * 0x10 - Marker (Zero bounding box)
@@ -73,8 +73,8 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withNoGravity() {
-        this.watchableObjects.add(EntityMetadataType.ENTITY_HAS_NO_GRAVITY.construct(true));
+    EntityMetadataBuilder withSilent() {
+        this.watchableObjects.add(EntityMetadataType.ENTITY_SILENT.construct(true));
         return this;
     }
 

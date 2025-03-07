@@ -19,7 +19,6 @@ class ClickableHologramRenderer implements NmsClickableHologramRenderer {
                 .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, position)
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
                         .withInvisible()
-                        .withNoGravity()
                         .withArmorStandProperties(false, false)
                         .toWatchableObjects())
                 .sendTo(player);

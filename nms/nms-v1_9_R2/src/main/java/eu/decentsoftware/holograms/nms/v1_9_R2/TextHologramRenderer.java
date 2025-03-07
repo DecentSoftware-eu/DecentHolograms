@@ -19,7 +19,6 @@ class TextHologramRenderer implements NmsTextHologramRenderer {
                 .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position))
                 .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
                         .withInvisible()
-                        .withNoGravity()
                         .withArmorStandProperties(true, true)
                         .withCustomName(content)
                         .toWatchableObjects())
