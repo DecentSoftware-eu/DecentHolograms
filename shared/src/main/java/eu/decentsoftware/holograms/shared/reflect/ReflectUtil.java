@@ -5,7 +5,8 @@ import eu.decentsoftware.holograms.shared.DecentHologramsException;
 
 import java.lang.reflect.Field;
 
-public final class ReflectUtil {
+// Never make this class final! (mocking)
+public class ReflectUtil {
 
     private ReflectUtil() {
         throw new IllegalAccessError("Utility class");
@@ -38,6 +39,19 @@ public final class ReflectUtil {
             throw new DecentHologramsException("Unexpected error occurred while getting value of field " + fieldName
                     + " in class " + clazz.getName(), e);
         }
+    }
+
+    /**
+     * Utility method to get a Class by name.
+     * This makes testing easier because it's not possible to mock {@link Class#forName(String)}.
+     *
+     * @param className The class name.
+     * @return The class.
+     * @throws ClassNotFoundException If the class does not exist.
+     * @see Class#forName(String)
+     */
+    public static Class<?> getClass(String className) throws ClassNotFoundException {
+        return Class.forName(className);
     }
 
 }

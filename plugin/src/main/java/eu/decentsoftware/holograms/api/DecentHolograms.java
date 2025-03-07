@@ -12,10 +12,15 @@ import eu.decentsoftware.holograms.api.nms.PacketListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
+import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
+import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
+import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -40,6 +45,7 @@ import java.util.logging.Logger;
 public final class DecentHolograms {
 
     private final JavaPlugin plugin;
+    private NmsAdapter nmsAdapter;
     private HologramManager hologramManager;
     private CommandManager commandManager;
     private FeatureManager featureManager;
@@ -53,6 +59,7 @@ public final class DecentHolograms {
     }
 
     void enable() {
+        initializeNmsAdapter();
         NMS.init();
         Settings.reload();
         Lang.reload();
@@ -104,6 +111,20 @@ public final class DecentHolograms {
         this.featureManager.reload();
 
         EventFactory.fireReloadEvent();
+    }
+
+    private void initializeNmsAdapter() {
+        try {
+            nmsAdapter = new NmsAdapterFactory().createNmsAdapter(Version.CURRENT);
+            Log.info("Initialized NMS adapter for %s (%s).", Version.CURRENT.name(), Version.CURRENT_MINECRAFT_VERSION);
+            return;
+        } catch (DecentHologramsNmsException e) {
+            Log.error("Error loading an NMS adapter for " + Version.CURRENT + ": " + e.getMessage(), e);
+        } catch (Exception e) {
+            Log.error("Unknown error loading an NMS adapter for " + Version.CURRENT, e);
+        }
+        Log.error("The plugin will now be disabled.");
+        Bukkit.getPluginManager().disablePlugin(plugin);
     }
 
     private void setupMetrics() {
