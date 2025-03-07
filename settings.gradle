@@ -20,3 +20,5 @@ rootProject.name = 'DecentHolograms'
 
 include ':shared'
 include ':plugin'
+include ':nms'
+include ':nms:nms-common'
