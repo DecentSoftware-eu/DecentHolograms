@@ -1,8 +1,8 @@
 dependencies {
-    compileOnly "org.spigotmc:spigot:1.13-R0.1-SNAPSHOT"
+    compileOnly(libs.spigot)
 
-    compileOnly "org.projectlombok:lombok:1.18.34"
-    annotationProcessor "org.projectlombok:lombok:1.18.34"
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 test {
