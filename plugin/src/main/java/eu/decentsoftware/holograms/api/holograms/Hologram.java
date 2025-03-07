@@ -8,7 +8,6 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
-import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
@@ -20,6 +19,8 @@ import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
 import eu.decentsoftware.holograms.event.HologramClickEvent;
+import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
+import eu.decentsoftware.holograms.shared.DecentPosition;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -250,6 +252,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
     private final AtomicInteger tickCounter;
+    private final List<NmsClickableHologramRenderer> clickableHologramRenderers = new ArrayList<>();
 
     /*
      *	Constructors
@@ -801,13 +804,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
         // Spawn clickable entities
-        NMS nms = NMS.getInstance();
         int amount = (int) (page.getHeight() / 2) + 1;
         Location location = getLocation().clone();
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
-            int id = page.getClickableEntityId(i);
-            nms.showFakeEntityArmorStand(player, location, id, true, false, true);
+            NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
+            renderer.display(player, DecentPosition.fromBukkitLocation(location));
             location.add(0, 1.8, 0);
         }
     }
@@ -825,8 +827,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
         // De-spawn clickable entities
-        NMS nms = NMS.getInstance();
-        page.getClickableEntityIds().forEach(id -> nms.hideFakeEntities(player, id));
+        page.getClickableEntityRenderers().forEach(renderer -> renderer.hide(player));
     }
 
     public void hideClickableEntitiesAll() {
@@ -842,13 +843,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
         // Spawn clickable entities
-        NMS nms = NMS.getInstance();
         int amount = (int) (page.getHeight() / 2) + 1;
         Location location = getLocation().clone();
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
-            int id = page.getClickableEntityId(i);
-            nms.teleportFakeEntity(player, location, id);
+            NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
+            renderer.move(player, DecentPosition.fromBukkitLocation(location));
             location.add(0, 1.8, 0);
         }
     }

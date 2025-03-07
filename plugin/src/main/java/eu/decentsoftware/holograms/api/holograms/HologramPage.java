@@ -2,12 +2,13 @@ package eu.decentsoftware.holograms.api.holograms;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
-import eu.decentsoftware.holograms.api.nms.NMS;
+import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -32,7 +33,7 @@ public class HologramPage extends FlagHolder {
 
     private int index;
     private final Hologram parent;
-    private final List<Integer> clickableEntityIds = new ArrayList<>();
+    private final List<NmsClickableHologramRenderer> clickableEntityRenderers = new ArrayList<>();
     private final List<HologramLine> lines = new ArrayList<>();
     private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
@@ -287,22 +288,38 @@ public class HologramPage extends FlagHolder {
         return !parent.hasFlag(EnumFlag.DISABLE_ACTIONS) && hasActions();
     }
 
+    /**
+     * @deprecated For removal.
+     */
+    @Deprecated
     public int getClickableEntityId(int index) {
-        if (index >= clickableEntityIds.size()) {
-            clickableEntityIds.add(NMS.getInstance().getFreeEntityId());
+        return getClickableRenderer(index).getEntityId();
+    }
+
+    NmsClickableHologramRenderer getClickableRenderer(int index) {
+        if (index >= clickableEntityRenderers.size()) {
+            clickableEntityRenderers.add(DecentHologramsAPI.get()
+                    .getNmsAdapter()
+                    .getHologramComponentFactory()
+                    .createClickableRenderer());
         }
-        return clickableEntityIds.get(index);
+        return clickableEntityRenderers.get(index);
     }
 
     public boolean hasEntity(final int eid) {
-        return clickableEntityIds.contains(eid) || lines.stream().anyMatch(line -> {
+        for (NmsClickableHologramRenderer clickableEntityRenderer : clickableEntityRenderers) {
+            if (clickableEntityRenderer.getEntityId() == eid) {
+                return true;
+            }
+        }
+        for (HologramLine line : lines) {
             for (int entityId : line.getEntityIds()) {
                 if (entityId == eid) {
                     return true;
                 }
             }
-            return false;
-        });
+        }
+        return false;
     }
 
     public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
