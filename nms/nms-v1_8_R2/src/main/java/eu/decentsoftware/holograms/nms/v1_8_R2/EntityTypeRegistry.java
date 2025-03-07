@@ -17,10 +17,10 @@ final class EntityTypeRegistry {
         register(EntityType.SKELETON, 51, 1.95f);
         register(EntityType.SPIDER, 52, 0.9f);
         register(EntityType.GIANT, 53, 1.8f * 6);
-        register(EntityType.ZOMBIE, 54, 1.8f);
+        register(EntityType.ZOMBIE, 54, 1.95f);
         register(EntityType.SLIME, 55, 0.51000005f);
         register(EntityType.GHAST, 56, 4.0f);
-        register(EntityType.PIG_ZOMBIE, 57, 1.8f);
+        register(EntityType.PIG_ZOMBIE, 57, 1.95f);
         register(EntityType.ENDERMAN, 58, 2.9f);
         register(EntityType.CAVE_SPIDER, 59, 0.5f);
         register(EntityType.SILVERFISH, 60, 0.3f);
@@ -29,7 +29,7 @@ final class EntityTypeRegistry {
         register(EntityType.ENDER_DRAGON, 63, 8.0f);
         register(EntityType.WITHER, 64, 3.5f);
         register(EntityType.BAT, 65, 0.9f);
-        register(EntityType.WITCH, 66, 1.8f);
+        register(EntityType.WITCH, 66, 1.95f);
         register(EntityType.ENDERMITE, 67, 0.3f);
         register(EntityType.GUARDIAN, 68, 0.85f);
         register(EntityType.PIG, 90, 0.9f);
@@ -63,7 +63,7 @@ final class EntityTypeRegistry {
         register(EntityType.ENDER_SIGNAL, 72, 0.25f);
         register(EntityType.THROWN_EXP_BOTTLE, 75, 0.25f);
         register(EntityType.FIREWORK, 76, 0.25f);
-        register(EntityType.LEASH_HITCH, 77, 0.0f);
+        register(EntityType.LEASH_HITCH, 77, 0.5f);
     }
 
     private EntityTypeRegistry() {
