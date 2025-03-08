@@ -444,8 +444,8 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 if (line.getFacing() == prev) {
                     line.setFacing(facing);
                 }
-                page.realignLines();
             });
+            page.realignLines();
         }
     }
 
