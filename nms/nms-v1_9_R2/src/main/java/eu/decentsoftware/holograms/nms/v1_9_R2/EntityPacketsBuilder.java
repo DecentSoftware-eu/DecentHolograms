@@ -40,6 +40,14 @@ class EntityPacketsBuilder {
         }
     }
 
+    EntityPacketsBuilder withSpawnEntityLivingOrObject(int entityId, EntityType type, DecentPosition position) {
+        if (type.isAlive()) {
+            return withSpawnEntityLiving(entityId, type, position);
+        } else {
+            return withSpawnEntity(entityId, type, position);
+        }
+    }
+
     EntityPacketsBuilder withSpawnEntity(int entityId, EntityType type, DecentPosition position) {
         PacketDataSerializerWrapper serializer = prepareSpawnEntityData(entityId, type, position);
         serializer.writeInt(type == EntityType.DROPPED_ITEM ? 1 : 0);

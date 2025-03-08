@@ -17,28 +17,18 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
 
     @Override
     public void display(Player player, DecentPosition position, EntityType content) {
-        if (content.isAlive()) {
-            EntityPacketsBuilder.create()
-                    .withSpawnEntityLiving(entityId, content, offsetPosition(position))
-                    .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                            .withSilent()
-                            .toWatchableObjects())
-                    .sendTo(player);
-        } else {
-            // Non-living entities must be sitting on an armor stand, otherwise they fall
-            EntityPacketsBuilder.create()
-                    .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position))
-                    .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
-                            .withInvisible()
-                            .withArmorStandProperties(true, true)
-                            .toWatchableObjects())
-                    .withSpawnEntity(entityId, content, offsetPosition(position))
-                    .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                            .withSilent()
-                            .toWatchableObjects())
-                    .withPassenger(armorStandEntityId, entityId)
-                    .sendTo(player);
-        }
+        EntityPacketsBuilder.create()
+                .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position))
+                .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
+                        .withInvisible()
+                        .withArmorStandProperties(true, true)
+                        .toWatchableObjects())
+                .withSpawnEntityLivingOrObject(entityId, content, offsetPosition(position))
+                .withEntityMetadata(entityId, EntityMetadataBuilder.create()
+                        .withSilent()
+                        .toWatchableObjects())
+                .withPassenger(armorStandEntityId, entityId)
+                .sendTo(player);
     }
 
     @Override
