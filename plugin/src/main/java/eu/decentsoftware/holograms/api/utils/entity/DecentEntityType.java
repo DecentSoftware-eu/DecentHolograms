@@ -28,6 +28,7 @@ public final class DecentEntityType {
                 XEntityType.AREA_EFFECT_CLOUD,
                 XEntityType.BLOCK_DISPLAY,
                 XEntityType.EVOKER_FANGS,
+                XEntityType.EXPERIENCE_ORB,
                 XEntityType.FALLING_BLOCK,
                 XEntityType.FISHING_BOBBER,
                 XEntityType.GLOW_ITEM_FRAME,
