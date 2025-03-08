@@ -61,6 +61,7 @@ final class EntityTypeRegistry {
         register(EntityType.WITHER_SKULL, 66, 0.3125f);
         register(EntityType.ITEM_FRAME, 71, 0.98f);
         register(EntityType.ENDER_SIGNAL, 72, 0.25f);
+        register(EntityType.SPLASH_POTION, 73, 0.25f);
         register(EntityType.THROWN_EXP_BOTTLE, 75, 0.25f);
         register(EntityType.FIREWORK, 76, 0.25f);
         register(EntityType.LEASH_HITCH, 77, 0.5f);
