@@ -27,11 +27,16 @@ public final class DecentEntityType {
         ENTITY_TYPE_BLACKLIST = Sets.newHashSet(
                 XEntityType.AREA_EFFECT_CLOUD,
                 XEntityType.BLOCK_DISPLAY,
+                XEntityType.CHEST_MINECART,
+                XEntityType.COMMAND_BLOCK_MINECART,
                 XEntityType.EVOKER_FANGS,
                 XEntityType.EXPERIENCE_ORB,
                 XEntityType.FALLING_BLOCK,
+                XEntityType.FIREWORK_ROCKET,
                 XEntityType.FISHING_BOBBER,
+                XEntityType.FURNACE_MINECART,
                 XEntityType.GLOW_ITEM_FRAME,
+                XEntityType.HOPPER_MINECART,
                 XEntityType.INTERACTION,
                 XEntityType.ITEM,
                 XEntityType.ITEM_DISPLAY,
@@ -39,12 +44,20 @@ public final class DecentEntityType {
                 XEntityType.LEASH_KNOT,
                 XEntityType.LIGHTNING_BOLT,
                 XEntityType.MARKER,
+                XEntityType.MINECART,
                 XEntityType.PAINTING,
                 XEntityType.PLAYER,
+                XEntityType.SPAWNER_MINECART,
                 XEntityType.TEXT_DISPLAY,
+                XEntityType.TNT_MINECART,
                 XEntityType.TNT,
                 XEntityType.UNKNOWN
         );
+        for (XEntityType value : XEntityType.getValues()) {
+            if (value.name().endsWith("BOAT")) {
+                ENTITY_TYPE_BLACKLIST.add(value);
+            }
+        }
 
         ENTITY_TYPES.removeIf(ENTITY_TYPE_BLACKLIST::contains);
 
