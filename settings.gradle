@@ -39,4 +39,6 @@ include 'nms:nms-v1_16_R1'
 findProject(':nms:nms-v1_16_R1')?.name = 'nms-v1_16_R1'
 include 'nms:nms-v1_16_R2'
 findProject(':nms:nms-v1_16_R2')?.name = 'nms-v1_16_R2'
+include 'nms:nms-v1_16_R3'
+findProject(':nms:nms-v1_16_R3')?.name = 'nms-v1_16_R3'
 
