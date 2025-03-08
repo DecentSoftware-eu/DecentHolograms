@@ -8,11 +8,9 @@ import org.bukkit.entity.Player;
 class EntityHologramRenderer implements NmsEntityHologramRenderer {
 
     private final int entityId;
-    private final int armorStandEntityId;
 
     EntityHologramRenderer(EntityIdGenerator entityIdGenerator) {
         this.entityId = entityIdGenerator.getFreeEntityId();
-        this.armorStandEntityId = entityIdGenerator.getFreeEntityId();
     }
 
     @Override
@@ -35,16 +33,14 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     @Override
     public void move(Player player, DecentPosition position) {
         EntityPacketsBuilder.create()
-                .withTeleportEntity(armorStandEntityId, offsetPosition(position))
+                .withTeleportEntity(entityId, offsetPosition(position))
                 .sendTo(player);
     }
 
     @Override
     public void hide(Player player) {
         EntityPacketsBuilder.create()
-                .withRemovePassenger(armorStandEntityId)
                 .withRemoveEntity(entityId)
-                .withRemoveEntity(armorStandEntityId)
                 .sendTo(player);
     }
 
