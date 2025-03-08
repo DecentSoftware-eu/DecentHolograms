@@ -139,6 +139,7 @@ public class HologramLine extends HologramObject {
     private String text;
     private HologramItem item;
     private HologramEntity entity;
+    private NmsHologramRenderer<?> previousRenderer;
     private NmsHologramRenderer<?> renderer;
 
     private volatile boolean containsAnimations;
@@ -216,45 +217,51 @@ public class HologramLine extends HologramObject {
             type = HologramLineType.ICON;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_ICON;
+                previousRenderer = renderer;
+                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createIconRenderer();
             }
             item = new HologramItem(content.substring("#ICON:".length()));
 
             containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-
-            renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createIconRenderer();
         } else if (contentU.startsWith("#SMALLHEAD:")) {
             type = HologramLineType.SMALLHEAD;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
+                previousRenderer = renderer;
+                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createSmallHeadRenderer();
             }
             item = new HologramItem(content.substring("#SMALLHEAD:".length()));
             containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-            renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createSmallHeadRenderer();
         } else if (contentU.startsWith("#HEAD:")) {
             type = HologramLineType.HEAD;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_HEAD;
+                previousRenderer = renderer;
+                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createHeadRenderer();
             }
             item = new HologramItem(content.substring("#HEAD:".length()));
             containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-            renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createHeadRenderer();
         } else if (contentU.startsWith("#ENTITY:")) {
             type = HologramLineType.ENTITY;
             String entityContent = content.substring("#ENTITY:".length()).trim();
             entity = new HologramEntity(entityContent);
-            renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
+            if (prevType != type) {
+                previousRenderer = renderer;
+                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
+            }
             height = ((NmsEntityHologramRenderer) renderer).getHeight(entity.getType());
             setOffsetY(-(height));
         } else {
             type = HologramLineType.TEXT;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT;
+                previousRenderer = renderer;
+                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createTextRenderer();
             }
             text = parseCustomReplacements();
 
             containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
             containsPlaceholders = PAPI.containsPlaceholders(text);
-            renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createTextRenderer();
         }
     }
 
@@ -413,6 +420,7 @@ public class HologramLine extends HologramObject {
         if (isDisabled()) {
             return;
         }
+        hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(false, players);
         for (Player player : playerList) {
             if (player == null) {
@@ -470,6 +478,7 @@ public class HologramLine extends HologramObject {
             return;
         }
 
+        hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (renderer instanceof NmsTextHologramRenderer) {
@@ -504,6 +513,7 @@ public class HologramLine extends HologramObject {
         if (isDisabled()) {
             return;
         }
+        hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (renderer instanceof NmsEntityHologramRenderer && updateRotation) {
@@ -520,6 +530,7 @@ public class HologramLine extends HologramObject {
         if (isDisabled() || type != HologramLineType.TEXT || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
             return;
         }
+        hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             UUID uuid = player.getUniqueId();
@@ -538,11 +549,21 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void hide(Player... players) {
+        hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             renderer.hide(player);
             viewers.remove(player.getUniqueId());
         }
+    }
+
+    private void hidePreviousIfNecessary() {
+        if (previousRenderer == null) {
+            return;
+        }
+
+        getViewerPlayers().forEach(previousRenderer::hide);
+        previousRenderer = null;
     }
 
     public boolean isInDisplayRange(@NonNull Player player) {
