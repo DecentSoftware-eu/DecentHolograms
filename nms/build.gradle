@@ -17,3 +17,22 @@ compileJava {
         child.tasks.named("jar")
     }
 }
+
+sourceSets {
+    main {
+        java {
+            setSrcDirs([])
+        }
+        resources {
+            setSrcDirs([])
+        }
+    }
+    test {
+        java {
+            setSrcDirs([])
+        }
+        resources {
+            setSrcDirs([])
+        }
+    }
+}
