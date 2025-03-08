@@ -29,9 +29,11 @@ public final class DecentEntityType {
                 XEntityType.BLOCK_DISPLAY,
                 XEntityType.CHEST_MINECART,
                 XEntityType.COMMAND_BLOCK_MINECART,
+                XEntityType.DRAGON_FIREBALL,
                 XEntityType.EVOKER_FANGS,
                 XEntityType.EXPERIENCE_ORB,
                 XEntityType.FALLING_BLOCK,
+                XEntityType.FIREBALL,
                 XEntityType.FIREWORK_ROCKET,
                 XEntityType.FISHING_BOBBER,
                 XEntityType.FURNACE_MINECART,
@@ -47,11 +49,13 @@ public final class DecentEntityType {
                 XEntityType.MINECART,
                 XEntityType.PAINTING,
                 XEntityType.PLAYER,
+                XEntityType.SMALL_FIREBALL,
                 XEntityType.SPAWNER_MINECART,
                 XEntityType.TEXT_DISPLAY,
                 XEntityType.TNT_MINECART,
                 XEntityType.TNT,
-                XEntityType.UNKNOWN
+                XEntityType.UNKNOWN,
+                XEntityType.WITHER_SKULL
         );
         for (XEntityType value : XEntityType.getValues()) {
             if (value.name().endsWith("BOAT")) {
