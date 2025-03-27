@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.utils.items;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
 import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.Log;
@@ -229,7 +230,15 @@ public class HologramItem {
         }
 
         ReadWriteNBT nbtItem = NBT.itemStackToNBT(itemStack);
-        int customModelData;
+        float customModelData;
+        if (Version.afterOrEqual(Version.v1_21_R3)) {
+            // New structure components:{custom_model_data={floats[...]}} since 1.21.4
+            ReadWriteNBTList<Float> floats = nbtItem.getOrCreateCompound("components")
+                .getOrCreateCompound("minecraft:custom_model_data")
+                .getFloatList("floats");
+            
+            customModelData = floats.isEmpty() ? 0.0F : floats.get(0);
+        } else
         if (Version.afterOrEqual(Version.v1_20_R4)) {
             // components contains item tags in 1.20.5+
             customModelData = nbtItem.getOrCreateCompound("components")
@@ -240,7 +249,7 @@ public class HologramItem {
                 .getInteger("CustomModelData");
         }
 
-        if (customModelData > 0) {
+        if (customModelData > 0.0) {
             stringBuilder.append("{CustomModelData:").append(customModelData).append('}');
         }
         return new HologramItem(stringBuilder.toString());
