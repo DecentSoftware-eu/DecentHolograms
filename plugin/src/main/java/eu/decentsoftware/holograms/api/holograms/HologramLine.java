@@ -516,13 +516,8 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (renderer instanceof NmsEntityHologramRenderer && updateRotation) {
-                this.hide();
-                this.show();
-            } else {
-                DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
-                renderer.move(player, position);
-            }
+            DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
+            renderer.move(player, position);
         }
     }
 

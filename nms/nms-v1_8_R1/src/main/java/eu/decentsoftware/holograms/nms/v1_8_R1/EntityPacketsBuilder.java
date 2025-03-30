@@ -8,6 +8,7 @@ import net.minecraft.server.v1_8_R1.Packet;
 import net.minecraft.server.v1_8_R1.PacketPlayOutAttachEntity;
 import net.minecraft.server.v1_8_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R1.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_8_R1.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_8_R1.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_8_R1.PacketPlayOutSpawnEntity;
@@ -126,6 +127,18 @@ class EntityPacketsBuilder {
                 (byte) ((int) (position.getPitch() * 256.0F / 360.0F)),
                 false // onGround
         );
+        packets.add(packet);
+        return this;
+    }
+
+    EntityPacketsBuilder withEntityHeadLook(int entityId, float yaw) {
+        PacketDataSerializerWrapper serializer = PacketDataSerializerWrapper.getInstance();
+        serializer.writeVarInt(entityId);
+        serializer.writeByte((byte) ((int) (yaw * 256.0F / 360.0F)));
+
+        PacketPlayOutEntityHeadRotation packet = new PacketPlayOutEntityHeadRotation();
+        serializer.writeToPacket(packet);
+
         packets.add(packet);
         return this;
     }
