@@ -62,6 +62,10 @@ class EntityPacketsBuilder {
     }
 
     EntityPacketsBuilder withSpawnEntityLiving(int entityId, EntityType type, DecentPosition position) {
+        return withSpawnEntityLiving(entityId, type, position, new DataWatcher(null));
+    }
+
+    EntityPacketsBuilder withSpawnEntityLiving(int entityId, EntityType type, DecentPosition position, DataWatcher dataWatcher) {
         PacketDataSerializerWrapper serializer = prepareSpawnEntityData(entityId, type, position);
         serializer.writeByte(MathHelper.d(position.getYaw() * 256.0F / 360.0F));
         serializer.writeShort(0);
@@ -71,7 +75,7 @@ class EntityPacketsBuilder {
 
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
         serializer.writeToPacket(packet);
-        SPAWN_ENTITY_LIVING_PACKET_DATA_WATCHER_FIELD.set(packet, new DataWatcher(null));
+        SPAWN_ENTITY_LIVING_PACKET_DATA_WATCHER_FIELD.set(packet, dataWatcher);
 
         packets.add(packet);
         return this;
