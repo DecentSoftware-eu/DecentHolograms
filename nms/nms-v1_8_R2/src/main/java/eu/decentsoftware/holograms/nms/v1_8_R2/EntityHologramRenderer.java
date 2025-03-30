@@ -69,6 +69,6 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     private DecentPosition offsetPosition(DecentPosition position) {
-        return position.subtractY(1.65);
+        return position.subtractY(0.25);
     }
 }

@@ -71,6 +71,6 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
     }
 
     private DecentPosition offsetPosition(DecentPosition position) {
-        return position.subtractY(2);
+        return position.subtractY(0.55);
     }
 }

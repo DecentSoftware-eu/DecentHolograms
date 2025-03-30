@@ -63,6 +63,6 @@ class TextHologramRenderer implements NmsTextHologramRenderer {
     }
 
     private DecentPosition offsetPosition(DecentPosition position) {
-        return position.subtractY(1.5);
+        return position.subtractY(0.5);
     }
 }
