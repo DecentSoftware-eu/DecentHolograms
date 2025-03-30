@@ -612,7 +612,7 @@ public final class DHAPI {
         // If the type changed, respawn the line.
         //
         // Otherwise, we don't need to do anything as HologramLine#setContent already updated the line.
-        if (prevType != line.getType() || cannotBeUpdated(prevType)) {
+        if (prevType != line.getType()) {
             Player[] viewers = line.getViewerPlayers().toArray(new Player[0]);
             line.hide();
             line.setContent(content);
@@ -628,10 +628,6 @@ public final class DHAPI {
         if (parent != null) {
             parent.getParent().save();
         }
-    }
-
-    private static boolean cannotBeUpdated(HologramLineType lineType) {
-        return lineType == HologramLineType.ENTITY;
     }
 
     /**

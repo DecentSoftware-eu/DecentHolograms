@@ -6,13 +6,18 @@ import net.minecraft.server.v1_8_R1.DataWatcher;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+// Some methods are synchronized to make sure no two threads generate a new entity ID at the same time,
+// causing one of them to be lost.
+// That could possibly result in an entity being displayed for a client and never destroyed.
 class EntityHologramRenderer implements NmsEntityHologramRenderer {
 
-    private final int entityId;
+    private final EntityIdGenerator entityIdGenerator;
+    private int entityId;
     private final int armorStandEntityId;
     private final DataWatcher armorStandDataWatcher;
 
     EntityHologramRenderer(EntityIdGenerator entityIdGenerator) {
+        this.entityIdGenerator = entityIdGenerator;
         this.entityId = entityIdGenerator.getFreeEntityId();
         this.armorStandEntityId = entityIdGenerator.getFreeEntityId();
         this.armorStandDataWatcher = DataWatcherBuilder.create()
@@ -22,7 +27,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void display(Player player, DecentPosition position, EntityType content) {
+    public synchronized void display(Player player, DecentPosition position, EntityType content) {
         EntityPacketsBuilder.create()
                 .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withSpawnEntityLivingOrObject(entityId, content, position)
@@ -32,10 +37,16 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void updateContent(Player player, DecentPosition position, EntityType content) {
+    public synchronized void updateContent(Player player, DecentPosition position, EntityType content) {
+        // To work around a client-side issue where despawning and immediately respawning an entity
+        // with the same ID in a single game tick causes it to not display properly,
+        // we generate a new entity ID on update.
+        int oldEntityId = entityId;
+        entityId = entityIdGenerator.getFreeEntityId();
+
         EntityPacketsBuilder.create()
                 .withRemovePassenger(armorStandEntityId)
-                .withRemoveEntity(entityId)
+                .withRemoveEntity(oldEntityId)
                 .withSpawnEntityLivingOrObject(entityId, content, position)
                 .withTeleportEntity(entityId, position)
                 .withPassenger(armorStandEntityId, entityId)
@@ -43,7 +54,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void move(Player player, DecentPosition position) {
+    public synchronized void move(Player player, DecentPosition position) {
         EntityPacketsBuilder.create()
                 .withTeleportEntity(armorStandEntityId, offsetPosition(position))
                 .withEntityHeadLook(entityId, position.getYaw())
@@ -51,7 +62,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void hide(Player player) {
+    public synchronized void hide(Player player) {
         EntityPacketsBuilder.create()
                 .withRemovePassenger(armorStandEntityId)
                 .withRemoveEntity(entityId)
@@ -65,7 +76,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public int[] getEntityIds() {
+    public synchronized int[] getEntityIds() {
         return new int[]{armorStandEntityId, entityId};
     }
 

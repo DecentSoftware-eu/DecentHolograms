@@ -199,7 +199,7 @@ public class HologramPage extends FlagHolder {
 
         line.setContent(content);
 
-        if (line.getType() != previousType || line.getType() == HologramLineType.ENTITY) {
+        if (line.getType() != previousType) {
             line.hide();
             line.show();
             realignLines();

@@ -443,10 +443,7 @@ public class HologramLine extends HologramObject {
                     ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
                     ((NmsIconHologramRenderer) renderer).display(player, position, itemStack);
                 } else if (renderer instanceof NmsEntityHologramRenderer) {
-                    String content = PAPI.setPlaceholders(player, getEntity().getContent());
-                    HologramEntity hologramEntity = new HologramEntity(content);
-
-                    EntityType entityType = hologramEntity.getType();
+                    EntityType entityType = getEntityType(player);
                     if (entityType != null) {
                         ((NmsEntityHologramRenderer) renderer).display(player, position, entityType);
                     }
@@ -499,9 +496,21 @@ public class HologramLine extends HologramObject {
                 } else if (renderer instanceof NmsIconHologramRenderer) {
                     ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
                     ((NmsIconHologramRenderer) renderer).updateContent(player, null, itemStack);
+                } else if (renderer instanceof NmsEntityHologramRenderer) {
+                    EntityType entityType = getEntityType(player);
+                    if (entityType != null) {
+                        DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
+                        ((NmsEntityHologramRenderer) renderer).updateContent(player, position, entityType);
+                    }
                 }
             }
         }
+    }
+
+    private EntityType getEntityType(Player player) {
+        String finalContent = PAPI.setPlaceholders(player, getEntity().getContent());
+        HologramEntity hologramEntity = new HologramEntity(finalContent);
+        return hologramEntity.getType();
     }
 
     /**
