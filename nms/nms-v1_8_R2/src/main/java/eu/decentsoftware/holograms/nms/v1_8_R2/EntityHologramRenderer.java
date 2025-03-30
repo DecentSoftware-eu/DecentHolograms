@@ -46,6 +46,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     public void move(Player player, DecentPosition position) {
         EntityPacketsBuilder.create()
                 .withTeleportEntity(armorStandEntityId, offsetPosition(position))
+                .withEntityHeadLook(entityId, position.getYaw())
                 .sendTo(player);
     }
 
