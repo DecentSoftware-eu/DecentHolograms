@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.nms.v1_8_R3;
 
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHeadHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
+import net.minecraft.server.v1_8_R3.DataWatcher;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,6 +11,7 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
 
     private final int entityId;
     private final boolean small;
+    private final DataWatcher armorStandDataWatcher;
 
     HeadHologramRenderer(EntityIdGenerator entityIdGenerator) {
         this(entityIdGenerator, false);
@@ -18,16 +20,16 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
     protected HeadHologramRenderer(EntityIdGenerator entityIdGenerator, boolean small) {
         this.entityId = entityIdGenerator.getFreeEntityId();
         this.small = small;
+        this.armorStandDataWatcher = DataWatcherBuilder.create()
+                .withInvisible()
+                .withArmorStandProperties(small, true)
+                .toDataWatcher();
     }
 
     @Override
     public void display(Player player, DecentPosition position, ItemStack content) {
         EntityPacketsBuilder.create()
-                .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, offsetPosition(position))
-                .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                        .withInvisible()
-                        .withArmorStandProperties(small, true)
-                        .toWatchableObjects())
+                .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withHelmet(entityId, content)
                 .sendTo(player);
     }

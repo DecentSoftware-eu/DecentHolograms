@@ -23,6 +23,10 @@ class EntityMetadataType<T> {
         return new DataWatcher.WatchableObject(dataType, index, value);
     }
 
+    void addToDataWatcher(DataWatcher dataWatcher, T value) {
+        dataWatcher.a(index, value);
+    }
+
     private static class DataType {
 
         static final int BYTE = 0;
