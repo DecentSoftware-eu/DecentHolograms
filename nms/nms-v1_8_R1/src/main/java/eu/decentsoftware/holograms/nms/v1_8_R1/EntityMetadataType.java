@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_8_R1;
 
+import net.minecraft.server.v1_8_R1.DataWatcher;
 import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.WatchableObject;
 
@@ -21,6 +22,10 @@ class EntityMetadataType<T> {
 
     WatchableObject construct(T value) {
         return new WatchableObject(dataType, index, value);
+    }
+
+    void addToDataWatcher(DataWatcher dataWatcher, T value) {
+        dataWatcher.a(index, value);
     }
 
     private static class DataType {
