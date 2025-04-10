@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.utils.items;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
@@ -291,8 +292,8 @@ public final class SkullUtils {
         URLConnection connection = null;
         try {
             connection = new URL(urlString).openConnection();
-            connection.setConnectTimeout(500);
-            connection.setReadTimeout(500);
+            connection.setConnectTimeout(Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000);
+            connection.setReadTimeout(Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000);
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder builder = new StringBuilder();
             int read;
