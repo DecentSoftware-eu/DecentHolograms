@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -29,6 +31,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -40,6 +44,10 @@ import java.util.function.Function;
  */
 @UtilityClass
 public final class SkullUtils {
+
+    private static final Cache<String, String> textureCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(1, TimeUnit.MINUTES)
+        .build();
 
     private static final String RESOLVABLE_PROFILE_CLASS_PATH = "net.minecraft.world.item.component.ResolvableProfile";
     private static Field profileField;
@@ -220,16 +228,33 @@ public final class SkullUtils {
             }
         }
     }
-
+    
     /**
      * Get a Base64 texture from URL by player username.
+     * Uses a cached value if present and not null.
      *
      * @param username The player username.
      * @return The Base64 or null if the URL is invalid.
      * @since 2.7.10
      */
     @Nullable
-    public static String getTextureFromURLByPlayerName(String username) {
+    public static String getTextureFromURLByPlayerName(String username){
+        try{
+            String cached = textureCache.get(username, () -> getTextureFromURLByPlayerName0(username));
+            if (cached == null) {
+                // Don't keep a null value in cache.
+                textureCache.invalidate(username);
+                return null;
+            }
+
+            return cached;
+        }catch(ExecutionException ex){
+            return null;
+        }
+    }
+
+    @Nullable
+    public static String getTextureFromURLByPlayerName0(String username) {
         final String uuid = getPlayerUUID(username);
         if (uuid == null) {
             return null;
