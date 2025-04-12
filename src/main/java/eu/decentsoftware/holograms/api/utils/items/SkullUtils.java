@@ -247,8 +247,7 @@ public final class SkullUtils {
 
             return data.get("value").toString();
         } catch (Exception e) {
-            Log.warn("Failed to fetch texture for player %s", username);
-            Log.warn("Cause: %s", e.getMessage());
+            Log.warn("Failed to fetch texture for player %s (%s). Cause: %s", username, uuid, e.getMessage());
         }
         return null;
     }
@@ -273,8 +272,7 @@ public final class SkullUtils {
                 return jsonData.get("id").toString();
             }
         } catch (Exception e) {
-            Log.warn("Failed to fetch UUID for player %s", playerName);
-            Log.warn("Cause: %s", e.getMessage());
+            Log.warn("Failed to fetch UUID for player %s. Cause: %s", playerName, e.getMessage());
         }
         return null;
     }
@@ -291,9 +289,11 @@ public final class SkullUtils {
         BufferedReader reader = null;
         URLConnection connection = null;
         try {
+            // Obtain the Timeout in milliseconds by multiplying it by 1000.
+            int timeout = Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000;
             connection = new URL(urlString).openConnection();
-            connection.setConnectTimeout(Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000);
-            connection.setReadTimeout(Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000);
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder builder = new StringBuilder();
             int read;
