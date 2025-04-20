@@ -227,14 +227,14 @@ public final class SkullUtils {
             }
         }
     }
-    
+
     /**
      * Returns the cached Base64 value from a Player name - if actually cached - or
      * attempts to retrieve it using the provided Player name.
      *
      * @param username The player username.
      * @return The Base64 or null if the texture couldn't be obtained.
-     * @since 2.7.17
+     * @since 2.8.17
      */
     @Nullable
     public static String getCachedOrFetchFromUsername(String username) {
