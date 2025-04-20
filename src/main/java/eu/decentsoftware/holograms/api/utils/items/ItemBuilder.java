@@ -293,7 +293,7 @@ public class ItemBuilder implements Cloneable {
 		 * If the player is offline, we want to fetch the texture ourselves. This is because
 		 * if the server is NOT in online mode, it will not be able to fetch the texture from Mojang.
 		 */
-		final String texture = SkullUtils.getTextureFromURLByPlayerName(playerName);
+		final String texture = SkullUtils.getCachedOrFetchFromUsername(playerName);
 		if (texture != null) {
 			SkullUtils.setSkullTexture(itemStack, texture);
 		}
