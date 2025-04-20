@@ -31,7 +31,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -46,7 +45,7 @@ import java.util.function.Function;
 public final class SkullUtils {
 
     private static final Cache<String, String> textureCache = CacheBuilder.newBuilder()
-        .expireAfterWrite(1, TimeUnit.MINUTES)
+        .expireAfterWrite(1, TimeUnit.HOURS)
         .build();
 
     private static final String RESOLVABLE_PROFILE_CLASS_PATH = "net.minecraft.world.item.component.ResolvableProfile";
@@ -230,31 +229,30 @@ public final class SkullUtils {
     }
     
     /**
-     * Get a Base64 texture from URL by player username.
-     * Uses a cached value if present and not null.
+     * Returns the cached Base64 value from a Player name - if actually cached - or
+     * attempts to retrieve it using the provided Player name.
      *
      * @param username The player username.
-     * @return The Base64 or null if the URL is invalid.
-     * @since 2.7.10
+     * @return The Base64 or null if the texture couldn't be obtained.
+     * @since 2.7.17
      */
     @Nullable
-    public static String getTextureFromURLByPlayerName(String username){
-        try{
-            String cached = textureCache.get(username, () -> getTextureFromURLByPlayerName0(username));
-            if (cached == null) {
-                // Don't keep a null value in cache.
-                textureCache.invalidate(username);
-                return null;
-            }
-
-            return cached;
-        }catch(ExecutionException ex){
-            return null;
+    public static String getCachedOrFetchFromUsername(String username) {
+        String cache = textureCache.getIfPresent(username);
+        if (cache != null) {
+            return cache;
         }
+        
+        String fetched = getTextureFromURLByPlayerName(username);
+        if (fetched != null) {
+            textureCache.put(username, fetched);
+        }
+        
+        return fetched;
     }
 
     @Nullable
-    public static String getTextureFromURLByPlayerName0(String username) {
+    private static String getTextureFromURLByPlayerName(String username) {
         final String uuid = getPlayerUUID(username);
         if (uuid == null) {
             return null;
