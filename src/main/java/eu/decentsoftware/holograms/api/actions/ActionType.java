@@ -66,7 +66,7 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
+            DECENT_HOLOGRAMS.getScheduler().executeAtEntity(player, () -> {
                 //
                 player.chat(PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
             });
@@ -80,7 +80,7 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
+            DECENT_HOLOGRAMS.getScheduler().executeAtEntity(player, () -> {
                 //
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
             });
@@ -113,7 +113,7 @@ public abstract class ActionType {
             if (location == null) {
                 return false;
             }
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> player.teleport(location));
+            DECENT_HOLOGRAMS.getScheduler().executeAtEntity(player, () -> player.teleport(location));
             return true;
         }
     };
