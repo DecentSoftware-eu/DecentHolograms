@@ -64,6 +64,8 @@ public class Settings {
      */
     @Key("holograms-eye-level-positioning")
     public static boolean HOLOGRAMS_EYE_LEVEL_POSITIONING = false;
+    @Key(value = "player-skin-connection-timeout", min = 1, max = 60)
+    public static int PLAYER_SKIN_CONNECTION_TIMEOUT = 5;
 
     public static Map<String, String> CUSTOM_REPLACEMENTS = ImmutableMap.<String, String>builder()
             .put("[x]", "\u2588")

@@ -185,7 +185,12 @@ public class NMS_1_17 extends NMS {
         }
         // DATA WATCHER OBJECT
         if (Version.afterOrEqual(18)) {
-            if (Version.afterOrEqual(Version.v1_21_R3)) {
+            if (Version.afterOrEqual(Version.v1_21_R4)) {
+                DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "am").getValue(null);
+                DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aR").getValue(null);
+                DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aS").getValue(null);
+                DWO_ARMOR_STAND_DATA = new ReflectField<>(ENTITY_ARMOR_STAND_CLASS, "bw").getValue(null);
+            } else if (Version.afterOrEqual(Version.v1_21_R3)) {
                 DWO_ENTITY_DATA = new ReflectField<>(ENTITY_CLASS, "am").getValue(null);
                 DWO_CUSTOM_NAME = new ReflectField<>(ENTITY_CLASS, "aO").getValue(null);
                 DWO_CUSTOM_NAME_VISIBLE = new ReflectField<>(ENTITY_CLASS, "aP").getValue(null);
@@ -325,8 +330,8 @@ public class NMS_1_17 extends NMS {
                     location.getX(),
                     location.getY(),
                     location.getZ(),
-                    location.getYaw(),
                     location.getPitch(),
+                    location.getYaw(),
                     REGISTRY_BLOCKS_FROM_ID_METHOD.invoke(ENTITY_TYPES_REGISTRY_FIELD.getValue(null), entityTypeId),
                     0,
                     VEC_3D_A,

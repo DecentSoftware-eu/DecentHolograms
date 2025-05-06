@@ -1,8 +1,11 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
@@ -28,6 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -39,6 +43,10 @@ import java.util.function.Function;
  */
 @UtilityClass
 public final class SkullUtils {
+
+    private static final Cache<String, String> textureCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(1, TimeUnit.HOURS)
+        .build();
 
     private static final String RESOLVABLE_PROFILE_CLASS_PATH = "net.minecraft.world.item.component.ResolvableProfile";
     private static Field profileField;
@@ -221,14 +229,30 @@ public final class SkullUtils {
     }
 
     /**
-     * Get a Base64 texture from URL by player username.
+     * Returns the cached Base64 value from a Player name - if actually cached - or
+     * attempts to retrieve it using the provided Player name.
      *
      * @param username The player username.
-     * @return The Base64 or null if the URL is invalid.
-     * @since 2.7.10
+     * @return The Base64 or null if the texture couldn't be obtained.
+     * @since 2.8.17
      */
     @Nullable
-    public static String getTextureFromURLByPlayerName(String username) {
+    public static String getCachedOrFetchFromUsername(String username) {
+        String cache = textureCache.getIfPresent(username);
+        if (cache != null) {
+            return cache;
+        }
+        
+        String fetched = getTextureFromURLByPlayerName(username);
+        if (fetched != null) {
+            textureCache.put(username, fetched);
+        }
+        
+        return fetched;
+    }
+
+    @Nullable
+    private static String getTextureFromURLByPlayerName(String username) {
         final String uuid = getPlayerUUID(username);
         if (uuid == null) {
             return null;
@@ -246,7 +270,7 @@ public final class SkullUtils {
 
             return data.get("value").toString();
         } catch (Exception e) {
-            Log.warn("Failed to fetch texture for player %s", username, e);
+            Log.warn("Failed to fetch texture for player %s (%s). Cause: %s", username, uuid, e.getMessage());
         }
         return null;
     }
@@ -271,7 +295,7 @@ public final class SkullUtils {
                 return jsonData.get("id").toString();
             }
         } catch (Exception e) {
-            Log.warn("Failed to fetch UUID for player %s", playerName, e);
+            Log.warn("Failed to fetch UUID for player %s. Cause: %s", playerName, e.getMessage());
         }
         return null;
     }
@@ -288,9 +312,11 @@ public final class SkullUtils {
         BufferedReader reader = null;
         URLConnection connection = null;
         try {
+            // Obtain the Timeout in milliseconds by multiplying it by 1000.
+            int timeout = Settings.PLAYER_SKIN_CONNECTION_TIMEOUT * 1000;
             connection = new URL(urlString).openConnection();
-            connection.setConnectTimeout(50);
-            connection.setReadTimeout(50);
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder builder = new StringBuilder();
             int read;
