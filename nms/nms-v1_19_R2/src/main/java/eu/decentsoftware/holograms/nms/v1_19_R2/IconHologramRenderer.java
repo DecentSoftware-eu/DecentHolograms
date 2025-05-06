@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_19_R2;
 
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsIconHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.entity.EntityType;
@@ -17,7 +18,9 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
     }
 
     @Override
-    public void display(Player player, DecentPosition position, ItemStack content) {
+    public void display(Player player, NmsHologramPartData<ItemStack> data) {
+        DecentPosition position = data.getPosition();
+        ItemStack content = data.getContent();
         EntityPacketsBuilder.create()
                 .withSpawnEntity(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position))
                 .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
@@ -34,18 +37,18 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
     }
 
     @Override
-    public void updateContent(Player player, DecentPosition position, ItemStack content) {
+    public void updateContent(Player player, NmsHologramPartData<ItemStack> data) {
         EntityPacketsBuilder.create()
                 .withEntityMetadata(itemEntityId, EntityMetadataBuilder.create()
-                        .withItemStack(content)
+                        .withItemStack(data.getContent())
                         .toWatchableObjects())
                 .sendTo(player);
     }
 
     @Override
-    public void move(Player player, DecentPosition position) {
+    public void move(Player player, NmsHologramPartData<ItemStack> data) {
         EntityPacketsBuilder.create()
-                .withTeleportEntity(armorStandEntityId, offsetPosition(position))
+                .withTeleportEntity(armorStandEntityId, offsetPosition(data.getPosition()))
                 .sendTo(player);
     }
 
@@ -59,7 +62,7 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
     }
 
     @Override
-    public double getHeight(ItemStack content) {
+    public double getHeight(NmsHologramPartData<ItemStack> data) {
         return 0.5d;
     }
 

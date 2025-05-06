@@ -12,6 +12,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsEntityHologramRenderer;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHeadHologramRenderer;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRenderer;
@@ -27,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Getter
@@ -249,7 +250,8 @@ public class HologramLine extends HologramObject {
                 previousRenderer = renderer;
                 renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
             }
-            height = ((NmsEntityHologramRenderer) renderer).getHeight(entity.getType());
+            NmsHologramPartData<EntityType> data = new NmsHologramPartData<>(getPositionSupplier(), () -> entity.getType());
+            height = ((NmsEntityHologramRenderer) renderer).getHeight(data);
             setOffsetY(-(height));
         } else {
             type = HologramLineType.TEXT;
@@ -430,24 +432,7 @@ public class HologramLine extends HologramObject {
                 continue;
             }
             if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
-                DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
-                if (renderer instanceof NmsTextHologramRenderer) {
-                    ((NmsTextHologramRenderer) renderer).display(player, position, getText(player, true));
-                } else if (renderer instanceof NmsSmallHeadHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsSmallHeadHologramRenderer) renderer).display(player, position, itemStack);
-                } else if (renderer instanceof NmsHeadHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsHeadHologramRenderer) renderer).display(player, position, itemStack);
-                } else if (renderer instanceof NmsIconHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsIconHologramRenderer) renderer).display(player, position, itemStack);
-                } else if (renderer instanceof NmsEntityHologramRenderer) {
-                    EntityType entityType = getEntityType(player);
-                    if (entityType != null) {
-                        ((NmsEntityHologramRenderer) renderer).display(player, position, entityType);
-                    }
-                }
+                renderer.display(player, getPartData(player, true, false));
                 viewers.add(player.getUniqueId());
             }
         }
@@ -478,31 +463,8 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (renderer instanceof NmsTextHologramRenderer) {
-                UUID uuid = player.getUniqueId();
-                String lastText = lastTextMap.get(uuid);
-                String updatedText = getText(player, true);
-                if (!updatedText.equals(lastText)) {
-                    lastTextMap.put(uuid, updatedText);
-                    ((NmsTextHologramRenderer) renderer).updateContent(player, null, updatedText);
-                }
-            } else if (containsPlaceholders || force) {
-                if (renderer instanceof NmsSmallHeadHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsSmallHeadHologramRenderer) renderer).updateContent(player, null, itemStack);
-                } else if (renderer instanceof NmsHeadHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsHeadHologramRenderer) renderer).updateContent(player, null, itemStack);
-                } else if (renderer instanceof NmsIconHologramRenderer) {
-                    ItemStack itemStack = HologramItem.parseItemStack(item.getContent(), player);
-                    ((NmsIconHologramRenderer) renderer).updateContent(player, null, itemStack);
-                } else if (renderer instanceof NmsEntityHologramRenderer) {
-                    EntityType entityType = getEntityType(player);
-                    if (entityType != null) {
-                        DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
-                        ((NmsEntityHologramRenderer) renderer).updateContent(player, position, entityType);
-                    }
-                }
+            if (renderer instanceof NmsTextHologramRenderer || (containsPlaceholders || force)) {
+                renderer.updateContent(player, getPartData(player, true, true));
             }
         }
     }
@@ -525,8 +487,7 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            DecentPosition position = DecentPosition.fromBukkitLocation(getLocation());
-            renderer.move(player, position);
+            renderer.move(player, getPartData(player, false, true));
         }
     }
 
@@ -537,14 +498,45 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
+            renderer.updateContent(player, getPartData(player, false, true));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends NmsHologramPartData<?>> T getPartData(Player player, boolean updateText, boolean cacheText) {
+        Supplier<DecentPosition> positionSupplier = getPositionSupplier();
+        if (renderer instanceof NmsTextHologramRenderer) {
+            return (T) getTextPartData(player, updateText, cacheText, positionSupplier);
+        } else if (renderer instanceof NmsSmallHeadHologramRenderer
+                || renderer instanceof NmsHeadHologramRenderer
+                || renderer instanceof NmsIconHologramRenderer) {
+            return (T) new NmsHologramPartData<>(positionSupplier, () -> HologramItem.parseItemStack(item.getContent(), player));
+        } else if (renderer instanceof NmsEntityHologramRenderer) {
+            return (T) new NmsHologramPartData<>(positionSupplier, () -> getEntityType(player));
+        }
+        throw new IllegalStateException("Unsupported renderer type: " + renderer.getClass().getName());
+    }
+
+    private Supplier<DecentPosition> getPositionSupplier() {
+        return () -> DecentPosition.fromBukkitLocation(getLocation());
+    }
+
+    private NmsHologramPartData<String> getTextPartData(Player player,
+                                                        boolean updateText,
+                                                        boolean cacheText,
+                                                        Supplier<DecentPosition> positionSupplier) {
+        if (!cacheText) {
+            return new NmsHologramPartData<>(positionSupplier, () -> getText(player, updateText));
+        }
+        return new NmsHologramPartData<>(positionSupplier, () -> {
             UUID uuid = player.getUniqueId();
             String lastText = lastTextMap.get(uuid);
-            String updatedText = getText(player, false);
+            String updatedText = getText(player, updateText);
             if (!updatedText.equals(lastText)) {
                 lastTextMap.put(uuid, updatedText);
-                ((NmsTextHologramRenderer) renderer).updateContent(player, null, updatedText);
             }
-        }
+            return updatedText;
+        });
     }
 
     /**

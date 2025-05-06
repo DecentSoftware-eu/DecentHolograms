@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_8_R2;
 
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsTextHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.server.v1_8_R2.DataWatcher;
@@ -20,7 +21,9 @@ class TextHologramRenderer implements NmsTextHologramRenderer {
     }
 
     @Override
-    public void display(Player player, DecentPosition position, String content) {
+    public void display(Player player, NmsHologramPartData<String> data) {
+        DecentPosition position = data.getPosition();
+        String content = data.getContent();
         EntityPacketsBuilder.create()
                 .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position), dataWatcher)
                 .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
@@ -30,18 +33,18 @@ class TextHologramRenderer implements NmsTextHologramRenderer {
     }
 
     @Override
-    public void updateContent(Player player, DecentPosition position, String content) {
+    public void updateContent(Player player, NmsHologramPartData<String> data) {
         EntityPacketsBuilder.create()
                 .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
-                        .withCustomName(content)
+                        .withCustomName(data.getContent())
                         .toWatchableObjects())
                 .sendTo(player);
     }
 
     @Override
-    public void move(Player player, DecentPosition position) {
+    public void move(Player player, NmsHologramPartData<String> data) {
         EntityPacketsBuilder.create()
-                .withTeleportEntity(armorStandEntityId, offsetPosition(position))
+                .withTeleportEntity(armorStandEntityId, offsetPosition(data.getPosition()))
                 .sendTo(player);
     }
 
@@ -53,7 +56,7 @@ class TextHologramRenderer implements NmsTextHologramRenderer {
     }
 
     @Override
-    public double getHeight(String content) {
+    public double getHeight(NmsHologramPartData<String> data) {
         return 0.25d;
     }
 

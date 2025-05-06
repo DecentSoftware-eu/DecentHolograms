@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_8_R1;
 
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsEntityHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.server.v1_8_R1.DataWatcher;
@@ -27,7 +28,9 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public synchronized void display(Player player, DecentPosition position, EntityType content) {
+    public synchronized void display(Player player, NmsHologramPartData<EntityType> data) {
+        DecentPosition position = data.getPosition();
+        EntityType content = data.getContent();
         EntityPacketsBuilder.create()
                 .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withSpawnEntityLivingOrObject(entityId, content, position)
@@ -37,13 +40,15 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public synchronized void updateContent(Player player, DecentPosition position, EntityType content) {
+    public synchronized void updateContent(Player player, NmsHologramPartData<EntityType> data) {
         // To work around a client-side issue where despawning and immediately respawning an entity
         // with the same ID in a single game tick causes it to not display properly,
         // we generate a new entity ID on update.
         int oldEntityId = entityId;
         entityId = entityIdGenerator.getFreeEntityId();
 
+        DecentPosition position = data.getPosition();
+        EntityType content = data.getContent();
         EntityPacketsBuilder.create()
                 .withRemovePassenger(armorStandEntityId)
                 .withRemoveEntity(oldEntityId)
@@ -54,7 +59,8 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public synchronized void move(Player player, DecentPosition position) {
+    public synchronized void move(Player player, NmsHologramPartData<EntityType> data) {
+        DecentPosition position = data.getPosition();
         EntityPacketsBuilder.create()
                 .withTeleportEntity(armorStandEntityId, offsetPosition(position))
                 .withEntityHeadLook(entityId, position.getYaw())
@@ -71,8 +77,8 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public double getHeight(EntityType content) {
-        return EntityTypeRegistry.getEntityTypeHeight(content);
+    public double getHeight(NmsHologramPartData<EntityType> data) {
+        return EntityTypeRegistry.getEntityTypeHeight(data.getContent());
     }
 
     @Override

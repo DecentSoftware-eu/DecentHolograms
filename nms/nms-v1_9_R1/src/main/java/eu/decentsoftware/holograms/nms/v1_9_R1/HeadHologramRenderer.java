@@ -1,7 +1,9 @@
 package eu.decentsoftware.holograms.nms.v1_9_R1;
 
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHeadHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
+import net.minecraft.server.v1_9_R1.DataWatcher;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,6 +12,7 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
 
     private final int entityId;
     private final boolean small;
+    private final DataWatcher armorStandDataWatcher;
 
     HeadHologramRenderer(EntityIdGenerator entityIdGenerator) {
         this(entityIdGenerator, false);
@@ -18,31 +21,33 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
     protected HeadHologramRenderer(EntityIdGenerator entityIdGenerator, boolean small) {
         this.entityId = entityIdGenerator.getFreeEntityId();
         this.small = small;
+        this.armorStandDataWatcher = DataWatcherBuilder.create()
+                .withInvisible()
+                .withArmorStandProperties(small, true)
+                .toDataWatcher();
     }
 
     @Override
-    public void display(Player player, DecentPosition position, ItemStack content) {
+    public void display(Player player, NmsHologramPartData<ItemStack> data) {
+        ItemStack content = data.getContent();
+        DecentPosition position = data.getPosition();
         EntityPacketsBuilder.create()
-                .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, offsetPosition(position))
-                .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                        .withInvisible()
-                        .withArmorStandProperties(small, true)
-                        .toWatchableObjects())
+                .withSpawnEntityLiving(entityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withHelmet(entityId, content)
                 .sendTo(player);
     }
 
     @Override
-    public void updateContent(Player player, DecentPosition position, ItemStack content) {
+    public void updateContent(Player player, NmsHologramPartData<ItemStack> data) {
         EntityPacketsBuilder.create()
-                .withHelmet(entityId, content)
+                .withHelmet(entityId, data.getContent())
                 .sendTo(player);
     }
 
     @Override
-    public void move(Player player, DecentPosition position) {
+    public void move(Player player, NmsHologramPartData<ItemStack> data) {
         EntityPacketsBuilder.create()
-                .withTeleportEntity(entityId, offsetPosition(position))
+                .withTeleportEntity(entityId, offsetPosition(data.getPosition()))
                 .sendTo(player);
     }
 
@@ -54,7 +59,7 @@ class HeadHologramRenderer implements NmsHeadHologramRenderer {
     }
 
     @Override
-    public double getHeight(ItemStack content) {
+    public double getHeight(NmsHologramPartData<ItemStack> data) {
         return small ? 0.5d : 0.7d;
     }
 

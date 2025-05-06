@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_21_R3;
 
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsEntityHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.entity.EntityType;
@@ -14,7 +15,9 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void display(Player player, DecentPosition position, EntityType content) {
+    public void display(Player player, NmsHologramPartData<EntityType> data) {
+        DecentPosition position = data.getPosition();
+        EntityType content = data.getContent();
         DecentPosition offsetPosition = offsetPosition(position);
         EntityPacketsBuilder.create()
                 .withSpawnEntity(entityId, content, offsetPosition)
@@ -26,15 +29,15 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public void updateContent(Player player, DecentPosition position, EntityType content) {
+    public void updateContent(Player player, NmsHologramPartData<EntityType> data) {
         hide(player);
-        display(player, position, content);
+        display(player, data);
     }
 
     @Override
-    public void move(Player player, DecentPosition position) {
+    public void move(Player player, NmsHologramPartData<EntityType> data) {
         EntityPacketsBuilder.create()
-                .withTeleportEntity(entityId, offsetPosition(position))
+                .withTeleportEntity(entityId, offsetPosition(data.getPosition()))
                 .sendTo(player);
     }
 
@@ -46,8 +49,8 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     }
 
     @Override
-    public double getHeight(EntityType content) {
-        return EntityTypeRegistry.getEntityTypeHeight(content);
+    public double getHeight(NmsHologramPartData<EntityType> data) {
+        return EntityTypeRegistry.getEntityTypeHeight(data.getContent());
     }
 
     @Override

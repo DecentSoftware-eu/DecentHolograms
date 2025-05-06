@@ -89,32 +89,75 @@ public class HologramsCommand extends DecentCommand {
      *  SubCommands
      */
 
-    @CommandInfo(
-            permissions = "dh.command.test",
-            usage = "/dh test",
-            playerOnly = true,
-            minArgs = 1,
-            description = "Test command."
-    )
-    public static class TestSubCommand extends DecentCommand {
-
-        public TestSubCommand() {
-            super("test");
-        }
-
-        @Override
-        public CommandHandler getCommandHandler() {
-            return (sender, args) -> {
-                // Nothing
-                return true;
-            };
-        }
-
-        @Override
-        public TabCompleteHandler getTabCompleteHandler() {
-            return null;
-        }
-    }
+//    @CommandInfo(
+//            permissions = "dh.command.test",
+//            usage = "/dh test",
+//            playerOnly = true,
+//            minArgs = 1,
+//            description = "Test command."
+//    )
+//    public static class TestSubCommand extends DecentCommand {
+//
+//        public TestSubCommand() {
+//            super("test");
+//        }
+//
+//        @Override
+//        public CommandHandler getCommandHandler() {
+//            return (sender, args) -> {
+//                if (!(sender instanceof Player)) {
+//                    Lang.ONLY_PLAYER.send(sender);
+//                    return true;
+//                }
+//                if (args.length < 2) {
+//                    Lang.USE_HELP.send(sender);
+//                    return true;
+//                }
+//                Player player = (Player) sender;
+//                DecentPosition position = DecentPosition.fromBukkitLocation(player.getLocation());
+//                NmsHologramRendererFactory componentFactory = PLUGIN.getNmsAdapter().getHologramComponentFactory();
+//                switch (args[0].toUpperCase()) {
+//                    case "TEXT":
+//                        NmsTextHologramRenderer textComponent = componentFactory.createTextRenderer();
+//                        textComponent.display(player, position, args[1]);
+//                        break;
+//                    case "ENTITY":
+//                        NmsEntityHologramRenderer entityComponent = componentFactory.createEntityRenderer();
+//                        EntityType entityType = XEntityType.of(args[1]).orElse(XEntityType.PIG).get();
+//                        entityComponent.display(player, position, entityType);
+//                        break;
+//                    case "ICON":
+//                        NmsIconHologramRenderer iconComponent = componentFactory.createIconRenderer();
+//                        iconComponent.display(player, position, getItemStack(args));
+//                        break;
+//                    case "HEAD":
+//                        NmsHeadHologramRenderer headComponent = componentFactory.createHeadRenderer();
+//                        headComponent.display(player, position, getItemStack(args));
+//                        break;
+//                    case "SMALLHEAD":
+//                    case "SMALL_HEAD":
+//                        NmsHeadHologramRenderer smallHeadComponent = componentFactory.createSmallHeadRenderer();
+//                        smallHeadComponent.display(player, position, getItemStack(args));
+//                        break;
+//                    default:
+//                        Lang.USE_HELP.send(sender);
+//                        return true;
+//                }
+//
+//                return true;
+//            };
+//        }
+//
+//        private ItemStack getItemStack(String[] args) {
+//            Material material = XMaterial.valueOf(args[1]).or(XMaterial.STONE).get();
+//            return new ItemStack(material);
+//        }
+//
+//        @Override
+//        public TabCompleteHandler getTabCompleteHandler() {
+//            return null;
+//        }
+//    }
 
     @CommandInfo(
             permissions = {"dh.default", "dh.command.version"},

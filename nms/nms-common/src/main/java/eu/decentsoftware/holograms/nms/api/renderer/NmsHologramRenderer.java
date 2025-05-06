@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.nms.api.renderer;
 
-import eu.decentsoftware.holograms.shared.DecentPosition;
+import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import org.bukkit.entity.Player;
 
 /**
@@ -18,29 +18,27 @@ public interface NmsHologramRenderer<T> {
     /**
      * Displays the hologram content to the specified player at the given position.
      *
-     * @param player   The player who will see the hologram.
-     * @param position The position where the hologram should be displayed.
-     * @param content  The content to render (e.g., text, entity, or item).
+     * @param player The player who will see the hologram.
+     * @param data   The hologram part data containing the position and content to display.
      */
-    void display(Player player, DecentPosition position, T content);
+    void display(Player player, NmsHologramPartData<T> data);
 
     /**
      * Updates the content of an already displayed hologram for the given player.
      * This can be used to modify text, change an item, or update an entity.
      *
-     * @param player   The player who sees the hologram.
-     * @param position The position of the existing hologram.
-     * @param content  The new content to update the hologram with.
+     * @param player The player who sees the hologram.
+     * @param data   The hologram part data containing the new content.
      */
-    void updateContent(Player player, DecentPosition position, T content);
+    void updateContent(Player player, NmsHologramPartData<T> data);
 
     /**
      * Moves the hologram to a new position for the specified player.
      *
-     * @param player   The player who sees the hologram.
-     * @param position The new position where the hologram should be moved.
+     * @param player The player who sees the hologram.
+     * @param data   The hologram part data containing the new position.
      */
-    void move(Player player, DecentPosition position);
+    void move(Player player, NmsHologramPartData<T> data);
 
     /**
      * Hides the hologram from the specified player.
@@ -54,10 +52,10 @@ public interface NmsHologramRenderer<T> {
      *
      * <p>This is used to determine spacing and positioning relative to other hologram elements.</p>
      *
-     * @param content The content whose height should be retrieved.
+     * @param data The hologram part data containing the content.
      * @return The height of the content.
      */
-    double getHeight(T content);
+    double getHeight(NmsHologramPartData<T> data);
 
     /**
      * Get the entity ids used by this renderer.
