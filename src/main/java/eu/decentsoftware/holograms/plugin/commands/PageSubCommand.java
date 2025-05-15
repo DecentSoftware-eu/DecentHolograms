@@ -336,6 +336,12 @@ public class PageSubCommand extends DecentCommand {
                     return true;
                 }
                 if (args.length > 2 && sender.hasPermission("dh.admin")) {
+                    if (args[2].equals("*")) {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            hologram.show(player, index);
+                        }
+                        return true;
+                    }
                     Player player = Bukkit.getPlayer(args[2]);
                     if (player != null && player.isOnline()) {
                         hologram.show(player, index);
