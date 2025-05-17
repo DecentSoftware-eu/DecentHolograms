@@ -44,4 +44,8 @@ class EntityMetadataType<T> {
         return new DataWatcher.Item<>(dataWatcherObject, value);
     }
 
+    void addToDataWatcher(DataWatcher dataWatcher, T value) {
+        dataWatcher.register(dataWatcherObject, value);
+    }
+
 }
