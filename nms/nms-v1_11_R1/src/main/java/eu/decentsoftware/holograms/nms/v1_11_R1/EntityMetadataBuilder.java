@@ -20,44 +20,6 @@ class EntityMetadataBuilder {
         return this.watchableObjects;
     }
 
-    EntityMetadataBuilder withInvisible() {
-        /*
-         * Entity Properties:
-         * 0x01 - On Fire
-         * 0x02 - Crouched
-         * 0x08 - Sprinting
-         * 0x10 - Eating/Drinking/Blocking
-         * 0x20 - Invisible
-         * 0x40 - Has glowing effect
-         * 0x80 - If flying with an elytra
-         */
-
-        this.watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct((byte) 0x20));
-        return this;
-    }
-
-    EntityMetadataBuilder withArmorStandProperties(boolean small, boolean marker) {
-        /*
-         * Armor Stand Properties:
-         * 0x01 - Small
-         * 0x02 - Unused
-         * 0x04 - Has Arms
-         * 0x08 - Remove Baseplate
-         * 0x10 - Marker (Zero bounding box)
-         */
-
-        byte data = 0x08; // Always Remove Baseplate
-        if (small) {
-            data |= 0x01;
-        }
-        if (marker) {
-            data |= 0x10;
-        }
-
-        this.watchableObjects.add(EntityMetadataType.ARMOR_STAND_PROPERTIES.construct(data));
-        return this;
-    }
-
     EntityMetadataBuilder withCustomName(String customName) {
         this.watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(customName));
         boolean visible = !Strings.isNullOrEmpty(customName);
