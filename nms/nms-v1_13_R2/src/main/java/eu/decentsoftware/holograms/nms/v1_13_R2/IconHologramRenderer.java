@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.nms.v1_13_R2;
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsIconHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
+import net.minecraft.server.v1_13_R2.DataWatcher;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +12,16 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
 
     private final int itemEntityId;
     private final int armorStandEntityId;
+    private final DataWatcher armorStandDataWatcher;
 
     IconHologramRenderer(EntityIdGenerator entityIdGenerator) {
         this.itemEntityId = entityIdGenerator.getFreeEntityId();
         this.armorStandEntityId = entityIdGenerator.getFreeEntityId();
+        this.armorStandDataWatcher = DataWatcherBuilder.create()
+                .withInvisible()
+                .withNoGravity()
+                .withArmorStandProperties(true, true)
+                .toDataWatcher();
     }
 
     @Override
@@ -22,11 +29,7 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
         DecentPosition position = data.getPosition();
         ItemStack content = data.getContent();
         EntityPacketsBuilder.create()
-                .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position))
-                .withEntityMetadata(armorStandEntityId, EntityMetadataBuilder.create()
-                        .withInvisible()
-                        .withArmorStandProperties(true, true)
-                        .toWatchableObjects())
+                .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withSpawnEntity(itemEntityId, EntityType.DROPPED_ITEM, position)
                 .withEntityMetadata(itemEntityId, EntityMetadataBuilder.create()
                         .withItemStack(content)
