@@ -36,9 +36,8 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
 
     @Override
     public void move(Player player, NmsHologramPartData<EntityType> data) {
-        EntityPacketsBuilder.create()
-                .withTeleportEntity(entityId, offsetPosition(data.getPosition()))
-                .sendTo(player);
+        hide(player);
+        display(player, data);
     }
 
     @Override
