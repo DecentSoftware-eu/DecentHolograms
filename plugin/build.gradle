@@ -1,0 +1,82 @@
+plugins {
+    id "maven-publish"
+    alias(libs.plugins.shadow)
+}
+
+version = "2.9.0"
+description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
+
+repositories {
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url = "https://repo.codemc.io/repository/maven-public/" }
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+}
+
+configurations {
+    // Make compileOnly dependencies available in tests
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
+dependencies {
+    implementation project(":nms")
+    implementation project(":nms:nms-common")
+
+    compileOnly(libs.spigot)
+    compileOnly(libs.placeholderapi)
+    compileOnly(libs.headdatabase.api)
+
+    implementation(libs.bstats.bukkit)
+    implementation(libs.item.nbt.api)
+    implementation(libs.xseries)
+
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.annotations)
+    annotationProcessor(libs.annotations)
+
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.junit.jupiter)
+}
+
+processResources {
+    def props = [version: project.version, description: project.description]
+    inputs.properties(props)
+    filteringCharset = "UTF-8"
+    filesMatching("plugin.yml") {
+        expand(props)
+    }
+}
+
+jar {
+    manifest {
+        attributes "Multi-Release": "true"
+    }
+}
+
+shadowJar {
+    archiveFileName.set("DecentHolograms-${version}.jar")
+
+    relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
+    relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
+    relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+}
+
+publishing {
+    publications {
+        create("shadow", MavenPublication) {
+            from(components["java"] as SoftwareComponent)
+            artifactId = "decentholograms"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

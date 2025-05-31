@@ -1,72 +1,29 @@
-plugins {
-    id "java"
-    id "maven-publish"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-}
+subprojects {
+    apply plugin: "java"
 
-group = "eu.decentsoftware.holograms"
-version = "2.8.17"
-description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
+    group = 'eu.decentsoftware.holograms'
 
-repositories {
-    mavenCentral()
-    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url = "https://repo.codemc.io/repository/nms/" }
-    maven { url = "https://repo.codemc.io/repository/maven-public/" }
-    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
-}
-
-dependencies {
-    compileOnly "org.spigotmc:spigot:1.13-R0.1-SNAPSHOT"
-    compileOnly "me.clip:placeholderapi:2.11.6"
-    compileOnly "com.arcaniax:HeadDatabase-API:1.3.2"
-
-    implementation "org.bstats:bstats-bukkit:3.1.0"
-    implementation "de.tr7zw:item-nbt-api:2.15.0"
-    implementation "com.github.cryptomorin:XSeries:13.0.0"
-
-    compileOnly "org.projectlombok:lombok:1.18.36"
-    annotationProcessor "org.projectlombok:lombok:1.18.36"
-    compileOnly "org.jetbrains:annotations:26.0.2"
-    annotationProcessor "org.jetbrains:annotations:26.0.2"
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+    repositories {
+        mavenCentral()
+        maven { url = "https://repo.codemc.io/repository/nms/" }
     }
-}
 
-compileJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-    options.encoding = "UTF-8"
-}
-
-processResources {
-    def props = [version: project.version, description: project.description]
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
-    }
-}
-
-shadowJar {
-    archiveClassifier.set("")
-
-    relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
-    relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
-    relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
-}
-
-publishing {
-    publications {
-        create("shadow", MavenPublication) {
-            from(components["java"] as SoftwareComponent)
-            artifactId = "decentholograms"
+    dependencies {
+        if (!project.path.endsWith(":shared")) {
+            implementation project(":shared")
         }
+    }
+
+    java {
+        withSourcesJar()
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(8)
+        }
+    }
+
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        options.encoding = "UTF-8"
     }
 }
