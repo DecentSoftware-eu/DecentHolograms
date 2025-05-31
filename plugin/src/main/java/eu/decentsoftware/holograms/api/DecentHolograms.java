@@ -7,7 +7,6 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.listeners.PlayerListener;
 import eu.decentsoftware.holograms.api.listeners.WorldListener;
-import eu.decentsoftware.holograms.api.nms.NMS;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
@@ -17,8 +16,8 @@ import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
-import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
+import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
@@ -61,7 +60,6 @@ public final class DecentHolograms {
 
     void enable() {
         initializeNmsAdapter();
-        NMS.init();
         Settings.reload();
         Lang.reload();
         DExecutor.init(3);
