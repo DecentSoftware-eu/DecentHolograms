@@ -3,10 +3,12 @@ package eu.decentsoftware.holograms.api.utils.scheduler;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.DExecutor;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.scheduler.BukkitTask;
 
+@UtilityClass
 public class S {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();

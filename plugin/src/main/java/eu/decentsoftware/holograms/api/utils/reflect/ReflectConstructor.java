@@ -5,6 +5,10 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * @deprecated For removal with {@link eu.decentsoftware.holograms.api.nms.NMS}.
+ */
+@Deprecated
 public class ReflectConstructor {
 
     private final Class<?> clazz;
