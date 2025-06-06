@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this feature request!
-        If this format doesn't suit your needs, feel free to use the [blank](https://github.com/DecentSoftware-eu/DecentHolograms3/issues/new) one instead.
+        If this format doesn't suit your needs, feel free to use the [blank](https://github.com/DecentSoftware-eu/DecentHolograms/issues/new) one instead.
   - type: checkboxes
     id: making-sure
     attributes:
