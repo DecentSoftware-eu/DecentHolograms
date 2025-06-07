@@ -3,5 +3,7 @@ before_install:
   - sdk install java 16-open
   - sdk install java 17-open
   - sdk install java 21.0.2-open
+install:
+  - ./gradlew shadowJar publishToMavenLocal
 env:
   ARTIFACT: 'decentholograms'
