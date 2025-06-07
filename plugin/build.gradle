@@ -20,6 +20,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(":api")
     implementation project(":nms")
     implementation project(":nms:nms-common")
 
