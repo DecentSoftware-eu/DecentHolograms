@@ -2,6 +2,6 @@ jdk: openjdk8
 before_install:
   - sdk install java 16-open
   - sdk install java 17-open
-  - sdk install java 21.0.4-open
+  - sdk install java 21.0.2-open
 env:
   ARTIFACT: 'decentholograms'
