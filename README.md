@@ -29,7 +29,7 @@ Building DecentHolograms is very simple. All you need is JDK 8+, Gradle, Git and
 1. Clone the project to your machine using Git.
 2. Open the project using your IDE or open a command line at the projects' location.
 3. Run `gradle clean shadowJar` and DecentHolograms will build.
-4. You can find the jar at `./build/libs/DecentHolograms-VERSION.jar`
+4. You can find the jar at `./plugin/build/libs/DecentHolograms-VERSION.jar`
 
 ## API [![](https://jitpack.io/v/decentsoftware-eu/decentholograms.svg)](https://jitpack.io/#decentsoftware-eu/decentholograms)
 How to get DecentHolograms API into your project:
