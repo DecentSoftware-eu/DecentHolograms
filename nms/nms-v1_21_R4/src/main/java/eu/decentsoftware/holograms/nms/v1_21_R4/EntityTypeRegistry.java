@@ -18,16 +18,22 @@ final class EntityTypeRegistry {
     }
 
     static EntityTypes<?> findEntityTypes(EntityType entityType) {
-        NamespacedKey keyOrNull = entityType.getKeyOrNull();
-        if (keyOrNull == null) {
-            throw new DecentHologramsNmsException("Couldn't get key for entity type: " + entityType);
-        }
+        NamespacedKey keyOrNull = getNamespacedKey(entityType);
         String key = keyOrNull.getKey();
         Optional<EntityTypes<?>> entityTypes = EntityTypes.a(key);
         if (entityTypes.isPresent()) {
             return entityTypes.get();
         }
         throw new DecentHologramsNmsException("Invalid entity type: " + entityType);
+    }
+
+    private static NamespacedKey getNamespacedKey(EntityType entityType) {
+        try {
+            // Using the deprecated #getKey method because #getKeyOrThrow and #getKeyOrNull don't exist on Paper.
+            return entityType.getKey();
+        } catch (IllegalStateException e) {
+            throw new DecentHologramsNmsException("Couldn't get key for entity type: " + entityType);
+        }
     }
 
 }
