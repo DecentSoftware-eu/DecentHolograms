@@ -18,8 +18,8 @@ final class EntityTypeRegistry {
     }
 
     static EntityTypes<?> findEntityTypes(EntityType entityType) {
-        NamespacedKey keyOrNull = getNamespacedKey(entityType);
-        String key = keyOrNull.getKey();
+        NamespacedKey namespacedKey = getNamespacedKey(entityType);
+        String key = namespacedKey.getKey();
         Optional<EntityTypes<?>> entityTypes = EntityTypes.a(key);
         if (entityTypes.isPresent()) {
             return entityTypes.get();
