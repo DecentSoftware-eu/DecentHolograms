@@ -9,7 +9,6 @@ import eu.decentsoftware.holograms.api.listeners.PlayerListener;
 import eu.decentsoftware.holograms.api.listeners.WorldListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
@@ -62,7 +61,6 @@ public final class DecentHolograms {
         initializeNmsAdapter();
         Settings.reload();
         Lang.reload();
-        DExecutor.init(3);
 
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
@@ -94,7 +92,6 @@ public final class DecentHolograms {
         }
 
         BungeeUtils.destroy();
-        DExecutor.shutdownNow();
     }
 
     /**

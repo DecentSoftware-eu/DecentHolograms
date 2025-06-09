@@ -8,7 +8,6 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
-import eu.decentsoftware.holograms.api.utils.DExecutor;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -482,7 +482,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return;
         }
 
-        DExecutor.execute(() -> {
+        CompletableFuture.runAsync(() -> {
             try {
                 lock.tryLock(250, TimeUnit.MILLISECONDS);
 
