@@ -41,16 +41,17 @@ public final class CFG {
             YamlConfiguration config;
             if (!file.exists()) {
                 // -- If the missing file is a resource, use it
-                InputStream is = plugin.getResource(file.getName());
-                if (is != null) {
-                    InputStreamReader isr = new InputStreamReader(is);
-                    config = YamlConfiguration.loadConfiguration(isr);
-                    config.save(file);
-                    CFG.loadFromConfigurationToObject(object, config);
-                    return config;
-                } else {
-                    config = (YamlConfiguration) CFG.saveIntoConfigurationFromObject(object);
-                    config.save(file);
+                try (InputStream is = plugin.getResource(file.getName())) {
+                    if (is != null) {
+                        InputStreamReader isr = new InputStreamReader(is);
+                        config = YamlConfiguration.loadConfiguration(isr);
+                        config.save(file);
+                        CFG.loadFromConfigurationToObject(object, config);
+                        return config;
+                    } else {
+                        config = (YamlConfiguration) CFG.saveIntoConfigurationFromObject(object);
+                        config.save(file);
+                    }
                 }
             } else {
                 config = YamlConfiguration.loadConfiguration(file);
