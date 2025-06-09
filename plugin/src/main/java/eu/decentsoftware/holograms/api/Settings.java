@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"java:S1444", "java:S3008"})
 @UtilityClass
 public class Settings {
 

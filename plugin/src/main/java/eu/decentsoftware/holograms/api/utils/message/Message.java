@@ -25,13 +25,6 @@ public final class Message {
 				.create());
 	}
 
-	public static void sendHoverURL(Player player, String text, String hoverText, String url) {
-		player.spigot().sendMessage(new ComponentBuilder(text)
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(hoverText)))
-				.event(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
-				.create());
-	}
-
 	public static BaseComponent[] getPagesComponents(final int page, boolean maxPage, String commandFormat) {
 		List<BaseComponent> baseComponents = new ArrayList<>();
 		if (page == 0 && maxPage) {
@@ -64,12 +57,6 @@ public final class Message {
 					.create()));
 		}
 		return baseComponents.toArray(new BaseComponent[0]);
-	}
-
-	public static void sendPaginatedMessage(Player player, int currentPage, String commandFormat, int itemsPerPage, List<String> header, List<String> footer, List<String> items) {
-		Validate.notNull(player);
-		Validate.notNull(items);
-		Message.sendPaginatedMessage(player, currentPage, commandFormat, itemsPerPage, header, footer, items, s -> s);
 	}
 
 	public static <T> void sendPaginatedMessage(Player player, int currentPage, String commandFormat, int itemsPerPage, List<String> header, List<String> footer, List<T> objects, Function<T, String> parseItem) {

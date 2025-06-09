@@ -48,20 +48,6 @@ public class FileUtils {
 	}
 
 	/**
-	 * Get the files in a tree, starting at the given root.
-	 *
-	 * @param rootPath  The root file path.
-	 * @param regex     The regex to match the file names.
-	 * @param createDir Whether to create the root directory if it doesn't exist.
-	 * @return The list of files.
-	 * @since 2.7.10
-	 */
-	@NotNull
-	public static List<File> getFilesFromTree(@NotNull String rootPath, @Nullable String regex, boolean createDir) {
-		return getFilesFromTree(new File(rootPath), regex, createDir);
-	}
-
-	/**
 	 * Get the relative path of a file to a base directory.
 	 *
 	 * @param file The file.

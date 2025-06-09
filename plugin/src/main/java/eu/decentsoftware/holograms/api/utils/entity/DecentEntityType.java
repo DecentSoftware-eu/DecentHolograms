@@ -88,10 +88,6 @@ public final class DecentEntityType {
         return null;
     }
 
-    public static boolean isAllowed(EntityType entityType) {
-        return isAllowed(XEntityType.of(entityType));
-    }
-
     public static boolean isAllowed(XEntityType entityType) {
         return !ENTITY_TYPE_BLACKLIST.contains(entityType);
     }
