@@ -52,6 +52,7 @@ public final class DecentHolograms {
     private AnimationManager animationManager;
     private Ticker ticker;
     private boolean updateAvailable;
+    private DecentHologramsApiProviderImpl apiProvider;
 
     DecentHolograms(@NonNull JavaPlugin plugin) {
         this.plugin = plugin;
@@ -78,9 +79,14 @@ public final class DecentHolograms {
         checkForUpdates();
 
         BungeeUtils.init();
+
+        this.apiProvider = new DecentHologramsApiProviderImpl();
+        DecentHologramsApiProvider.setImplementation(this.apiProvider);
     }
 
     void disable() {
+        this.apiProvider.destroy();
+        DecentHologramsApiProvider.setImplementation(null);
         this.nmsPacketListenerService.shutdown();
         this.featureManager.destroy();
         this.hologramManager.destroy();
