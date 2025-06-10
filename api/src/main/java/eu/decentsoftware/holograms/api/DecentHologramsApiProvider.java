@@ -35,21 +35,34 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 abstract class DecentHologramsApiProvider {
 
+    private static final String UNINITIALIZED_ERROR_MESSAGE = "DecentHolograms API is not initialized."
+            + " Please ensure that the DecentHolograms plugin is loaded before accessing the API.";
+    private static final String LOG_MESSAGE_TEMPLATE = "Caught plugin %s v%s (by %s) trying to access DecentHolograms API"
+            + " when DecentHolograms is not initialized. Make sure you have DecentHolograms as a dependency in your plugin.yml"
+            + " and that it is loaded before you try to access the API.";
+
     private static DecentHologramsApiProvider implementation;
 
     @Contract(pure = true)
     @ApiStatus.Internal
-    static DecentHologramsApiProvider getImplementation() {
+    static DecentHologramsApiProvider getImplementation(@NotNull Plugin plugin) {
         if (DecentHologramsApiProvider.implementation == null) {
-            throw new IllegalStateException("DecentHologramsApiProvider implementation is not set.");
+            logUninitializedAccessError(plugin);
+            throw new IllegalStateException(UNINITIALIZED_ERROR_MESSAGE);
         }
         return DecentHologramsApiProvider.implementation;
     }
 
+    private static void logUninitializedAccessError(@NotNull Plugin plugin) {
+        String logMessage = String.format(LOG_MESSAGE_TEMPLATE, plugin.getName(),
+                plugin.getDescription().getVersion(), plugin.getDescription().getAuthors());
+        plugin.getLogger().severe(logMessage);
+    }
+
     @ApiStatus.Internal
-    static void setImplementation(@NotNull DecentHologramsApiProvider implementation) {
+    static void setImplementation(DecentHologramsApiProvider implementation) {
         if (DecentHologramsApiProvider.implementation != null) {
-            throw new IllegalStateException("DecentHologramsApiProvider implementation is already set.");
+            throw new IllegalStateException("DecentHolograms API is already initialized.");
         }
         DecentHologramsApiProvider.implementation = implementation;
     }

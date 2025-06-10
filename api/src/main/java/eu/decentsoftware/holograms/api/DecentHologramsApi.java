@@ -36,8 +36,9 @@ public interface DecentHologramsApi {
      * @return The instance of the API.
      * @since 2.10.0
      */
+    @NotNull
     static DecentHologramsApi getInstance(@NotNull Plugin plugin) {
-        return DecentHologramsApiProvider.getImplementation().getApi(plugin);
+        return DecentHologramsApiProvider.getImplementation(plugin).getApi(plugin);
     }
 
 }
