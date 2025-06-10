@@ -80,4 +80,15 @@ publishing {
 
 test {
     useJUnitPlatform()
+
+    // Workaround for case-insensitive file systems.
+    // The two classes having similar names cause NoClassDefFoundError in tests
+    // because the classloader tries to load the wrong one.
+    // This is a temporary fix until the DecentHologramsAPI class is removed from the plugin.
+    doFirst {
+        def badClass = file("$buildDir/classes/java/main/eu/decentsoftware/holograms/api/DecentHologramsAPI.class")
+        if (badClass.exists()) {
+            badClass.delete()
+        }
+    }
 }
