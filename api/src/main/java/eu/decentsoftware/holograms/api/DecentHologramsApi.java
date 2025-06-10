@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.api;
 
+import eu.decentsoftware.holograms.api.hologram.HologramService;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,5 +41,16 @@ public interface DecentHologramsApi {
     static DecentHologramsApi getInstance(@NotNull Plugin plugin) {
         return DecentHologramsApiProvider.getImplementation(plugin).getApi(plugin);
     }
+
+    /**
+     * Provides access to the HologramService, which allows for the creation and management
+     * of holograms tied to the API instance.
+     *
+     * @return An instance of the HologramService for the current API instance
+     * @see HologramService
+     * @since 2.10.0
+     */
+    @NotNull
+    HologramService getHologramService();
 
 }
