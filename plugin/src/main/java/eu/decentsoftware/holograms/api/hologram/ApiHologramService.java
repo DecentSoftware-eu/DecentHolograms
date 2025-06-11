@@ -18,9 +18,7 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.location.ApiLocationManager;
 import eu.decentsoftware.holograms.api.location.DecentLocation;
-import eu.decentsoftware.holograms.api.visibility.ApiVisibilityManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -32,6 +30,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ApiHologramService implements HologramService {
 
     private final Set<ApiHologram> holograms = ConcurrentHashMap.newKeySet();
+    private final ApiHologramFactory hologramFactory;
+
+    public ApiHologramService(ApiHologramFactory hologramFactory) {
+        this.hologramFactory = hologramFactory;
+    }
 
     public void destroy() {
         holograms.forEach(ApiHologram::destroy);
@@ -41,11 +44,7 @@ public class ApiHologramService implements HologramService {
     @NotNull
     @Override
     public Hologram createHologram(@NotNull DecentLocation location) {
-        ApiHologram hologram = new ApiHologram(
-                new ApiLocationManager(location),
-                new ApiVisibilityManager(),
-                new ApiHologramSettings()
-        );
+        ApiHologram hologram = hologramFactory.createHologram(location);
         holograms.add(hologram);
         return hologram;
     }
