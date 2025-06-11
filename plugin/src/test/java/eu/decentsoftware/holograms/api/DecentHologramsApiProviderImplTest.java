@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.hologram.ApiHologramService;
+import eu.decentsoftware.holograms.api.hologram.ApiHologramManager;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,8 +70,8 @@ class DecentHologramsApiProviderImplTest {
         DecentHologramsApi api = provider.getApi(plugin);
 
         assertNotNull(api);
-        assertNotNull(api.getHologramService());
-        assertInstanceOf(ApiHologramService.class, api.getHologramService());
+        assertNotNull(api.getHologramManager());
+        assertInstanceOf(ApiHologramManager.class, api.getHologramManager());
     }
 
     @Test
@@ -85,7 +85,7 @@ class DecentHologramsApiProviderImplTest {
         assertNotNull(api1);
         assertNotNull(api2);
         assertNotEquals(api1, api2);
-        assertNotEquals(api1.getHologramService(), api2.getHologramService());
+        assertNotEquals(api1.getHologramManager(), api2.getHologramManager());
     }
 
 }

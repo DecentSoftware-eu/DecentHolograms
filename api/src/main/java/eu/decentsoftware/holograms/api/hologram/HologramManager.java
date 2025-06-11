@@ -25,19 +25,19 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Collection;
 
 /**
- * This service provides operations for creating and managing holograms.
+ * This manager provides operations for creating and managing holograms.
  * <p>
- * Holograms created with this service are isolated to the API instance that created them.
+ * Holograms created with this manager are isolated to the API instance that created them.
  * They will not be available from other API instances, even if they are on the same server.
  * <p>
- * Holograms created with this service will be automatically destroyed when the API instance is stopped.
+ * Holograms created with this manager will be automatically destroyed when the API instance is stopped.
  * This can happen when the server is stopped or when the plugin that created the API instance is disabled.
  *
  * @author d0by
  * @see Hologram
  * @since 2.10.0
  */
-public interface HologramService {
+public interface HologramManager {
 
     /**
      * Create a new, empty hologram.

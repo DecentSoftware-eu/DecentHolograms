@@ -18,27 +18,27 @@
 
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.hologram.ApiHologramService;
+import eu.decentsoftware.holograms.api.hologram.ApiHologramManager;
 import eu.decentsoftware.holograms.utils.Validate;
 import org.jetbrains.annotations.NotNull;
 
 public class DecentHologramsApiImpl implements DecentHologramsApi {
 
-    private final ApiHologramService hologramService;
+    private final ApiHologramManager hologramManager;
 
-    public DecentHologramsApiImpl(@NotNull ApiHologramService hologramService) {
-        Validate.notNull(hologramService, "hologramService cannot be null");
-        this.hologramService = hologramService;
+    public DecentHologramsApiImpl(@NotNull ApiHologramManager hologramManager) {
+        Validate.notNull(hologramManager, "hologramManager cannot be null");
+        this.hologramManager = hologramManager;
     }
 
     public void destroy() {
-        hologramService.destroy();
+        hologramManager.destroy();
     }
 
     @NotNull
     @Override
-    public ApiHologramService getHologramService() {
-        return hologramService;
+    public ApiHologramManager getHologramManager() {
+        return hologramManager;
     }
 
 }

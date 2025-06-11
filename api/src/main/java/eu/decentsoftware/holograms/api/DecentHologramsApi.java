@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.hologram.HologramService;
+import eu.decentsoftware.holograms.api.hologram.HologramManager;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,14 +43,14 @@ public interface DecentHologramsApi {
     }
 
     /**
-     * Provides access to the HologramService, which allows for the creation and management
+     * Provides access to the {@link HologramManager}, which allows for the creation and management
      * of holograms tied to the API instance.
      *
-     * @return An instance of the HologramService for the current API instance
-     * @see HologramService
+     * @return An instance of the {@link HologramManager} for the current API instance
+     * @see HologramManager
      * @since 2.10.0
      */
     @NotNull
-    HologramService getHologramService();
+    HologramManager getHologramManager();
 
 }

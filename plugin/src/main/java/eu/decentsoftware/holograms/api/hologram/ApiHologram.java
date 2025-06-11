@@ -45,6 +45,7 @@ public class ApiHologram implements Hologram {
         this.settings = settings;
     }
 
+    @Override
     public void destroy() {
         hide();
         clearPages();

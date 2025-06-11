@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.hologram.ApiHologramService;
+import eu.decentsoftware.holograms.api.hologram.ApiHologramManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,12 +33,12 @@ import static org.mockito.Mockito.verify;
 class DecentHologramsApiImplTest {
 
     @Mock
-    private ApiHologramService hologramService;
+    private ApiHologramManager hologramManager;
     private DecentHologramsApiImpl api;
 
     @BeforeEach
     void setUp() {
-        api = new DecentHologramsApiImpl(hologramService);
+        api = new DecentHologramsApiImpl(hologramManager);
     }
 
     @Test
@@ -50,14 +50,14 @@ class DecentHologramsApiImplTest {
 
     @Test
     void testGetHologramService() {
-        assertEquals(hologramService, api.getHologramService());
+        assertEquals(hologramManager, api.getHologramManager());
     }
 
     @Test
     void testDestroy() {
         api.destroy();
 
-        verify(hologramService).destroy();
+        verify(hologramManager).destroy();
     }
 
 }

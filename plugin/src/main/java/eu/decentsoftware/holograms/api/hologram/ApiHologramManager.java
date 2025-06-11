@@ -27,12 +27,12 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ApiHologramService implements HologramService {
+public class ApiHologramManager implements HologramManager {
 
     private final Set<ApiHologram> holograms = ConcurrentHashMap.newKeySet();
     private final ApiHologramFactory hologramFactory;
 
-    public ApiHologramService(ApiHologramFactory hologramFactory) {
+    public ApiHologramManager(ApiHologramFactory hologramFactory) {
         this.hologramFactory = hologramFactory;
     }
 

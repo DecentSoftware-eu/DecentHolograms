@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.hologram.ApiHologramFactory;
-import eu.decentsoftware.holograms.api.hologram.ApiHologramService;
+import eu.decentsoftware.holograms.api.hologram.ApiHologramManager;
 import eu.decentsoftware.holograms.utils.Validate;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +41,8 @@ class DecentHologramsApiProviderImpl extends DecentHologramsApiProvider {
         Validate.notNull(plugin, "plugin cannot be null");
 
         ApiHologramFactory hologramFactory = new ApiHologramFactory();
-        ApiHologramService hologramService = new ApiHologramService(hologramFactory);
-        DecentHologramsApiImpl apiInstance = new DecentHologramsApiImpl(hologramService);
+        ApiHologramManager hologramManager = new ApiHologramManager(hologramFactory);
+        DecentHologramsApiImpl apiInstance = new DecentHologramsApiImpl(hologramManager);
         apiMap.put(plugin, apiInstance);
         return apiInstance;
     }

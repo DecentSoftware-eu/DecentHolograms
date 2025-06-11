@@ -33,12 +33,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ApiHologramServiceTest {
+class ApiHologramManagerTest {
 
     @Mock
     private ApiHologramFactory hologramFactory;
     @InjectMocks
-    private ApiHologramService service;
+    private ApiHologramManager manager;
 
     @Test
     void testCreateHologram() {
@@ -47,11 +47,11 @@ class ApiHologramServiceTest {
 
         when(hologramFactory.createHologram(location)).thenReturn(hologram);
 
-        Hologram createdHologram = service.createHologram(location);
+        Hologram createdHologram = manager.createHologram(location);
 
         assertEquals(hologram, createdHologram);
-        assertEquals(1, service.getHolograms().size());
-        assertTrue(service.getHolograms().contains(hologram));
+        assertEquals(1, manager.getHolograms().size());
+        assertTrue(manager.getHolograms().contains(hologram));
         verify(hologramFactory, times(1)).createHologram(location);
     }
 
@@ -65,13 +65,13 @@ class ApiHologramServiceTest {
         when(hologramFactory.createHologram(location1)).thenReturn(hologram1);
         when(hologramFactory.createHologram(location2)).thenReturn(hologram2);
 
-        service.createHologram(location1);
-        service.createHologram(location2);
+        manager.createHologram(location1);
+        manager.createHologram(location2);
 
-        service.destroy();
+        manager.destroy();
 
         verify(hologram1, times(1)).destroy();
         verify(hologram2, times(1)).destroy();
-        assertTrue(service.getHolograms().isEmpty());
+        assertTrue(manager.getHolograms().isEmpty());
     }
 }
