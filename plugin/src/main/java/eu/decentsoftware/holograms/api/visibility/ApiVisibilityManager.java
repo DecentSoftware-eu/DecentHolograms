@@ -24,12 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 public class ApiVisibilityManager implements VisibilityManager {
 
-    private final Map<UUID, Visibility> playerVisibilityMap = new ConcurrentHashMap<>();
+    private static final String PLAYER_CANNOT_BE_NULL = "player cannot be null";
+    // Using WeakHashMap to allow GC to clean up player entries when they disconnect
+    private final Map<Player, Visibility> playerVisibilityMap = new WeakHashMap<>();
     private Visibility defaultVisibility = Visibility.VISIBLE;
 
     @Override
@@ -47,26 +48,28 @@ public class ApiVisibilityManager implements VisibilityManager {
 
     @Override
     public void setPlayerVisibility(@NotNull Player player, @Nullable Visibility visibility) {
-        Validate.notNull(player, "player cannot be null");
+        Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
-        if (visibility == null) {
-            playerVisibilityMap.remove(player.getUniqueId());
-        } else {
-            playerVisibilityMap.put(player.getUniqueId(), visibility);
+        synchronized (playerVisibilityMap) {
+            if (visibility == null) {
+                playerVisibilityMap.remove(player);
+            } else {
+                playerVisibilityMap.put(player, visibility);
+            }
         }
     }
 
     @Nullable
     @Override
     public Visibility getPlayerVisibility(@NotNull Player player) {
-        Validate.notNull(player, "player cannot be null");
+        Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
-        return playerVisibilityMap.get(player.getUniqueId());
+        return playerVisibilityMap.get(player);
     }
 
     @Override
     public boolean isVisibleTo(@NotNull Player player) {
-        Validate.notNull(player, "player cannot be null");
+        Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
         Visibility playerVisibility = getPlayerVisibility(player);
         return (playerVisibility == null && getDefaultVisibility() == Visibility.VISIBLE) || playerVisibility == Visibility.VISIBLE;

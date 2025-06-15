@@ -28,13 +28,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApiVisibilityManagerTest {
@@ -139,8 +136,6 @@ class ApiVisibilityManagerTest {
     }
 
     private static Player mockPlayer() {
-        Player mockPlayer = mock(Player.class);
-        when(mockPlayer.getUniqueId()).thenReturn(UUID.randomUUID());
-        return mockPlayer;
+        return mock(Player.class);
     }
 }
