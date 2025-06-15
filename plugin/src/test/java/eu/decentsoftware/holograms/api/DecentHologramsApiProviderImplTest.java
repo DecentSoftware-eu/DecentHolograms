@@ -88,4 +88,16 @@ class DecentHologramsApiProviderImplTest {
         assertNotEquals(api1.getHologramManager(), api2.getHologramManager());
     }
 
+    @Test
+    void testGetApi_samePlugin() {
+        Plugin plugin = mock(Plugin.class);
+
+        DecentHologramsApi api1 = provider.getApi(plugin);
+        DecentHologramsApi api2 = provider.getApi(plugin);
+
+        assertNotNull(api1);
+        assertNotNull(api2);
+        assertEquals(api1, api2);
+    }
+
 }

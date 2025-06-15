@@ -40,11 +40,11 @@ class DecentHologramsApiProviderImpl extends DecentHologramsApiProvider {
     DecentHologramsApiImpl getApi(@NotNull Plugin plugin) {
         Validate.notNull(plugin, "plugin cannot be null");
 
-        ApiHologramFactory hologramFactory = new ApiHologramFactory();
-        ApiHologramManager hologramManager = new ApiHologramManager(hologramFactory);
-        DecentHologramsApiImpl apiInstance = new DecentHologramsApiImpl(hologramManager);
-        apiMap.put(plugin, apiInstance);
-        return apiInstance;
+        return apiMap.computeIfAbsent(plugin, pluginKey -> {
+            ApiHologramFactory hologramFactory = new ApiHologramFactory();
+            ApiHologramManager hologramManager = new ApiHologramManager(hologramFactory);
+            return new DecentHologramsApiImpl(hologramManager);
+        });
     }
 
 }
