@@ -43,7 +43,7 @@ public class ApiHologramManager implements HologramManager {
 
     @NotNull
     @Override
-    public Hologram createHologram(@NotNull DecentLocation location) {
+    public ApiHologram createHologram(@NotNull DecentLocation location) {
         ApiHologram hologram = hologramFactory.createHologram(location);
         holograms.add(hologram);
         return hologram;

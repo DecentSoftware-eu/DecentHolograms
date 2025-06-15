@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.api.location.DecentOffsets;
 import eu.decentsoftware.holograms.utils.Validate;
 import org.jetbrains.annotations.NotNull;
 
-public class ApiHologramLine implements HologramLine {
+public abstract class ApiHologramLine implements HologramLine {
 
     private double height = 0.0d;
     private DecentOffsets offsets = DecentOffsets.ZERO;

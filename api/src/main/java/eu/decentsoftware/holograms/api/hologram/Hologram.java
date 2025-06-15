@@ -37,6 +37,16 @@ import java.util.List;
 public interface Hologram {
 
     /**
+     * Destroy this hologram. This method hides the hologram and destroys all components.
+     * <p>
+     * After calling this method, the hologram can't be used anymore and should not be
+     * referenced.
+     *
+     * @since 2.10.0
+     */
+    void destroy();
+
+    /**
      * Displays the hologram to the players for whom it is visible.
      * This method ensures the visibility of the hologram and renders
      * all components and pages for the intended audience.

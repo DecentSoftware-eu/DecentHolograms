@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.api.hologram.line.ApiHologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,43 +30,55 @@ import java.util.List;
 
 public class ApiHologramPage implements HologramPage {
 
-    private final List<HologramLine> lines = new ArrayList<>();
+    private final ApiHologram hologram;
+    private final List<ApiHologramLine> lines = new ArrayList<>();
+
+    public ApiHologramPage(ApiHologram hologram) {
+        this.hologram = hologram;
+    }
 
     @Nullable
     @Override
-    public HologramLine getLine(int index) {
+    public ApiHologramLine getLine(int index) {
+        hologram.checkDestroyed();
         return lines.get(index);
     }
 
     @Override
     public void removeLine(int index) {
+        hologram.checkDestroyed();
         lines.remove(index);
     }
 
     @Override
     public void appendLine(@NotNull HologramLine line) {
-        lines.add(line);
+        hologram.checkDestroyed();
+        lines.add((ApiHologramLine) line);
     }
 
     @Override
     public void insertLine(int index, @NotNull HologramLine line) {
-        lines.add(index, line);
+        hologram.checkDestroyed();
+        lines.add(index, (ApiHologramLine) line);
     }
 
     @NotNull
     @Unmodifiable
     @Override
     public List<HologramLine> getLines() {
+        hologram.checkDestroyed();
         return ImmutableList.copyOf(lines);
     }
 
     @Override
     public void clearLines() {
+        hologram.checkDestroyed();
         lines.clear();
     }
 
     @Override
     public double getHeight() {
+        hologram.checkDestroyed();
         return lines.stream()
                 .map(HologramLine::getHeight)
                 .reduce(Double::sum)
@@ -74,6 +87,7 @@ public class ApiHologramPage implements HologramPage {
 
     @Override
     public int size() {
+        hologram.checkDestroyed();
         return lines.size();
     }
 }
