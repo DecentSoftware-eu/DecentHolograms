@@ -45,7 +45,7 @@ class DecentHologramsApiImplTest {
     void testConstruction_nullHologramService() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecentHologramsApiImpl(null));
 
-        assertEquals("hologramService cannot be null", exception.getMessage());
+        assertEquals("hologramManager cannot be null", exception.getMessage());
     }
 
     @Test
