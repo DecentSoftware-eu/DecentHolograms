@@ -265,7 +265,7 @@ public interface Hologram {
      * @since 2.10.0
      */
     @NotNull
-    LocationManager getPositionManager();
+    LocationManager getLocationManager();
 
     /**
      * The visibility manager of the hologram, used for managing

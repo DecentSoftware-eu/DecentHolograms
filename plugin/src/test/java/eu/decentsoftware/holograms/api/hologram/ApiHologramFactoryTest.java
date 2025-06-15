@@ -40,8 +40,8 @@ class ApiHologramFactoryTest {
         ApiHologram hologram = factory.createHologram(location);
 
         assertNotNull(hologram);
-        assertNotNull(hologram.getPositionManager());
-        assertEquals(location, hologram.getPositionManager().getLocation());
+        assertNotNull(hologram.getLocationManager());
+        assertEquals(location, hologram.getLocationManager().getLocation());
         assertNotNull(hologram.getVisibilityManager());
     }
 }
