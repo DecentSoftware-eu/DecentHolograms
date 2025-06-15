@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class DecentHologramsApiProviderImplTest {
 
@@ -44,7 +45,7 @@ class DecentHologramsApiProviderImplTest {
 
     @Test
     void testDestroy() {
-        Plugin plugin = mock(Plugin.class);
+        Plugin plugin = mockPlugin();
 
         try (MockedConstruction<DecentHologramsApiImpl> ignored = mockConstruction(DecentHologramsApiImpl.class)) {
             // Register an API instance
@@ -64,8 +65,18 @@ class DecentHologramsApiProviderImplTest {
     }
 
     @Test
-    void testGetApi() {
+    void testGetApi_pluginNotEnabled() {
         Plugin plugin = mock(Plugin.class);
+        when(plugin.isEnabled()).thenReturn(false);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> provider.getApi(plugin));
+
+        assertEquals("plugin must be enabled", exception.getMessage());
+    }
+
+    @Test
+    void testGetApi() {
+        Plugin plugin = mockPlugin();
 
         DecentHologramsApi api = provider.getApi(plugin);
 
@@ -76,8 +87,8 @@ class DecentHologramsApiProviderImplTest {
 
     @Test
     void testGetApi_differentPlugins() {
-        Plugin plugin1 = mock(Plugin.class);
-        Plugin plugin2 = mock(Plugin.class);
+        Plugin plugin1 = mockPlugin();
+        Plugin plugin2 = mockPlugin();
 
         DecentHologramsApi api1 = provider.getApi(plugin1);
         DecentHologramsApi api2 = provider.getApi(plugin2);
@@ -90,7 +101,7 @@ class DecentHologramsApiProviderImplTest {
 
     @Test
     void testGetApi_samePlugin() {
-        Plugin plugin = mock(Plugin.class);
+        Plugin plugin = mockPlugin();
 
         DecentHologramsApi api1 = provider.getApi(plugin);
         DecentHologramsApi api2 = provider.getApi(plugin);
@@ -98,6 +109,12 @@ class DecentHologramsApiProviderImplTest {
         assertNotNull(api1);
         assertNotNull(api2);
         assertEquals(api1, api2);
+    }
+
+    private static Plugin mockPlugin() {
+        Plugin plugin = mock(Plugin.class);
+        when(plugin.isEnabled()).thenReturn(true);
+        return plugin;
     }
 
 }

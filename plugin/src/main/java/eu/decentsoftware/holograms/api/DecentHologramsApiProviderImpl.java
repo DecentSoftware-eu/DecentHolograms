@@ -39,6 +39,7 @@ class DecentHologramsApiProviderImpl extends DecentHologramsApiProvider {
     @Override
     DecentHologramsApiImpl getApi(@NotNull Plugin plugin) {
         Validate.notNull(plugin, "plugin cannot be null");
+        Validate.isTrue(plugin.isEnabled(), "plugin must be enabled");
 
         return apiMap.computeIfAbsent(plugin, pluginKey -> {
             ApiHologramFactory hologramFactory = new ApiHologramFactory();

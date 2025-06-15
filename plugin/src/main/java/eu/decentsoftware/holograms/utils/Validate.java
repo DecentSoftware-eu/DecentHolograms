@@ -45,4 +45,18 @@ public class Validate {
         }
     }
 
+    /**
+     * Checks if the given boolean expression is true and throws an IllegalArgumentException with the provided message if it is not.
+     *
+     * @param expression The boolean expression to check.
+     * @param message    The message to include in the exception if the expression is false.
+     * @throws IllegalArgumentException if the expression is false.
+     * @since 2.10.0
+     */
+    public static void isTrue(boolean expression, String message) {
+        if (!expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
 }
