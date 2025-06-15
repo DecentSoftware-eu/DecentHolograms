@@ -36,6 +36,20 @@ class DecentHologramsApiProviderImpl extends DecentHologramsApiProvider {
         apiMap.clear();
     }
 
+    /**
+     * Destroys the API instance associated with the given plugin, if it exists.
+     *
+     * @param plugin the plugin whose API instance should be destroyed
+     */
+    void destroyIfExists(@NotNull Plugin plugin) {
+        Validate.notNull(plugin, "plugin cannot be null");
+
+        DecentHologramsApiImpl api = apiMap.remove(plugin);
+        if (api != null) {
+            api.destroy();
+        }
+    }
+
     @Override
     DecentHologramsApiImpl getApi(@NotNull Plugin plugin) {
         Validate.notNull(plugin, "plugin cannot be null");

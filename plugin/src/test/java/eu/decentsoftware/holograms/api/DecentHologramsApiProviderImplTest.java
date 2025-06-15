@@ -58,6 +58,34 @@ class DecentHologramsApiProviderImplTest {
     }
 
     @Test
+    void testDestroyIfExists_nullPlugin() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> provider.destroyIfExists(null));
+
+        assertEquals("plugin cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testDestroyIfExists() {
+        Plugin plugin = mockPlugin();
+
+        try (MockedConstruction<DecentHologramsApiImpl> ignored = mockConstruction(DecentHologramsApiImpl.class)) {
+            // Register an API instance
+            DecentHologramsApiImpl api = provider.getApi(plugin);
+
+            provider.destroyIfExists(plugin);
+
+            verify(api).destroy();
+        }
+    }
+
+    @Test
+    void testDestroyIfExists_noApi() {
+        Plugin plugin = mockPlugin();
+
+        provider.destroyIfExists(plugin);
+    }
+
+    @Test
     void testGetApi_nullPlugin() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> provider.getApi(null));
 

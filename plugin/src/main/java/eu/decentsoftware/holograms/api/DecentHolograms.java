@@ -82,6 +82,8 @@ public final class DecentHolograms {
 
         this.apiProvider = new DecentHologramsApiProviderImpl();
         DecentHologramsApiProvider.setImplementation(this.apiProvider);
+        DecentHologramsApiListener apiListener = new DecentHologramsApiListener(this.apiProvider);
+        pm.registerEvents(apiListener, this.plugin);
     }
 
     void disable() {
