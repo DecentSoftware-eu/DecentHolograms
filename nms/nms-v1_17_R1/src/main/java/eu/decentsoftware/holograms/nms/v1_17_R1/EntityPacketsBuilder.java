@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.nms.v1_17_R1;
 
 import com.mojang.datafixers.util.Pair;
+import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
@@ -22,12 +23,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+
 class EntityPacketsBuilder {
+
+    private static final Constructor<?> destroyPacketConstructor = getTheOtherFuckingDestroyPacketConstructor();
+
+    private static Constructor<?> getTheOtherFuckingDestroyPacketConstructor() {
+        Constructor<?> constructor;
+        try {
+            // This constructor is available in "1.17" only.
+            constructor = PacketPlayOutEntityDestroy.class.getConstructor(int.class);
+        } catch (NoSuchMethodException | SecurityException e) {
+            constructor = null;
+        }
+        return constructor;
+    }
 
     private final List<Packet<?>> packets;
 
@@ -146,7 +163,24 @@ class EntityPacketsBuilder {
     }
 
     EntityPacketsBuilder withRemoveEntity(int entityId) {
-        PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(entityId);
+        PacketPlayOutEntityDestroy packet;
+        try {
+            packet = new PacketPlayOutEntityDestroy(entityId);
+        } catch (NoSuchMethodError e) {
+            // So it seems that ONLY "1.17" has this constructor.
+            // The NMS version is not even different from "1.17.1", which has the same constructor as all the other versions.
+            // Basically, one of the "v1_17_R1" versions is different from the other.
+            // Working with minecraft is so much fun.
+            try {
+                if (destroyPacketConstructor == null) {
+                    // what do you want from me then? is there a third constructor?
+                    throw new DecentHologramsNmsException("Failed to find the constructor for PacketPlayOutEntityDestroy.");
+                }
+                packet = (PacketPlayOutEntityDestroy) destroyPacketConstructor.newInstance(entityId);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+                throw new DecentHologramsNmsException("Failed to remove entity with id " + entityId + " using the 1.17 constructor.", ex);
+            }
+        }
         packets.add(packet);
         return this;
     }
