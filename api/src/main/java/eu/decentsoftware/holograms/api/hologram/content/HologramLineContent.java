@@ -16,7 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.hologram.content;
 
-public interface SmallHeadHologramLine extends HeadHologramLine {
+/**
+ * This interface represents the content of a line in a hologram.
+ *
+ * <p>Implementations of this interface represent individual types of line content.</p>
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
+public interface HologramLineContent {
 }

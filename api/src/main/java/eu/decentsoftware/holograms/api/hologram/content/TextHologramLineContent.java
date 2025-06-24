@@ -16,37 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.hologram.content;
 
-import eu.decentsoftware.holograms.api.hologram.HologramLine;
-import eu.decentsoftware.holograms.api.location.DecentOffsets;
-import eu.decentsoftware.holograms.utils.Validate;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ApiHologramLine implements HologramLine {
+public interface TextHologramLineContent {
 
-    private double height = 0.0d;
-    private DecentOffsets offsets = DecentOffsets.ZERO;
-
-    @Override
-    public double getHeight() {
-        return height;
-    }
-
-    @Override
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
+    /**
+     * Get the text of this line.
+     * This is the text that will be displayed in the hologram.
+     *
+     * @return The text of this line.
+     * @since 2.10.0
+     */
     @NotNull
-    @Override
-    public DecentOffsets getOffsets() {
-        return offsets;
-    }
+    String getText();
 
-    @Override
-    public void setOffsets(@NotNull DecentOffsets offsets) {
-        Validate.notNull(offsets, "offsets cannot be null");
-        this.offsets = offsets;
-    }
+    /**
+     * Set the text of this line.
+     * This is the text that will be displayed in the hologram.
+     *
+     * @param text The text to set for this line.
+     * @since 2.10.0
+     */
+    void setText(@NotNull String text);
+
 }

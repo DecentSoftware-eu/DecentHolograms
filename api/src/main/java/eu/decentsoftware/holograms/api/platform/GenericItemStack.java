@@ -16,29 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.platform;
 
-import org.jetbrains.annotations.NotNull;
+public interface GenericItemStack {
 
-public interface TextHologramLine extends HologramLine {
-
-    /**
-     * Get the text of this line.
-     *
-     * @return The text of this line.
-     * @since 2.10.0
-     */
-    @NotNull
-    String getText();
-
-    /**
-     * Set the text of this line.
-     * <p>
-     * This method also updates the line accordingly.
-     *
-     * @param text The text of this line.
-     * @since 2.10.0
-     */
-    void setText(@NotNull String text);
+    Object getPlatformItemStack();
 
 }

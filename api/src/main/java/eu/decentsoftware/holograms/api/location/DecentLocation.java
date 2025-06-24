@@ -18,18 +18,14 @@
 
 package eu.decentsoftware.holograms.api.location;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
  * An immutable location without yaw and pitch.
- * This class does not store the {@link World} object, but only the world name,
+ * This class does not store the World object, but only the world name,
  * which makes it possible to use this class even if the world is not loaded.
  *
  * @author d0by
@@ -57,33 +53,6 @@ public final class DecentLocation {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    /**
-     * Create a new instance of DecentLocation.
-     *
-     * @param world The world.
-     * @param x     The x coordinate.
-     * @param y     The y coordinate.
-     * @param z     The z coordinate.
-     * @since 2.10.0
-     */
-    @Contract(pure = true)
-    public DecentLocation(@NotNull World world, double x, double y, double z) {
-        this.worldName = world.getName();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    /**
-     * Create a new instance of DecentLocation from a Bukkit {@link Location}.
-     *
-     * @param location The Bukkit {@link Location}.
-     * @since 2.10.0
-     */
-    public DecentLocation(@NotNull Location location) {
-        this(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
 
     /**
@@ -165,32 +134,6 @@ public final class DecentLocation {
     }
 
     /**
-     * Get the bukkit world of this location.
-     *
-     * @return The bukkit world of this location. Null if the world is not loaded.
-     * @since 2.10.0
-     */
-    @Nullable
-    public World getWorld() {
-        return Bukkit.getWorld(getWorldName());
-    }
-
-    /**
-     * Get the bukkit location of this location.
-     *
-     * @return The bukkit location of this location. Null if the world is not loaded.
-     * @since 2.10.0
-     */
-    @Nullable
-    public Location toBukkitLocation() {
-        World world = Bukkit.getWorld(getWorldName());
-        if (world == null) {
-            return null;
-        }
-        return new Location(world, getX(), getY(), getZ());
-    }
-
-    /**
      * Get the distance between this location and another location.
      *
      * @param location The other location.
@@ -198,17 +141,6 @@ public final class DecentLocation {
      * @since 2.10.0
      */
     public double distance(@NotNull DecentLocation location) {
-        return Math.sqrt(distanceSquared(location));
-    }
-
-    /**
-     * Get the distance between this location and another location.
-     *
-     * @param location The other location.
-     * @return The distance between the two locations.
-     * @since 2.10.0
-     */
-    public double distance(@NotNull Location location) {
         return Math.sqrt(distanceSquared(location));
     }
 
@@ -231,18 +163,6 @@ public final class DecentLocation {
     }
 
     /**
-     * Get the squared distance between this location and another location.
-     *
-     * @param location The other location.
-     * @return The squared distance between the two locations.
-     * @throws IllegalArgumentException If the locations are in different worlds.
-     * @since 2.10.0
-     */
-    public double distanceSquared(@NotNull Location location) {
-        return distanceSquared(new DecentLocation(location));
-    }
-
-    /**
      * Check if this location is in the same world as another location.
      *
      * @param location The other location.
@@ -251,17 +171,6 @@ public final class DecentLocation {
      */
     public boolean isSameWorld(@NotNull DecentLocation location) {
         return getWorldName().equals(location.getWorldName());
-    }
-
-    /**
-     * Check if this location is in the same world as another location.
-     *
-     * @param location The other location.
-     * @return True if the locations are in the same world.
-     * @since 2.10.0
-     */
-    public boolean isSameWorld(@NotNull Location location) {
-        return getWorldName().equals(location.getWorld().getName());
     }
 
     /**

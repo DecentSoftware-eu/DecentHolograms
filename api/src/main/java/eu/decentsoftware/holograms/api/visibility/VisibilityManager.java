@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.visibility;
 
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.api.platform.GenericPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,9 +27,9 @@ import org.jetbrains.annotations.Nullable;
  * It is able to show/hide the hologram for specific players.
  * <p>
  * To modify the visibility of the hologram for a specific player, use
- * {@link #setPlayerVisibility(Player, Visibility)} or {@link #resetPlayerVisibility(Player)}.
+ * {@link #setPlayerVisibility(GenericPlayer, Visibility)} or {@link #resetPlayerVisibility(GenericPlayer)}.
  * To get the visibility of the hologram for a specific player,
- * use {@link #getPlayerVisibility(Player)}.
+ * use {@link #getPlayerVisibility(GenericPlayer)}.
  * <p>
  * Player visibility is always prioritized over the default visibility.
  * <p>
@@ -84,21 +84,21 @@ public interface VisibilityManager {
      *
      * @param player     The player to set the visibility for.
      * @param visibility The visibility to set.
-     * @see #getPlayerVisibility(Player)
+     * @see #getPlayerVisibility(GenericPlayer)
      * @see #isVisibleByDefault()
      * @since 2.10.0
      */
-    void setPlayerVisibility(@NotNull Player player, @Nullable Visibility visibility);
+    void setPlayerVisibility(@NotNull GenericPlayer player, @Nullable Visibility visibility);
 
     /**
      * Set the visibility of the hologram for the given player to the default
      * visibility.
      *
      * @param player The player to reset the visibility for.
-     * @see #setPlayerVisibility(Player, Visibility)
+     * @see #setPlayerVisibility(GenericPlayer, Visibility)
      * @since 2.10.0
      */
-    default void resetPlayerVisibility(@NotNull Player player) {
+    default void resetPlayerVisibility(@NotNull GenericPlayer player) {
         setPlayerVisibility(player, null);
     }
 
@@ -109,12 +109,12 @@ public interface VisibilityManager {
      *
      * @param player The player to get the visibility for.
      * @return The visibility of the hologram for the given player.
-     * @see #setPlayerVisibility(Player, Visibility)
+     * @see #setPlayerVisibility(GenericPlayer, Visibility)
      * @see #isVisibleByDefault()
      * @since 2.10.0
      */
     @Nullable
-    Visibility getPlayerVisibility(@NotNull Player player);
+    Visibility getPlayerVisibility(@NotNull GenericPlayer player);
 
     /**
      * Check if the hologram is visible to the given player. This method checks
@@ -122,10 +122,10 @@ public interface VisibilityManager {
      *
      * @param player The player to check the visibility for.
      * @return True if the hologram is visible to the player, false otherwise.
-     * @see #getPlayerVisibility(Player)
+     * @see #getPlayerVisibility(GenericPlayer)
      * @see #isVisibleByDefault()
      * @since 2.10.0
      */
-    boolean isVisibleTo(@NotNull Player player);
+    boolean isVisibleTo(@NotNull GenericPlayer player);
 
 }

@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;

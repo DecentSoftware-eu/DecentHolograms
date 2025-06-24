@@ -16,32 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.hologram.content;
 
-import org.bukkit.inventory.ItemStack;
+import eu.decentsoftware.holograms.api.platform.GenericItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public interface IconHologramLine extends HologramLine {
+public interface SmallHeadHologramLineContent extends HologramLineContent {
 
     /**
-     * Get the {@link ItemStack} of this line. This is the item that will be displayed
-     * as an icon in the hologram.
+     * Get the {@link GenericItemStack} of the line. This is the item that will be displayed
+     * as a small head in the hologram.
      *
-     * @return The {@link ItemStack} of this line.
+     * @return The {@link GenericItemStack} of the line.
      * @since 2.10.0
      */
     @NotNull
-    ItemStack getItemStack();
+    GenericItemStack getItemStack();
 
     /**
-     * Set the {@link ItemStack} of this line. This is the item that will be displayed
-     * as an icon in the hologram.
+     * Set the {@link GenericItemStack} of the line. This is the item that will be displayed
+     * as a small head in the hologram.
      * <p>
      * This method also updates the line accordingly.
      *
-     * @param itemStack The {@link ItemStack} of this line.
+     * @param itemStack The {@link GenericItemStack} of the line.
      * @since 2.10.0
      */
-    void setItemStack(@NotNull ItemStack itemStack);
+    void setItemStack(@NotNull GenericItemStack itemStack);
 
 }

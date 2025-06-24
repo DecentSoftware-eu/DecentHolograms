@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.hologram.HologramPage;
+import eu.decentsoftware.holograms.api.hologram.content.HologramLineContent;
 import eu.decentsoftware.holograms.api.location.DecentOffsets;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +30,15 @@ import org.jetbrains.annotations.NotNull;
  * @since 2.10.0
  */
 public interface HologramLine {
+
+    /**
+     * Get the content of this hologram line.
+     *
+     * @return The content of this hologram line.
+     * @see HologramLineContent
+     * @since 2.10.0
+     */
+    HologramLineContent getContent();
 
     /**
      * Get the height of this line in blocks.
@@ -67,5 +76,27 @@ public interface HologramLine {
      * @since 2.10.0
      */
     void setOffsets(@NotNull DecentOffsets offsets);
+
+    /**
+     * Get the facing direction of the line.
+     * This is the angle in degrees that the line is facing.
+     * <p>
+     * This value overrides the default facing direction of the hologram.
+     *
+     * @return The facing direction of the line in degrees.
+     * @since 2.10.0
+     */
+    float getFacing();
+
+    /**
+     * Set the facing direction of the line.
+     * This is the angle in degrees that the line is facing.
+     * <p>
+     * This value overrides the default facing direction of the hologram.
+     *
+     * @param facing The facing direction of the line in degrees. Must be between 0 and 360.
+     * @since 2.10.0
+     */
+    void setFacing(float facing);
 
 }

@@ -16,37 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.line;
+package eu.decentsoftware.holograms.api.hologram.content;
 
-import eu.decentsoftware.holograms.api.hologram.HologramLine;
-import eu.decentsoftware.holograms.api.location.DecentOffsets;
-import eu.decentsoftware.holograms.utils.Validate;
+import eu.decentsoftware.holograms.api.platform.GenericItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ApiHologramLine implements HologramLine {
+public interface HeadHologramLineContent extends HologramLineContent {
 
-    private double height = 0.0d;
-    private DecentOffsets offsets = DecentOffsets.ZERO;
-
-    @Override
-    public double getHeight() {
-        return height;
-    }
-
-    @Override
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
+    /**
+     * Get the {@link GenericItemStack} of the line. This is the item that will be displayed
+     * as a head in the hologram.
+     *
+     * @return The {@link GenericItemStack} of the line.
+     * @since 2.10.0
+     */
     @NotNull
-    @Override
-    public DecentOffsets getOffsets() {
-        return offsets;
-    }
+    GenericItemStack getItemStack();
 
-    @Override
-    public void setOffsets(@NotNull DecentOffsets offsets) {
-        Validate.notNull(offsets, "offsets cannot be null");
-        this.offsets = offsets;
-    }
+    /**
+     * Set the {@link GenericItemStack} of the line. This is the item that will be displayed
+     * as a head in the hologram.
+     * <p>
+     * This method also updates the line accordingly.
+     *
+     * @param itemStack The {@link GenericItemStack} of the line.
+     * @since 2.10.0
+     */
+    void setItemStack(@NotNull GenericItemStack itemStack);
+
 }
