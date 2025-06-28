@@ -444,7 +444,7 @@ public class LineSubCommand extends DecentCommand {
 				Common.tell(sender, " &8• &7位置: &b%s, %.2f, %.2f, %.2f",
 						loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ()
 				);
-				Common.tell(sender, " &8• &7内容: &b") + line.getContent());
+				Common.tell(sender, " &8• &7内容: &b%s", line.getContent());
 				Common.tell(sender, " &8• &7高度: &b%f", line.getHeight());
 				Common.tell(sender, " &8• &7X轴偏移: &b%f", line.getOffsetX());
 				Common.tell(sender, " &8• &7Y轴偏移: &b%f", line.getOffsetY());

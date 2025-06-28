@@ -51,7 +51,7 @@ class DecentHologramsNmsPacketListenerTest {
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> packetListener.onEntityInteract(event));
 
-        assertEquals("Unknown action: null", exception.getMessage());
+        assertEquals("未知操作: null", exception.getMessage());
         verify(hologramManager, never()).onClick(any(), anyInt(), any());
     }
 

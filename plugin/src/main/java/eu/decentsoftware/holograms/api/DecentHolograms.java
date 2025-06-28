@@ -74,7 +74,7 @@ public final class DecentHolograms {
             "汉化: postyizhan (驿站忆行)",
             "汉化版仓库: https://github.com/postyizhan/DecentHolograms-CN",
             "交流群: 611076407"
-        ).forEach(logger::info);
+        ).forEach(plugin.getLogger()::info);
 
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
