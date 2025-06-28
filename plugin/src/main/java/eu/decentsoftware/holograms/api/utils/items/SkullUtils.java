@@ -270,7 +270,7 @@ public final class SkullUtils {
 
             return data.get("value").toString();
         } catch (Exception e) {
-            Log.warn("Failed to fetch texture for player %s (%s). Cause: %s", username, uuid, e.getMessage());
+            Log.warn("无法获取玩家 %s (%s) 的纹理。原因: %s", username, uuid, e.getMessage());
         }
         return null;
     }
@@ -295,7 +295,7 @@ public final class SkullUtils {
                 return jsonData.get("id").toString();
             }
         } catch (Exception e) {
-            Log.warn("Failed to fetch UUID for player %s. Cause: %s", playerName, e.getMessage());
+            Log.warn("无法获取玩家 %s 的UUID。原因: %s", playerName, e.getMessage());
         }
         return null;
     }

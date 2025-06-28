@@ -19,7 +19,7 @@ public final class ConverterCommon {
     
     public static void createHologram(ConvertorResult convertorResult, String name, Location location, List<String> lines, DecentHolograms plugin) {
         if (plugin.getHologramManager().containsHologram(name)) {
-            Log.warn("A hologram with name '%s' already exists, skipping...", name);
+            Log.warn("名为 '%s' 的悬浮字已存在，跳过...", name);
             convertorResult.addSkipped();
             return ;
         }
@@ -33,7 +33,7 @@ public final class ConverterCommon {
     
     public static void createHologramPages(ConvertorResult convertorResult, String name, Location location, List<List<String>> pages, DecentHolograms plugin) {
         if (plugin.getHologramManager().containsHologram(name)) {
-            Log.warn("A hologram with name '%s' already exists, skipping...", name);
+            Log.warn("名为 '%s' 的悬浮字已存在，跳过...", name);
             convertorResult.addSkipped();
             return;
         }

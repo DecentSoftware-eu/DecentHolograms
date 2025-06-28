@@ -82,11 +82,11 @@ public final class DHAPI {
         Validate.notNull(location);
 
         if (!name.matches(Common.NAME_REGEX)) {
-            throw new IllegalArgumentException(String.format("Hologram name can only contain alphanumeric characters, underscores and dashes! (%s)", name));
+            throw new IllegalArgumentException(String.format("悬浮字名称只能包含字母、数字、下划线和横杠！(%s)", name));
         }
 
         if (Hologram.getCachedHologramNames().contains(name)) {
-            throw new IllegalArgumentException(String.format("Hologram with that name already exists! (%s)", name));
+            throw new IllegalArgumentException(String.format("该名称的悬浮字已存在！(%s)", name));
         }
 
         Hologram hologram = new Hologram(name, location, saveToFile);
@@ -258,7 +258,7 @@ public final class DHAPI {
         Validate.notNull(hologram);
         HologramPage page = hologram.insertPage(index);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
         if (lines != null && !lines.isEmpty()) {
             for (String content : lines) {
@@ -379,7 +379,7 @@ public final class DHAPI {
         Validate.notNull(content);
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
         return addHologramLine(page, content);
     }
@@ -510,7 +510,7 @@ public final class DHAPI {
         Validate.notNull(hologram);
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
         return insertHologramLine(page, lineIndex, content);
     }
@@ -555,7 +555,7 @@ public final class DHAPI {
     public static HologramLine insertHologramLine(HologramPage page, int index, String content) throws IllegalArgumentException {
         HologramLine oldLine = page.getLine(index);
         if (oldLine == null) {
-            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+            throw new IllegalArgumentException("给定的行索引超出悬浮字页面范围。");
         }
         HologramLine line = new HologramLine(page, oldLine.getLocation().clone(), content);
         page.insertLine(index, line);
@@ -669,7 +669,7 @@ public final class DHAPI {
         Validate.notNull(content);
         HologramLine line = page.getLine(lineIndex);
         if (line == null) {
-            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+            throw new IllegalArgumentException("给定的行索引超出悬浮字页面范围。");
         }
         setHologramLine(line, content);
     }
@@ -755,11 +755,11 @@ public final class DHAPI {
 
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
         HologramLine line = page.getLine(lineIndex);
         if (line == null) {
-            throw new IllegalArgumentException("Given line index is out of bounds for the hologram page.");
+            throw new IllegalArgumentException("给定的行索引超出悬浮字页面范围。");
         }
         setHologramLine(line, content);
     }
@@ -791,7 +791,7 @@ public final class DHAPI {
         Validate.notNull(hologram);
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
         HologramLine line = page.removeLine(lineIndex);
         hologram.save();
@@ -841,7 +841,7 @@ public final class DHAPI {
 
         HologramPage page = hologram.getPage(pageIndex);
         if (page == null) {
-            throw new IllegalArgumentException("Given page index is out of bounds for the hologram.");
+            throw new IllegalArgumentException("给定的页面索引超出悬浮字范围。");
         }
 
         while (page.size() > lines.size()) {

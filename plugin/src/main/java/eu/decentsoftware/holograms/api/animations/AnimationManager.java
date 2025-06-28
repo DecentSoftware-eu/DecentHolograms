@@ -117,7 +117,7 @@ public class AnimationManager extends Ticked {
         }
 
         int counter = 0;
-        Log.info("Loading animations...");
+        Log.info("正在加载动画...");
         for (File file : files) {
             String fileName = FileUtils.getRelativePath(file, folder);
             try {
@@ -125,10 +125,10 @@ public class AnimationManager extends Ticked {
                 registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
-                Log.warn("Failed to load animation from file '%s'!", e, fileName);
+                Log.warn("无法从文件 '%s' 加载动画！", e, fileName);
             }
         }
-        Log.info("Loaded %d animations!", counter);
+        Log.info("已加载 %d 个动画！", counter);
     }
 
 }

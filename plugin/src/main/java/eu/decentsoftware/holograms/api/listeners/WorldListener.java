@@ -49,7 +49,7 @@ public class WorldListener implements Listener {
                             hologramManager.registerHologram(hologram);
                         }
                     } catch (LocationParseException ignored) {
-                        Log.warn("Failed to load hologram from file: " + fileName);
+                        Log.warn("无法从文件加载悬浮字: " + fileName);
                     }
                 });
             }

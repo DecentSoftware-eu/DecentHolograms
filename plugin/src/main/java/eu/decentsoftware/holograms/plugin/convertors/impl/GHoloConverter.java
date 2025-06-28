@@ -29,9 +29,9 @@ public class GHoloConverter implements IConvertor {
     
     @Override
     public ConvertorResult convert(File file) {
-        Log.info("Converting GHolo holograms...");
+        Log.info("正在转换 GHolo 悬浮字...");
         if (ConverterCommon.notValidFile(file, "h.data")) {
-            Log.warn("Invalid file! Need 'h.data'");
+            Log.warn("无效文件！需要 'h.data'");
             return ConvertorResult.createFailed();
         }
 
@@ -42,7 +42,7 @@ public class GHoloConverter implements IConvertor {
             
             Location location = LocationUtils.asLocation(config.getString(path + ".l"));
             if(location == null){
-                Log.warn("Cannot convert '%s'! Invalid location.", name);
+                Log.warn("无法转换 '%s'！位置无效。", name);
                 convertorResult.addFailed();
                 continue;
             }

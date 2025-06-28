@@ -42,7 +42,7 @@ public class DecentHologramsNmsPacketListener implements NmsPacketListener {
                     return ClickType.SHIFT_RIGHT;
             }
         }
-        throw new IllegalArgumentException("Unknown action: " + action);
+        throw new IllegalArgumentException("未知操作: " + action);
     }
 
 }

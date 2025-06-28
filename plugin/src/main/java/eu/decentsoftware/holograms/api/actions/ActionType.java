@@ -202,7 +202,7 @@ public abstract class ActionType {
     protected ActionType(@NonNull String name) {
         name = name.toUpperCase();
         if (VALUES.containsKey(name)) {
-            throw new IllegalArgumentException("ActionType " + name + " already exists!");
+            throw new IllegalArgumentException("动作类型 " + name + " 已经存在！");
         }
         this.name = name;
         VALUES.put(this.name, this);

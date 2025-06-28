@@ -59,7 +59,7 @@ public final class CFG {
             }
             return config;
         } catch (Exception e) {
-            Log.warn("Failed to load configuration from file. (%s)", e, file.getName());
+            Log.warn("无法从文件加载配置。 (%s)", e, file.getName());
         }
         return null;
     }
@@ -118,7 +118,7 @@ public final class CFG {
                 }
                 config.set(key, newValue);
             } catch (Exception e) {
-                Log.warn("Failed to save field value to configuration. (%s)", e, f.getName());
+                Log.warn("无法将字段值保存到配置中。 (%s)", e, f.getName());
             }
         }
         return config;
@@ -178,7 +178,7 @@ public final class CFG {
                     CFG.setFieldValue(f, object, o);
                 }
             } catch (Exception e) {
-                Log.warn("Failed to load field value from configuration. (%s)", e, f.getName());
+                Log.warn("无法从配置中加载字段值。 (%s)", e, f.getName());
             }
         }
     }

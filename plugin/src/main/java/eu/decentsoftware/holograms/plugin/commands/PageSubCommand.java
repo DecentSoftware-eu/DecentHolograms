@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 @CommandInfo(
         permissions = "dh.command.pages",
         usage = "/dh pages help",
-        description = "All commands for editing hologram pages.",
+        description = "所有用于编辑悬浮字页面的命令。",
         aliases = {"page", "p"}
 )
 public class PageSubCommand extends DecentCommand {
@@ -76,7 +76,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.help",
             usage = "/dh page help",
-            description = "All commands for editing pages.",
+            description = "所有编辑页面的命令。",
             aliases = {"?"}
     )
     static class PageHelpSub extends DecentCommand {
@@ -89,8 +89,8 @@ public class PageSubCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 sender.sendMessage("");
-                Common.tell(sender, " &3&lHOLOGRAM PAGES HELP");
-                Common.tell(sender, " All page commands.");
+                Common.tell(sender, " &3&l悬浮字页面帮助");
+                Common.tell(sender, " 所有页面命令。");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
                 List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
@@ -98,7 +98,7 @@ public class PageSubCommand extends DecentCommand {
                     Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
                 }
                 sender.sendMessage("");
-                Common.tell(sender, " &7Aliases: &b%s%s",
+                Common.tell(sender, " &7别名: &b%s%s",
                         command.getName(),
                         command.getAliases().size() > 1
                                 ? ", " + String.join(", ", command.getAliases())
@@ -118,7 +118,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.add",
             usage = "/dh page add <hologram> [content]",
-            description = "Add a page to Hologram.",
+            description = "向悬浮字添加页面。",
             aliases = {"append"},
             minArgs = 1
     )
@@ -169,7 +169,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.insert",
             usage = "/dh page insert <hologram> <page> [content]",
-            description = "Insert a page into Hologram.",
+            description = "在悬浮字中插入页面。",
             minArgs = 2
     )
     static class PageInsertSub extends DecentCommand {
@@ -228,7 +228,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.remove",
             usage = "/dh page remove <hologram> <page>",
-            description = "Remove a page from Hologram.",
+            description = "从悬浮字中删除页面。",
             aliases = {"rm", "rem", "del", "delete"},
             minArgs = 2
     )
@@ -265,7 +265,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.swap",
             usage = "/dh page swap <hologram> <page1> <page2>",
-            description = "Swap two pages in a Hologram.",
+            description = "交换悬浮字中的两个页面。",
             minArgs = 3
     )
     static class PageSwapSub extends DecentCommand {
@@ -316,7 +316,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.switch",
             usage = "/dh page switch <hologram> <page> [player]",
-            description = "Switch to a page in hologram.",
+            description = "切换到悬浮字中的指定页面。",
             aliases = {"go", "view"},
             minArgs = 2
     )
@@ -357,7 +357,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.actions",
             usage = "/dh page actions <hologram> <page> <clickType> [listPage]",
-            description = "List of click actions.",
+            description = "显示点击动作列表。",
             playerOnly = true,
             minArgs = 3
     )
@@ -386,8 +386,8 @@ public class PageSubCommand extends DecentCommand {
                     Lang.ACTION_NO_ACTIONS.send(sender);
                     return true;
                 }
-                int currentPage = args.length >= 4 ? Validator.getInteger(args[3], "Page must be a valid integer.") - 1 : 0;
-                List<String> header = Lists.newArrayList("", " &3&lACTIONS LIST - #{page}", " &fList of all actions on a page.", "");
+                int currentPage = args.length >= 4 ? Validator.getInteger(args[3], "页码必须是有效的整数。") - 1 : 0;
+                List<String> header = Lists.newArrayList("", " &3&l动作列表 - #{page}", " &f页面上的所有动作列表。", "");
                 Function<Action, String> parseItem = action -> String.format(" &8• &b%s", action.toString());
                 String commandFormat = "/dh actions " + args[0] + " " + args[1] + " " + args[2] + " %d";
                 Message.sendPaginatedMessage((Player) sender, currentPage, commandFormat, 15, header, null, actions, parseItem);
@@ -404,7 +404,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.clearactions",
             usage = "/dh page clearactions <hologram> <page> <clickType>",
-            description = "Clear all click actions.",
+            description = "清除所有点击动作。",
             minArgs = 3
     )
     static class PageClearActionsSub extends DecentCommand {
@@ -448,7 +448,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.addactions",
             usage = "/dh page addaction <hologram> <page> <clickType> <action>",
-            description = "Add a click action.",
+            description = "添加点击动作。",
             minArgs = 4
     )
     static class PageAddActionSub extends DecentCommand {
@@ -495,7 +495,7 @@ public class PageSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.pages.removeaction",
             usage = "/dh page removeaction <hologram> <page> <clickType> <index>",
-            description = "Remove a click action.",
+            description = "移除点击动作。",
             aliases = {"remaction"},
             minArgs = 4
     )

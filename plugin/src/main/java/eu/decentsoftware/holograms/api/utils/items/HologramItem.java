@@ -70,7 +70,7 @@ public class HologramItem {
 
             return itemStack;
         } catch (Exception e) {
-            Log.warn("Error parsing item: %s", e, content);
+            Log.warn("解析物品时出错: %s", e, content);
             return new ItemStack(Material.STONE);
         }
     }
@@ -92,7 +92,7 @@ public class HologramItem {
             try {
                 Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
             } catch (Exception ex) {
-                Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+                Log.warn("无法将NBT数据应用到物品: %s", ex, nbt);
             }
 
             return itemStack;

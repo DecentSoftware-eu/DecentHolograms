@@ -15,7 +15,7 @@ import java.util.List;
 @CommandInfo(
 		permissions = "dh.command.features",
 		usage = "/dh features help",
-		description = "All commands for managing features.",
+		description = "所有用于管理功能的命令。",
 		aliases = {"feature", "f"}
 )
 public class FeatureSubCommand extends DecentCommand {
@@ -56,7 +56,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.disable",
             usage = "/dh feature disable <feature>",
-            description = "Disable a Feature.",
+            description = "禁用功能。",
             aliases = {"off"},
             minArgs = 1
     )
@@ -99,7 +99,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.enable",
             usage = "/dh feature enable <feature>",
-            description = "Enable a Feature.",
+            description = "启用功能。",
             aliases = {"on"},
             minArgs = 1
     )
@@ -142,7 +142,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.help",
             usage = "/dh feature help",
-            description = "Show help for features.",
+            description = "显示功能相关帮助。",
             aliases = {"?"}
     )
     public static class FeatureHelpSub extends DecentCommand {
@@ -155,8 +155,8 @@ public class FeatureSubCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 sender.sendMessage("");
-                Common.tell(sender, " &3&lDECENT HOLOGRAMS HELP (FEATURES)");
-                Common.tell(sender, " All commands for managing features.");
+                Common.tell(sender, " &3&lDECENT HOLOGRAMS 帮助 (功能)");
+                Common.tell(sender, " 所有用于管理功能的命令。");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("features");
                 List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
@@ -164,7 +164,7 @@ public class FeatureSubCommand extends DecentCommand {
                     Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
                 }
                 sender.sendMessage("");
-                Common.tell(sender, " &7Aliases: &b%s%s",
+                Common.tell(sender, " &7别名: &b%s%s",
                         command.getName(),
                         command.getAliases().size() > 1
                                 ? ", " + String.join(", ", command.getAliases())
@@ -185,7 +185,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.info",
             usage = "/dh feature info <feature>",
-            description = "Info about feature.",
+            description = "显示功能相关信息。",
             minArgs = 1
     )
     public static class FeatureInfoSub extends DecentCommand {
@@ -229,7 +229,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.list",
             usage = "/dh feature list",
-            description = "List of all features"
+            description = "所有功能列表"
     )
     public static class FeatureListSub extends DecentCommand {
 
@@ -267,7 +267,7 @@ public class FeatureSubCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.features.reload",
             usage = "/dh feature reload <feature>",
-            description = "Reload a Feature.",
+            description = "重新加载功能。",
             minArgs = 1
     )
     public static class FeatureReloadSub extends DecentCommand {

@@ -32,7 +32,7 @@ public class LocationUtils {
         try {
             return asLocationE(string, separator);
         } catch (LocationParseException e) {
-            Log.warn( "Error while parsing Location %s", e, string);
+            Log.warn( "解析位置 %s 时出错", e, string);
             return null;
         }
     }
@@ -56,12 +56,12 @@ public class LocationUtils {
                     }
                     return location;
                 } catch (NumberFormatException e) {
-                    Log.warn("Error while parsing Location %s", e, string);
+                    Log.warn("解析位置 %s 时出错", e, string);
                 }
             }
-            throw new LocationParseException(String.format("World '%s' not found.", spl[0]), LocationParseException.Reason.WORLD, spl[0]);
+            throw new LocationParseException(String.format("未找到世界 '%s'。", spl[0]), LocationParseException.Reason.WORLD, spl[0]);
         }
-        throw new LocationParseException(String.format("Wrong location format: %s", string));
+        throw new LocationParseException(String.format("位置格式错误: %s", string));
     }
 
     public static Location randomizeLocation(@NonNull Location location) {
@@ -90,7 +90,7 @@ public class LocationUtils {
 
         // World was neither retrieved from name nor UUID. How is this possible?
         if (world == null) {
-            Log.warn("Cannot retrieve World from value %s! It's neither a valid name nor UUID.", value);
+            Log.warn("无法从值 %s 获取世界！它既不是有效的名称也不是UUID。", value);
         }
 
         return world;

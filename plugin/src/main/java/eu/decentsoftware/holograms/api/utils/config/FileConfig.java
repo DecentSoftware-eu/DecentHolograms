@@ -74,7 +74,7 @@ public class FileConfig extends YamlConfiguration {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    Log.warn("Failed to create config file at path '%s'.", e, path);
+                    Log.warn("无法在路径 '%s' 创建配置文件。", e, path);
                 }
             } else {
                 plugin.saveResource(this.path, false);
@@ -89,7 +89,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.save(this.file);
         } catch (IOException e) {
-            Log.warn("Failed to save config file at path '%s'.", e, path);
+            Log.warn("无法保存路径为 '%s' 的配置文件。", e, path);
         }
     }
 
@@ -100,7 +100,7 @@ public class FileConfig extends YamlConfiguration {
         try {
             this.load(file);
         } catch (IOException | InvalidConfigurationException e) {
-            Log.warn("Failed to reload config file at path '%s'.", path);
+            Log.warn("无法重新加载路径为 '%s' 的配置文件。", path);
         }
     }
 
@@ -112,7 +112,7 @@ public class FileConfig extends YamlConfiguration {
             try {
                 Files.delete(file.toPath());
             } catch (IOException e) {
-                Log.warn("Failed to delete config file at path '%s'.", e, path);
+                Log.warn("无法删除路径为 '%s' 的配置文件。", e, path);
             }
         }
     }

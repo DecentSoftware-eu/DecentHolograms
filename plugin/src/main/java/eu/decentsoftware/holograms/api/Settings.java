@@ -22,7 +22,7 @@ public class Settings {
     @Key(value = "click-cooldown", min = 1, max = 300)
     public static int CLICK_COOLDOWN = 1;
     @Key("defaults.text")
-    public static String DEFAULT_TEXT = "Blank Line";
+    public static String DEFAULT_TEXT = "空白行";
     @Key("defaults.down-origin")
     public static boolean DEFAULT_DOWN_ORIGIN = false;
     @Key(value = "defaults.height.text", min = 0.0d, max = 2.5d)
@@ -44,24 +44,24 @@ public class Settings {
     @Key("allow-placeholders-inside-animations")
     public static boolean ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS = false;
     /**
-     * If true, the visibility of holograms will be updated when a player gets teleported or respawned.
+     * 如果为true，当玩家被传送或重生时，将更新悬浮字的可见性。
      *
-     * <p>By default, this is disabled because it causes visual glitches where even if a player gets teleported
-     * by a fraction of a block, the holograms still disappear and reappear for them.</p>
+     * <p>默认情况下，这是禁用的，因为它会导致视觉故障，
+     * 即使玩家仅被传送了一小段距离，悬浮字仍会对他们消失然后重新出现。</p>
      *
-     * <p>Some clients (or client versions?) need this though, so if someone is experiencing issues with holograms
-     * not showing up after a player gets teleported or respawned, they can enable this setting.</p>
+     * <p>有些客户端（或客户端版本）需要启用此选项，
+     * 所以如果有人发现悬浮字在玩家传送或重生后不显示，可以启用此选项。</p>
      *
      * @since 2.8.9
      */
     @Key("update-visibility-on-teleport")
     public static boolean UPDATE_VISIBILITY_ON_TELEPORT = false;
     /**
-     * Set this to true if you want holograms to appear at the player's eye level.
+     * 将此设为true，如果你希望悬浮字在玩家视线水平出现。
      *
-     * <p>When enabled, holograms will be positioned at the player's eye height when created or moved.</p>
+     * <p>启用时，创建或移动悬浮字时，它们会定位在玩家视线高度。</p>
      *
-     * <p>When disabled, holograms will be positioned at the player's feet height when created or moved (default).</p>
+     * <p>禁用时，创建或移动悬浮字时，它们会定位在玩家脚部高度（默认）。</p>
      */
     @Key("holograms-eye-level-positioning")
     public static boolean HOLOGRAMS_EYE_LEVEL_POSITIONING = false;
@@ -83,14 +83,14 @@ public class Settings {
     // ========================================= //
 
     /**
-     * Reload all Settings
+     * 重载所有设置
      */
     public static void reload() {
         CONFIG.reload();
 
         CFG.load(DECENT_HOLOGRAMS.getPlugin(), Settings.class, CONFIG.getFile());
 
-        // -- Load custom replacements
+        // -- 加载自定义替换
         ConfigurationSection customReplacementsSection = CONFIG.getConfigurationSection("custom-replacements");
         if (customReplacementsSection != null) {
             Map<String, String> replacements = new HashMap<>();

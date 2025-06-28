@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 		aliases = {"holograms", "hologram", "dh", "holo"},
 		permissions = {"dh.default", "dh.command.decentholograms"},
 		usage = "/dh <args>",
-		description = "The main DecentHolograms Command."
+		description = "DecentHolograms插件的主命令。"
 )
 public class HologramsCommand extends DecentCommand {
 
@@ -163,7 +163,7 @@ public class HologramsCommand extends DecentCommand {
             permissions = {"dh.default", "dh.command.version"},
             usage = "/dh version",
             aliases = {"ver", "about"},
-            description = "Shows some info about your current DecentHolograms version."
+            description = "显示当前DecentHolograms版本的相关信息。"
     )
     public static class VersionSubCommand extends DecentCommand {
 
@@ -188,7 +188,7 @@ public class HologramsCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.reload",
             usage = "/dh reload",
-            description = "Reload the plugin."
+            description = "重新加载插件。"
     )
     public static class ReloadSubCommand extends DecentCommand {
 
@@ -219,7 +219,7 @@ public class HologramsCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.list",
             usage = "/dh list [page]",
-            description = "Show list of all Holograms.",
+            description = "显示所有悬浮字列表。",
             playerOnly = true
     )
     public static class ListSubCommand extends DecentCommand {
@@ -233,11 +233,11 @@ public class HologramsCommand extends DecentCommand {
             return (sender, args) -> {
                 final List<Hologram> holograms = Lists.newArrayList(PLUGIN.getHologramManager().getHolograms());
                 if (holograms.isEmpty()) {
-                    Common.tell(sender, "%sThere are currently no holograms.", Common.PREFIX);
+                    Common.tell(sender, "%s当前没有悬浮字。", Common.PREFIX);
                     return true;
                 }
-                int currentPage = args.length >= 1 ? Validator.getInteger(args[0], "Page must be a valid integer.") - 1 : 0;
-                List<String> header = Lists.newArrayList("", " &3&lHOLOGRAM LIST - #" + (currentPage + 1), " &fList of all existing holograms.", "");
+                int currentPage = args.length >= 1 ? Validator.getInteger(args[0], "页码必须是有效的整数。") - 1 : 0;
+                List<String> header = Lists.newArrayList("", " &3&l悬浮字列表 - #" + (currentPage + 1), " &f所有现有悬浮字列表。", "");
                 Function<Hologram, String> parseItem = hologram -> {
                     Location l = hologram.getLocation();
                     String name = (hologram.isEnabled() ? "" : "&c") + hologram.getName();
@@ -277,7 +277,7 @@ public class HologramsCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.help",
             usage = "/dh help",
-            description = "Show general help.",
+            description = "显示通用帮助信息。",
             aliases = {"?"}
     )
     public static class HelpSubCommand extends DecentCommand {
@@ -290,8 +290,8 @@ public class HologramsCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 sender.sendMessage("");
-                Common.tell(sender, " &3&lDECENT HOLOGRAMS HELP");
-                Common.tell(sender, " All general commands.");
+                Common.tell(sender, " &3&lDECENT HOLOGRAMS 帮助");
+                Common.tell(sender, " 所有通用命令。");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand();
                 List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
@@ -300,7 +300,7 @@ public class HologramsCommand extends DecentCommand {
                     Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
                 }
                 sender.sendMessage("");
-                Common.tell(sender, " &7Aliases: &b%s%s",
+                Common.tell(sender, " &7别名: &b%s%s",
                         command.getName(),
                         command.getAliases().size() > 1
                                 ? ", " + String.join(", ", command.getAliases())
@@ -321,7 +321,7 @@ public class HologramsCommand extends DecentCommand {
     @CommandInfo(
             permissions = "dh.command.convert",
             usage = "/dh convert <plugin> [file]",
-            description = "Convert holograms from given plugin.",
+            description = "从指定插件转换悬浮字。",
             minArgs = 1
     )
     public static class ConvertSubCommand extends DecentCommand {
@@ -336,20 +336,20 @@ public class HologramsCommand extends DecentCommand {
                 final ConvertorType convertorType = ConvertorType.fromString(args[0]);
                 final String path = args.length >= 2 ? args[0] : null;
                 if (convertorType == null) {
-                    Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
+                    Common.tell(sender, "%s&c无法转换悬浮字！提供了未知插件 '%s'", Common.PREFIX, args[0]);
                     return true;
                 }
 
                 long startTime = System.currentTimeMillis();
                 IConvertor convertor = convertorType.getConvertor();
                 if (convertor == null) {
-                    Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
+                    Common.tell(sender, "%s&c无法转换悬浮字！提供了未知插件 '%s'", Common.PREFIX, args[0]);
                     return true;
                 }
 
-                Common.tell(sender, "%sConverting holograms from %s...", Common.PREFIX, convertorType.getName());
+                Common.tell(sender, "%s正在从%s转换悬浮字...", Common.PREFIX, convertorType.getName());
                 if (convertorType.isLimited()) {
-                    Common.tell(sender, "%s&6NOTE: %s support is limited!", Common.PREFIX, convertorType.getName());
+                    Common.tell(sender, "%s&6注意: %s支持功能有限!", Common.PREFIX, convertorType.getName());
                 }
 
                 ConvertorResult result;
@@ -365,10 +365,10 @@ public class HologramsCommand extends DecentCommand {
         }
 
         public void sendResult(CommandSender sender, long startTime, ConvertorResult result) {
-            Common.tell(sender, "%sConverted %d hologram(s) in %s ms!", Common.PREFIX, result.getTotalCount(), System.currentTimeMillis() - startTime);
-            Common.tell(sender, "%s- &a%d successful", Common.PREFIX, result.getSuccessCount());
-            Common.tell(sender, "%s- &e%d skipped", Common.PREFIX, result.getSkippedCount());
-            Common.tell(sender, "%s- &c%d failed", Common.PREFIX, result.getFailedCount());
+            Common.tell(sender, "%s已转换 %d 个悬浮字，耗时 %s 毫秒!", Common.PREFIX, result.getTotalCount(), System.currentTimeMillis() - startTime);
+            Common.tell(sender, "%s- &a%d 成功", Common.PREFIX, result.getSuccessCount());
+            Common.tell(sender, "%s- &e%d 跳过", Common.PREFIX, result.getSkippedCount());
+            Common.tell(sender, "%s- &c%d 失败", Common.PREFIX, result.getFailedCount());
         }
 
         @Override

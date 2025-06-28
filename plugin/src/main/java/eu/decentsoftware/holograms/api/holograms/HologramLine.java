@@ -93,7 +93,7 @@ public class HologramLine extends HologramObject {
                 try {
                     line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
                 } catch (Exception e) {
-                    Log.warn("Flags for line %s seem to be invalid!", content);
+                    Log.warn("行 %s 的标志似乎无效！", content);
                 }
             }
         }
@@ -514,7 +514,7 @@ public class HologramLine extends HologramObject {
         } else if (renderer instanceof NmsEntityHologramRenderer) {
             return (T) new NmsHologramPartData<>(positionSupplier, () -> getEntityType(player));
         }
-        throw new IllegalStateException("Unsupported renderer type: " + renderer.getClass().getName());
+        throw new IllegalStateException("不支持的渲染器类型: " + renderer.getClass().getName());
     }
 
     private Supplier<DecentPosition> getPositionSupplier() {

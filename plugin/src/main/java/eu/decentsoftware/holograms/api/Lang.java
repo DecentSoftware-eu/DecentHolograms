@@ -133,7 +133,7 @@ public class Lang {
                 }
             }
         } catch (IllegalAccessException e) {
-            Log.warn("Failed to load Lang values.", e);
+            Log.warn("无法加载语言值。", e);
         }
         Lang.reload();
     }
@@ -146,7 +146,7 @@ public class Lang {
 
     public static void sendVersionMessage(@NonNull CommandSender sender) {
         Common.tell(sender,
-                "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f: \n&f- &7%s\n&f- &7%s",
+                "\n&f此服务器正在运行 &3DecentHolograms v%s&f by &bd0by&f: \n&f- &7%s\n&f- &7%s",
                 DecentHologramsAPI.get().getPlugin().getDescription().getVersion(),
                 "https://www.spigotmc.org/resources/96927/",
                 "https://modrinth.com/plugin/decentholograms"

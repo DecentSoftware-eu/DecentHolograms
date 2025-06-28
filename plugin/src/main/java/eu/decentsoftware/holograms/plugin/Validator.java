@@ -33,13 +33,13 @@ public final class Validator {
     public static Hologram getHologram(String name) throws DecentCommandException {
         Hologram hologram = DECENT_HOLOGRAMS.getHologramManager().getHologram(name);
         if (hologram == null) {
-            throw new DecentCommandException("Hologram with that name couldn't be found.");
+            throw new DecentCommandException("无法找到该名称的悬浮字。");
         }
         return hologram;
     }
 
     public static HologramPage getHologramPage(Hologram hologram, int index) throws DecentCommandException {
-        index = getIntegerInRange(index, 1, hologram.size(), "Page index must be in bounds of given hologram.");
+        index = getIntegerInRange(index, 1, hologram.size(), "页面索引必须在悬浮字范围内。");
         return hologram.getPage(index);
     }
 
@@ -52,7 +52,7 @@ public final class Validator {
     }
 
     public static HologramLine getHologramLine(HologramPage page, int index) throws DecentCommandException {
-        return getHologramLine(page, index, "Hologram line couldn't be found.");
+        return getHologramLine(page, index, "无法找到悬浮字行。");
     }
 
     /*
@@ -76,11 +76,11 @@ public final class Validator {
     }
 
     public static int getHologramLineIndex(HologramPage page, int index) throws DecentCommandException {
-        return getIntegerInRange(index, 1, page.size(), "Line index must be in bounds of given hologram page.");
+        return getIntegerInRange(index, 1, page.size(), "行索引必须在给定的悬浮字页面范围内。");
     }
 
     public static int getHologramLineIndex(HologramPage page, String index) throws DecentCommandException {
-        return Validator.getInteger(index, 1, page.size(), "Line index must be in bounds of given hologram page.");
+        return Validator.getInteger(index, 1, page.size(), "行索引必须在给定的悬浮字页面范围内。");
     }
 
     public static EnumFlag getFlag(String string, String message) throws DecentCommandException {

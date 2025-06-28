@@ -76,7 +76,7 @@ public class Ticker {
                     try {
                         ticked.tick();
                     } catch (Exception ex) {
-                        Log.warn("Failed to tick object: %s", ex, ticked.getId());
+                        Log.warn("无法执行对象的tick操作: %s", ex, ticked.getId());
                     }
                 }
             }

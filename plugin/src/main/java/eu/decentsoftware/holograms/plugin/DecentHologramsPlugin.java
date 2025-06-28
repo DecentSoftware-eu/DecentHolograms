@@ -29,8 +29,8 @@ public class DecentHologramsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         if (unsupportedServerVersion) {
-            getLogger().severe("Unsupported server version detected: " + Bukkit.getServer().getVersion());
-            getLogger().severe("Plugin will now be disabled.");
+            getLogger().severe("检测到不支持的服务器版本: " + Bukkit.getServer().getVersion());
+            getLogger().severe("插件将被禁用。");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }

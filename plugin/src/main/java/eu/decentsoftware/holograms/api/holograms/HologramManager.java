@@ -186,7 +186,7 @@ public class HologramManager extends Ticked {
         }
 
         int counter = 0;
-        Log.info("Loading holograms... ");
+        Log.info("正在加载悬浮字... ");
         for (File file : files) {
             String filePath = FileUtils.getRelativePath(file, folder);
             try {
@@ -201,10 +201,10 @@ public class HologramManager extends Ticked {
                 toLoad.get(worldName).add(filePath);
                 counter++;
             } catch (Exception e) {
-                Log.warn("Failed to load hologram from file '%s'!", e, filePath);
+                Log.warn("无法从文件 '%s' 加载悬浮字！", e, filePath);
             }
         }
-        Log.info("Loaded %d holograms!", counter);
+        Log.info("已加载 %d 个悬浮字！", counter);
     }
 
     /**

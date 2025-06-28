@@ -69,7 +69,7 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 
 	@Override
 	public String getDescription() {
-		return "Spawn a temporary hologram displaying heals.";
+		return "生成一个显示治疗的临时悬浮字。";
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

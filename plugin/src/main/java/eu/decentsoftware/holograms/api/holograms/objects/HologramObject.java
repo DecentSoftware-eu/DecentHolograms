@@ -90,7 +90,7 @@ public abstract class HologramObject extends FlagHolder {
      */
     public void disable(@NonNull DisableCause cause) {
         if (cause == DisableCause.NONE)
-            throw new IllegalArgumentException("Cannot use DisableCause NONE while disabling Hologram!");
+            throw new IllegalArgumentException("禁用悬浮字时不能使用DisableCause NONE！");
 
         this.cause = cause;
         this.enabled = false;

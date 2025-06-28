@@ -1,18 +1,17 @@
 # # # # # # # # # # # # # # # # #
 #
-# Welcome to DecentHolograms config.yml.
+# 欢迎使用DecentHolograms配置文件。
 #
-# - We recommend you to visit our wiki for
-# detailed explanation of all features and
-# configuration options as this plugin has
-# a ton of them.
+# - 我们建议您访问我们的wiki，获取
+# 所有功能和配置选项的详细说明，
+# 因为本插件有大量功能和选项。
 #
-# - You should also join our discord server for
-# more information, support and updates. Our
-# discord server is the main way of reporting
-# bugs or ideas for possible improvements.
+# - 您也可以加入我们的Discord服务器
+# 获取更多信息、支持和更新。我们的
+# Discord服务器是报告bug或提出
+# 改进建议的主要渠道。
 #
-# - Web: www.decentholograms.eu
+# - 网站: www.decentholograms.eu
 # - Wiki: wiki.decentholograms.eu
 # - Discord: discord.decentsoftware.eu
 # - GitHub: github.decentsoftware.eu
@@ -20,129 +19,127 @@
 # # # # # # # # # #
 
 defaults:
-  # Default line
+  # 默认文本行内容
   text: Blank Line
-  # Default Hologram display range in blocks.
+  # 默认悬浮字显示范围（方块）
   display-range: 48
-  # Default Hologram update range in blocks.
+  # 默认悬浮字更新范围（方块）
   update-range: 48
-  # Default Hologram update interval in ticks.
+  # 默认悬浮字更新间隔（刻）
   update-interval: 20
-  # Maximum amount of cached pattern processing results
-  # Do not change if you do not know what it means
-  # Increasing this number will result in higher memory usage
-  # Range: 5 - 10000
-  # Default: 500
+  # 缓存模式处理结果的最大数量
+  # 如果不了解这意味着什么，请勿更改
+  # 增加这个数字会导致更高的内存使用
+  # 范围: 5 - 10000
+  # 默认值: 500
   lru-cache-size: 500
-  # Default heights of different hologram line types.
+  # 不同类型悬浮字行的默认高度
   height:
     text: 0.3
     icon: 0.6
     head: 0.75
     smallhead: 0.6
-  # Default value of Down Origin
+  # 向下原点的默认值
   down-origin: false
 
-# Check for updates on plugin startup? [true/false]
+# 是否在插件启动时检查更新？[true/false]
 update-checker: true
 
-# Click cooldown in ticks
+# 点击冷却时间（刻）
 click-cooldown: 1
 
-# Do we want to replace placeholders inside animation frames?
+# 是否要在动画帧内替换占位符？
 #
-# WARNING! Setting this to true will have a negative impact
-# on CPU usage, so if you don't NEED to use placeholders inside
-# animation frames, keep this disabled.
+# 警告！将此设置为true将对CPU使用产生
+# 负面影响，所以如果你不需要在动画帧内
+# 使用占位符，请保持禁用状态。
 allow-placeholders-inside-animations: false
 
-# If true, the visibility of holograms will be updated when a player gets teleported or respawned.
+# 如果为true，当玩家被传送或重生时，将更新悬浮字的可见性。
 #
-# By default, this is disabled because it causes visual glitches where even if a player gets teleported
-# by a fraction of a block, the holograms still disappear and reappear for them.
+# 默认情况下，这是禁用的，因为它会导致视觉故障，
+# 即使玩家仅被传送了一小段距离，悬浮字仍会对他们消失然后重新出现。
 #
-# Some clients (or client versions?) need this though, so if you are experiencing issues with holograms
-# not showing up after a player gets teleported or respawned, you can enable this.
+# 有些客户端（或客户端版本）需要启用此选项，
+# 所以如果你发现悬浮字在玩家传送或重生后不显示，可以启用此选项。
 update-visibility-on-teleport: false
 
-# Set this to true if you want holograms to appear at the player's eye level.
-# When enabled, holograms will be positioned at the player's eye height when created or moved.
-# When disabled, holograms will be positioned at the player's feet height when created or moved (default).
+# 将此设为true，如果你希望悬浮字在玩家视线水平出现。
+# 启用时，创建或移动悬浮字时，它们会定位在玩家视线高度。
+# 禁用时，创建或移动悬浮字时，它们会定位在玩家脚部高度（默认）。
 holograms-eye-level-positioning: false
 
 #
-# Sets the time in seconds that DecentHolograms should have when trying to fetch Skin data for players both
-# by name and UUID.
-# Value can go as low as 1 second and as high as 60 seconds.
+# 设置DecentHolograms尝试通过名称和UUID获取玩家皮肤数据时的超时时间（秒）。
+# 值可以低至1秒，高至60秒。
 #
-# Note: Increasing this value can have a negative impact on your server's performance, especially on bad
-#       internet connections.
-#       You should only ever change this if you encounter the following warning:
+# 注意: 增加此值可能对服务器性能产生负面影响，特别是在网络连接不佳时。
+#       仅在遇到以下警告时才应更改此值：
 #
-#       Failed to fetch UUID for player <player>
-#       Cause: Connect|Read timed out
+#       获取玩家<玩家名>的UUID失败
+#       原因: 连接超时或读取超时
 player-skin-connection-timeout: 5
 
 
 
 # # # # # # # # # # # # # # # # #
 #
-# Damage Display
+# 伤害显示
 #
-# Temporary damage display that shows up on every successful hit
+# 每次成功攻击时显示的临时伤害显示
 #
 # # # # # # # # # #
 
 damage-display:
-  # Do you want this feature enabled? [true/false]
+  # 是否启用此功能？[true/false]
   enabled: false
-  # Do you want to display damage for players? [true/false]
+  # 是否为玩家显示伤害？[true/false]
   players: true
-  # Do you want to display damage for mobs? [true/false]
+  # 是否为生物显示伤害？[true/false]
   mobs: true
-  # Do you want to display 0 (or less) damage? [true/false]
+  # 是否显示0（或更少）的伤害？[true/false]
   zero-damage: false
-  # How long will the hologram stay in ticks
+  # 悬浮字持续时间（刻）
   duration: 40
-  # Damage placeholder: {damage}
-  # Animations and Placeholders DO work here
+  # 伤害占位符: {damage}
+  # 此处可使用动画和占位符
   appearance: '&c{damage}'
-  # Appearance of the damage, if the damage is critical
+  # 暴击伤害的显示样式
   critical-appearance: '&4&lCrit!&4 {damage}'
-  # Height offset
+  # 高度偏移
   height: 0
 
 
 
 # # # # # # # # # # # # # # # # #
 #
-# Healing Display
+# 治疗显示
 #
-# Temporary damage display that shows up on every health increase
+# 每次生命值增加时显示的临时治疗显示
 #
 # # # # # # # # # #
 
 healing-display:
-  # Do you want this feature enabled? [true/false]
+  # 是否启用此功能？[true/false]
   enabled: false
-  # Do you want to display healing for players? [true/false]
+  # 是否为玩家显示治疗？[true/false]
   players: true
-  # Do you want to display healing for mobs? [true/false]
+  # 是否为生物显示治疗？[true/false]
   mobs: true
-  # How long will the hologram stay in ticks
+  # 悬浮字持续时间（刻）
   duration: 40
-  # Heal placeholder: {heal}
-  # Animations and Placeholders DO work here
+  # 治疗占位符: {heal}
+  # 此处可使用动画和占位符
   appearance: '&a+ {heal}'
-  # Height offset
+  # 高度偏移
   height: 0
 
 
 # # # # # # # # # # # # # # # # #
 #
-# Custom text replacements
+# 自定义文本替换
 #
-# Replace specific patterns in Holograms with custom replacements, similar to HolographicDisplays
+# 用自定义替换内容替换悬浮字中的特定模式，类似于HolographicDisplays
 #
 # # # # # # # # # #
 

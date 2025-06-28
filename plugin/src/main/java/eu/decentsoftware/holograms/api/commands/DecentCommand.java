@@ -29,7 +29,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		super(name);
 		this.info = getClass().getAnnotation(CommandInfo.class);
 		if (info == null) {
-			throw new RuntimeException(String.format("Command %s is not annotated with @CommandInfo.", name));
+			throw new RuntimeException(String.format("命令 %s 没有使用 @CommandInfo 注解。", name));
 		}
 		this.setAliases(Arrays.asList(info.aliases()));
 	}

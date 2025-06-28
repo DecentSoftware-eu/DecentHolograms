@@ -34,7 +34,7 @@ public class Action {
             this.data = null;
         }
         if (this.type == null) {
-            throw new IllegalArgumentException("Invalid action type in action: " + string);
+            throw new IllegalArgumentException("操作中的动作类型无效: " + string);
         }
     }
 

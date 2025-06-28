@@ -62,6 +62,20 @@ public final class DecentHolograms {
         Settings.reload();
         Lang.reload();
 
+        java.util.Arrays.asList(
+       " _____   _    ___   ___   _   _ ",
+            "|  __ \\ | |  | | / ____| | \\ | |",
+            "| |  | || |__| || |      |  \\| |",
+            "| |  | ||  __  || |      | . ` |",
+            "| |__| || |  | || |____  | |\\  |",
+            "|_____/ |_|  |_| \\_____| |_| \\_|",
+            "",
+            "DecentHolograms 汉化版加载成功",
+            "汉化: postyizhan (驿站忆行)",
+            "汉化版仓库: https://github.com/postyizhan/DecentHolograms-CN",
+            "交流群: 611076407"
+        ).forEach(logger::info);
+
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
         this.commandManager = new CommandManager();
@@ -113,14 +127,14 @@ public final class DecentHolograms {
     private void initializeNmsAdapter() {
         try {
             nmsAdapter = new NmsAdapterFactory().createNmsAdapter(Version.CURRENT);
-            Log.info("Initialized NMS adapter for %s (%s).", Version.CURRENT.name(), Version.CURRENT_MINECRAFT_VERSION);
+            Log.info("已初始化 %s (%s) 版本的 NMS 适配器。", Version.CURRENT.name(), Version.CURRENT_MINECRAFT_VERSION);
             return;
         } catch (DecentHologramsNmsException e) {
-            Log.error("Error loading an NMS adapter for " + Version.CURRENT + ": " + e.getMessage(), e);
+            Log.error("加载 " + Version.CURRENT + " 版本的NMS适配器时出错: " + e.getMessage(), e);
         } catch (Exception e) {
-            Log.error("Unknown error loading an NMS adapter for " + Version.CURRENT, e);
+            Log.error("加载 " + Version.CURRENT + " 版本的NMS适配器时发生未知错误", e);
         }
-        Log.error("The plugin will now be disabled.");
+        Log.error("插件将被禁用。");
         Bukkit.getPluginManager().disablePlugin(plugin);
     }
 

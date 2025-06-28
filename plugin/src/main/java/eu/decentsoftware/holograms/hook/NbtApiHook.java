@@ -29,9 +29,9 @@ public class NbtApiHook {
     public static void initialize() {
         loadedSuccessfully = NBT.preloadApi();
         if (!loadedSuccessfully) {
-            Log.warn("NBT-API could not be loaded. Custom NBT in items may not work as expected.");
+            Log.warn("NBT-API 无法加载。物品中的自定义NBT可能无法正常工作。");
         } else {
-            Log.info("NBT-API loaded successfully.");
+            Log.info("NBT-API 加载成功。");
         }
     }
 
@@ -61,7 +61,7 @@ public class NbtApiHook {
 
             return NBT.itemStackFromNBT(modifiableNBT);
         } catch (Exception ex) {
-            Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+            Log.warn("无法将NBT数据应用到物品: %s", ex, nbt);
             return itemStack;
         }
     }
