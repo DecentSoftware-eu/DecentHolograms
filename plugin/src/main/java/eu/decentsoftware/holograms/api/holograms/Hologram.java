@@ -9,7 +9,6 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
@@ -248,7 +247,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected final Set<UUID> hidePlayers = ConcurrentHashMap.newKeySet();
     protected final Set<UUID> showPlayers = ConcurrentHashMap.newKeySet();
     protected boolean defaultVisibleState = true;
-    protected final DList<HologramPage> pages = new DList<>();
+    protected final List<HologramPage> pages = new ArrayList<>();
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
     private final AtomicInteger tickCounter;
@@ -998,7 +997,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
         // Update all page indexes of current viewers, so they still see the same page.
-        if (pages.isNotEmpty()) {
+        if (!pages.isEmpty()) {
             for (Map.Entry<UUID, Integer> entry : viewerPages.entrySet()) {
                 UUID uuid = entry.getKey();
                 int currentPage = viewerPages.get(uuid);
