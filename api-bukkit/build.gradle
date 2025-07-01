@@ -16,6 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+configurations {
+    // Make compileOnly dependencies available in tests
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
 dependencies {
     implementation project(":api")
 
@@ -23,4 +30,16 @@ dependencies {
 
     compileOnly(libs.annotations)
     annotationProcessor(libs.annotations)
+
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.junit.jupiter)
+}
+
+test {
+    useJUnitPlatform()
 }
