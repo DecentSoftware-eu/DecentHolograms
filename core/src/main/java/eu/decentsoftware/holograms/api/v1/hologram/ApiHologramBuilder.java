@@ -29,15 +29,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ApiHologramBuilder implements HologramBuilder {
 
     private final DecentLocation location;
     private final List<ApiHologramPageBuilder> pageBuilders = new ArrayList<>();
     private final ApiHologramSettings settings = new ApiHologramSettings();
+    private final Consumer<ApiHologram> createdHologramConsumer;
 
-    public ApiHologramBuilder(DecentLocation location) {
+    public ApiHologramBuilder(DecentLocation location, Consumer<ApiHologram> createdHologramConsumer) {
         this.location = location;
+        this.createdHologramConsumer = createdHologramConsumer;
     }
 
     @NotNull
@@ -139,6 +142,7 @@ public class ApiHologramBuilder implements HologramBuilder {
             ApiHologramPage page = pageBuilder.build(hologram);
             hologram.addPage(page);
         }
+        createdHologramConsumer.accept(hologram);
         return hologram;
     }
 }

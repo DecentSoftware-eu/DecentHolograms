@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.DecentEntityType;
 import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -32,36 +31,15 @@ public class ApiHologramManager implements HologramManager {
 
     private final Set<ApiHologram> holograms = ConcurrentHashMap.newKeySet();
 
-    @SuppressWarnings("all")
     public void destroy() {
         holograms.forEach(ApiHologram::destroy);
         holograms.clear();
-
-        DecentLocation location = new DecentLocation("world", 0, 0, 0);
-        Hologram hologram = createHologram(location)
-                .withFacing(90f)
-                .addPage()
-                    .addEntityLine(DecentEntityType.ALLAY)
-                        .withFacing(180f)
-                        .and()
-                    .addTextLine("Hello, World!")
-                        .withHeight(0.5f)
-                        .and()
-                    .addTextLine("This is a hologram!")
-                        .and()
-                    .and()
-                .addPage()
-                    .addTextLine("This is another page!")
-                        .withHeight(0.5f)
-                        .and()
-                    .and()
-                .build();
     }
 
     @NotNull
     @Override
     public ApiHologramBuilder createHologram(@NotNull DecentLocation location) {
-        return new ApiHologramBuilder(location);
+        return new ApiHologramBuilder(location, holograms::add);
     }
 
     @NotNull
