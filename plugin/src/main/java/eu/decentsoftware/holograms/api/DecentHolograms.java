@@ -14,6 +14,8 @@ import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
+import eu.decentsoftware.holograms.api.v1.DecentHologramsApiListener;
+import eu.decentsoftware.holograms.api.v1.DecentHologramsApiProviderImpl;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
@@ -81,14 +83,12 @@ public final class DecentHolograms {
         BungeeUtils.init();
 
         this.apiProvider = new DecentHologramsApiProviderImpl();
-        DecentHologramsApiProvider.setImplementation(this.apiProvider);
         DecentHologramsApiListener apiListener = new DecentHologramsApiListener(this.apiProvider);
         pm.registerEvents(apiListener, this.plugin);
     }
 
     void disable() {
         this.apiProvider.destroy();
-        DecentHologramsApiProvider.setImplementation(null);
         this.nmsPacketListenerService.shutdown();
         this.featureManager.destroy();
         this.hologramManager.destroy();
