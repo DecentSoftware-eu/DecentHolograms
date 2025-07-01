@@ -22,11 +22,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 
-class BukkitDecentHologramsApiListener implements Listener {
+public class BukkitDecentHologramsApiListener implements Listener {
 
     private final BukkitDecentHologramsApiProviderImpl provider;
 
-    BukkitDecentHologramsApiListener(BukkitDecentHologramsApiProviderImpl provider) {
+    public BukkitDecentHologramsApiListener(BukkitDecentHologramsApiProviderImpl provider) {
         this.provider = provider;
     }
 

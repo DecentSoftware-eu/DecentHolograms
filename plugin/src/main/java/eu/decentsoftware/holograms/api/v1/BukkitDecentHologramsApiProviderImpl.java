@@ -21,10 +21,7 @@ package eu.decentsoftware.holograms.api.v1;
 import eu.decentsoftware.holograms.Validate;
 import eu.decentsoftware.holograms.api.v1.hologram.ApiHologramManager;
 import eu.decentsoftware.holograms.api.v1.platform.BukkitPlatformAdapter;
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -33,21 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BukkitDecentHologramsApiProviderImpl extends BukkitDecentHologramsApiProvider {
 
     private final Map<Plugin, BukkitDecentHologramsApiImpl> apiMap = new ConcurrentHashMap<>();
-    private final BukkitDecentHologramsApiListener listener;
-
-    public BukkitDecentHologramsApiProviderImpl(JavaPlugin plugin) {
-        listener = new BukkitDecentHologramsApiListener(this);
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
-        BukkitDecentHologramsApiProvider.setImplementation(this);
-    }
 
     /**
      * Destroys all API instances and clears the internal map.
      * This method should be called when the plugin is disabled to clean up resources.
      */
     public void destroy() {
-        BukkitDecentHologramsApiProvider.setImplementation(null);
-        HandlerList.unregisterAll(listener);
         apiMap.values().forEach(BukkitDecentHologramsApiImpl::destroy);
         apiMap.clear();
     }

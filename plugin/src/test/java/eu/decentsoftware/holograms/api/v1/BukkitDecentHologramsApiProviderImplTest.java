@@ -20,11 +20,9 @@ package eu.decentsoftware.holograms.api.v1;
 
 import eu.decentsoftware.holograms.api.v1.hologram.ApiHologramManager;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -33,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
@@ -41,10 +40,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BukkitDecentHologramsApiProviderImplTest {
 
-    @Mock
-    private JavaPlugin decentHologramsPlugin;
-    @InjectMocks
     private BukkitDecentHologramsApiProviderImpl provider;
+
+    @BeforeEach
+    void setUp() {
+        provider = new BukkitDecentHologramsApiProviderImpl();
+    }
 
     @Test
     void testDestroy() {
@@ -144,7 +145,7 @@ class BukkitDecentHologramsApiProviderImplTest {
 
     private static Plugin mockPlugin() {
         Plugin plugin = mock(Plugin.class);
-        when(plugin.isEnabled()).thenReturn(true);
+        lenient().when(plugin.isEnabled()).thenReturn(true);
         return plugin;
     }
 
