@@ -21,6 +21,8 @@ configurations {
 
 dependencies {
     implementation project(":api")
+    implementation project(":api-bukkit")
+    implementation project(":core")
     implementation project(":nms")
     implementation project(":nms:nms-common")
 

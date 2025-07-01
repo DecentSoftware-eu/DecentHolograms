@@ -19,7 +19,9 @@ pluginManagement {
 rootProject.name = 'DecentHolograms'
 
 include ':api'
+include ':api-bukkit'
 include ':shared'
+include ':core'
 include ':plugin'
 include ':nms'
 include ':nms:nms-common'

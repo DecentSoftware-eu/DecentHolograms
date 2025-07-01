@@ -16,14 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+dependencies {
+    implementation project(":api")
 
-import java.util.UUID;
+    compileOnly(libs.spigot)
 
-public interface GenericPlayer {
-
-    Object getPlatformPlayer();
-
-    UUID getUniqueId();
-
+    compileOnly(libs.annotations)
+    annotationProcessor(libs.annotations)
 }

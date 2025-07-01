@@ -16,14 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1;
 
-import java.util.UUID;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 
-public interface GenericPlayer {
+class BukkitDecentHologramsApiListener implements Listener {
 
-    Object getPlatformPlayer();
+    private final BukkitDecentHologramsApiProviderImpl provider;
 
-    UUID getUniqueId();
+    BukkitDecentHologramsApiListener(BukkitDecentHologramsApiProviderImpl provider) {
+        this.provider = provider;
+    }
 
+    @EventHandler
+    void onPluginDisable(PluginDisableEvent event) {
+        provider.destroyIfExists(event.getPlugin());
+    }
 }

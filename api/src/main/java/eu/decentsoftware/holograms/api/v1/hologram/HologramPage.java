@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.api.v1.hologram;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
@@ -36,39 +35,12 @@ public interface HologramPage {
      * Get the line at the specified index.
      *
      * @param index The index of the line to get.
-     * @return The line at the specified index or null if the index is out of bounds.
+     * @return The line at the specified index.
      * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size())
      * @since 2.10.0
      */
-    @Nullable
+    @NotNull
     HologramLine getLine(int index);
-
-    /**
-     * Remove the line at the specified index.
-     *
-     * @param index The index of the line to remove.
-     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size())
-     * @since 2.10.0
-     */
-    void removeLine(int index);
-
-    /**
-     * Add a line to the end of this page.
-     *
-     * @param line The line to add.
-     * @since 2.10.0
-     */
-    void appendLine(@NotNull HologramLine line);
-
-    /**
-     * Add a line to the end of this page.
-     *
-     * @param index The index to add the line at.
-     * @param line  The line to add.
-     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size())
-     * @since 2.10.0
-     */
-    void insertLine(int index, @NotNull HologramLine line);
 
     /**
      * Retrieves an unmodifiable list of all lines present in this hologram page.
@@ -78,7 +50,7 @@ public interface HologramPage {
      */
     @NotNull
     @Unmodifiable
-    List<HologramLine> getLines();
+    List<? extends HologramLine> getLines();
 
     /**
      * Get the current number of lines.
@@ -87,13 +59,6 @@ public interface HologramPage {
      * @since 2.10.0
      */
     int size();
-
-    /**
-     * Remove all lines from this page.
-     *
-     * @since 2.10.0
-     */
-    void clearLines();
 
     /**
      * Get the height of this page.

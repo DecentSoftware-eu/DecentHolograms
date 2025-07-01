@@ -48,7 +48,7 @@ public interface HologramManager {
      * @since 2.10.0
      */
     @NotNull
-    Hologram createHologram(@NotNull DecentLocation location);
+    HologramBuilder createHologram(@NotNull DecentLocation location);
 
     /**
      * Get an unmodifiable collection of all holograms, created by this API instance.

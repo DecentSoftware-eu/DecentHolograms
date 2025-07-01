@@ -16,14 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import java.util.UUID;
+import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import org.jetbrains.annotations.NotNull;
 
-public interface GenericPlayer {
+public class ApiSmallHeadHologramLineContent implements SmallHeadHologramLineContent {
 
-    Object getPlatformPlayer();
+    private final GenericItemStack itemStack;
 
-    UUID getUniqueId();
+    public ApiSmallHeadHologramLineContent(GenericItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
+    @NotNull
+    @Override
+    public GenericItemStack getItemStack() {
+        return itemStack;
+    }
 }

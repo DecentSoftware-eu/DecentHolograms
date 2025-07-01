@@ -18,12 +18,25 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
+import org.bukkit.entity.Player;
+
 import java.util.UUID;
 
-public interface GenericPlayer {
+public class BukkitPlayer implements GenericPlayer {
 
-    Object getPlatformPlayer();
+    private final Player player;
 
-    UUID getUniqueId();
+    public BukkitPlayer(Player player) {
+        this.player = player;
+    }
 
+    @Override
+    public Object getPlatformPlayer() {
+        return player;
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return player.getUniqueId();
+    }
 }

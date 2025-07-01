@@ -16,14 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram;
 
-import java.util.UUID;
+import eu.decentsoftware.holograms.api.v1.location.DecentOffsets;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public interface GenericPlayer {
+public interface HologramLineBuilder {
 
-    Object getPlatformPlayer();
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withHeight(double height);
 
-    UUID getUniqueId();
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withOffsets(@NotNull DecentOffsets offsets);
+
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withFacing(float facing);
+
+    @NotNull
+    HologramPageBuilder and();
 
 }

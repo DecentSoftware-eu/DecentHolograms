@@ -16,14 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
-public interface GenericPlayer {
+public class ApiTextHologramLineContent implements TextHologramLineContent {
 
-    Object getPlatformPlayer();
+    private final String text;
 
-    UUID getUniqueId();
+    public ApiTextHologramLineContent(String text) {
+        this.text = text;
+    }
 
+    @NotNull
+    @Override
+    public String getText() {
+        return text;
+    }
 }

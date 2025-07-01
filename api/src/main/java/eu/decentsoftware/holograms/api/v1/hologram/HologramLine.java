@@ -38,6 +38,7 @@ public interface HologramLine {
      * @see HologramLineContent
      * @since 2.10.0
      */
+    @NotNull
     HologramLineContent getContent();
 
     /**
@@ -47,14 +48,6 @@ public interface HologramLine {
      * @since 2.10.0
      */
     double getHeight();
-
-    /**
-     * Set the height of this hologram line. This method also updates the line accordingly.
-     *
-     * @param height The height to set for this hologram line in blocks.
-     * @since 2.10.0
-     */
-    void setHeight(double height);
 
     /**
      * Get the offsets of this line.
@@ -68,16 +61,6 @@ public interface HologramLine {
     DecentOffsets getOffsets();
 
     /**
-     * Set the offsets of this line. This method also updates the line accordingly.
-     * <p>
-     * Offsets are used to adjust the position of the line relative to its base position.
-     *
-     * @param offsets The offsets to set for this hologram line.
-     * @since 2.10.0
-     */
-    void setOffsets(@NotNull DecentOffsets offsets);
-
-    /**
      * Get the facing direction of the line.
      * This is the angle in degrees that the line is facing.
      * <p>
@@ -87,16 +70,5 @@ public interface HologramLine {
      * @since 2.10.0
      */
     float getFacing();
-
-    /**
-     * Set the facing direction of the line.
-     * This is the angle in degrees that the line is facing.
-     * <p>
-     * This value overrides the default facing direction of the hologram.
-     *
-     * @param facing The facing direction of the line in degrees. Must be between 0 and 360.
-     * @since 2.10.0
-     */
-    void setFacing(float facing);
 
 }

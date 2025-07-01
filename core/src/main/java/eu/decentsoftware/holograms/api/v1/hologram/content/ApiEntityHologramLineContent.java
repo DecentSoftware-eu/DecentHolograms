@@ -16,14 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import java.util.UUID;
+import eu.decentsoftware.holograms.api.v1.DecentEntityType;
+import org.jetbrains.annotations.NotNull;
 
-public interface GenericPlayer {
+public class ApiEntityHologramLineContent implements EntityHologramLineContent {
 
-    Object getPlatformPlayer();
+    private final DecentEntityType entityType;
 
-    UUID getUniqueId();
+    public ApiEntityHologramLineContent(DecentEntityType entityType) {
+        this.entityType = entityType;
+    }
 
+    @NotNull
+    @Override
+    public DecentEntityType getEntityType() {
+        return entityType;
+    }
 }

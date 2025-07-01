@@ -16,14 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram;
 
-import java.util.UUID;
+public interface HologramEditor {
 
-public interface GenericPlayer {
+    HologramEditor setInteractive(boolean interactive);
 
-    Object getPlatformPlayer();
+    HologramEditor setDownOrigin(boolean downOrigin);
 
-    UUID getUniqueId();
+    HologramEditor setViewDistance(int viewDistance);
+
+    HologramEditor setUpdateDistance(int updateDistance);
+
+    HologramEditor setUpdateInterval(int updateInterval);
+
+    HologramEditor setUpdating(boolean updating);
+
+    HologramEditor setFacing(float facing);
+
+    void applyChanges();
 
 }

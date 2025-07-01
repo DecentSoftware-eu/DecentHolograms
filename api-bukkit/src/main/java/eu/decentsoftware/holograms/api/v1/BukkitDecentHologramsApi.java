@@ -18,32 +18,26 @@
 
 package eu.decentsoftware.holograms.api.v1;
 
-import eu.decentsoftware.holograms.api.v1.hologram.HologramManager;
-import eu.decentsoftware.holograms.api.v1.platform.PlatformAdapter;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-interface DecentHologramsApi {
+/**
+ * This is the main class of the API. It serves as the access point to the API.
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
+public interface BukkitDecentHologramsApi extends DecentHologramsApi {
 
     /**
-     * Provides access to the {@link HologramManager}, which allows for the creation and management
-     * of holograms tied to the API instance.
+     * Get an instance of the DecentHolograms API for the given plugin.
      *
-     * @return An instance of the {@link HologramManager} for the current API instance
-     * @see HologramManager
+     * @param plugin The plugin to get the API for (instance of your plugin).
+     * @return The instance of the API.
      * @since 2.10.0
      */
     @NotNull
-    HologramManager getHologramManager();
-
-    /**
-     * Provides access to the {@link PlatformAdapter}, which allows for platform-specific operations
-     * and interactions.
-     *
-     * @return An instance of the {@link PlatformAdapter} for the current API instance and platform.
-     * @see PlatformAdapter
-     * @since 2.10.0
-     */
-    @NotNull
-    PlatformAdapter getPlatformAdapter();
-
+    static BukkitDecentHologramsApi getInstance(@NotNull Plugin plugin) {
+        return BukkitDecentHologramsApiProvider.getImplementation(plugin).getApi(plugin);
+    }
 }

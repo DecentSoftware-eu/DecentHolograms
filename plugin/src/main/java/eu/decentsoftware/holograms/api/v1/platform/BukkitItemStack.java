@@ -18,12 +18,18 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-import java.util.UUID;
+import org.bukkit.inventory.ItemStack;
 
-public interface GenericPlayer {
+public class BukkitItemStack implements GenericItemStack {
 
-    Object getPlatformPlayer();
+    private final ItemStack itemStack;
 
-    UUID getUniqueId();
+    public BukkitItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
+    @Override
+    public Object getPlatformItemStack() {
+        return itemStack;
+    }
 }

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.visibility;
 
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.api.v1.platform.GenericPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,19 +28,22 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApiVisibilityManagerTest {
 
-    private ApiVisibilityManager visibilityManager;
+    private eu.decentsoftware.holograms.api.v1.visibility.ApiVisibilityManager visibilityManager;
 
     @BeforeEach
     void setUp() {
-        visibilityManager = new ApiVisibilityManager();
+        visibilityManager = new eu.decentsoftware.holograms.api.v1.visibility.ApiVisibilityManager();
     }
 
     @Test
@@ -80,7 +83,7 @@ class ApiVisibilityManagerTest {
 
     @Test
     void testDefaultPlayerVisibility() {
-        Player player = mockPlayer();
+        GenericPlayer player = mockPlayer();
 
         assertNull(visibilityManager.getPlayerVisibility(player));
     }
@@ -89,8 +92,8 @@ class ApiVisibilityManagerTest {
     @NullSource
     @EnumSource(Visibility.class)
     void testSetPlayerVisibility(Visibility visibility) {
-        Player player1 = mockPlayer();
-        Player player2 = mockPlayer();
+        GenericPlayer player1 = mockPlayer();
+        GenericPlayer player2 = mockPlayer();
 
         visibilityManager.setPlayerVisibility(player1, visibility);
 
@@ -101,7 +104,7 @@ class ApiVisibilityManagerTest {
 
     @Test
     void testResetPlayerVisibility() {
-        Player player = mockPlayer();
+        GenericPlayer player = mockPlayer();
 
         visibilityManager.setPlayerVisibility(player, Visibility.VISIBLE);
         assertEquals(Visibility.VISIBLE, visibilityManager.getPlayerVisibility(player));
@@ -125,7 +128,7 @@ class ApiVisibilityManagerTest {
     @ParameterizedTest
     @MethodSource("provideTestIsVisibleTo")
     void testIsVisibleTo(Visibility defaultVisibility, Visibility playerVisibility, boolean expectedResult) {
-        Player player = mockPlayer();
+        GenericPlayer player = mockPlayer();
 
         visibilityManager.setDefaultVisibility(defaultVisibility);
         visibilityManager.setPlayerVisibility(player, playerVisibility);
@@ -135,7 +138,9 @@ class ApiVisibilityManagerTest {
         assertEquals(expectedResult, isVisible);
     }
 
-    private static Player mockPlayer() {
-        return mock(Player.class);
+    private static GenericPlayer mockPlayer() {
+        GenericPlayer player = mock(GenericPlayer.class);
+        when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+        return player;
     }
 }

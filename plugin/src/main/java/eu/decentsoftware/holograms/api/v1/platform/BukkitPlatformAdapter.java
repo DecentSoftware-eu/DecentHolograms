@@ -18,12 +18,21 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-import java.util.UUID;
+import eu.decentsoftware.holograms.Validate;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-public interface GenericPlayer {
+public class BukkitPlatformAdapter implements PlatformAdapter {
 
-    Object getPlatformPlayer();
+    @Override
+    public GenericPlayer getGenericPlayer(Object platformPlayer) {
+        Validate.isTrue(platformPlayer instanceof Player, "platformPlayer must be a Bukkit player");
+        return new BukkitPlayer((Player) platformPlayer);
+    }
 
-    UUID getUniqueId();
-
+    @Override
+    public GenericItemStack getGenericItemStack(Object platformItemStack) {
+        Validate.isTrue(platformItemStack instanceof ItemStack, "platformItemStack must be a Bukkit ItemStack");
+        return new BukkitItemStack((ItemStack) platformItemStack);
+    }
 }
