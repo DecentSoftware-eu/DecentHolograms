@@ -1,5 +1,6 @@
 subprojects {
     apply plugin: "java"
+    apply plugin: "maven-publish"
 
     group = 'eu.decentsoftware.holograms'
 
@@ -25,5 +26,16 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
         options.encoding = "UTF-8"
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                groupId    = rootProject.findProperty("group") ?: project.group
+                artifactId = project.name
+                version    = rootProject.version
+            }
+        }
     }
 }

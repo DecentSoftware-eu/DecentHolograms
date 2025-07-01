@@ -21,6 +21,8 @@ public final class DecentEntityType {
     private static final Map<String, XEntityType> ENTITY_TYPE_ALIASES = new HashMap<>();
     private static final Set<XEntityType> ENTITY_TYPE_BLACKLIST;
     private static final Set<XEntityType> ENTITY_TYPES;
+    private static final EnumSet<EntityType> BUKKIT_ENTITY_TYPE_BLACKLIST;
+    private static final EnumSet<EntityType> BUKKIT_ALLOWED_ENTITY_TYPES;
 
     static {
         ENTITY_TYPES = EnumSet.allOf(XEntityType.class);
@@ -55,13 +57,33 @@ public final class DecentEntityType {
                 XEntityType.TNT_MINECART,
                 XEntityType.TNT,
                 XEntityType.UNKNOWN,
-                XEntityType.WITHER_SKULL
+                XEntityType.WITHER_SKULL,
+                // Boats and Chest Boats
+                XEntityType.ACACIA_BOAT,
+                XEntityType.ACACIA_CHEST_BOAT,
+                XEntityType.BIRCH_BOAT,
+                XEntityType.BIRCH_CHEST_BOAT,
+                XEntityType.CHERRY_BOAT,
+                XEntityType.CHERRY_CHEST_BOAT,
+                XEntityType.DARK_OAK_BOAT,
+                XEntityType.DARK_OAK_CHEST_BOAT,
+                XEntityType.JUNGLE_BOAT,
+                XEntityType.JUNGLE_CHEST_BOAT,
+                XEntityType.MANGROVE_BOAT,
+                XEntityType.MANGROVE_CHEST_BOAT,
+                XEntityType.OAK_BOAT,
+                XEntityType.OAK_CHEST_BOAT,
+                XEntityType.PALE_OAK_BOAT,
+                XEntityType.PALE_OAK_CHEST_BOAT,
+                XEntityType.SPRUCE_BOAT,
+                XEntityType.SPRUCE_CHEST_BOAT
         );
-        for (XEntityType value : XEntityType.getValues()) {
-            if (value.name().endsWith("BOAT")) {
-                ENTITY_TYPE_BLACKLIST.add(value);
-            }
-        }
+
+        BUKKIT_ENTITY_TYPE_BLACKLIST = EnumSet.copyOf(ENTITY_TYPE_BLACKLIST.stream()
+                .map(XEntityType::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
+        BUKKIT_ALLOWED_ENTITY_TYPES = EnumSet.complementOf(BUKKIT_ENTITY_TYPE_BLACKLIST);
 
         ENTITY_TYPES.removeIf(ENTITY_TYPE_BLACKLIST::contains);
 
@@ -74,9 +96,8 @@ public final class DecentEntityType {
     }
 
     public static List<String> getAllowedEntityTypeNames() {
-        return ENTITY_TYPES.stream()
-                .map(DecentEntityType::getBukkitEntityTypeName)
-                .filter(Objects::nonNull)
+        return BUKKIT_ALLOWED_ENTITY_TYPES.stream()
+                .map(EntityType::name)
                 .collect(Collectors.toList());
     }
 
@@ -88,8 +109,8 @@ public final class DecentEntityType {
         return null;
     }
 
-    public static boolean isAllowed(XEntityType entityType) {
-        return !ENTITY_TYPE_BLACKLIST.contains(entityType);
+    private static boolean isAllowed(EntityType entityType) {
+        return !BUKKIT_ENTITY_TYPE_BLACKLIST.contains(entityType);
     }
 
     @Nullable
@@ -97,14 +118,39 @@ public final class DecentEntityType {
         if (string == null) {
             return null;
         }
-        XEntityType entityType = ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
-        if (entityType == null) {
-            entityType = XEntityType.of(string).orElse(null);
+
+        EntityType bukkitEntityType = getBukkitEntityTypeByName(string);
+        if (bukkitEntityType == null) {
+            bukkitEntityType = getBukkitEntityTypeByNameViaXEntityType(string);
         }
-        if (entityType != null && isAllowed(entityType)) {
-            return entityType.get();
+
+        if (bukkitEntityType != null && isAllowed(bukkitEntityType)) {
+            return bukkitEntityType;
         }
         return null;
     }
 
+    @Nullable
+    private static EntityType getBukkitEntityTypeByNameViaXEntityType(String string) {
+        XEntityType xEntityType = XEntityType.of(string).orElseGet(() -> getXEntityTypeFromAlias(string));
+        if (xEntityType != null) {
+            return xEntityType.get();
+        }
+        return null;
+    }
+
+    @Nullable
+    private static EntityType getBukkitEntityTypeByName(String string) {
+        EntityType bukkitEntityType;
+        try {
+            bukkitEntityType = EntityType.valueOf(string);
+        } catch (IllegalArgumentException e) {
+            bukkitEntityType = null;
+        }
+        return bukkitEntityType;
+    }
+
+    private static XEntityType getXEntityTypeFromAlias(String string) {
+        return ENTITY_TYPE_ALIASES.get(Common.removeSpacingChars(string).toLowerCase());
+    }
 }
