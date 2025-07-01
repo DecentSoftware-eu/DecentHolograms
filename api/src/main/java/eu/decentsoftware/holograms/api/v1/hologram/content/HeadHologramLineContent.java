@@ -32,16 +32,4 @@ public interface HeadHologramLineContent extends HologramLineContent {
      */
     @NotNull
     GenericItemStack getItemStack();
-
-    /**
-     * Set the {@link GenericItemStack} of the line. This is the item that will be displayed
-     * as a head in the hologram.
-     * <p>
-     * This method also updates the line accordingly.
-     *
-     * @param itemStack The {@link GenericItemStack} of the line.
-     * @since 2.10.0
-     */
-    void setItemStack(@NotNull GenericItemStack itemStack);
-
 }

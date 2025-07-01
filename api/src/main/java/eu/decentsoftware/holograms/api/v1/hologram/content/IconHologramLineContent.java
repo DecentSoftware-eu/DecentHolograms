@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.api.v1.hologram.content;
 import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public interface IconHologramLineContent {
+public interface IconHologramLineContent extends HologramLineContent {
 
     /**
      * Get the {@link GenericItemStack} of this line. This is the item that will be displayed
@@ -32,16 +32,4 @@ public interface IconHologramLineContent {
      */
     @NotNull
     GenericItemStack getItemStack();
-
-    /**
-     * Set the {@link GenericItemStack} of this line. This is the item that will be displayed
-     * as an icon in the hologram.
-     * <p>
-     * This method also updates the line accordingly.
-     *
-     * @param itemStack The {@link GenericItemStack} of this line.
-     * @since 2.10.0
-     */
-    void setItemStack(@NotNull GenericItemStack itemStack);
-
 }

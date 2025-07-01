@@ -31,13 +31,4 @@ public interface EntityHologramLineContent extends HologramLineContent {
      */
     @NotNull
     DecentEntityType getEntityType();
-
-    /**
-     * Set the entity type of the line. This method also updates the line accordingly.
-     *
-     * @param entityType The entity type of the line.
-     * @since 2.10.0
-     */
-    void setEntityType(@NotNull DecentEntityType entityType);
-
 }

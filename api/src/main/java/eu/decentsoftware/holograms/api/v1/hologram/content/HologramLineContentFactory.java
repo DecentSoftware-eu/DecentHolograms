@@ -36,7 +36,7 @@ public interface HologramLineContentFactory {
      * @param text The text to display in the hologram line.
      * @return A new instance of {@link TextHologramLineContent}.
      */
-    TextHologramLineContent createTextHologramLineContent(@NotNull String text);
+    TextHologramLineContent createTextContent(@NotNull String text);
 
     /**
      * Creates a new icon hologram line content with the specified item stack.
@@ -44,7 +44,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack to display in the hologram line.
      * @return A new instance of {@link IconHologramLineContent}.
      */
-    IconHologramLineContent createIconHologramLineContent(@NotNull GenericItemStack itemStack);
+    IconHologramLineContent createIconContent(@NotNull GenericItemStack itemStack);
 
     /**
      * Creates a new head hologram line content with the specified item stack.
@@ -52,7 +52,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack representing the head to display in the hologram line.
      * @return A new instance of {@link HeadHologramLineContent}.
      */
-    HeadHologramLineContent createHeadHologramLineContent(@NotNull GenericItemStack itemStack);
+    HeadHologramLineContent createHeadContent(@NotNull GenericItemStack itemStack);
 
     /**
      * Creates a new small head hologram line content with the specified item stack.
@@ -60,7 +60,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack representing the small head to display in the hologram line.
      * @return A new instance of {@link SmallHeadHologramLineContent}.
      */
-    SmallHeadHologramLineContent createSmallHeadHologramLineContent(@NotNull GenericItemStack itemStack);
+    SmallHeadHologramLineContent createSmallHeadContent(@NotNull GenericItemStack itemStack);
 
     /**
      * Creates a new entity hologram line content with the specified entity type.
@@ -68,6 +68,6 @@ public interface HologramLineContentFactory {
      * @param entityType The type of entity to display in the hologram line.
      * @return A new instance of {@link EntityHologramLineContent}.
      */
-    EntityHologramLineContent createEntityHologramLineContent(@NotNull DecentEntityType entityType);
+    EntityHologramLineContent createEntityContent(@NotNull DecentEntityType entityType);
 
 }

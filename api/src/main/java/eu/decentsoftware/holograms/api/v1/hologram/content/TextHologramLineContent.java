@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.api.v1.hologram.content;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface TextHologramLineContent {
+public interface TextHologramLineContent extends HologramLineContent {
 
     /**
      * Get the text of this line.
@@ -31,14 +31,4 @@ public interface TextHologramLineContent {
      */
     @NotNull
     String getText();
-
-    /**
-     * Set the text of this line.
-     * This is the text that will be displayed in the hologram.
-     *
-     * @param text The text to set for this line.
-     * @since 2.10.0
-     */
-    void setText(@NotNull String text);
-
 }
