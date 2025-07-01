@@ -22,20 +22,53 @@ import eu.decentsoftware.holograms.api.v1.location.DecentOffsets;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Builder for configuring hologram lines.
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
 public interface HologramLineBuilder {
 
+    /**
+     * Sets the vertical height/spacing of this line.
+     *
+     * @param height The height value to set.
+     * @return This builder for chaining.
+     * @since 2.10.0
+     */
     @NotNull
     @Contract("_ -> this")
     HologramLineBuilder withHeight(double height);
 
+    /**
+     * Sets the positional offsets for this line.
+     *
+     * @param offsets The offsets to apply.
+     * @return This builder for chaining.
+     * @since 2.10.0
+     */
     @NotNull
     @Contract("_ -> this")
     HologramLineBuilder withOffsets(@NotNull DecentOffsets offsets);
 
+    /**
+     * Sets the facing angle/rotation of this line.
+     *
+     * @param facing The facing angle in degrees. (0-360)
+     * @return This builder for chaining.
+     * @since 2.10.0
+     */
     @NotNull
     @Contract("_ -> this")
     HologramLineBuilder withFacing(float facing);
 
+    /**
+     * Returns to the parent page builder.
+     *
+     * @return The parent HologramPageBuilder.
+     * @since 2.10.0
+     */
     @NotNull
     HologramPageBuilder and();
 
