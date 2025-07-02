@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -40,15 +39,14 @@ import java.util.Collection;
 public interface HologramManager {
 
     /**
-     * Create a new, empty hologram.
+     * Creates a new instance of {@link HologramBuilder} for constructing a hologram.
      *
-     * @param location The location of the hologram.
-     * @return The new hologram.
-     * @see Hologram
+     * @return A new instance of {@link HologramBuilder}.
+     * @see HologramBuilder
      * @since 2.10.0
      */
     @NotNull
-    HologramBuilder createHologram(@NotNull DecentLocation location);
+    HologramBuilder newHologram();
 
     /**
      * Get an unmodifiable collection of all holograms, created by this API instance.

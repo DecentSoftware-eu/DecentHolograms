@@ -20,7 +20,8 @@ package eu.decentsoftware.holograms.api.v1.hologram;
 
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
 import eu.decentsoftware.holograms.api.v1.hologram.content.HologramLineContent;
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,62 +35,82 @@ public interface HologramPageBuilder {
     /**
      * Adds a new line with custom content to the page.
      *
-     * @param content The content to add to the line.
      * @return A builder for configuring the new line.
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addLine(@NotNull HologramLineContent content);
+    HologramLineBuilder withLine();
+
+    /**
+     * Adds a new line with custom content to the page.
+     *
+     * @param content The content to add to the line.
+     * @return This builder instance.
+     * @see HologramLineContent
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramPageBuilder withLine(@NotNull HologramLineContent content);
 
     /**
      * Adds a new text line to the page.
      *
      * @param text The text content to add.
-     * @return A builder for configuring the new line.
+     * @return This builder instance.
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addTextLine(@NotNull String text);
+    @Contract("_ -> this")
+    HologramPageBuilder withTextLine(@NotNull String text);
 
     /**
      * Adds a new line displaying an item icon.
      *
      * @param itemStack The item to display.
-     * @return A builder for configuring the new line.
+     * @return This builder instance.
+     * @see DecentItemStack
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addIconLine(@NotNull GenericItemStack itemStack);
+    @Contract("_ -> this")
+    HologramPageBuilder withIconLine(@NotNull DecentItemStack itemStack);
 
     /**
      * Adds a new line displaying a player head.
      *
      * @param itemStack The head item to display.
-     * @return A builder for configuring the new line.
+     * @return This builder instance.
+     * @see DecentItemStack
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addHeadLine(@NotNull GenericItemStack itemStack);
+    @Contract("_ -> this")
+    HologramPageBuilder withHeadLine(@NotNull DecentItemStack itemStack);
 
     /**
      * Adds a new line displaying a small player head.
      *
      * @param itemStack The head item to display.
-     * @return A builder for configuring the new line.
+     * @return This builder instance.
+     * @see DecentItemStack
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addSmallHeadLine(@NotNull GenericItemStack itemStack);
+    @Contract("_ -> this")
+    HologramPageBuilder withSmallHeadLine(@NotNull DecentItemStack itemStack);
 
     /**
      * Adds a new line displaying an entity.
      *
      * @param entityType The type of entity to display.
-     * @return A builder for configuring the new line.
+     * @return This builder instance.
+     * @see DecentEntityType
      * @since 2.10.0
      */
     @NotNull
-    HologramLineBuilder addEntityLine(@NotNull DecentEntityType entityType);
+    @Contract("_ -> this")
+    HologramPageBuilder withEntityLine(@NotNull DecentEntityType entityType);
 
     /**
      * Returns to the parent hologram builder.

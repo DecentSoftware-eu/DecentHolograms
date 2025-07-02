@@ -19,28 +19,88 @@
 package eu.decentsoftware.holograms.api.v1.hologram;
 
 import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.api.v1.DecentEntityType;
+import eu.decentsoftware.holograms.api.v1.hologram.content.ApiEntityHologramLineContent;
+import eu.decentsoftware.holograms.api.v1.hologram.content.ApiHeadHologramLineContent;
+import eu.decentsoftware.holograms.api.v1.hologram.content.ApiIconHologramLineContent;
+import eu.decentsoftware.holograms.api.v1.hologram.content.ApiSmallHeadHologramLineContent;
+import eu.decentsoftware.holograms.api.v1.hologram.content.ApiTextHologramLineContent;
 import eu.decentsoftware.holograms.api.v1.hologram.content.HologramLineContent;
 import eu.decentsoftware.holograms.api.v1.location.DecentOffsets;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class ApiHologramLineBuilder implements HologramLineBuilder {
 
     private final ApiHologramPageBuilder pageBuilder;
-    private final HologramLineContent content;
+    private HologramLineContent content;
     private double height = 0.0;
     private DecentOffsets offsets = DecentOffsets.ZERO;
     private float facing = 0.0f;
 
-    public ApiHologramLineBuilder(@NotNull ApiHologramPageBuilder pageBuilder, @NotNull HologramLineContent content) {
+    public ApiHologramLineBuilder(@NotNull ApiHologramPageBuilder pageBuilder) {
         this.pageBuilder = pageBuilder;
-        this.content = content;
     }
 
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramLineBuilder withHeight(double height) {
+    public ApiHologramLineBuilder withContent(@NotNull HologramLineContent content) {
+        Validate.notNull(content, "content cannot be null");
+        this.content = content;
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withTextContent(@NotNull String text) {
+        Validate.notNull(text, "text cannot be null");
+        this.content = new ApiTextHologramLineContent(text);
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withIconContent(@NotNull DecentItemStack itemStack) {
+        Validate.notNull(itemStack, "itemStack cannot be null");
+        this.content = new ApiIconHologramLineContent(itemStack);
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withHeadContent(@NotNull DecentItemStack itemStack) {
+        Validate.notNull(itemStack, "itemStack cannot be null");
+        this.content = new ApiHeadHologramLineContent(itemStack);
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withSmallHeadContent(@NotNull DecentItemStack itemStack) {
+        Validate.notNull(itemStack, "itemStack cannot be null");
+        this.content = new ApiSmallHeadHologramLineContent(itemStack);
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withEntityContent(@NotNull DecentEntityType entityType) {
+        Validate.notNull(entityType, "entityType cannot be null");
+        this.content = new ApiEntityHologramLineContent(entityType);
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramLineBuilder withHeight(double height) {
         this.height = height;
         return this;
     }
@@ -48,7 +108,7 @@ public class ApiHologramLineBuilder implements HologramLineBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramLineBuilder withOffsets(@NotNull DecentOffsets offsets) {
+    public ApiHologramLineBuilder withOffsets(@NotNull DecentOffsets offsets) {
         Validate.notNull(offsets, "offsets cannot be null");
         this.offsets = offsets;
         return this;
@@ -57,7 +117,7 @@ public class ApiHologramLineBuilder implements HologramLineBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramLineBuilder withFacing(float facing) {
+    public ApiHologramLineBuilder withFacing(float facing) {
         Validate.isTrue(facing >= 0.0f && facing <= 360.0f, "facing must be between 0 and 360");
         this.facing = facing;
         return this;
@@ -65,11 +125,13 @@ public class ApiHologramLineBuilder implements HologramLineBuilder {
 
     @NotNull
     @Override
-    public HologramPageBuilder and() {
+    public ApiHologramPageBuilder and() {
         return pageBuilder;
     }
 
     ApiHologramLine build() {
+        Validate.notNull(content, "Cannot build a hologram line without content");
+
         ApiHologramLine line = new ApiHologramLine(content);
         line.setHeight(height);
         line.setOffsets(offsets);

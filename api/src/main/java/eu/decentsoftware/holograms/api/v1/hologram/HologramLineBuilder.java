@@ -18,7 +18,10 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
+import eu.decentsoftware.holograms.api.v1.DecentEntityType;
+import eu.decentsoftware.holograms.api.v1.hologram.content.HologramLineContent;
 import eu.decentsoftware.holograms.api.v1.location.DecentOffsets;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +34,80 @@ import org.jetbrains.annotations.NotNull;
 public interface HologramLineBuilder {
 
     /**
+     * Sets the content of this line.
+     *
+     * @param content The content to set for the line.
+     * @return This builder instance.
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withContent(@NotNull HologramLineContent content);
+
+    /**
+     * Sets the content of this line to display text.
+     *
+     * @param text The text content to display.
+     * @return This builder instance.
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withTextContent(@NotNull String text);
+
+    /**
+     * Sets the content of this line to display an item icon.
+     *
+     * @param itemStack The item stack to display as an icon.
+     * @return This builder instance.
+     * @see DecentItemStack
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withIconContent(@NotNull DecentItemStack itemStack);
+
+    /**
+     * Sets the content of this line to display a player head.
+     *
+     * @param itemStack The head item stack to display.
+     * @return This builder instance.
+     * @see DecentItemStack
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withHeadContent(@NotNull DecentItemStack itemStack);
+
+    /**
+     * Sets the content of this line to display a small player head.
+     *
+     * @param itemStack The head item stack to display.
+     * @return This builder instance.
+     * @see DecentItemStack
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withSmallHeadContent(@NotNull DecentItemStack itemStack);
+
+    /**
+     * Sets the content of this line to display an entity.
+     *
+     * @param entityType The type of entity to display.
+     * @return This builder instance.
+     * @see DecentEntityType
+     * @since 2.10.0
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramLineBuilder withEntityContent(@NotNull DecentEntityType entityType);
+
+    /**
      * Sets the vertical height/spacing of this line.
      *
      * @param height The height value to set.
-     * @return This builder for chaining.
+     * @return This builder instance.
      * @since 2.10.0
      */
     @NotNull
@@ -45,7 +118,7 @@ public interface HologramLineBuilder {
      * Sets the positional offsets for this line.
      *
      * @param offsets The offsets to apply.
-     * @return This builder for chaining.
+     * @return This builder instance.
      * @since 2.10.0
      */
     @NotNull
@@ -56,7 +129,7 @@ public interface HologramLineBuilder {
      * Sets the facing angle/rotation of this line.
      *
      * @param facing The facing angle in degrees. (0-360)
-     * @return This builder for chaining.
+     * @return This builder instance.
      * @since 2.10.0
      */
     @NotNull

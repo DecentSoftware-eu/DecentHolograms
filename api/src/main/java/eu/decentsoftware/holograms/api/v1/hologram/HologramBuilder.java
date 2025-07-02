@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
+import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.jetbrains.annotations.Contract;
@@ -30,6 +31,17 @@ import org.jetbrains.annotations.NotNull;
  * @since 2.10.0
  */
 public interface HologramBuilder {
+
+    /**
+     * Sets the location of the hologram.
+     *
+     * @param location The location.
+     * @return This builder instance.
+     * @see DecentLocation
+     */
+    @NotNull
+    @Contract("_ -> this")
+    HologramBuilder withLocation(@NotNull DecentLocation location);
 
     /**
      * Sets whether the hologram is interactive.
@@ -128,7 +140,7 @@ public interface HologramBuilder {
      * @return A new hologram page builder.
      */
     @NotNull
-    HologramPageBuilder addPage();
+    HologramPageBuilder withPage();
 
     /**
      * Builds and returns the final hologram.

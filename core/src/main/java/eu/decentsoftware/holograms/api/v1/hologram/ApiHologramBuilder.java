@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.api.v1.hologram;
 import eu.decentsoftware.holograms.Validate;
 import eu.decentsoftware.holograms.api.v1.location.ApiLocationManager;
 import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
-import eu.decentsoftware.holograms.api.v1.platform.GenericPlayer;
+import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import eu.decentsoftware.holograms.api.v1.visibility.ApiVisibilityManager;
 import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.jetbrains.annotations.Contract;
@@ -33,20 +33,28 @@ import java.util.function.Consumer;
 
 public class ApiHologramBuilder implements HologramBuilder {
 
-    private final DecentLocation location;
     private final List<ApiHologramPageBuilder> pageBuilders = new ArrayList<>();
     private final ApiHologramSettings settings = new ApiHologramSettings();
     private final Consumer<ApiHologram> createdHologramConsumer;
+    private DecentLocation location;
 
-    public ApiHologramBuilder(DecentLocation location, Consumer<ApiHologram> createdHologramConsumer) {
-        this.location = location;
+    public ApiHologramBuilder(Consumer<ApiHologram> createdHologramConsumer) {
         this.createdHologramConsumer = createdHologramConsumer;
     }
 
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withInteractive(boolean interactive) {
+    public ApiHologramBuilder withLocation(@NotNull DecentLocation location) {
+        Validate.notNull(location, "location cannot be null");
+        this.location = location;
+        return this;
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    @Override
+    public ApiHologramBuilder withInteractive(boolean interactive) {
         settings.setInteractive(interactive);
         return this;
     }
@@ -54,7 +62,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withDownOrigin(boolean downOrigin) {
+    public ApiHologramBuilder withDownOrigin(boolean downOrigin) {
         settings.setDownOrigin(downOrigin);
         return this;
     }
@@ -62,7 +70,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withViewDistance(int viewDistance) {
+    public ApiHologramBuilder withViewDistance(int viewDistance) {
         Validate.isTrue(viewDistance > 0 && viewDistance <= 48, "viewDistance must be between 1 and 48 blocks");
         settings.setViewDistance(viewDistance);
         return this;
@@ -71,7 +79,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withUpdateDistance(int updateDistance) {
+    public ApiHologramBuilder withUpdateDistance(int updateDistance) {
         Validate.isTrue(updateDistance > 0 && updateDistance <= 48, "updateDistance must be between 1 and 48 blocks");
         settings.setUpdateDistance(updateDistance);
         return this;
@@ -80,7 +88,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withUpdateInterval(int updateInterval) {
+    public ApiHologramBuilder withUpdateInterval(int updateInterval) {
         Validate.isTrue(updateInterval > 0 && updateInterval <= 1200, "updateInterval must be between 1 and 1200 ticks");
         settings.setUpdateInterval(updateInterval);
         return this;
@@ -89,7 +97,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withUpdating(boolean updating) {
+    public ApiHologramBuilder withUpdating(boolean updating) {
         settings.setUpdating(updating);
         return this;
     }
@@ -97,7 +105,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withFacing(float facing) {
+    public ApiHologramBuilder withFacing(float facing) {
         Validate.isTrue(facing >= 0.0f && facing <= 360.0f, "facing must be between 0 and 360 degrees");
         settings.setFacing(facing);
         return this;
@@ -106,7 +114,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_ -> this")
     @Override
-    public HologramBuilder withDefaultVisibility(@NotNull Visibility visibility) {
+    public ApiHologramBuilder withDefaultVisibility(@NotNull Visibility visibility) {
         Validate.notNull(visibility, "visibility cannot be null");
         // TODO
         return this;
@@ -115,7 +123,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @NotNull
     @Contract("_,_ -> this")
     @Override
-    public HologramBuilder withPlayerVisibility(@NotNull GenericPlayer player, @NotNull Visibility visibility) {
+    public ApiHologramBuilder withPlayerVisibility(@NotNull DecentPlayer player, @NotNull Visibility visibility) {
         Validate.notNull(player, "player cannot be null");
         Validate.notNull(visibility, "visibility cannot be null");
         // TODO
@@ -124,7 +132,7 @@ public class ApiHologramBuilder implements HologramBuilder {
 
     @NotNull
     @Override
-    public HologramPageBuilder addPage() {
+    public ApiHologramPageBuilder withPage() {
         ApiHologramPageBuilder pageBuilder = new ApiHologramPageBuilder(this);
         pageBuilders.add(pageBuilder);
         return pageBuilder;
@@ -132,7 +140,8 @@ public class ApiHologramBuilder implements HologramBuilder {
 
     @NotNull
     @Override
-    public Hologram build() {
+    public ApiHologram build() {
+        Validate.notNull(location, "Cannot build a hologram without a location");
         Validate.isTrue(!pageBuilders.isEmpty(), "Cannot build a hologram with no pages");
 
         ApiLocationManager locationManager = new ApiLocationManager(location);

@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -38,8 +37,8 @@ public class ApiHologramManager implements HologramManager {
 
     @NotNull
     @Override
-    public ApiHologramBuilder createHologram(@NotNull DecentLocation location) {
-        return new ApiHologramBuilder(location, holograms::add);
+    public ApiHologramBuilder newHologram() {
+        return new ApiHologramBuilder(holograms::add);
     }
 
     @NotNull

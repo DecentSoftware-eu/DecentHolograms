@@ -20,13 +20,8 @@ package eu.decentsoftware.holograms.api.v1.hologram;
 
 import eu.decentsoftware.holograms.Validate;
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
-import eu.decentsoftware.holograms.api.v1.hologram.content.ApiEntityHologramLineContent;
-import eu.decentsoftware.holograms.api.v1.hologram.content.ApiHeadHologramLineContent;
-import eu.decentsoftware.holograms.api.v1.hologram.content.ApiIconHologramLineContent;
-import eu.decentsoftware.holograms.api.v1.hologram.content.ApiSmallHeadHologramLineContent;
-import eu.decentsoftware.holograms.api.v1.hologram.content.ApiTextHologramLineContent;
 import eu.decentsoftware.holograms.api.v1.hologram.content.HologramLineContent;
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -43,54 +38,75 @@ public class ApiHologramPageBuilder implements HologramPageBuilder {
 
     @NotNull
     @Override
-    public HologramLineBuilder addLine(@NotNull HologramLineContent content) {
+    public HologramLineBuilder withLine() {
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this);
+        lineBuilders.add(lineBuilder);
+        return lineBuilder;
+    }
+
+    @NotNull
+    @Override
+    public ApiHologramPageBuilder withLine(@NotNull HologramLineContent content) {
         Validate.notNull(content, "content cannot be null");
-        return createHologramLineBuilder(content);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withContent(content);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramLineBuilder addTextLine(@NotNull String text) {
+    public ApiHologramPageBuilder withTextLine(@NotNull String text) {
         Validate.notNull(text, "text cannot be null");
-        ApiTextHologramLineContent lineContent = new ApiTextHologramLineContent(text);
-        return createHologramLineBuilder(lineContent);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withTextContent(text);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramLineBuilder addIconLine(@NotNull GenericItemStack itemStack) {
+    public ApiHologramPageBuilder withIconLine(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
-        HologramLineContent lineContent = new ApiIconHologramLineContent(itemStack);
-        return createHologramLineBuilder(lineContent);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withIconContent(itemStack);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramLineBuilder addHeadLine(@NotNull GenericItemStack itemStack) {
+    public ApiHologramPageBuilder withHeadLine(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
-        HologramLineContent lineContent = new ApiHeadHologramLineContent(itemStack);
-        return createHologramLineBuilder(lineContent);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withHeadContent(itemStack);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramLineBuilder addSmallHeadLine(@NotNull GenericItemStack itemStack) {
+    public ApiHologramPageBuilder withSmallHeadLine(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
-        HologramLineContent lineContent = new ApiSmallHeadHologramLineContent(itemStack);
-        return createHologramLineBuilder(lineContent);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withSmallHeadContent(itemStack);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramLineBuilder addEntityLine(@NotNull DecentEntityType entityType) {
+    public ApiHologramPageBuilder withEntityLine(@NotNull DecentEntityType entityType) {
         Validate.notNull(entityType, "entityType cannot be null");
-        HologramLineContent lineContent = new ApiEntityHologramLineContent(entityType);
-        return createHologramLineBuilder(lineContent);
+        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this)
+                .withEntityContent(entityType);
+        lineBuilders.add(lineBuilder);
+        return this;
     }
 
     @NotNull
     @Override
-    public HologramBuilder and() {
+    public ApiHologramBuilder and() {
         return hologramBuilder;
     }
 
@@ -103,11 +119,5 @@ public class ApiHologramPageBuilder implements HologramPageBuilder {
             page.appendLine(line);
         }
         return page;
-    }
-
-    private ApiHologramLineBuilder createHologramLineBuilder(HologramLineContent content) {
-        ApiHologramLineBuilder lineBuilder = new ApiHologramLineBuilder(this, content);
-        lineBuilders.add(lineBuilder);
-        return lineBuilder;
     }
 }
