@@ -16,44 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1;
+package eu.decentsoftware.holograms.api.v1.platform;
 
-import eu.decentsoftware.holograms.api.v1.hologram.ApiHologramManager;
-import eu.decentsoftware.holograms.api.v1.platform.BukkitPlatformAdapter;
+import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BukkitDecentHologramsApiImplTest {
+class BukkitPlayerTest {
 
     @Mock
-    private ApiHologramManager hologramManager;
-    @Mock
-    private BukkitPlatformAdapter platformAdapter;
+    private Player platformPlayer;
     @InjectMocks
-    private BukkitDecentHologramsApiImpl api;
+    private BukkitPlayer player;
 
     @Test
-    void testGetHologramService() {
-        assertEquals(hologramManager, api.getHologramManager());
+    void testGetPlayer() {
+        assertEquals(platformPlayer, player.getPlatformPlayer());
     }
 
     @Test
-    void testGetPlatformManager() {
-        assertEquals(platformAdapter, api.getPlatformAdapter());
-    }
+    void testGetUniqueId() {
+        UUID uniqueId = UUID.randomUUID();
+        when(platformPlayer.getUniqueId()).thenReturn(uniqueId);
 
-    @Test
-    void testDestroy() {
-        api.destroy();
-
-        verify(hologramManager).destroy();
+        assertEquals(uniqueId, player.getUniqueId());
     }
 
 }

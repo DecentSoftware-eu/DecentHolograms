@@ -25,12 +25,15 @@ import org.jetbrains.annotations.NotNull;
 public class ApiHologramLine implements HologramLine {
 
     private HologramLineContent content;
-    private double height = 0.0d;
-    private DecentOffsets offsets = DecentOffsets.ZERO;
-    private float facing = 0.0f;
+    private double height;
+    private DecentOffsets offsets;
+    private float facing;
 
-    public ApiHologramLine(HologramLineContent content) {
+    public ApiHologramLine(@NotNull HologramLineContent content) {
         this.content = content;
+        this.height = 0d;
+        this.offsets = DecentOffsets.ZERO;
+        this.facing = 0f;
     }
 
     @NotNull

@@ -38,5 +38,4 @@ class ApiHologramSettingsTest {
         assertTrue(settings.isUpdating());
         assertEquals(0.0f, settings.getFacing());
     }
-
 }

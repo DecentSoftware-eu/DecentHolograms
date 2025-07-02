@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.api.v1;
 
 import eu.decentsoftware.holograms.api.v1.hologram.ApiHologramManager;
 import eu.decentsoftware.holograms.api.v1.platform.BukkitPlatformAdapter;
-import eu.decentsoftware.holograms.Validate;
 import org.jetbrains.annotations.NotNull;
 
 public class BukkitDecentHologramsApiImpl implements BukkitDecentHologramsApi {
@@ -28,9 +27,7 @@ public class BukkitDecentHologramsApiImpl implements BukkitDecentHologramsApi {
     private final ApiHologramManager hologramManager;
     private final BukkitPlatformAdapter platformAdapter;
 
-    public BukkitDecentHologramsApiImpl(@NotNull ApiHologramManager hologramManager, @NotNull BukkitPlatformAdapter platformAdapter) {
-        Validate.notNull(hologramManager, "hologramManager cannot be null");
-        Validate.notNull(platformAdapter, "platformAdapter cannot be null");
+    public BukkitDecentHologramsApiImpl(ApiHologramManager hologramManager, BukkitPlatformAdapter platformAdapter) {
         this.hologramManager = hologramManager;
         this.platformAdapter = platformAdapter;
     }

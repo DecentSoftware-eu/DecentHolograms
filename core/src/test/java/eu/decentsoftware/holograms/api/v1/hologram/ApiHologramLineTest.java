@@ -16,23 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.v1.platform;
+package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.Validate;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import eu.decentsoftware.holograms.api.v1.hologram.content.HologramLineContent;
+import eu.decentsoftware.holograms.api.v1.location.DecentOffsets;
+import org.junit.jupiter.api.Test;
 
-public class BukkitPlatformAdapter implements PlatformAdapter {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
-    @Override
-    public DecentPlayer getGenericPlayer(Object platformPlayer) {
-        Validate.isTrue(platformPlayer instanceof Player, "platformPlayer must be a Bukkit Player");
-        return new BukkitPlayer((Player) platformPlayer);
-    }
+class ApiHologramLineTest {
 
-    @Override
-    public DecentItemStack getGenericItemStack(Object platformItemStack) {
-        Validate.isTrue(platformItemStack instanceof ItemStack, "platformItemStack must be a Bukkit ItemStack");
-        return new BukkitItemStack((ItemStack) platformItemStack);
+    @Test
+    void testDefaultValues() {
+        HologramLineContent content = mock(HologramLineContent.class);
+
+        ApiHologramLine line = new ApiHologramLine(content);
+        assertEquals(content, line.getContent());
+        assertEquals(0d, line.getHeight());
+        assertEquals(DecentOffsets.ZERO, line.getOffsets());
+        assertEquals(0f, line.getFacing());
     }
 }

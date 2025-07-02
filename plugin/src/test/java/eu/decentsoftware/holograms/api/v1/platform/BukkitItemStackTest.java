@@ -18,21 +18,23 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-import eu.decentsoftware.holograms.Validate;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
-public class BukkitPlatformAdapter implements PlatformAdapter {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-    @Override
-    public DecentPlayer getGenericPlayer(Object platformPlayer) {
-        Validate.isTrue(platformPlayer instanceof Player, "platformPlayer must be a Bukkit Player");
-        return new BukkitPlayer((Player) platformPlayer);
-    }
+class BukkitItemStackTest {
 
-    @Override
-    public DecentItemStack getGenericItemStack(Object platformItemStack) {
-        Validate.isTrue(platformItemStack instanceof ItemStack, "platformItemStack must be a Bukkit ItemStack");
-        return new BukkitItemStack((ItemStack) platformItemStack);
+    @Mock
+    private ItemStack platformItemStack;
+
+    @Test
+    void testGetPlatformItemStack() {
+        DecentItemStack decentItemStack = new BukkitItemStack(platformItemStack);
+
+        assertNotNull(decentItemStack);
+        assertEquals(platformItemStack, decentItemStack.getPlatformItemStack());
     }
 }
