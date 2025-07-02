@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.visibility;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericPlayer;
+import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import eu.decentsoftware.holograms.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public class ApiVisibilityManager implements VisibilityManager {
     }
 
     @Override
-    public void setPlayerVisibility(@NotNull GenericPlayer player, @Nullable Visibility visibility) {
+    public void setPlayerVisibility(@NotNull DecentPlayer player, @Nullable Visibility visibility) {
         Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
         synchronized (playerVisibilityMap) {
@@ -61,14 +61,14 @@ public class ApiVisibilityManager implements VisibilityManager {
 
     @Nullable
     @Override
-    public Visibility getPlayerVisibility(@NotNull GenericPlayer player) {
+    public Visibility getPlayerVisibility(@NotNull DecentPlayer player) {
         Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
         return playerVisibilityMap.get(player.getUniqueId());
     }
 
     @Override
-    public boolean isVisibleTo(@NotNull GenericPlayer player) {
+    public boolean isVisibleTo(@NotNull DecentPlayer player) {
         Validate.notNull(player, PLAYER_CANNOT_BE_NULL);
 
         Visibility playerVisibility = getPlayerVisibility(player);

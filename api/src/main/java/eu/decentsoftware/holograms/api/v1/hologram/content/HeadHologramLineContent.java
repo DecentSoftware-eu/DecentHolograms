@@ -18,18 +18,18 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public interface HeadHologramLineContent extends HologramLineContent {
 
     /**
-     * Get the {@link GenericItemStack} of the line. This is the item that will be displayed
+     * Get the {@link DecentItemStack} of the line. This is the item that will be displayed
      * as a head in the hologram.
      *
-     * @return The {@link GenericItemStack} of the line.
+     * @return The {@link DecentItemStack} of the line.
      * @since 2.10.0
      */
     @NotNull
-    GenericItemStack getItemStack();
+    DecentItemStack getItemStack();
 }

@@ -25,13 +25,13 @@ import org.bukkit.inventory.ItemStack;
 public class BukkitPlatformAdapter implements PlatformAdapter {
 
     @Override
-    public GenericPlayer getGenericPlayer(Object platformPlayer) {
+    public DecentPlayer getGenericPlayer(Object platformPlayer) {
         Validate.isTrue(platformPlayer instanceof Player, "platformPlayer must be a Bukkit player");
         return new BukkitPlayer((Player) platformPlayer);
     }
 
     @Override
-    public GenericItemStack getGenericItemStack(Object platformItemStack) {
+    public DecentItemStack getGenericItemStack(Object platformItemStack) {
         Validate.isTrue(platformItemStack instanceof ItemStack, "platformItemStack must be a Bukkit ItemStack");
         return new BukkitItemStack((ItemStack) platformItemStack);
     }

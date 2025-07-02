@@ -18,20 +18,20 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ApiSmallHeadHologramLineContent implements SmallHeadHologramLineContent {
 
-    private final GenericItemStack itemStack;
+    private final DecentItemStack itemStack;
 
-    public ApiSmallHeadHologramLineContent(GenericItemStack itemStack) {
+    public ApiSmallHeadHologramLineContent(DecentItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
     @NotNull
     @Override
-    public GenericItemStack getItemStack() {
+    public DecentItemStack getItemStack() {
         return itemStack;
     }
 }

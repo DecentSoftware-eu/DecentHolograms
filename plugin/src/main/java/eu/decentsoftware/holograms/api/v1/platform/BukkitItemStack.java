@@ -19,15 +19,17 @@
 package eu.decentsoftware.holograms.api.v1.platform;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-public class BukkitItemStack implements GenericItemStack {
+public class BukkitItemStack implements DecentItemStack {
 
     private final ItemStack itemStack;
 
-    public BukkitItemStack(ItemStack itemStack) {
+    public BukkitItemStack(@NotNull ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
+    @NotNull
     @Override
     public Object getPlatformItemStack() {
         return itemStack;

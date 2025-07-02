@@ -18,8 +18,16 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-public interface GenericItemStack {
+import org.jetbrains.annotations.NotNull;
 
-    Object getPlatformItemStack();
+import java.util.UUID;
+
+public interface DecentPlayer {
+
+    @NotNull
+    Object getPlatformPlayer();
+
+    @NotNull
+    UUID getUniqueId();
 
 }

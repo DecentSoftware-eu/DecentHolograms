@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.api.v1.hologram.content;
 
 import eu.decentsoftware.holograms.Validate;
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ApiHologramLineContentFactory implements HologramLineContentFactory {
@@ -32,19 +32,19 @@ public class ApiHologramLineContentFactory implements HologramLineContentFactory
     }
 
     @Override
-    public IconHologramLineContent createIconContent(@NotNull GenericItemStack itemStack) {
+    public IconHologramLineContent createIconContent(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
         return new ApiIconHologramLineContent(itemStack);
     }
 
     @Override
-    public HeadHologramLineContent createHeadContent(@NotNull GenericItemStack itemStack) {
+    public HeadHologramLineContent createHeadContent(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
         return new ApiHeadHologramLineContent(itemStack);
     }
 
     @Override
-    public SmallHeadHologramLineContent createSmallHeadContent(@NotNull GenericItemStack itemStack) {
+    public SmallHeadHologramLineContent createSmallHeadContent(@NotNull DecentItemStack itemStack) {
         Validate.notNull(itemStack, "itemStack cannot be null");
         return new ApiSmallHeadHologramLineContent(itemStack);
     }

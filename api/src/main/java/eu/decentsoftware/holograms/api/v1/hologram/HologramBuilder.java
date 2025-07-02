@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericPlayer;
+import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -120,7 +120,7 @@ public interface HologramBuilder {
      */
     @NotNull
     @Contract("_,_ -> this")
-    HologramBuilder withPlayerVisibility(@NotNull GenericPlayer player, @NotNull Visibility visibility);
+    HologramBuilder withPlayerVisibility(@NotNull DecentPlayer player, @NotNull Visibility visibility);
 
     /**
      * Adds a new page to the hologram.

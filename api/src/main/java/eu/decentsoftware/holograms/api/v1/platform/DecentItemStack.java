@@ -18,12 +18,11 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
-public interface GenericPlayer {
+public interface DecentItemStack {
 
-    Object getPlatformPlayer();
-
-    UUID getUniqueId();
+    @NotNull
+    Object getPlatformItemStack();
 
 }

@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,7 +44,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack to display in the hologram line.
      * @return A new instance of {@link IconHologramLineContent}.
      */
-    IconHologramLineContent createIconContent(@NotNull GenericItemStack itemStack);
+    IconHologramLineContent createIconContent(@NotNull DecentItemStack itemStack);
 
     /**
      * Creates a new head hologram line content with the specified item stack.
@@ -52,7 +52,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack representing the head to display in the hologram line.
      * @return A new instance of {@link HeadHologramLineContent}.
      */
-    HeadHologramLineContent createHeadContent(@NotNull GenericItemStack itemStack);
+    HeadHologramLineContent createHeadContent(@NotNull DecentItemStack itemStack);
 
     /**
      * Creates a new small head hologram line content with the specified item stack.
@@ -60,7 +60,7 @@ public interface HologramLineContentFactory {
      * @param itemStack The item stack representing the small head to display in the hologram line.
      * @return A new instance of {@link SmallHeadHologramLineContent}.
      */
-    SmallHeadHologramLineContent createSmallHeadContent(@NotNull GenericItemStack itemStack);
+    SmallHeadHologramLineContent createSmallHeadContent(@NotNull DecentItemStack itemStack);
 
     /**
      * Creates a new entity hologram line content with the specified entity type.

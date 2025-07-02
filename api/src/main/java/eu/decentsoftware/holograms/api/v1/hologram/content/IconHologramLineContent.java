@@ -18,18 +18,18 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public interface IconHologramLineContent extends HologramLineContent {
 
     /**
-     * Get the {@link GenericItemStack} of this line. This is the item that will be displayed
+     * Get the {@link DecentItemStack} of this line. This is the item that will be displayed
      * as an icon in the hologram.
      *
-     * @return The {@link GenericItemStack} of this line.
+     * @return The {@link DecentItemStack} of this line.
      * @since 2.10.0
      */
     @NotNull
-    GenericItemStack getItemStack();
+    DecentItemStack getItemStack();
 }

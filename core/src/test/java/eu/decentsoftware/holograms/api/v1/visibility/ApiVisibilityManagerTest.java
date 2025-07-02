@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.visibility;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericPlayer;
+import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +83,7 @@ class ApiVisibilityManagerTest {
 
     @Test
     void testDefaultPlayerVisibility() {
-        GenericPlayer player = mockPlayer();
+        DecentPlayer player = mockPlayer();
 
         assertNull(visibilityManager.getPlayerVisibility(player));
     }
@@ -92,8 +92,8 @@ class ApiVisibilityManagerTest {
     @NullSource
     @EnumSource(Visibility.class)
     void testSetPlayerVisibility(Visibility visibility) {
-        GenericPlayer player1 = mockPlayer();
-        GenericPlayer player2 = mockPlayer();
+        DecentPlayer player1 = mockPlayer();
+        DecentPlayer player2 = mockPlayer();
 
         visibilityManager.setPlayerVisibility(player1, visibility);
 
@@ -104,7 +104,7 @@ class ApiVisibilityManagerTest {
 
     @Test
     void testResetPlayerVisibility() {
-        GenericPlayer player = mockPlayer();
+        DecentPlayer player = mockPlayer();
 
         visibilityManager.setPlayerVisibility(player, Visibility.VISIBLE);
         assertEquals(Visibility.VISIBLE, visibilityManager.getPlayerVisibility(player));
@@ -128,7 +128,7 @@ class ApiVisibilityManagerTest {
     @ParameterizedTest
     @MethodSource("provideTestIsVisibleTo")
     void testIsVisibleTo(Visibility defaultVisibility, Visibility playerVisibility, boolean expectedResult) {
-        GenericPlayer player = mockPlayer();
+        DecentPlayer player = mockPlayer();
 
         visibilityManager.setDefaultVisibility(defaultVisibility);
         visibilityManager.setPlayerVisibility(player, playerVisibility);
@@ -138,8 +138,8 @@ class ApiVisibilityManagerTest {
         assertEquals(expectedResult, isVisible);
     }
 
-    private static GenericPlayer mockPlayer() {
-        GenericPlayer player = mock(GenericPlayer.class);
+    private static DecentPlayer mockPlayer() {
+        DecentPlayer player = mock(DecentPlayer.class);
         when(player.getUniqueId()).thenReturn(UUID.randomUUID());
         return player;
     }

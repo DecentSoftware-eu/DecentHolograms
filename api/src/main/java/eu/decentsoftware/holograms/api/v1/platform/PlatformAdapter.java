@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.api.v1.platform;
 
 public interface PlatformAdapter {
 
-    GenericPlayer getGenericPlayer(Object platformPlayer);
+    DecentPlayer getGenericPlayer(Object platformPlayer);
 
-    GenericItemStack getGenericItemStack(Object platformItemStack);
+    DecentItemStack getGenericItemStack(Object platformItemStack);
 
 }

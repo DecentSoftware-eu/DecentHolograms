@@ -18,20 +18,20 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import eu.decentsoftware.holograms.api.v1.platform.GenericItemStack;
+import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ApiIconHologramLineContent implements IconHologramLineContent {
 
-    private final GenericItemStack itemStack;
+    private final DecentItemStack itemStack;
 
-    public ApiIconHologramLineContent(GenericItemStack itemStack) {
+    public ApiIconHologramLineContent(DecentItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
     @NotNull
     @Override
-    public GenericItemStack getItemStack() {
+    public DecentItemStack getItemStack() {
         return itemStack;
     }
 }
