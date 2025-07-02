@@ -57,6 +57,6 @@ public interface HologramManager {
      */
     @NotNull
     @Unmodifiable
-    Collection<Hologram> getHolograms();
+    Collection<? extends Hologram> getHolograms();
 
 }

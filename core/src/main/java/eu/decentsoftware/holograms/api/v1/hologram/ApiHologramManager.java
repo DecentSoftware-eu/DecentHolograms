@@ -44,7 +44,7 @@ public class ApiHologramManager implements HologramManager {
     @NotNull
     @Unmodifiable
     @Override
-    public Collection<Hologram> getHolograms() {
+    public Collection<ApiHologram> getHolograms() {
         return Collections.unmodifiableCollection(holograms);
     }
 }
