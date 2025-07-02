@@ -18,8 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.location.ApiLocationManager;
-import eu.decentsoftware.holograms.api.v1.visibility.ApiVisibilityManager;
+import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -30,17 +29,15 @@ import java.util.List;
 
 public class ApiHologram implements Hologram {
 
-    private final ApiLocationManager positionManager;
-    private final ApiVisibilityManager visibilityManager;
     private final ApiHologramSettings settings;
     private final List<ApiHologramPage> pages = new ArrayList<>();
+    private DecentLocation location;
     private boolean destroyed = false;
 
     @Contract(pure = true)
-    public ApiHologram(ApiLocationManager positionManager, ApiVisibilityManager visibilityManager, ApiHologramSettings settings) {
-        this.positionManager = positionManager;
-        this.visibilityManager = visibilityManager;
+    public ApiHologram(ApiHologramSettings settings, DecentLocation location) {
         this.settings = settings;
+        this.location = location;
     }
 
     public void destroy() {
@@ -61,6 +58,17 @@ public class ApiHologram implements Hologram {
 
     public boolean isDestroyed() {
         return destroyed;
+    }
+
+    @NotNull
+    @Override
+    public DecentLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(@NotNull DecentLocation location) {
+        checkDestroyed();
+        this.location = location;
     }
 
     @NotNull
@@ -118,19 +126,5 @@ public class ApiHologram implements Hologram {
     @Override
     public ApiHologramSettings getSettings() {
         return settings;
-    }
-
-    @NotNull
-    @Override
-    public ApiLocationManager getLocationManager() {
-        checkDestroyed();
-        return positionManager;
-    }
-
-    @NotNull
-    @Override
-    public ApiVisibilityManager getVisibilityManager() {
-        checkDestroyed();
-        return visibilityManager;
     }
 }

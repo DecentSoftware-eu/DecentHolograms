@@ -19,10 +19,8 @@
 package eu.decentsoftware.holograms.api.v1.hologram;
 
 import eu.decentsoftware.holograms.Validate;
-import eu.decentsoftware.holograms.api.v1.location.ApiLocationManager;
 import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
-import eu.decentsoftware.holograms.api.v1.visibility.ApiVisibilityManager;
 import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -144,9 +142,7 @@ public class ApiHologramBuilder implements HologramBuilder {
         Validate.notNull(location, "Cannot build a hologram without a location");
         Validate.isTrue(!pageBuilders.isEmpty(), "Cannot build a hologram with no pages");
 
-        ApiLocationManager locationManager = new ApiLocationManager(location);
-        ApiVisibilityManager visibilityManager = new ApiVisibilityManager();
-        ApiHologram hologram = new ApiHologram(locationManager, visibilityManager, settings);
+        ApiHologram hologram = new ApiHologram(settings, location);
         for (ApiHologramPageBuilder pageBuilder : pageBuilders) {
             ApiHologramPage page = pageBuilder.build(hologram);
             hologram.addPage(page);

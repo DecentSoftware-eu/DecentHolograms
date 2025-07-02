@@ -18,8 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.api.v1.location.LocationManager;
-import eu.decentsoftware.holograms.api.v1.visibility.VisibilityManager;
+import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -34,6 +33,16 @@ import java.util.List;
  * @since 2.10.0
  */
 public interface Hologram {
+
+    /**
+     * Get the location of this hologram.
+     *
+     * @return The location.
+     * @see DecentLocation
+     * @since 2.10.0
+     */
+    @NotNull
+    DecentLocation getLocation();
 
     /**
      * Get the page at the given index.
@@ -65,27 +74,5 @@ public interface Hologram {
      */
     @NotNull
     HologramSettings getSettings();
-
-    /**
-     * The position manager of the hologram, used for editing
-     * the location of the hologram.
-     *
-     * @return The position manager of the hologram.
-     * @see LocationManager
-     * @since 2.10.0
-     */
-    @NotNull
-    LocationManager getLocationManager();
-
-    /**
-     * The visibility manager of the hologram, used for managing
-     * the visibility of the hologram.
-     *
-     * @return The visibility manager of the hologram.
-     * @see VisibilityManager
-     * @since 2.10.0
-     */
-    @NotNull
-    VisibilityManager getVisibilityManager();
 
 }

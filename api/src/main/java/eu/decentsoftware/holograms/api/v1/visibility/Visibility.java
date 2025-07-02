@@ -23,7 +23,6 @@ package eu.decentsoftware.holograms.api.v1.visibility;
  * determine if the hologram should be visible for a player.
  *
  * @author d0by
- * @see VisibilityManager
  * @since 2.10.0
  */
 public enum Visibility {
