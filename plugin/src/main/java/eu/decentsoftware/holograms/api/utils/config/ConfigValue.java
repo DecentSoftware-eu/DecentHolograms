@@ -2,33 +2,28 @@ package eu.decentsoftware.holograms.api.utils.config;
 
 public class ConfigValue<T> {
 
-	protected final FileConfig config;
 	protected final boolean setDefault;
 	protected final String path;
 	protected final T defaultValue;
 	protected T value;
 
-	public ConfigValue(FileConfig config, boolean setDefault, String path, T defaultValue) {
-		this.config = config;
+	public ConfigValue(boolean setDefault, String path, T defaultValue) {
 		this.setDefault = setDefault;
 		this.path = path;
 		this.defaultValue = defaultValue;
-
-		this.updateValue();
 	}
 
-	public ConfigValue(FileConfig config, String path, T defaultValue) {
-		this(config, true, path, defaultValue);
+	public ConfigValue(String path, T defaultValue) {
+		this(true, path, defaultValue);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void updateValue() {
+	public void updateValue(FileConfig config) {
 		if (!config.contains(path)) {
 			value = defaultValue;
 			if (setDefault) {
 				config.set(path, defaultValue);
 				config.saveData();
-				config.reload();
 			}
 		} else {
 			Object o = config.get(path);
@@ -39,10 +34,6 @@ public class ConfigValue<T> {
 				value = defaultValue;
 			}
 		}
-	}
-
-	public FileConfig getConfig() {
-		return config;
 	}
 
 	public String getPath() {
