@@ -18,7 +18,9 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
+import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class ApiHologramSettings implements HologramSettings {
 
@@ -29,6 +31,7 @@ public class ApiHologramSettings implements HologramSettings {
     private int updateInterval;
     private boolean updating;
     private float facing;
+    private Visibility defaultVisibility;
 
     @Contract(pure = true)
     public ApiHologramSettings() {
@@ -39,6 +42,7 @@ public class ApiHologramSettings implements HologramSettings {
         this.updateInterval = 20;
         this.updating = true;
         this.facing = 0.0f;
+        this.defaultVisibility = Visibility.VISIBLE;
     }
 
     @Override
@@ -102,5 +106,15 @@ public class ApiHologramSettings implements HologramSettings {
 
     public void setFacing(float facing) {
         this.facing = facing;
+    }
+
+    @NotNull
+    @Override
+    public Visibility getDefaultVisibility() {
+        return defaultVisibility;
+    }
+
+    public void setDefaultVisibility(@NotNull Visibility defaultVisibility) {
+        this.defaultVisibility = defaultVisibility;
     }
 }

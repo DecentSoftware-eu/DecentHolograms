@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
+import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,5 +38,6 @@ class ApiHologramSettingsTest {
         assertEquals(20, settings.getUpdateInterval());
         assertTrue(settings.isUpdating());
         assertEquals(0.0f, settings.getFacing());
+        assertEquals(Visibility.VISIBLE, settings.getDefaultVisibility());
     }
 }

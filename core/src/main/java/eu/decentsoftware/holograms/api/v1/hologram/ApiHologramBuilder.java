@@ -114,7 +114,7 @@ public class ApiHologramBuilder implements HologramBuilder {
     @Override
     public ApiHologramBuilder withDefaultVisibility(@NotNull Visibility visibility) {
         Validate.notNull(visibility, "visibility cannot be null");
-        // TODO
+        settings.setDefaultVisibility(visibility);
         return this;
     }
 

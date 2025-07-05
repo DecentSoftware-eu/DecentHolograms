@@ -18,6 +18,9 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
+import eu.decentsoftware.holograms.api.v1.visibility.Visibility;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This class holds the settings of a hologram.
  *
@@ -94,5 +97,18 @@ public interface HologramSettings {
      * @since 2.10.0
      */
     float getFacing();
+
+    /**
+     * Retrieves the default visibility setting for the hologram.
+     * The default visibility determines whether the hologram is visible
+     * or hidden by default for players.
+     *
+     * <p>Default value is {@link Visibility#VISIBLE}.</p>
+     *
+     * @return The default visibility of the hologram. This value is never null.
+     * @since 2.10.0
+     */
+    @NotNull
+    Visibility getDefaultVisibility();
 
 }
