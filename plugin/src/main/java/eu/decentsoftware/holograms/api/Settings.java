@@ -15,7 +15,7 @@ import java.util.Map;
 public class Settings {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-    private static final FileConfig CONFIG = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "config.yml");
+    private static FileConfig config;
 
     @Key("update-checker")
     public static boolean CHECK_FOR_UPDATES = true;
@@ -86,12 +86,12 @@ public class Settings {
      * Reload all Settings
      */
     public static void reload() {
-        CONFIG.reload();
+        config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "config.yml");
 
-        CFG.load(DECENT_HOLOGRAMS.getPlugin(), Settings.class, CONFIG.getFile());
+        CFG.load(DECENT_HOLOGRAMS.getPlugin(), Settings.class, config.getFile());
 
         // -- Load custom replacements
-        ConfigurationSection customReplacementsSection = CONFIG.getConfigurationSection("custom-replacements");
+        ConfigurationSection customReplacementsSection = config.getConfigurationSection("custom-replacements");
         if (customReplacementsSection != null) {
             Map<String, String> replacements = new HashMap<>();
             for (String key : customReplacementsSection.getKeys(false)) {
@@ -105,7 +105,7 @@ public class Settings {
     }
 
     public static FileConfig getConfig() {
-        return CONFIG;
+        return config;
     }
 
 }

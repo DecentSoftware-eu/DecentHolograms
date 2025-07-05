@@ -40,7 +40,7 @@ public class FileConfig extends YamlConfiguration {
         this.path = path;
         this.file = new File(plugin.getDataFolder(), path);
         this.createFile();
-        this.reload();
+        this.loadData();
     }
 
     /**
@@ -58,7 +58,7 @@ public class FileConfig extends YamlConfiguration {
         this.path = file.getName();
         this.file = file;
         this.createFile();
-        this.reload();
+        this.loadData();
     }
 
     /**
@@ -95,12 +95,23 @@ public class FileConfig extends YamlConfiguration {
 
     /**
      * Reloads the configuration from the file.
+     *
+     * @deprecated For removal.
      */
+    @Deprecated
     public void reload() {
         try {
             this.load(file);
         } catch (IOException | InvalidConfigurationException e) {
             Log.warn("Failed to reload config file at path '%s'.", path);
+        }
+    }
+
+    private void loadData() {
+        try {
+            this.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            Log.warn("Failed to load config file at path '%s'.", path);
         }
     }
 
