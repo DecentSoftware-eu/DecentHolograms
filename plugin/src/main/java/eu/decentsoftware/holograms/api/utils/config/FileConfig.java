@@ -40,7 +40,7 @@ public class FileConfig extends YamlConfiguration {
         this.path = path;
         this.file = new File(plugin.getDataFolder(), path);
         this.createFile();
-        this.reload();
+        this.loadData();
     }
 
     /**
@@ -58,7 +58,7 @@ public class FileConfig extends YamlConfiguration {
         this.path = file.getName();
         this.file = file;
         this.createFile();
-        this.reload();
+        this.loadData();
     }
 
     /**
@@ -95,12 +95,23 @@ public class FileConfig extends YamlConfiguration {
 
     /**
      * Reloads the configuration from the file.
+     *
+     * @deprecated For removal.
      */
+    @Deprecated
     public void reload() {
         try {
             this.load(file);
         } catch (IOException | InvalidConfigurationException e) {
             Log.warn("无法重新加载路径为 '%s' 的配置文件。", path);
+        }
+    }
+
+    private void loadData() {
+        try {
+            this.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            Log.warn("Failed to load config file at path '%s'.", path);
         }
     }
 

@@ -688,6 +688,7 @@ public class LineSubCommand extends DecentCommand {
 				int index = Validator.getInteger(args[2], Lang.LINE_DOES_NOT_EXIST.getValue());
 				String content = sender instanceof Player ? Validator.getLineContent((Player) sender, args, 3) : Validator.getLineContent(args, 3);
 				if (page.setLine(index - 1, content)) {
+					page.realignLines();
 					hologram.save();
 					Lang.LINE_SET.send(sender);
 				} else {
