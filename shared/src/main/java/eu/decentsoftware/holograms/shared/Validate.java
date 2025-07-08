@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms;
+package eu.decentsoftware.holograms.shared;
 
 /**
  * Utility class for validation checks.

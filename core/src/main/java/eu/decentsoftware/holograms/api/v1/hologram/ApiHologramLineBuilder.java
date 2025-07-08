@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.shared.Validate;
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
 import eu.decentsoftware.holograms.api.v1.hologram.content.ApiEntityHologramLineContent;
 import eu.decentsoftware.holograms.api.v1.hologram.content.ApiHeadHologramLineContent;

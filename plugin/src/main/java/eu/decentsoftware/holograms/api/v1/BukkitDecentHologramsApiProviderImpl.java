@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1;
 
-import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.shared.Validate;
 import eu.decentsoftware.holograms.api.v1.hologram.ApiHologramManager;
 import eu.decentsoftware.holograms.api.v1.platform.BukkitPlatformAdapter;
 import org.bukkit.plugin.Plugin;

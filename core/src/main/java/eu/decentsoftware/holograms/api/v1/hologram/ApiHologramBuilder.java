@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram;
 
-import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.shared.Validate;
 import eu.decentsoftware.holograms.api.v1.location.DecentLocation;
 import eu.decentsoftware.holograms.api.v1.platform.DecentPlayer;
 import eu.decentsoftware.holograms.api.v1.visibility.Visibility;

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.hologram.content;
 
-import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.shared.Validate;
 import eu.decentsoftware.holograms.api.v1.DecentEntityType;
 import eu.decentsoftware.holograms.api.v1.platform.DecentItemStack;
 import org.jetbrains.annotations.NotNull;

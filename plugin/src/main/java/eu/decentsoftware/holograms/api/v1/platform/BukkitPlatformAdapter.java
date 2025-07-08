@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.v1.platform;
 
-import eu.decentsoftware.holograms.Validate;
+import eu.decentsoftware.holograms.shared.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
