@@ -463,7 +463,9 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            if (renderer instanceof NmsTextHologramRenderer || (containsPlaceholders || force)) {
+            if (renderer instanceof NmsTextHologramRenderer) {
+                updateTextIfNecessary(player, true);
+            } else if (containsPlaceholders || force) {
                 renderer.updateContent(player, getPartData(player, true, true));
             }
         }
@@ -498,7 +500,21 @@ public class HologramLine extends HologramObject {
         hidePreviousIfNecessary();
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
-            renderer.updateContent(player, getPartData(player, false, true));
+            if (renderer instanceof NmsTextHologramRenderer) {
+                updateTextIfNecessary(player, false);
+            }
+        }
+    }
+
+    private void updateTextIfNecessary(Player player, boolean updatePlaceholders) {
+        UUID uuid = player.getUniqueId();
+        String lastText = lastTextMap.get(uuid);
+        String updatedText = getText(player, updatePlaceholders);
+        if (!updatedText.equals(lastText)) {
+            lastTextMap.put(uuid, updatedText);
+
+            NmsHologramPartData<String> partData = new NmsHologramPartData<>(getPositionSupplier(), () -> updatedText);
+            ((NmsTextHologramRenderer) renderer).updateContent(player, partData);
         }
     }
 
