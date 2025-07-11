@@ -21,7 +21,7 @@ public class PAPI {
 	}
 
 	/**
-	 * Set placeholders to given String for given Player.
+	 * Set placeholders to given String for a given Player.
 	 *
 	 * @param player The player.
 	 * @param string The string.
@@ -29,7 +29,14 @@ public class PAPI {
 	 */
 	public static String setPlaceholders(Player player, String string) {
 		if (isAvailable()) {
-			return PlaceholderAPI.setPlaceholders(player, string);
+			try {
+				return PlaceholderAPI.setPlaceholders(player, string);
+			} catch (Exception e) {
+				Log.warn("Failed to replace placeholders in string '%s' for player '%s'."
+						+ " This issue likely originates from a placeholder provided by another plugin."
+						+ " Please contact the developer(s) of any plugin mentioned in the stack trace.", e, string, player.getName());
+				return string;
+			}
 		}
 		return string;
 	}
