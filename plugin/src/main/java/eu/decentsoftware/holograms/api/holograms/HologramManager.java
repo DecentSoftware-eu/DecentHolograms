@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -271,6 +272,7 @@ public class HologramManager extends Ticked {
      */
     public void registerHologram(@NonNull Hologram hologram) {
         hologramMap.put(hologram.getName(), hologram);
+        EventFactory.fireHologramLoadEvent(hologram);
     }
 
     /**

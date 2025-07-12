@@ -50,19 +50,12 @@ public class EventFactory {
         Bukkit.getPluginManager().callEvent(event);
     }
     
-    /**
-     * Fire a Hologram load event.
-     *
-     * @param hologram The hologram that gets loaded.
-     *
-     * @see HologramLoadEvent
-     */
     public static void fireHologramLoadEvent(Hologram hologram) {
         if (HologramLoadEvent.getHandlerList().getRegisteredListeners().length == 0) {
             return;
         }
-
-        HologramLoadEvent event = new HologramLoadEvent(hologram);
+        
+        HologramLoadEvent event = new HologramLoadEvent(!Bukkit.isPrimaryThread(), hologram);
         Bukkit.getPluginManager().callEvent(event);
     }
     
@@ -78,7 +71,7 @@ public class EventFactory {
             return;
         }
 
-        HologramUnloadEvent event = new HologramUnloadEvent(hologram);
+        HologramUnloadEvent event = new HologramUnloadEvent(!Bukkit.isPrimaryThread(), hologram);
         Bukkit.getPluginManager().callEvent(event);
     }
 
