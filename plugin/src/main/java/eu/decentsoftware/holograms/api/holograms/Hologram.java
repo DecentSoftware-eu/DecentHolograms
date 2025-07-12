@@ -414,6 +414,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             this.showAll();
             this.register();
         }
+        EventFactory.fireHologramLoadEvent(this);
     }
 
     /**
@@ -427,6 +428,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             this.hideAll();
             super.disable(cause);
         }
+        EventFactory.fireHologramUnloadEvent(this);
     }
 
     @Override
