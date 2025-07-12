@@ -3,8 +3,7 @@ package eu.decentsoftware.holograms.api.utils.event;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
-import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
-import eu.decentsoftware.holograms.event.HologramClickEvent;
+import eu.decentsoftware.holograms.event.*;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,6 +47,38 @@ public class EventFactory {
         }
 
         DecentHologramsReloadEvent event = new DecentHologramsReloadEvent();
+        Bukkit.getPluginManager().callEvent(event);
+    }
+    
+    /**
+     * Fire a Hologram load event.
+     *
+     * @param hologram The hologram that gets loaded.
+     *
+     * @see HologramLoadEvent
+     */
+    public static void fireHologramLoadEvent(Hologram hologram) {
+        if (HologramLoadEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+
+        HologramLoadEvent event = new HologramLoadEvent(hologram);
+        Bukkit.getPluginManager().callEvent(event);
+    }
+    
+    /**
+     * Fire a Hologram unload event.
+     *
+     * @param hologram The hologram that gets unloaded.
+     *
+     * @see HologramUnloadEvent
+     */
+    public static void fireHologramUnloadEvent(Hologram hologram) {
+        if (HologramUnloadEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+
+        HologramUnloadEvent event = new HologramUnloadEvent(hologram);
         Bukkit.getPluginManager().callEvent(event);
     }
 
