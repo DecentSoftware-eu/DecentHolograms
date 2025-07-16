@@ -25,7 +25,7 @@ public final class DecentHologramsAPI {
      * Load DecentHologramsAPI. This method will be called by DecentHolograms
      * plugin when it is being loaded.
      *
-     * @param plugin The instance of DecentHolograms plugin.
+     * @param plugin The instance of the DecentHolograms plugin.
      */
     @ApiStatus.Internal
     public static void onLoad(@NonNull JavaPlugin plugin) {
@@ -39,7 +39,7 @@ public final class DecentHologramsAPI {
      * <b>This is an internal method. Do not use it.</b>
      * <p>
      * Enable DecentHologramsAPI. This method will be called by DecentHolograms
-     * plugin when it is being  enabled.
+     * plugin when it is being enabled.
      */
     @ApiStatus.Internal
     public static void onEnable() {

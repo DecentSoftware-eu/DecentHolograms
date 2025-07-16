@@ -18,23 +18,19 @@
 
 package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PAPITest {
@@ -43,10 +39,11 @@ class PAPITest {
     private PluginManager pluginManager;
     @Mock
     private Player player;
-    @Mock
-    private DecentHolograms decentHolograms;
-    @Mock
-    private Logger logger;
+
+    @BeforeAll
+    static void beforeAll() {
+        Log.initializeForTests();
+    }
 
     @Test
     void testSetPlaceholders_PlaceholderAPINotEnabled() {
@@ -65,14 +62,11 @@ class PAPITest {
     @Test
     void testSetPlaceholders_PlaceholderAPIThrows() {
         try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class);
-             MockedStatic<PlaceholderAPI> mockedPlaceholderAPI = mockStatic(PlaceholderAPI.class);
-             MockedStatic<DecentHologramsAPI> mockedDecentHologramsAPI = mockStatic(DecentHologramsAPI.class)) {
+             MockedStatic<PlaceholderAPI> mockedPlaceholderAPI = mockStatic(PlaceholderAPI.class)) {
             mockedBukkit.when(Bukkit::getPluginManager).thenReturn(pluginManager);
             mockedBukkit.when(() -> pluginManager.isPluginEnabled("PlaceholderAPI")).thenReturn(true);
             mockedPlaceholderAPI.when(() -> PlaceholderAPI.setPlaceholders(player, "Test %placeholder%"))
                     .thenThrow(new RuntimeException("PlaceholderAPI exception"));
-            mockedDecentHologramsAPI.when(DecentHologramsAPI::get).thenReturn(decentHolograms);
-            when(decentHolograms.getLogger()).thenReturn(logger);
 
             String result = PAPI.setPlaceholders(player, "Test %placeholder%");
 
