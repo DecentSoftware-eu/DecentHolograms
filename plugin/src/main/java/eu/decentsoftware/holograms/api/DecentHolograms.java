@@ -58,6 +58,7 @@ public final class DecentHolograms {
     }
 
     void enable() {
+        Log.setLogger(plugin.getLogger());
         initializeNmsAdapter();
         Settings.reload();
         Lang.reload();
