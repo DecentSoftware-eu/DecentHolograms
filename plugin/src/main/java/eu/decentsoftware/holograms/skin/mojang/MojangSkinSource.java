@@ -20,9 +20,6 @@ package eu.decentsoftware.holograms.skin.mojang;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.api.utils.Log;
@@ -33,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -85,19 +83,15 @@ public class MojangSkinSource implements SkinSource {
 
     private String extractUniqueIdFromJson(String playerName, String json) {
         try {
-            JsonObject response = gson.fromJson(json, JsonObject.class);
-            JsonElement errorMessage = response.get("errorMessage");
+            MojangUuidResponse response = gson.fromJson(json, MojangUuidResponse.class);
+            String errorMessage = response.getErrorMessage();
             if (errorMessage != null) {
-                String errorMessageString = errorMessage.getAsString();
-                Log.warn("Error fetching UUID for player: %s. Error message: %s", playerName, errorMessageString);
-                throw new SkinSourceException(errorMessageString);
+                Log.warn("Error fetching UUID for player: %s. Error message: %s", playerName, errorMessage);
+                throw new SkinSourceException(errorMessage);
             }
-            JsonElement idElement = response.get("id");
-            if (idElement != null) {
-                String uniqueId = idElement.getAsString();
-                if (uniqueId != null && !uniqueId.isEmpty()) {
-                    return uniqueId;
-                }
+            String uniqueId = response.getId();
+            if (uniqueId != null && !uniqueId.isEmpty()) {
+                return uniqueId;
             }
             throw new SkinSourceException("No unique ID found in JSON response: " + json);
         } catch (SkinSourceException e) {
@@ -113,19 +107,17 @@ public class MojangSkinSource implements SkinSource {
 
     private String extractSkinTextureFromJson(String json) {
         try {
-            JsonObject response = gson.fromJson(json, JsonObject.class);
-            JsonArray propertiesElement = response.getAsJsonArray("properties");
-            if (propertiesElement == null || propertiesElement.size() == 0) {
+            MojangProfileResponse response = gson.fromJson(json, MojangProfileResponse.class);
+            List<MojangProfileProperty> properties = response.getProperties();
+            if (properties == null || properties.isEmpty()) {
                 throw new SkinSourceException("No profile properties found in JSON response: " + json);
             }
-            for (JsonElement propertyElement : propertiesElement) {
+            for (MojangProfileProperty property : properties) {
                 // There should only ever be one property, and it should be "textures",
                 // but according to the API documentation, this is "for now"
                 // so we check all properties to be safe in case more properties are added in the future.
-                JsonElement nameElement = propertyElement.getAsJsonObject().get("name");
-                if ("textures".equals(nameElement.getAsString())) {
-                    JsonElement valueElement = propertyElement.getAsJsonObject().get("value");
-                    return valueElement.getAsString();
+                if ("textures".equals(property.getName())) {
+                    return property.getValue();
                 }
             }
             throw new SkinSourceException("No skin texture found in JSON response: " + json);
