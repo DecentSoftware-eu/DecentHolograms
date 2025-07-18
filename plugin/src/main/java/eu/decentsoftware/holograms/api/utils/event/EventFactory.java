@@ -3,8 +3,7 @@ package eu.decentsoftware.holograms.api.utils.event;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
-import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
-import eu.decentsoftware.holograms.event.HologramClickEvent;
+import eu.decentsoftware.holograms.event.*;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,6 +47,70 @@ public class EventFactory {
         }
 
         DecentHologramsReloadEvent event = new DecentHologramsReloadEvent();
+        Bukkit.getPluginManager().callEvent(event);
+    }
+    
+    /**
+     * Fire a Hologram register event.
+     *
+     * @param hologram The hologram that gets registered.
+     *
+     * @see HologramRegisterEvent
+     */
+    public static void fireHologramRegisterEvent(Hologram hologram) {
+        if (HologramRegisterEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+        
+        HologramRegisterEvent event = new HologramRegisterEvent(!Bukkit.isPrimaryThread(), hologram);
+        Bukkit.getPluginManager().callEvent(event);
+    }
+    
+    /**
+     * Fire a Hologram unregister event.
+     *
+     * @param hologram The hologram that gets unregistered.
+     *
+     * @see HologramUnregisterEvent
+     */
+    public static void fireHologramUnregisterEvent(Hologram hologram) {
+        if (HologramUnregisterEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+
+        HologramUnregisterEvent event = new HologramUnregisterEvent(!Bukkit.isPrimaryThread(), hologram);
+        Bukkit.getPluginManager().callEvent(event);
+    }
+
+    /**
+     * Fire a Hologram Enable event.
+     *
+     * @param hologram The hologram that gets enabled.
+     *
+     * @see HologramEnableEvent
+     */
+    public static void fireHologramEnableEvent(Hologram hologram) {
+        if (HologramEnableEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+
+        HologramEnableEvent event = new HologramEnableEvent(!Bukkit.isPrimaryThread(), hologram);
+        Bukkit.getPluginManager().callEvent(event);
+    }
+
+    /**
+     * Fire a Hologram Disable event.
+     *
+     * @param hologram The hologram that gets disabled.
+     *
+     * @see HologramDisableEvent
+     */
+    public static void fireHologramDisableEvent(Hologram hologram) {
+        if (HologramDisableEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            return;
+        }
+
+        HologramDisableEvent event = new HologramDisableEvent(!Bukkit.isPrimaryThread(), hologram);
         Bukkit.getPluginManager().callEvent(event);
     }
 
