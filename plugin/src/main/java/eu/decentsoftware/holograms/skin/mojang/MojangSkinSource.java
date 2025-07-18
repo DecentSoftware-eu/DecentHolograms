@@ -28,6 +28,7 @@ import eu.decentsoftware.holograms.skin.SkinSourceException;
 import eu.decentsoftware.holograms.url.UrlReader;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MojangSkinSource implements SkinSource {
         try {
             URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
             String jsonResponse = UrlReader.readString(url);
-            return extractSkinTextureFromJson(jsonResponse);
+            return extractSkinTextureFromJson(playerName, jsonResponse);
         } catch (SkinSourceException e) {
             throw e;
         } catch (IOException e) {
@@ -72,6 +73,9 @@ public class MojangSkinSource implements SkinSource {
             return extractUniqueIdFromJson(playerName, jsonResponse);
         } catch (SkinSourceException e) {
             throw e;
+        } catch (FileNotFoundException e) {
+            Log.warn("Cannot fetch skin texture for player %s. Player not found.", playerName);
+            throw new SkinSourceException("Player " + playerName + " not found.");
         } catch (IOException e) {
             Log.warn("Failed to fetch unique ID for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch unique ID for player " + playerName + ".");
@@ -105,8 +109,11 @@ public class MojangSkinSource implements SkinSource {
         }
     }
 
-    private String extractSkinTextureFromJson(String json) {
+    private String extractSkinTextureFromJson(String playerName, String json) {
         try {
+            if (json == null || json.isEmpty()) {
+                throw new SkinSourceException("Received empty JSON response while fetching skin texture for player " + playerName + ".");
+            }
             MojangProfileResponse response = gson.fromJson(json, MojangProfileResponse.class);
             List<MojangProfileProperty> properties = response.getProperties();
             if (properties == null || properties.isEmpty()) {

@@ -26,16 +26,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mockStatic;
@@ -84,6 +85,20 @@ class MojangSkinSourceTest {
                     () -> skinSource.fetchSkinTextureByPlayerName(playerName));
 
             assertEquals("Failed to fetch unique ID for player " + playerName + ".", exception.getMessage());
+        }
+    }
+
+    @Test
+    void testFetchSkinTextureByPlayerName_uuidApiFileNotFoundException() {
+        String playerName = "d0by";
+
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            urlReaderMock.when(() -> UrlReader.readString(any(URL.class))).thenThrow(new FileNotFoundException("Player not found"));
+
+            SkinSourceException exception = assertThrows(SkinSourceException.class,
+                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
+
+            assertEquals("Player " + playerName + " not found.", exception.getMessage());
         }
     }
 
@@ -137,7 +152,27 @@ class MojangSkinSourceTest {
             SkinSourceException exception = assertThrows(SkinSourceException.class,
                     () -> skinSource.fetchSkinTextureByPlayerName(playerName));
 
-            assertTrue(exception.getMessage().contains("Failed to parse JSON response"));
+            assertEquals("Failed to parse JSON response: " + malformedJson, exception.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void testFetchSkinTextureByPlayerName_emptyResponse(String emptyResponse) {
+        String playerName = "d0by";
+        String fakeUUIDJson = "{\"id\": \"fd8070f3d722429b9fdea09d21bf4375\"}";
+
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/lookup/name/" + playerName))))
+                    .thenReturn(fakeUUIDJson);
+            urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/profile/fd8070f3d722429b9fdea09d21bf4375"))))
+                    .thenReturn(emptyResponse);
+
+            SkinSourceException exception = assertThrows(SkinSourceException.class,
+                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
+
+            assertEquals("Received empty JSON response while fetching skin texture for player " + playerName + ".", exception.getMessage());
         }
     }
 

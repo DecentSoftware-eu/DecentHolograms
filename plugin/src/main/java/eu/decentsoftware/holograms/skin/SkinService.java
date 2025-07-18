@@ -72,7 +72,7 @@ public class SkinService {
             textureCache.put(playerName, fetchedTexture);
             return fetchedTexture;
         } catch (SkinSourceException e) {
-            Log.warn(e.getMessage());
+            Log.warn("Error fetching skin texture: %s", e.getMessage());
         } catch (Exception e) {
             Log.error("An unexpected error occurred while fetching skin texture for player '%s'.", e, playerName);
         }
