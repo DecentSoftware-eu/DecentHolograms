@@ -98,7 +98,7 @@ class MojangSkinSourceTest {
             SkinSourceException exception = assertThrows(SkinSourceException.class,
                     () -> skinSource.fetchSkinTextureByPlayerName(playerName));
 
-            assertEquals("Player " + playerName + " not found.", exception.getMessage());
+            assertEquals("Cannot fetch skin texture for player " + playerName + ". Player not found.", exception.getMessage());
         }
     }
 

@@ -73,8 +73,7 @@ public class MojangSkinSource implements SkinSource {
         } catch (SkinSourceException e) {
             throw e;
         } catch (FileNotFoundException e) {
-            Log.warn("Cannot fetch skin texture for player %s. Player not found.", playerName);
-            throw new SkinSourceException("Player " + playerName + " not found.");
+            throw new SkinSourceException("Cannot fetch skin texture for player " + playerName + ". Player not found.");
         } catch (IOException e) {
             Log.warn("Failed to fetch unique ID for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch unique ID for player " + playerName + ".");
