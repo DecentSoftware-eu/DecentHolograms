@@ -215,7 +215,6 @@ public class HologramManager extends Ticked {
         // Destroy registered holograms
         for (Hologram hologram : getHolograms()) {
             hologram.destroy();
-            EventFactory.fireHologramUnregisterEvent(hologram);
         }
         hologramMap.clear();
 
@@ -293,7 +292,12 @@ public class HologramManager extends Ticked {
      * @return The hologram or null if it wasn't found.
      */
     public Hologram removeHologram(@NonNull String name) {
-        return hologramMap.remove(name);
+        Hologram hologram = hologramMap.remove(name);
+        if (hologram != null) {
+            EventFactory.fireHologramUnregisterEvent(hologram);
+        }
+
+        return hologram;
     }
 
     /**
