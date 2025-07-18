@@ -5,16 +5,16 @@ import lombok.Getter;
 import org.bukkit.event.HandlerList;
 
 /**
- * This event is called whenever a Hologram is unloaded via
- * {@link Hologram#disable(eu.decentsoftware.holograms.api.holograms.DisableCause)}
+ * This event is called whenever a Hologram is unregistered through
+ * {@link eu.decentsoftware.holograms.api.holograms.HologramManager#destroy()}
  */
 @Getter
-public class HologramUnloadEvent extends DecentHologramsEvent{
+public class HologramUnregisterEvent extends DecentHologramsEvent {
 
     private static final HandlerList HANDLERS = new HandlerList();
     private final Hologram hologram;
 
-    public HologramUnloadEvent(boolean isAsync, Hologram hologram) {
+    public HologramUnregisterEvent(boolean isAsync, Hologram hologram) {
         super(isAsync);
         this.hologram = hologram;
     }
