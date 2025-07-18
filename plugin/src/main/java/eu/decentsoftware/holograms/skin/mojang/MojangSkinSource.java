@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.skin.mojang;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.api.utils.Log;
@@ -43,7 +42,7 @@ import java.util.Objects;
  */
 public class MojangSkinSource implements SkinSource {
 
-    private static final Gson gson = new GsonBuilder().create();
+    private static final Gson gson = new Gson();
 
     @NotNull
     @Override
