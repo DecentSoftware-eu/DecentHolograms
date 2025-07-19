@@ -245,8 +245,13 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
-				if (Hologram.getCachedHologramNames().contains(args[1])) {
-					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, args[1]);
+				String cloneHologramName = args[1];
+				if (!cloneHologramName.matches(Common.NAME_REGEX)) {
+					Lang.HOLOGRAM_INVALID_NAME.send(sender, cloneHologramName);
+					return true;
+				}
+				if (Hologram.getCachedHologramNames().contains(cloneHologramName)) {
+					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, cloneHologramName);
 					return true;
 				}
 
@@ -280,7 +285,7 @@ public class HologramSubCommand extends DecentCommand {
 					}
 				}
 
-				final Hologram clone = hologram.clone(args[1], location, temp);
+				final Hologram clone = hologram.clone(cloneHologramName, location, temp);
 				clone.save();
 				clone.showAll();
 				clone.realignLines();
