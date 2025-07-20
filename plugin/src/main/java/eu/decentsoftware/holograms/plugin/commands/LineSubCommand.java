@@ -481,7 +481,7 @@ public class LineSubCommand extends DecentCommand {
 				int index = Validator.getInteger(args[2], Lang.LINE_DOES_NOT_EXIST.getValue());
 				HologramLine prevLine = Validator.getHologramLine(page, index);
 				String content = args.length > 3 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 3) : Validator.getLineContent(args, 3) : Settings.DEFAULT_TEXT;
-				HologramLine line = new HologramLine(page, prevLine.getLocation(), content);
+				HologramLine line = new HologramLine(page, prevLine.getLocation().clone(), content);
 
 				if (page.insertLine(index - 1, line)) {
 					hologram.save();
