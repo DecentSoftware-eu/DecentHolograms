@@ -812,11 +812,7 @@ public class HologramSubCommand extends DecentCommand {
 		@Override
 		public CommandHandler getCommandHandler() {
 			return (sender, args) -> {
-				Hologram hologram = Validator.getHologram(args[0]);
-				if (hologram == null) {
-					Lang.HOLOGRAM_DOES_NOT_EXIST.send(sender);
-					return true;
-				}
+				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				int pageIndex = Validator.getInteger(args[1]);
 				HologramPage page = Validator.getHologramPage(hologram, pageIndex);
 				if (page == null) {

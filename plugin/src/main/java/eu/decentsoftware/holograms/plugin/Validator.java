@@ -40,7 +40,7 @@ public final class Validator {
 
     public static HologramPage getHologramPage(Hologram hologram, int index) throws DecentCommandException {
         index = getIntegerInRange(index, 1, hologram.size(), "Page index must be in bounds of given hologram.");
-        return hologram.getPage(index);
+        return hologram.getPage(index - 1);
     }
 
     public static HologramLine getHologramLine(HologramPage page, int index, String message) throws DecentCommandException {
