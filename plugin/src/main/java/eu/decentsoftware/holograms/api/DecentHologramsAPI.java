@@ -2,7 +2,6 @@ package eu.decentsoftware.holograms.api;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -67,29 +66,8 @@ public final class DecentHologramsAPI {
     }
 
     /**
-     * Check whether DecentHologramsAPI is currently running and ready for use.
-     *
-     * @return True if DecentHologramsAPI is running, false otherwise.
-     */
-    public static boolean isRunning() {
-        return implementation != null && enabled;
-    }
-
-    /**
      * Get the instance of running DecentHolograms. This method will throw
-     * an exception if DecentHologramsAPI is not running. You can check whether
-     * DecentHologramsAPI is running by using {@link #isRunning()}.
-     * <p>
-     * You might need to wait until DecentHologramsAPI is fully enabled before
-     * using this method. You can check whether DecentHologramsAPI is enabled
-     * by using {@link #isRunning()}. Alternatively, you can use the
-     * {@link PluginEnableEvent} event to detect when DecentHologramsAPI
-     * is enabled.
-     *
-     * @return The instance of running DecentHolograms (if running).
-     * @throws IllegalStateException If DecentHologramsAPI is not running.
-     * @see #isRunning()
-     * @see PluginEnableEvent
+     * an exception if DecentHologramsAPI is not running.
      */
     public static DecentHolograms get() {
         if (implementation == null || !enabled) {

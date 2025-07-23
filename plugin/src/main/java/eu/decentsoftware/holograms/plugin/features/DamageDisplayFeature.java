@@ -2,9 +2,7 @@ package eu.decentsoftware.holograms.plugin.features;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
-import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -41,16 +39,6 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
 	@Override
 	public void reload() {
 		this.disable();
-
-		FileConfig config = Settings.getConfig();
-		enabled = config.getBoolean("damage-display.enabled", enabled);
-		duration = config.getInt("damage-display.duration", duration);
-		appearance = config.getString("damage-display.appearance", appearance);
-		criticalAppearance = config.getString("damage-display.critical-appearance", criticalAppearance);
-		heightOffset = config.getDouble("damage-display.height", heightOffset);
-		displayForPlayers = config.getBoolean("damage-display.players", displayForPlayers);
-		displayForMobs = config.getBoolean("damage-display.mobs", displayForMobs);
-		zeroDamage = config.getBoolean("damage-display.zero-damage", zeroDamage);
 
 		if (enabled) {
 			this.enable();

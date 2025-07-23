@@ -18,16 +18,8 @@ public class S {
         Bukkit.getScheduler().cancelTask(id);
     }
 
-    public static void sync(Runnable runnable) {
-        Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), runnable);
-    }
-
     public static BukkitTask sync(Runnable runnable, long delay) {
         return Bukkit.getScheduler().runTaskLater(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
-    }
-
-    public static BukkitTask syncTask(Runnable runnable, long interval) {
-        return Bukkit.getScheduler().runTaskTimer(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
     public static void async(Runnable runnable) {
@@ -44,10 +36,6 @@ public class S {
         } catch (IllegalPluginAccessException e) {
             CompletableFuture.runAsync(runnable);
         }
-    }
-
-    public static BukkitTask asyncTask(Runnable runnable, long interval) {
-        return Bukkit.getScheduler().runTaskTimerAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, 0, interval);
     }
 
     public static BukkitTask asyncTask(Runnable runnable, long interval, long delay) {

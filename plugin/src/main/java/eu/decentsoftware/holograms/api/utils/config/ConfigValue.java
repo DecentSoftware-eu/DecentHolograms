@@ -17,39 +17,10 @@ public class ConfigValue<T> {
 		this(true, path, defaultValue);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void updateValue(FileConfig config) {
-		if (!config.contains(path)) {
-			value = defaultValue;
-			if (setDefault) {
-				config.set(path, defaultValue);
-				config.saveData();
-			}
-		} else {
-			Object o = config.get(path);
-			try {
-				value = (T) o;
-			} catch (Exception e) {
-				e.printStackTrace();
-				value = defaultValue;
-			}
-		}
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public T getDefaultValue() {
-		return defaultValue;
-	}
-
 	public T getValue() {
 		return value == null ? defaultValue : value;
 	}
 
-	public void setValue(T value) {
-		this.value = value;
-	}
+
 
 }

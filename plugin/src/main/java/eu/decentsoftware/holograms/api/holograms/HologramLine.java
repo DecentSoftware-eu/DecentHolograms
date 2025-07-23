@@ -8,7 +8,6 @@ import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
@@ -25,7 +24,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -33,14 +31,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -51,78 +47,6 @@ public class HologramLine extends HologramObject {
     /*
      *	Static Methods
      */
-
-    @NonNull
-    public static HologramLine fromFile(@NonNull ConfigurationSection config, @Nullable HologramPage parent, @NonNull Location location) {
-        HologramLine line = new HologramLine(parent, location, config.getString("content", Settings.DEFAULT_TEXT));
-        if (config.isString("permission")) {
-            line.setPermission(config.getString("permission", null));
-        }
-        if (config.isList("flags")) {
-            line.addFlags(config.getStringList("flags").stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-        }
-        if (config.isDouble("height")) {
-            line.setHeight(config.getDouble("height"));
-        }
-        if (config.isDouble("offsetX")) {
-            line.setOffsetX(config.getDouble("offsetX"));
-        }
-        if (config.isDouble("offsetZ")) {
-            line.setOffsetZ(config.getDouble("offsetZ"));
-        }
-        if (config.isDouble("facing")) {
-            line.setFacing((float) config.getDouble("facing"));
-        }
-        return line;
-    }
-
-    @NonNull
-    @SuppressWarnings("unchecked")
-    public static HologramLine fromMap(@NonNull Map<String, Object> map, @Nullable HologramPage parent, @NonNull Location location) {
-        String content = (String) map.getOrDefault("content", Settings.DEFAULT_TEXT);
-        HologramLine line = new HologramLine(parent, location, content);
-        if (map.containsKey("height")) {
-            Object height = map.get("height");
-            if (height instanceof Double) {
-                line.setHeight((Double) height);
-            }
-        }
-        if (map.containsKey("flags")) {
-            Object flags = map.get("flags");
-            if (flags instanceof List) {
-                try {
-                    line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-                } catch (Exception e) {
-                    Log.warn("Flags for line %s seem to be invalid!", content);
-                }
-            }
-        }
-        if (map.containsKey("permission")) {
-            Object permission = map.get("permission");
-            if (permission instanceof String) {
-                line.setPermission((String) permission);
-            }
-        }
-        if (map.containsKey("offsetX")) {
-            Object offsetX = map.get("offsetX");
-            if (offsetX instanceof Double) {
-                line.setOffsetX((Double) offsetX);
-            }
-        }
-        if (map.containsKey("offsetZ")) {
-            Object offsetZ = map.get("offsetZ");
-            if (offsetZ instanceof Double) {
-                line.setOffsetZ((Double) offsetZ);
-            }
-        }
-        if (map.containsKey("facing")) {
-            Object facing = map.get("facing");
-            if (facing instanceof Double) {
-                line.setFacing(((Double) facing).floatValue());
-            }
-        }
-        return line;
-    }
 
     /*
      *	Fields
@@ -267,38 +191,6 @@ public class HologramLine extends HologramObject {
         }
     }
 
-    @NonNull
-    public Map<String, Object> serializeToMap() {
-        final Map<String, Object> map = new LinkedHashMap<>();
-        map.put("content", content);
-        map.put("height", height);
-        if (!flags.isEmpty()) map.put("flags", flags.stream().map(EnumFlag::name).collect(Collectors.toList()));
-        if (permission != null && !permission.trim().isEmpty()) map.put("permission", permission);
-        if (getOffsetX() != 0.0d) map.put("offsetX", offsetX);
-        if (getOffsetZ() != 0.0d) map.put("offsetZ", offsetZ);
-        if (parent == null || getFacing() != parent.getParent().getFacing()) map.put("facing", facing);
-        return map;
-    }
-
-    /**
-     * Create a new instance of hologram line that's identical to this one.
-     *
-     * @param location Location of the clone.
-     * @return Cloned instance of this line.
-     */
-    @NonNull
-    public HologramLine clone(@Nullable HologramPage parent, @NonNull Location location) {
-        HologramLine line = new HologramLine(parent, location, this.getContent());
-        line.setHeight(this.getHeight());
-        line.setOffsetY(this.getOffsetY());
-        line.setOffsetX(this.getOffsetX());
-        line.setOffsetZ(this.getOffsetZ());
-        line.setFacing(this.getFacing());
-        line.setPermission(this.getPermission());
-        line.addFlags(this.getFlags().toArray(new EnumFlag[0]));
-        return line;
-    }
-
     /**
      * Get the type of this line.
      *
@@ -380,37 +272,8 @@ public class HologramLine extends HologramObject {
     @NonNull
     // Parses custom replacements that can be defined in the config
     private String parseCustomReplacements() {
-        if (!content.isEmpty()) {
-            for (Map.Entry<String, String> replacement : Settings.CUSTOM_REPLACEMENTS.entrySet()) {
-                content = content.replace(replacement.getKey(), replacement.getValue());
-            }
-        }
+
         return content;
-    }
-
-    /**
-     * Check if the given player has the permission to see this line, if any.
-     *
-     * @param player The player.
-     * @return True, if the player has the permission to see this line, false otherwise.
-     */
-    public boolean hasPermission(@NonNull Player player) {
-        return permission == null || permission.isEmpty() || player.hasPermission(permission);
-    }
-
-    /**
-     * Update the visibility of this line for the given player. This method checks
-     * if the player has the permission to see this line and if they are in the display
-     * range. Then it updates the visibility accordingly.
-     *
-     * @param player The player to update visibility for.
-     */
-    public void updateVisibility(@NonNull Player player) {
-        if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
-            hide(player);
-        } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
-            show(player);
-        }
     }
 
     /**
@@ -436,17 +299,6 @@ public class HologramLine extends HologramObject {
                 viewers.add(player.getUniqueId());
             }
         }
-    }
-
-    /**
-     * Update this line for given players.
-     *
-     * <p>This method will update the line only if it needs to be updated.</p>
-     *
-     * @param players Given players.
-     */
-    public void update(Player... players) {
-        update(false, players);
     }
 
     /**
@@ -482,7 +334,7 @@ public class HologramLine extends HologramObject {
      *
      * @param players Given players.
      */
-    public void updateLocation(boolean updateRotation, Player... players) {
+    public void updateLocation(Player... players) {
         if (isDisabled()) {
             return;
         }
@@ -582,11 +434,6 @@ public class HologramLine extends HologramObject {
         return parent == null || parent.getParent().isInDisplayRange(player);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isInUpdateRange(@NonNull Player player) {
-        return parent == null || parent.getParent().isInUpdateRange(player);
-    }
-
     public double getOffsetX() {
         return offsetX.get();
     }
@@ -599,16 +446,8 @@ public class HologramLine extends HologramObject {
         return offsetZ.get();
     }
 
-    public void setOffsetX(double offsetX) {
-        this.offsetX.set(offsetX);
-    }
-
     public void setOffsetY(double offsetY) {
         this.offsetY.set(offsetY);
-    }
-
-    public void setOffsetZ(double offsetZ) {
-        this.offsetZ.set(offsetZ);
     }
 
     /*

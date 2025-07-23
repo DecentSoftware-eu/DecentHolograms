@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 
@@ -8,6 +9,7 @@ import javax.annotation.Nullable;
 /**
  * Enum of supported NMS versions.
  */
+@Getter
 @SuppressWarnings("java:S115") // SonarLint: Enum values naming convention
 public enum Version {
     v1_8_R1(8, "1.8"),
@@ -54,7 +56,7 @@ public enum Version {
         CURRENT = getCurrentVersion();
     }
 
-    private static Version getCurrentVersion() {
+    public static Version getCurrentVersion() {
         return fromMinecraftVersion(CURRENT_MINECRAFT_VERSION);
     }
 
@@ -63,26 +65,6 @@ public enum Version {
         String bukkitVersion = Bukkit.getServer().getBukkitVersion();
         // Minecraft version (e.g., 1.20.6)
         return bukkitVersion.split("-", 2)[0];
-    }
-
-    /**
-     * Parse a Version from string.
-     *
-     * @param version The string.
-     * @return The parsed Version or null.
-     */
-    @Nullable
-    public static Version fromString(String version) {
-        if (version == null) {
-            return null;
-        }
-
-        for (Version value : Version.values()) {
-            if (value.name().equalsIgnoreCase(version)) {
-                return value;
-            }
-        }
-        return null;
     }
 
     @Nullable
@@ -109,10 +91,6 @@ public enum Version {
         return CURRENT.getMinor() > minor;
     }
 
-    public static boolean after(@NonNull Version version) {
-        return CURRENT.ordinal() > version.ordinal();
-    }
-
     public static boolean afterOrEqual(int minor) {
         return CURRENT.getMinor() >= minor;
     }
@@ -123,18 +101,6 @@ public enum Version {
 
     public static boolean before(int minor) {
         return CURRENT.getMinor() < minor;
-    }
-
-    public static boolean before(@NonNull Version version) {
-        return CURRENT.ordinal() < version.ordinal();
-    }
-
-    public static boolean beforeOrEqual(int minor) {
-        return CURRENT.getMinor() <= minor;
-    }
-
-    public static boolean beforeOrEqual(@NonNull Version version) {
-        return CURRENT.ordinal() <= version.ordinal();
     }
 
     public static boolean supportsHex() {
@@ -151,14 +117,6 @@ public enum Version {
     Version(int minor, String... minecraftVersions) {
         this.minor = minor;
         this.minecraftVersions = minecraftVersions;
-    }
-
-    public int getMinor() {
-        return minor;
-    }
-
-    public String[] getMinecraftVersions() {
-        return minecraftVersions;
     }
 
 }
