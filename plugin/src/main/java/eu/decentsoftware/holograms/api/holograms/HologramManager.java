@@ -1,13 +1,8 @@
 package eu.decentsoftware.holograms.api.holograms;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.api.utils.event.EventFactory;
-import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
-import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import lombok.NonNull;
@@ -15,10 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HologramManager extends Ticked {
 
-    private final DecentHolograms decentHolograms;
     private final Map<String, Hologram> hologramMap = new ConcurrentHashMap<>();
     private final Map<UUID, Long> clickCooldowns = new ConcurrentHashMap<>();
     private final Set<HologramLine> temporaryLines = ConcurrentHashMap.newKeySet();
@@ -49,9 +40,8 @@ public class HologramManager extends Ticked {
      */
     private final Map<String, Set<String>> toLoad = new ConcurrentHashMap<>();
 
-    public HologramManager(DecentHolograms decentHolograms) {
+    public HologramManager() {
         super(20L);
-        this.decentHolograms = decentHolograms;
         this.register();
 
         S.async(this::reload); // Reload when the worlds are ready
@@ -180,31 +170,10 @@ public class HologramManager extends Ticked {
         hologramMap.clear();
         toLoad.clear();
 
-        File folder = new File(decentHolograms.getDataFolder(), "holograms");
-        List<File> files = FileUtils.getFilesFromTree(folder, Common.NAME_REGEX + "\\.yml", true);
-        if (files.isEmpty()) {
-            return;
-        }
 
         int counter = 0;
         Log.info("Loading holograms... ");
-        for (File file : files) {
-            String filePath = FileUtils.getRelativePath(file, folder);
-            try {
-                registerHologram(Hologram.fromFile(filePath));
-                counter++;
-            } catch (LocationParseException e) {
-                // This hologram will load when its world loads.
-                String worldName = e.getWorldName();
-                if (!toLoad.containsKey(worldName)) {
-                    toLoad.put(worldName, new HashSet<>());
-                }
-                toLoad.get(worldName).add(filePath);
-                counter++;
-            } catch (Exception e) {
-                Log.warn("Failed to load hologram from file '%s'!", e, filePath);
-            }
-        }
+
         Log.info("Loaded %d holograms!", counter);
     }
 
@@ -228,20 +197,6 @@ public class HologramManager extends Ticked {
     }
 
     /**
-     * Show all registered holograms for the given player.
-     *
-     * @param player Given player.
-     */
-    public void showAll(@NonNull Player player) {
-        for (Hologram hologram : getHolograms()) {
-            hologram.show(player, hologram.getPlayerPage(player));
-        }
-        for (HologramLine line : temporaryLines) {
-            line.show(player);
-        }
-    }
-
-    /**
      * Hide all registered holograms for the given player.
      *
      * @param player Given player.
@@ -253,36 +208,6 @@ public class HologramManager extends Ticked {
         for (HologramLine line : temporaryLines) {
             line.hide(player);
         }
-    }
-
-    /**
-     * Check whether a hologram with the given name is registered in this manager.
-     *
-     * @param name Name of the hologram.
-     * @return Boolean whether a hologram with the given name is registered in this manager.
-     */
-    public boolean containsHologram(@NonNull String name) {
-        return hologramMap.containsKey(name);
-    }
-
-    /**
-     * Register a new hologram.
-     *
-     * @param hologram New hologram.
-     */
-    public void registerHologram(@NonNull Hologram hologram) {
-        hologramMap.put(hologram.getName(), hologram);
-        EventFactory.fireHologramRegisterEvent(hologram);
-    }
-
-    /**
-     * Get hologram by name.
-     *
-     * @param name Name of the hologram.
-     * @return The hologram or null if it wasn't found.
-     */
-    public Hologram getHologram(@NonNull String name) {
-        return hologramMap.get(name);
     }
 
     /**
@@ -301,15 +226,6 @@ public class HologramManager extends Ticked {
     }
 
     /**
-     * Get the names of all registered holograms.
-     *
-     * @return Set of the names of all registered holograms.
-     */
-    public Set<String> getHologramNames() {
-        return hologramMap.keySet();
-    }
-
-    /**
      * Get all registered holograms.
      *
      * @return Collection of all registered holograms.
@@ -317,11 +233,6 @@ public class HologramManager extends Ticked {
     @NonNull
     public Collection<Hologram> getHolograms() {
         return hologramMap.values();
-    }
-
-    @NonNull
-    public Map<String, Set<String>> getToLoad() {
-        return toLoad;
     }
 
 }

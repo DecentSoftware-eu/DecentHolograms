@@ -1,10 +1,8 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
-import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
-import eu.decentsoftware.holograms.hook.NbtApiHook;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -46,10 +44,7 @@ public class HologramItem {
             if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
                 String extrasFinal = parseExtras(player);
                 if (StringUtils.isNotEmpty(extrasFinal)) {
-                    if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
-                        String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
-                        itemBuilder.withItemStack(HeadDatabaseUtils.getHeadItemStackById(headDatabaseId));
-                    } else if (extrasFinal.length() <= 16) {
+                    if (extrasFinal.length() <= 16) {
                         itemBuilder.withSkullOwner(extrasFinal);
                     } else {
                         itemBuilder.withSkullTexture(extrasFinal);
@@ -65,7 +60,7 @@ public class HologramItem {
             ItemStack itemStack = itemBuilder.toItemStack();
 
             if (nbt != null) {
-                itemStack = applyNBT(player, itemStack);
+                itemStack = applyNBT(itemStack);
             }
 
             return itemStack;
@@ -85,9 +80,9 @@ public class HologramItem {
     }
 
     @SuppressWarnings("deprecation")
-    private ItemStack applyNBT(Player player, ItemStack itemStack){
+    private ItemStack applyNBT(ItemStack itemStack){
         if (Version.afterOrEqual(Version.v1_20_R4)) {
-            return NbtApiHook.applyNbtDataToItemStack(itemStack, nbt, player);
+            return null;
         } else {
             try {
                 Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
@@ -203,10 +198,7 @@ public class HologramItem {
             }
         }
 
-        float customModelData = NbtApiHook.extractCustomModelData(itemStack);
-        if (customModelData > 0.0) {
-            stringBuilder.append("{CustomModelData:").append(customModelData).append('}');
-        }
+
         return new HologramItem(stringBuilder.toString());
     }
 

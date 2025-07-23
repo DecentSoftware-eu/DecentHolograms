@@ -25,10 +25,7 @@ dependencies {
 
     compileOnly(libs.spigot)
     compileOnly(libs.placeholderapi)
-    compileOnly(libs.headdatabase.api)
 
-    implementation(libs.bstats.bukkit)
-    implementation(libs.item.nbt.api)
     implementation(libs.xseries)
 
     compileOnly(libs.lombok)
@@ -46,12 +43,7 @@ dependencies {
 }
 
 processResources {
-    def props = [version: project.version, description: project.description]
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
-    }
+
 }
 
 jar {
@@ -63,8 +55,6 @@ jar {
 shadowJar {
     archiveFileName.set("DecentHolograms-${version}.jar")
 
-    relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
-    relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
 }
 

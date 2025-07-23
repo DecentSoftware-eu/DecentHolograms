@@ -16,12 +16,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -73,17 +70,6 @@ public class HologramPage extends FlagHolder {
         return height;
     }
 
-    @NonNull
-    public Location getCenter() {
-        Location center = parent.getLocation().clone();
-        if (parent.isDownOrigin()) {
-            center.add(0, getHeight() / 2, 0);
-        } else {
-            center.subtract(0, getHeight() / 2, 0);
-        }
-        return center;
-    }
-
     /**
      * Get hologram size. (Number of lines)
      *
@@ -91,38 +77,6 @@ public class HologramPage extends FlagHolder {
      */
     public int size() {
         return this.lines.size();
-    }
-
-    @NonNull
-    public Map<String, Object> serializeToMap() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        List<Map<String, Object>> linesMap = new ArrayList<>();
-        for (int i = 1; i <= this.lines.size(); i++) {
-            HologramLine line = this.lines.get(i - 1);
-            linesMap.add(line.serializeToMap());
-        }
-        map.put("lines", linesMap);
-        Map<String, List<String>> actionsMap = new LinkedHashMap<>();
-        for (Map.Entry<ClickType, List<Action>> entry : this.getActions().entrySet()) {
-            actionsMap.put(entry.getKey().name(), entry.getValue().stream().map(Action::toString).collect(Collectors.toList()));
-        }
-        map.put("actions", actionsMap);
-        return map;
-    }
-
-    @NonNull
-    public HologramPage clone(@NonNull Hologram parent, int index) {
-        HologramPage page = new HologramPage(parent, index);
-        for (HologramLine line : getLines()) {
-            page.addLine(line.clone(page, page.getNextLineLocation()));
-        }
-        for (Map.Entry<ClickType, List<Action>> entry : getActions().entrySet()) {
-            for (Action action : entry.getValue()) {
-                page.addAction(entry.getKey(), action);
-            }
-        }
-        page.addFlags(this.getFlags().toArray(new EnumFlag[0]));
-        return page;
     }
 
     /*
@@ -147,7 +101,7 @@ public class HologramPage extends FlagHolder {
             lineLocation.setZ(currentLocation.getZ() + line.getOffsetZ());
 
             line.setLocation(lineLocation);
-            line.updateLocation(true);
+            line.updateLocation();
             currentLocation.subtract(0, line.getHeight(), 0);
         }
     }
@@ -241,22 +195,6 @@ public class HologramPage extends FlagHolder {
     }
 
     /**
-     * Swap two lines in this hologram page.
-     *
-     * @param index1 First line.
-     * @param index2 Second line.
-     * @return Boolean whether the operation was successful.
-     */
-    public boolean swapLines(int index1, int index2) {
-        if (index1 < 0 || index1 >= size() || index2 < 0 || index2 >= size()) {
-            return false;
-        }
-        Collections.swap(this.lines, index1, index2);
-        realignLines();
-        return true;
-    }
-
-    /**
      * Get the Location at the bottom of this hologram page that's available for a new line.
      *
      * @return the Location at the bottom of this hologram page that's available for a new line.
@@ -322,10 +260,6 @@ public class HologramPage extends FlagHolder {
         return false;
     }
 
-    public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
-        actions.computeIfAbsent(clickType, k -> new ArrayList<>()).add(action);
-    }
-
     public void executeActions(@NonNull Player player, @NonNull ClickType clickType) {
         if (!actions.containsKey(clickType)) return;
         for (Action action : actions.get(clickType)) {
@@ -343,21 +277,6 @@ public class HologramPage extends FlagHolder {
             }
             action.setData(actionData);
         }
-    }
-
-    public void clearActions(@NonNull ClickType clickType) {
-        actions.remove(clickType);
-    }
-
-    public void removeAction(@NonNull ClickType clickType, int index) {
-        actions.get(clickType).remove(index);
-    }
-
-    public List<Action> getActions(@NonNull ClickType clickType) {
-        if (!actions.containsKey(clickType)) {
-            return new ArrayList<>();
-        }
-        return actions.get(clickType);
     }
 
     /**

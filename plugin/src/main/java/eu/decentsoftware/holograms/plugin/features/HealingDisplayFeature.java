@@ -2,9 +2,7 @@ package eu.decentsoftware.holograms.plugin.features;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
-import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -36,13 +34,6 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 	public void reload() {
 		this.disable();
 
-		FileConfig config = Settings.getConfig();
-		enabled = config.getBoolean("healing-display.enabled", enabled);
-		duration = config.getInt("healing-display.duration", duration);
-		appearance = config.getString("healing-display.appearance", appearance);
-		heightOffset = config.getDouble("healing-display.height", heightOffset);
-		displayForPlayers = config.getBoolean("healing-display.players", displayForPlayers);
-		displayForMobs = config.getBoolean("healing-display.mobs", displayForMobs);
 
 		if (enabled) {
 			this.enable();
