@@ -7,13 +7,11 @@ import eu.decentsoftware.holograms.api.Settings;
 
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
-import eu.decentsoftware.holograms.api.utils.event.EventFactory;
+
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
-import eu.decentsoftware.holograms.event.HologramClickEvent;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
-import eu.decentsoftware.holograms.shared.DecentPosition;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -136,17 +134,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
 
     /**
-     * Creates a new hologram with the given name and location. The hologram will be saved to a file.
-     *
-     * @param name     The name of the hologram.
-     * @param location The location of the hologram.
-     * @see DHAPI#createHologram(String, Location)
-     */
-    public Hologram(@NonNull String name, @NonNull Location location) {
-        this(name, location, true);
-    }
-
-    /**
      * Creates a new hologram with the given name and location.
      *
      * @param name       The name of the hologram.
@@ -203,7 +190,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             return;
         }
         tickCounter.incrementAndGet();
-        updateAnimationsAll();
     }
 
     /*
@@ -296,7 +282,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     @Override
     public void setLocation(@NonNull Location location) {
         super.setLocation(location);
-        teleportClickableEntitiesAll();
     }
 
     /**
@@ -341,16 +326,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     public boolean onClick(@NonNull Player player, int entityId) {
         HologramPage page = getPage(player);
-        if (page == null || !page.hasEntity(entityId)) {
-            return false;
-        }
-
-        boolean eventNotCancelled = EventFactory.fireHologramClickEvent(player, this, page, entityId);
-        if (eventNotCancelled) {
-            return true;
-        }
-
-        return false;
+        return page != null && page.hasEntity(entityId);
     }
 
     /**
@@ -417,10 +393,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      * @param player    Given player.
      * @param pageIndex Given page.
      */
-    public boolean show(@NonNull Player player, int pageIndex) {
+    public void show(@NonNull Player player, int pageIndex) {
         synchronized (visibilityMutex) {
             if (isDisabled() || isHideState(player) || (!isDefaultVisibleState() && !isShowState(player))) {
-                return false;
+                return;
             }
             HologramPage page = getPage(pageIndex);
             if (page != null && page.size() > 0 && canShow(player) && isInDisplayRange(player)) {
@@ -437,9 +413,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                     // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
                     S.sync(() -> showPageTo(player, page, pageIndex), 0L);
                 }
-                return true;
             }
-            return false;
         }
     }
 
@@ -448,7 +422,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
         viewers.add(player.getUniqueId());
-        showClickableEntities(player);
     }
 
     public void showAll() {
@@ -486,25 +459,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void updateAnimationsAll() {
-        synchronized (visibilityMutex) {
-            if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-                getViewerPlayers().forEach(this::performUpdateAnimations);
-            }
-        }
-    }
-
-    private void performUpdateAnimations(@NotNull Player player) {
-        if (!isVisible(player) || !isInUpdateRange(player) || isHideState(player)) {
-            return;
-        }
-
-        HologramPage page = getPage(player);
-        if (page != null) {
-            page.getLines().forEach(line -> line.updateAnimations(player));
-        }
-    }
-
     public void hide(@NonNull Player player) {
         synchronized (visibilityMutex) {
             if (isVisible(player)) {
@@ -530,23 +484,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
-    public void showClickableEntities(@NonNull Player player) {
-        HologramPage page = getPage(player);
-        if (page == null || !(page.isClickable() || HologramClickEvent.isRegistered())) {
-            return;
-        }
-
-        // Spawn clickable entities
-        int amount = (int) (page.getHeight() / 2) + 1;
-        Location location = getLocation().clone();
-        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
-        for (int i = 0; i < amount; i++) {
-            NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.display(player, DecentPosition.fromBukkitLocation(location));
-            location.add(0, 1.8, 0);
-        }
-    }
-
     public void hideClickableEntities(@NonNull Player player) {
         HologramPage page = getPage(player);
         if (page == null) {
@@ -555,29 +492,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
         // De-spawn clickable entities
         page.getClickableEntityRenderers().forEach(renderer -> renderer.hide(player));
-    }
-
-    public void teleportClickableEntities(@NonNull Player player) {
-        HologramPage page = getPage(player);
-        if (page == null || !(page.isClickable() || HologramClickEvent.isRegistered())) {
-            return;
-        }
-
-        // Spawn clickable entities
-        int amount = (int) (page.getHeight() / 2) + 1;
-        Location location = getLocation().clone();
-        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
-        for (int i = 0; i < amount; i++) {
-            NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.move(player, DecentPosition.fromBukkitLocation(location));
-            location.add(0, 1.8, 0);
-        }
-    }
-
-    public void teleportClickableEntitiesAll() {
-        if (isEnabled()) {
-            getViewerPlayers().forEach(this::teleportClickableEntities);
-        }
     }
 
 
