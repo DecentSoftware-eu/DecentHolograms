@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
-import eu.decentsoftware.holograms.api.features.FeatureManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.listeners.PlayerListener;
@@ -36,7 +35,6 @@ public final class DecentHolograms {
     private NmsAdapter nmsAdapter;
     private NmsPacketListenerService nmsPacketListenerService;
     private HologramManager hologramManager;
-    private FeatureManager featureManager;
     private AnimationManager animationManager;
     private Ticker ticker;
 
@@ -51,7 +49,6 @@ public final class DecentHolograms {
 
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager();
-        this.featureManager = new FeatureManager();
         this.animationManager = new AnimationManager();
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
@@ -65,7 +62,6 @@ public final class DecentHolograms {
 
     void disable() {
         this.nmsPacketListenerService.shutdown();
-        this.featureManager.destroy();
         this.hologramManager.destroy();
         this.animationManager.destroy();
         this.ticker.destroy();

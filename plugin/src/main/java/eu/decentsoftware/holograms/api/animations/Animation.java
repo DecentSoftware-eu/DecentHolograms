@@ -34,8 +34,4 @@ public abstract class Animation {
         return Math.min(currentStep, maxSteps);
     }
 
-    public boolean isIdentifier(@NonNull String string) {
-        return name.equalsIgnoreCase(string) || aliases.contains(string.toLowerCase());
-    }
-
 }
