@@ -8,10 +8,9 @@ import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
-import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
-import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
+
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import lombok.Getter;
 import lombok.NonNull;
@@ -49,8 +48,8 @@ public final class DecentHolograms {
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager();
 
-        DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
-        this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
+
+        this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter);
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(this), this.plugin);
@@ -77,8 +76,6 @@ public final class DecentHolograms {
             nmsAdapter = new NmsAdapterFactory().createNmsAdapter(Version.CURRENT);
             Log.info("Initialized NMS adapter for %s (%s).", Version.CURRENT.name(), Version.CURRENT_MINECRAFT_VERSION);
             return;
-        } catch (DecentHologramsNmsException e) {
-            Log.error("Error loading an NMS adapter for " + Version.CURRENT + ": " + e.getMessage(), e);
         } catch (Exception e) {
             Log.error("Unknown error loading an NMS adapter for " + Version.CURRENT, e);
         }

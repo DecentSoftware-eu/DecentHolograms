@@ -2,8 +2,7 @@ package eu.decentsoftware.holograms.api.holograms;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -22,7 +21,6 @@ public class HologramPage {
 
     private int index;
     private final Hologram parent;
-    private final List<NmsClickableHologramRenderer> clickableEntityRenderers = new ArrayList<>();
     private final List<HologramLine> lines = new ArrayList<>();
 
     /*
@@ -182,30 +180,9 @@ public class HologramPage {
         return ImmutableList.copyOf(lines);
     }
 
-    /**
-     * @deprecated For removal.
-     */
-    @Deprecated
-    public int getClickableEntityId(int index) {
-        return getClickableRenderer(index).getEntityId();
-    }
 
-    NmsClickableHologramRenderer getClickableRenderer(int index) {
-        if (index >= clickableEntityRenderers.size()) {
-            clickableEntityRenderers.add(DecentHologramsAPI.get()
-                    .getNmsAdapter()
-                    .getHologramComponentFactory()
-                    .createClickableRenderer());
-        }
-        return clickableEntityRenderers.get(index);
-    }
 
     public boolean hasEntity(final int eid) {
-        for (NmsClickableHologramRenderer clickableEntityRenderer : clickableEntityRenderers) {
-            if (clickableEntityRenderer.getEntityId() == eid) {
-                return true;
-            }
-        }
         for (HologramLine line : lines) {
             for (int entityId : line.getEntityIds()) {
                 if (entityId == eid) {
