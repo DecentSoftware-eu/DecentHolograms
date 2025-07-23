@@ -4,7 +4,7 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Settings;
-import eu.decentsoftware.holograms.api.actions.ClickType;
+
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
@@ -337,20 +337,16 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      *
      * @param player    The player that clicked the hologram.
      * @param entityId  The id of the clicked entity.
-     * @param clickType The type of the click.
      * @return True if the click was handled, false otherwise.
      */
-    public boolean onClick(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
+    public boolean onClick(@NonNull Player player, int entityId) {
         HologramPage page = getPage(player);
         if (page == null || !page.hasEntity(entityId)) {
             return false;
         }
 
-        boolean eventNotCancelled = EventFactory.fireHologramClickEvent(player, this, page, clickType, entityId);
+        boolean eventNotCancelled = EventFactory.fireHologramClickEvent(player, this, page, entityId);
         if (eventNotCancelled) {
-            if (!hasFlag(EnumFlag.DISABLE_ACTIONS)) {
-                page.executeActions(player, clickType);
-            }
             return true;
         }
 

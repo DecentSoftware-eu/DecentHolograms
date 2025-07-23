@@ -3,8 +3,6 @@ package eu.decentsoftware.holograms.api.holograms;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.actions.Action;
-import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
@@ -13,12 +11,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -32,7 +27,6 @@ public class HologramPage extends FlagHolder {
     private final Hologram parent;
     private final List<NmsClickableHologramRenderer> clickableEntityRenderers = new ArrayList<>();
     private final List<HologramLine> lines = new ArrayList<>();
-    private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
     /*
      *	Constructors
@@ -260,37 +254,13 @@ public class HologramPage extends FlagHolder {
         return false;
     }
 
-    public void executeActions(@NonNull Player player, @NonNull ClickType clickType) {
-        if (!actions.containsKey(clickType)) return;
-        for (Action action : actions.get(clickType)) {
-            String actionName = action.getType().getName();
-            String actionData = action.getData();
-            if (actionName.contains("_PAGE") && actionData == null) {
-                action.setData(getParent().getName());
-            } else if (actionName.equals("PAGE") && actionData != null && actionData.matches("\\d+")) {
-                action.setData(getParent().getName() + ":" + actionData);
-            }
-
-            if (!action.execute(player)) {
-                action.setData(actionData);
-                return;
-            }
-            action.setData(actionData);
-        }
-    }
-
     /**
      * Check if this page has any actions.
      *
      * @return True if this page has any actions, false otherwise.
      */
     public boolean hasActions() {
-        for (ClickType value : ClickType.values()) {
-            List<Action> list = actions.get(value);
-            if (list != null && !list.isEmpty()) {
-                return true;
-            }
-        }
+
         return false;
     }
 

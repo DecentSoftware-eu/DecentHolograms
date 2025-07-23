@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractAction;
 import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractEvent;
@@ -36,12 +35,7 @@ class DecentHologramsNmsPacketListenerTest {
     private DecentHologramsNmsPacketListener packetListener;
 
     private static Stream<Arguments> providerInteractionActionsWithRespectiveClickTypes() {
-        return Stream.of(
-                Arguments.arguments(NmsEntityInteractAction.LEFT_CLICK, ClickType.LEFT),
-                Arguments.arguments(NmsEntityInteractAction.RIGHT_CLICK, ClickType.RIGHT),
-                Arguments.arguments(NmsEntityInteractAction.SHIFT_LEFT_CLICK, ClickType.SHIFT_LEFT),
-                Arguments.arguments(NmsEntityInteractAction.SHIFT_RIGHT_CLICK, ClickType.SHIFT_RIGHT)
-        );
+        return null;
     }
 
     @Test
@@ -52,21 +46,21 @@ class DecentHologramsNmsPacketListenerTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> packetListener.onEntityInteract(event));
 
         assertEquals("Unknown action: null", exception.getMessage());
-        verify(hologramManager, never()).onClick(any(), anyInt(), any());
+        verify(hologramManager, never()).onClick(any(), anyInt());
     }
 
     @ParameterizedTest
     @MethodSource("providerInteractionActionsWithRespectiveClickTypes")
-    void testOnEntityInteract_mapping(NmsEntityInteractAction action, ClickType clickType) {
+    void testOnEntityInteract_mapping(NmsEntityInteractAction action) {
         Player player = mock(Player.class);
         NmsEntityInteractEvent event = new NmsEntityInteractEvent(player, 1, action);
 
-        when(hologramManager.onClick(any(), anyInt(), any())).thenReturn(false);
+        when(hologramManager.onClick(any(), anyInt())).thenReturn(false);
 
         packetListener.onEntityInteract(event);
 
         assertFalse(event.isHandled());
-        verify(hologramManager).onClick(player, 1, clickType);
+        verify(hologramManager).onClick(player, 1);
     }
 
     @Test
@@ -74,12 +68,12 @@ class DecentHologramsNmsPacketListenerTest {
         Player player = mock(Player.class);
         NmsEntityInteractEvent event = new NmsEntityInteractEvent(player, 1, NmsEntityInteractAction.LEFT_CLICK);
 
-        when(hologramManager.onClick(any(), anyInt(), any())).thenReturn(true);
+        when(hologramManager.onClick(any(), anyInt())).thenReturn(true);
 
         packetListener.onEntityInteract(event);
 
         assertTrue(event.isHandled());
-        verify(hologramManager).onClick(player, 1, ClickType.LEFT);
+        verify(hologramManager).onClick(player, 1);
     }
 
 }

@@ -1,13 +1,11 @@
 package eu.decentsoftware.holograms.api.holograms;
 
 import eu.decentsoftware.holograms.api.Settings;
-import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -91,34 +89,14 @@ public class HologramManager extends Ticked {
     }
 
     /**
-     * Spawn a temporary line going to disappear after the given duration.
-     *
-     * @param location Location of the line.
-     * @param content  Content of the line.
-     * @param duration Duration to disappear after. (In ticks)
-     * @return The Hologram Line.
-     */
-    public HologramLine spawnTemporaryHologramLine(@NonNull Location location, String content, long duration) {
-        HologramLine line = new HologramLine(null, location, content);
-        temporaryLines.add(line);
-        line.show();
-        S.async(() -> {
-            line.destroy();
-            temporaryLines.remove(line);
-        }, duration);
-        return line;
-    }
-
-    /**
      * Attempts to process a click on an entity. If the entity is part of a hologram,
      * that is clickable and enabled, the click will be processed.
      *
      * @param player    The player who clicked.
      * @param entityId  Entity ID of the clicked entity.
-     * @param clickType Click type.
      * @return True if the click was processed, false otherwise.
      */
-    public boolean onClick(final @NonNull Player player, final int entityId, final @NonNull ClickType clickType) {
+    public boolean onClick(final @NonNull Player player, final int entityId) {
         final UUID uid = player.getUniqueId();
 
         // Check if the player is on cooldown.
@@ -143,7 +121,7 @@ public class HologramManager extends Ticked {
                 continue;
             }
 
-            if (hologram.onClick(player, entityId, clickType)) {
+            if (hologram.onClick(player, entityId)) {
                 clickCooldowns.put(uid, System.currentTimeMillis());
                 return true;
             }

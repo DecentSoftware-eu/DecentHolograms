@@ -1,9 +1,7 @@
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
-import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractAction;
 import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractEvent;
 
 /**
@@ -22,27 +20,10 @@ public class DecentHologramsNmsPacketListener implements NmsPacketListener {
 
     @Override
     public void onEntityInteract(NmsEntityInteractEvent event) {
-        ClickType clickType = mapEntityInteractActionToClickType(event.getAction());
-        boolean processed = hologramManager.onClick(event.getPlayer(), event.getEntityId(), clickType);
+        boolean processed = hologramManager.onClick(event.getPlayer(), event.getEntityId());
         if (processed) {
             event.setHandled(true);
         }
-    }
-
-    private ClickType mapEntityInteractActionToClickType(NmsEntityInteractAction action) {
-        if (action != null) {
-            switch (action) {
-                case LEFT_CLICK:
-                    return ClickType.LEFT;
-                case RIGHT_CLICK:
-                    return ClickType.RIGHT;
-                case SHIFT_LEFT_CLICK:
-                    return ClickType.SHIFT_LEFT;
-                case SHIFT_RIGHT_CLICK:
-                    return ClickType.SHIFT_RIGHT;
-            }
-        }
-        throw new IllegalArgumentException("Unknown action: " + action);
     }
 
 }

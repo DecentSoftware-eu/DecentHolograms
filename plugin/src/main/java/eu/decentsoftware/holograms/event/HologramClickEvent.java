@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.event;
 
-import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import lombok.Getter;
@@ -20,15 +19,13 @@ public class HologramClickEvent extends DecentHologramsEvent implements Cancella
     private final @NotNull Player player;
     private final @NotNull Hologram hologram;
     private final @NotNull HologramPage page;
-    private final @NotNull ClickType click;
     private final int entityId;
 
-    public HologramClickEvent(@NotNull Player player, @NotNull Hologram hologram, @NotNull HologramPage page, @NotNull ClickType click, int entityId) {
+    public HologramClickEvent(@NotNull Player player, @NotNull Hologram hologram, @NotNull HologramPage page,  int entityId) {
         super(true);
         this.player = player;
         this.hologram = hologram;
         this.page = page;
-        this.click = click;
         this.entityId = entityId;
     }
 
