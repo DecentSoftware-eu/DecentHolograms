@@ -1,5 +1,8 @@
 package eu.decentsoftware.holograms.hook;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
@@ -7,6 +10,7 @@ import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import lombok.Data;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +63,17 @@ public class NbtApiHook {
              */
             modifiableNBT.mergeCompound(originalNBT);
 
+            // Load the nbt data
+            ItemNbtData nbtData = ItemNbtData.fromJson(nbt);
+
+            /*
+             * Since item_model is new, it gets mapped under 'custom_data' in the item.
+             * We need to manually re-apply it.
+             */
+            if (nbtData.getItemModel() != null) {
+                modifiableNBT.getOrCreateCompound("components").setString("minecraft:item_model", nbtData.getItemModel());
+            }
+
             return NBT.itemStackFromNBT(modifiableNBT);
         } catch (Exception ex) {
             Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
@@ -66,12 +81,51 @@ public class NbtApiHook {
         }
     }
 
+    public static ItemNbtData readData(ItemStack itemStack) {
+        if (!loadedSuccessfully) {
+            return ItemNbtData.EMPTY;
+        }
+
+        ReadWriteNBT nbt = NBT.itemStackToNBT(itemStack);
+        return new ItemNbtData(extractItemModel(nbt), extractCustomModelData(nbt));
+    }
+
+    public static String extractItemModel(ItemStack itemStack) {
+        if (!loadedSuccessfully) {
+            return null;
+        }
+
+        return extractItemModel(NBT.itemStackToNBT(itemStack));
+    }
+
+    public static String extractItemModel(ReadWriteNBT nbtItem) {
+        if (!loadedSuccessfully) {
+            return null;
+        }
+
+        String itemModel;
+        if (Version.afterOrEqual(Version.v1_21_R2)) {
+            itemModel = nbtItem.getOrCreateCompound("components")
+                    .getString("minecraft:item_model");
+        } else {
+            itemModel = null;
+        }
+        return itemModel;
+    }
+
     public static float extractCustomModelData(ItemStack itemStack) {
         if (!loadedSuccessfully) {
             return 0f;
         }
 
-        ReadWriteNBT nbtItem = NBT.itemStackToNBT(itemStack);
+        return extractCustomModelData(NBT.itemStackToNBT(itemStack));
+    }
+
+    public static float extractCustomModelData(ReadWriteNBT nbtItem) {
+        if (!loadedSuccessfully) {
+            return 0f;
+        }
+
         float customModelData;
         if (Version.afterOrEqual(Version.v1_21_R3)) {
             // New structure components:{custom_model_data={floats[...]}} since 1.21.4
@@ -90,5 +144,52 @@ public class NbtApiHook {
                     .getInteger("CustomModelData");
         }
         return customModelData;
+    }
+
+    /**
+     * Represents the result of reading data from an item stack.
+     * This is used to prevent redundancy with NBTAPI.
+     */
+    @Data
+    public static class ItemNbtData {
+        public static final ItemNbtData EMPTY = new ItemNbtData(null, 0f);
+
+        private final String itemModel;
+        private final float customModelData;
+        private String json;
+
+        public ItemNbtData(String itemModel, float customModelData) {
+            this.itemModel = itemModel;
+            this.customModelData = customModelData;
+            this.json = toJson();
+        }
+
+        /**
+         * Converts this result to json.
+         *
+         * @return the json.
+         */
+        private String toJson() {
+            if ((this.itemModel == null || this.itemModel.isEmpty()) && this.customModelData == 0f)
+                return "";
+
+            // Use Gson to allow for easier expansion in the future.
+            JsonObject object = new JsonObject();
+            if (this.itemModel != null && !this.itemModel.isEmpty())
+                object.addProperty("minecraft:item_model", this.itemModel);
+            if (this.customModelData != 0f)
+                object.addProperty("CustomModelData", this.customModelData);
+            return object.toString();
+        }
+
+        public static ItemNbtData fromJson(String json) {
+            if (json == null || json.isEmpty())
+                return EMPTY;
+
+            JsonObject object = new JsonParser().parse(json).getAsJsonObject();
+            String itemModel = object.has("minecraft:item_model") ? object.get("minecraft:item_model").getAsString() : null;
+            float customModelData = object.has("CustomModelData") ? object.get("CustomModelData").getAsFloat() : 0f;
+            return new ItemNbtData(itemModel, customModelData);
+        }
     }
 }

@@ -171,6 +171,7 @@ public class HologramItem {
      *     <li>Enchantments (Will add {@value ENCHANTED_INDICATOR})</li>
      *     <li>Skull Owner/Texture (Texture is prioritized)</li>
      *     <li>CustomModelData (custom_model_data on newer MC versions).</li>
+     *     <li>item_model</li>
      * </ul>
      * 
      * @param itemStack The Item to convert into a HologramItem.
@@ -203,10 +204,8 @@ public class HologramItem {
             }
         }
 
-        float customModelData = NbtApiHook.extractCustomModelData(itemStack);
-        if (customModelData > 0.0) {
-            stringBuilder.append("{CustomModelData:").append(customModelData).append('}');
-        }
+        NbtApiHook.ItemNbtData nbtRead = NbtApiHook.readData(itemStack);
+        stringBuilder.append(nbtRead.getJson());
         return new HologramItem(stringBuilder.toString());
     }
 
