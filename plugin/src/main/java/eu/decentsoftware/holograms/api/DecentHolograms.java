@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.listeners.PlayerListener;
@@ -35,7 +34,7 @@ public final class DecentHolograms {
     private NmsAdapter nmsAdapter;
     private NmsPacketListenerService nmsPacketListenerService;
     private HologramManager hologramManager;
-    private AnimationManager animationManager;
+
     private Ticker ticker;
 
     DecentHolograms(@NonNull JavaPlugin plugin) {
@@ -49,7 +48,7 @@ public final class DecentHolograms {
 
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager();
-        this.animationManager = new AnimationManager();
+
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
 
@@ -63,7 +62,7 @@ public final class DecentHolograms {
     void disable() {
         this.nmsPacketListenerService.shutdown();
         this.hologramManager.destroy();
-        this.animationManager.destroy();
+
         this.ticker.destroy();
 
         for (Hologram hologram : Hologram.getCachedHolograms()) {

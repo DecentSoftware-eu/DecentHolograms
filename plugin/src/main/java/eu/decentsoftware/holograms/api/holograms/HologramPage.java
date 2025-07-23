@@ -3,9 +3,6 @@ package eu.decentsoftware.holograms.api.holograms;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
-import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
-import eu.decentsoftware.holograms.api.holograms.objects.FlagHolder;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
 import lombok.Getter;
 import lombok.NonNull;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class HologramPage extends FlagHolder {
+public class HologramPage {
 
     /*
      *	Fields
@@ -104,11 +101,10 @@ public class HologramPage extends FlagHolder {
      * Add a new line to the bottom of this hologram page.
      *
      * @param line New line.
-     * @return Boolean whether the operation was successful.
      * @see DHAPI#addHologramLine(HologramPage, String)
      */
-    public boolean addLine(@NonNull HologramLine line) {
-        return insertLine(size(), line);
+    public void addLine(@NonNull HologramLine line) {
+        insertLine(size(), line);
     }
 
     /**
@@ -126,32 +122,6 @@ public class HologramPage extends FlagHolder {
         lines.add(index, line);
         parent.getViewerPlayers(this.index).forEach(line::show);
         realignLines();
-        return true;
-    }
-
-    /**
-     * Set new content of a line in this hologram page.
-     *
-     * @param index   Index of the line.
-     * @param content Line's new content.
-     * @return Boolean whether the operation was successful.
-     * @see DHAPI#setHologramLine(HologramPage, int, String)
-     */
-    public boolean setLine(int index, @NonNull String content) {
-        HologramLine line = getLine(index);
-        if (line == null) {
-            return false;
-        }
-
-        HologramLineType previousType = line.getType();
-
-        line.setContent(content);
-
-        if (line.getType() != previousType) {
-            line.hide();
-            line.show();
-            realignLines();
-        }
         return true;
     }
 
@@ -212,14 +182,6 @@ public class HologramPage extends FlagHolder {
         return ImmutableList.copyOf(lines);
     }
 
-    /*
-     *  Action Methods
-     */
-
-    public boolean isClickable() {
-        return !parent.hasFlag(EnumFlag.DISABLE_ACTIONS) && hasActions();
-    }
-
     /**
      * @deprecated For removal.
      */
@@ -251,16 +213,6 @@ public class HologramPage extends FlagHolder {
                 }
             }
         }
-        return false;
-    }
-
-    /**
-     * Check if this page has any actions.
-     *
-     * @return True if this page has any actions, false otherwise.
-     */
-    public boolean hasActions() {
-
         return false;
     }
 

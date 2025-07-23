@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,56 +136,14 @@ public class HologramLine extends HologramObject {
      */
     public void parseContent() {
         HologramLineType prevType = type;
-        String contentU = content.toUpperCase(Locale.ROOT);
-        if (contentU.startsWith("#ICON:")) {
-            type = HologramLineType.ICON;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_ICON;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createIconRenderer();
-            }
-            item = new HologramItem(content.substring("#ICON:".length()));
-
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#SMALLHEAD:")) {
-            type = HologramLineType.SMALLHEAD;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createSmallHeadRenderer();
-            }
-            item = new HologramItem(content.substring("#SMALLHEAD:".length()));
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#HEAD:")) {
-            type = HologramLineType.HEAD;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_HEAD;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createHeadRenderer();
-            }
-            item = new HologramItem(content.substring("#HEAD:".length()));
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#ENTITY:")) {
-            type = HologramLineType.ENTITY;
-            String entityContent = content.substring("#ENTITY:".length()).trim();
-            entity = new HologramEntity(entityContent);
-            if (prevType != type) {
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
-            }
-            NmsHologramPartData<EntityType> data = new NmsHologramPartData<>(getPositionSupplier(), () -> entity.getType());
-            height = ((NmsEntityHologramRenderer) renderer).getHeight(data);
-            setOffsetY(-(height));
-        } else {
-            type = HologramLineType.TEXT;
+        type = HologramLineType.TEXT;
             if (prevType != type) {
                 height = Settings.DEFAULT_HEIGHT_TEXT;
                 previousRenderer = renderer;
                 renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createTextRenderer();
-            }
+
             text = parseCustomReplacements();
 
-            containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
             containsPlaceholders = PAPI.containsPlaceholders(text);
         }
     }
@@ -218,21 +175,9 @@ public class HologramLine extends HologramObject {
         if (update || string == null) {
             string = text == null ? "" : text;
             // Parse placeholders.
-            if (!hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
-                string = parsePlaceholders(string, player, containsPlaceholders);
-            }
+            string = parsePlaceholders(string, player, containsPlaceholders);
             // Update the cached text.
             playerTextMap.put(uuid, string);
-        }
-
-        // Parse animations
-        if (containsAnimations && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            string = DECENT_HOLOGRAMS.getAnimationManager().parseTextAnimations(string);
-            // Parse placeholders.
-            if (Settings.ALLOW_PLACEHOLDERS_INSIDE_ANIMATIONS && !hasFlag(EnumFlag.DISABLE_PLACEHOLDERS)) {
-                // This has been done to allow the use of placeholders in animation frames.
-                string = parsePlaceholders(string, player, true);
-            }
         }
 
         return Common.colorize(string);
@@ -316,7 +261,7 @@ public class HologramLine extends HologramObject {
         List<Player> playerList = getPlayers(true, players);
         for (Player player : playerList) {
             if (renderer instanceof NmsTextHologramRenderer) {
-                updateTextIfNecessary(player, true);
+                updateTextIfNecessary(player);
             } else if (containsPlaceholders || force) {
                 renderer.updateContent(player, getPartData(player, true, true));
             }
@@ -345,23 +290,10 @@ public class HologramLine extends HologramObject {
         }
     }
 
-    public void updateAnimations(Player... players) {
-        if (isDisabled() || type != HologramLineType.TEXT || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            return;
-        }
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(true, players);
-        for (Player player : playerList) {
-            if (renderer instanceof NmsTextHologramRenderer) {
-                updateTextIfNecessary(player, false);
-            }
-        }
-    }
-
-    private void updateTextIfNecessary(Player player, boolean updatePlaceholders) {
+    private void updateTextIfNecessary(Player player) {
         UUID uuid = player.getUniqueId();
         String lastText = lastTextMap.get(uuid);
-        String updatedText = getText(player, updatePlaceholders);
+        String updatedText = getText(player, true);
         if (!updatedText.equals(lastText)) {
             lastTextMap.put(uuid, updatedText);
 
@@ -444,10 +376,6 @@ public class HologramLine extends HologramObject {
 
     public double getOffsetZ() {
         return offsetZ.get();
-    }
-
-    public void setOffsetY(double offsetY) {
-        this.offsetY.set(offsetY);
     }
 
     /*
