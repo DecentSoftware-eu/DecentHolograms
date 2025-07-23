@@ -12,11 +12,8 @@ import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsEntityHologramRenderer;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsHeadHologramRenderer;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRenderer;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsIconHologramRenderer;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsSmallHeadHologramRenderer;
+
 import eu.decentsoftware.holograms.nms.api.renderer.NmsTextHologramRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import lombok.Getter;
@@ -24,7 +21,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -268,12 +264,6 @@ public class HologramLine extends HologramObject {
         }
     }
 
-    private EntityType getEntityType(Player player) {
-        String finalContent = PAPI.setPlaceholders(player, getEntity().getContent());
-        HologramEntity hologramEntity = new HologramEntity(finalContent);
-        return hologramEntity.getType();
-    }
-
     /**
      * Update the location of this line for given players.
      *
@@ -305,16 +295,7 @@ public class HologramLine extends HologramObject {
     @SuppressWarnings("unchecked")
     private <T extends NmsHologramPartData<?>> T getPartData(Player player, boolean updateText, boolean cacheText) {
         Supplier<DecentPosition> positionSupplier = getPositionSupplier();
-        if (renderer instanceof NmsTextHologramRenderer) {
-            return (T) getTextPartData(player, updateText, cacheText, positionSupplier);
-        } else if (renderer instanceof NmsSmallHeadHologramRenderer
-                || renderer instanceof NmsHeadHologramRenderer
-                || renderer instanceof NmsIconHologramRenderer) {
-            return (T) new NmsHologramPartData<>(positionSupplier, () -> HologramItem.parseItemStack(item.getContent(), player));
-        } else if (renderer instanceof NmsEntityHologramRenderer) {
-            return (T) new NmsHologramPartData<>(positionSupplier, () -> getEntityType(player));
-        }
-        throw new IllegalStateException("Unsupported renderer type: " + renderer.getClass().getName());
+        return (T) getTextPartData(player, updateText, cacheText, positionSupplier);
     }
 
     private Supplier<DecentPosition> getPositionSupplier() {

@@ -11,7 +11,7 @@ import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.ITicked;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsClickableHologramRenderer;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -127,7 +127,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     protected boolean downOrigin = Settings.DEFAULT_DOWN_ORIGIN;
     protected boolean alwaysFacePlayer = false;
     private final AtomicInteger tickCounter;
-    private final List<NmsClickableHologramRenderer> clickableHologramRenderers = new ArrayList<>();
+
 
     /*
      *	Constructors
@@ -477,7 +477,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     private void hidePageFrom(@NonNull Player player, @NonNull HologramPage page) {
         page.getLines().forEach(line -> line.hide(player));
-        hideClickableEntities(player);
     }
 
     public void hideAll() {
@@ -486,16 +485,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 getViewerPlayers().forEach(this::hide);
             }
         }
-    }
-
-    public void hideClickableEntities(@NonNull Player player) {
-        HologramPage page = getPage(player);
-        if (page == null) {
-            return;
-        }
-
-        // De-spawn clickable entities
-        page.getClickableEntityRenderers().forEach(renderer -> renderer.hide(player));
     }
 
 

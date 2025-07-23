@@ -1,8 +1,8 @@
 package eu.decentsoftware.holograms.nms.v1_19_R3;
 
-import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
+
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
-import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import eu.decentsoftware.holograms.shared.reflect.ReflectField;
 import io.netty.channel.ChannelPipeline;
@@ -17,7 +17,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unused") // Instantiated via reflection
+
+import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 public class NmsAdapterImpl implements NmsAdapter {
 
     private static final String PACKET_HANDLER_NAME = "decent_holograms_packet_handler";
@@ -35,15 +36,15 @@ public class NmsAdapterImpl implements NmsAdapter {
     }
 
     @Override
-    public void registerPacketListener(Player player, NmsPacketListener listener) {
+    public void registerPacketListener(Player player) {
         Objects.requireNonNull(player, "player cannot be null");
-        Objects.requireNonNull(listener, "listener cannot be null");
+
 
         executeOnPipelineInEventLoop(player, pipeline -> {
             if (pipeline.get(PACKET_HANDLER_NAME) != null) {
                 pipeline.remove(PACKET_HANDLER_NAME);
             }
-            pipeline.addBefore("packet_handler", PACKET_HANDLER_NAME, new InboundPacketHandler(player, listener));
+            pipeline.addBefore("packet_handler", PACKET_HANDLER_NAME, new InboundPacketHandler(player));
         });
     }
 

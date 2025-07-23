@@ -24,9 +24,8 @@ public interface NmsAdapter {
      * <p>A player can only have a single listener registered.</p>
      *
      * @param player   The player to register the listener for.
-     * @param listener The listener to register.
      */
-    void registerPacketListener(Player player, NmsPacketListener listener);
+    void registerPacketListener(Player player);
 
     /**
      * Unregister a packet listener for a player.

@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
-import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -16,12 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class NmsPacketListenerService {
 
     private final NmsAdapter nmsAdapter;
-    private final NmsPacketListener packetListener;
     private final NmsPlayerListener playerListener;
 
-    public NmsPacketListenerService(JavaPlugin plugin, NmsAdapter nmsAdapter, NmsPacketListener packetListener) {
+    public NmsPacketListenerService(JavaPlugin plugin, NmsAdapter nmsAdapter) {
         this.nmsAdapter = nmsAdapter;
-        this.packetListener = packetListener;
         this.playerListener = new NmsPlayerListener(this);
 
         Bukkit.getPluginManager().registerEvents(playerListener, plugin);
@@ -43,7 +41,7 @@ public class NmsPacketListenerService {
      * @param player The player.
      */
     void registerListener(Player player) {
-        nmsAdapter.registerPacketListener(player, packetListener);
+        nmsAdapter.registerPacketListener(player);
     }
 
     /**

@@ -18,41 +18,5 @@ public interface NmsHologramRendererFactory {
      */
     NmsTextHologramRenderer createTextRenderer();
 
-    /**
-     * Creates a renderer for displaying icon holograms.
-     *
-     * @return A new instance of {@link NmsIconHologramRenderer}.
-     */
-    NmsIconHologramRenderer createIconRenderer();
-
-    /**
-     * Creates a renderer for displaying head holograms.
-     *
-     * @return A new instance of {@link NmsHeadHologramRenderer}.
-     */
-    NmsHeadHologramRenderer createHeadRenderer();
-
-    /**
-     * Creates a renderer for displaying small head holograms.
-     *
-     * @return A new instance of {@link NmsSmallHeadHologramRenderer}.
-     */
-    NmsSmallHeadHologramRenderer createSmallHeadRenderer();
-
-    /**
-     * Creates a renderer for displaying entity holograms.
-     *
-     * @return A new instance of {@link NmsEntityHologramRenderer}.
-     */
-    NmsEntityHologramRenderer createEntityRenderer();
-
-    /**
-     * Creates a renderer for displaying clickable holograms.
-     *
-     * <p>These holograms support player interaction, enabling actions when clicked.</p>
-     *
-     * @return A new instance of {@link NmsClickableHologramRenderer}.
-     */
-    NmsClickableHologramRenderer createClickableRenderer();
 
 }
