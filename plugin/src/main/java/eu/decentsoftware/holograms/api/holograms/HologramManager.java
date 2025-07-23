@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.holograms;
 
-import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
@@ -88,48 +87,6 @@ public class HologramManager extends Ticked {
         }
     }
 
-    /**
-     * Attempts to process a click on an entity. If the entity is part of a hologram,
-     * that is clickable and enabled, the click will be processed.
-     *
-     * @param player    The player who clicked.
-     * @param entityId  Entity ID of the clicked entity.
-     * @return True if the click was processed, false otherwise.
-     */
-    public boolean onClick(final @NonNull Player player, final int entityId) {
-        final UUID uid = player.getUniqueId();
-
-        // Check if the player is on cooldown.
-        if (clickCooldowns.containsKey(uid) && System.currentTimeMillis() - clickCooldowns.get(uid) < Settings.CLICK_COOLDOWN * 50L) {
-            return false;
-        }
-
-        for (Hologram hologram : Hologram.getCachedHolograms()) {
-            if (!hologram.isVisible(player)) {
-                continue;
-            }
-
-            if (!hologram.getLocation().getWorld().equals(player.getLocation().getWorld())) {
-                continue;
-            }
-
-            // Limit the distance to 5 blocks; this is to prevent
-            // any possible exploits with the entity ID.
-            double dx = hologram.getLocation().getX() - player.getLocation().getX();
-            double dz = hologram.getLocation().getZ() - player.getLocation().getZ();
-            if (dx > 5 || dx < -5 || dz > 5 || dz < -5) {
-                continue;
-            }
-
-            if (hologram.onClick(player, entityId)) {
-                clickCooldowns.put(uid, System.currentTimeMillis());
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void onQuit(@NonNull Player player) {
         Hologram.getCachedHolograms().forEach(hologram -> hologram.onQuit(player));
         clickCooldowns.remove(player.getUniqueId());
@@ -195,12 +152,8 @@ public class HologramManager extends Ticked {
      * @return The hologram or null if it wasn't found.
      */
     public Hologram removeHologram(@NonNull String name) {
-        Hologram hologram = hologramMap.remove(name);
-        if (hologram != null) {
-            EventFactory.fireHologramUnregisterEvent(hologram);
-        }
 
-        return hologram;
+        return hologramMap.remove(name);
     }
 
     /**

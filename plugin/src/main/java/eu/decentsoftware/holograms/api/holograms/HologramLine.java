@@ -9,8 +9,6 @@ import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
-import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRenderer;
 
@@ -57,8 +55,6 @@ public class HologramLine extends HologramObject {
     private double height;
     private String content;
     private String text;
-    private HologramItem item;
-    private HologramEntity entity;
     private NmsHologramRenderer<?> previousRenderer;
     private NmsHologramRenderer<?> renderer;
 

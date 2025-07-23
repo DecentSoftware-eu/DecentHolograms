@@ -238,8 +238,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             this.showAll();
             this.register();
         }
-
-        EventFactory.fireHologramEnableEvent(this);
     }
 
     /**
@@ -253,8 +251,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
             this.hideAll();
             super.disable(cause);
         }
-
-        EventFactory.fireHologramDisableEvent(this);
     }
 
     @Override
@@ -319,18 +315,6 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 lock.unlock();
             }
         });
-    }
-
-    /**
-     * Handle a click on this hologram.
-     *
-     * @param player    The player that clicked the hologram.
-     * @param entityId  The id of the clicked entity.
-     * @return True if the click was handled, false otherwise.
-     */
-    public boolean onClick(@NonNull Player player, int entityId) {
-        HologramPage page = getPage(player);
-        return page != null && page.hasEntity(entityId);
     }
 
     /**
