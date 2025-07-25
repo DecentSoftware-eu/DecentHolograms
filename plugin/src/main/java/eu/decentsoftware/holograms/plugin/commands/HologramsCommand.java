@@ -294,19 +294,8 @@ public class HologramsCommand extends DecentCommand {
                 Common.tell(sender, " All general commands.");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand();
-                List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-                for (CommandBase subCommand : subCommands) {
-                    if (subCommand.getClass().toString().contains("HologramSubCommand")) continue;
-                    Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-                }
-                sender.sendMessage("");
-                Common.tell(sender, " &7Aliases: &b%s%s",
-                        command.getName(),
-                        command.getAliases().size() > 1
-                                ? ", " + String.join(", ", command.getAliases())
-                                : ""
-                );
-                sender.sendMessage("");
+                printHelpSubCommandsAndAliases(sender, command,
+                        subCommand -> !subCommand.getClass().toString().contains("HologramSubCommand"));
                 return true;
             };
         }
