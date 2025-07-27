@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
-import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
@@ -391,18 +390,7 @@ public class LineSubCommand extends DecentCommand {
 				Common.tell(sender, " 所有用于编辑悬浮字行的命令。");
 				sender.sendMessage("");
 				CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("lines");
-				List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-				for (CommandBase subCommand : subCommands) {
-					Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-				}
-				sender.sendMessage("");
-				Common.tell(sender, " &7别名: &b%s%s",
-						command.getName(),
-						command.getAliases().size() > 1
-								? ", " + String.join(", ", command.getAliases())
-								: ""
-				);
-				sender.sendMessage("");
+				printHelpSubCommandsAndAliases(sender, command);
 				return true;
 			};
 		}
@@ -481,7 +469,7 @@ public class LineSubCommand extends DecentCommand {
 				int index = Validator.getInteger(args[2], Lang.LINE_DOES_NOT_EXIST.getValue());
 				HologramLine prevLine = Validator.getHologramLine(page, index);
 				String content = args.length > 3 ? sender instanceof Player ? Validator.getLineContent((Player) sender, args, 3) : Validator.getLineContent(args, 3) : Settings.DEFAULT_TEXT;
-				HologramLine line = new HologramLine(page, prevLine.getLocation(), content);
+				HologramLine line = new HologramLine(page, prevLine.getLocation().clone(), content);
 
 				if (page.insertLine(index - 1, line)) {
 					hologram.save();

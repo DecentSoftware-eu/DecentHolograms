@@ -1,15 +1,5 @@
 package eu.decentsoftware.holograms.api.commands;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.Lang;
-import eu.decentsoftware.holograms.api.utils.Common;
-import org.apache.commons.lang.Validate;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +8,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.utils.Common;
 
 public abstract class DecentCommand extends Command implements CommandBase {
 
@@ -29,7 +33,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		super(name);
 		this.info = getClass().getAnnotation(CommandInfo.class);
 		if (info == null) {
-			throw new RuntimeException(String.format("命令 %s 没有使用 @CommandInfo 注解。", name));
+			throw new DecentCommandException(String.format("命令 %s 没有使用 @CommandInfo 注解。", name));
 		}
 		this.setAliases(Arrays.asList(info.aliases()));
 	}
@@ -96,6 +100,28 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		return info.description();
 	}
 
+	protected void printHelpSubCommandsAndAliases(CommandSender sender, CommandBase command) {
+		printHelpSubCommandsAndAliases(sender, command, subCommand -> true);
+	}
+
+    protected void printHelpSubCommandsAndAliases(CommandSender sender, CommandBase command, Predicate<CommandBase> subCommandFilter) {
+        List<CommandBase> helpSubCommands = command.getSubCommands().stream()
+				.filter(subCommandFilter)
+				.collect(Collectors.toList());
+        for (CommandBase subCommand : helpSubCommands) {
+            Common.tell(sender, " &8• &b" + subCommand.getUsage() + " &8- &7" + subCommand.getDescription());
+        }
+        sender.sendMessage("");
+        Common.tell(sender, " &7Aliases: &b" + getAliasesFormatted(command));
+        sender.sendMessage("");
+    }
+
+	private String getAliasesFormatted(CommandBase command) {
+		return command.getName() + (command.getAliases().size() > 1
+				? ", " + String.join(", ", command.getAliases())
+				: "");
+	}
+
 	/**
 	 * Handle the Command.
 	 *
@@ -126,7 +152,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 
 		return this.getCommandHandler().handle(sender, args);
 	}
-	
+
 	/**
 	 * Handle Tab Complete of the Command.
 	 *
@@ -138,7 +164,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 	protected final List<String> handeTabComplete(CommandSender sender, String[] args) {
 		return handleTabComplete(sender, args);
 	}
-	
+
 	/**
 	 * Handle Tab Complete of the Command.
 	 *
@@ -157,9 +183,9 @@ public abstract class DecentCommand extends Command implements CommandBase {
 				subs.add(cmd.getName());
 				subs.addAll(Lists.newArrayList(cmd.getAliases()));
 			});
-			
+
 			List<String> matches = TabCompleteHandler.getPartialMatches(args[0], subs);
-			
+
 			if (!matches.isEmpty()) {
 				Collections.sort(matches);
 				return matches;

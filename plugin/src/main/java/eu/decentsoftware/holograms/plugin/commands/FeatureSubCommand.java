@@ -1,6 +1,9 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
@@ -9,8 +12,6 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.utils.Common;
-
-import java.util.List;
 
 @CommandInfo(
 		permissions = "dh.command.features",
@@ -159,18 +160,7 @@ public class FeatureSubCommand extends DecentCommand {
                 Common.tell(sender, " 所有用于管理功能的命令。");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("features");
-                List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-                for (CommandBase subCommand : subCommands) {
-                    Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-                }
-                sender.sendMessage("");
-                Common.tell(sender, " &7别名: &b%s%s",
-                        command.getName(),
-                        command.getAliases().size() > 1
-                                ? ", " + String.join(", ", command.getAliases())
-                                : ""
-                );
-                sender.sendMessage("");
+                printHelpSubCommandsAndAliases(sender, command);
                 return true;
             };
         }

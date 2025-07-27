@@ -1,6 +1,17 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
 import com.google.common.collect.Lists;
+
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.Action;
@@ -18,15 +29,6 @@ import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @CommandInfo(
         permissions = "dh.command.pages",
@@ -93,18 +95,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " 所有页面命令。");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
-                List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-                for (CommandBase subCommand : subCommands) {
-                    Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-                }
-                sender.sendMessage("");
-                Common.tell(sender, " &7别名: &b%s%s",
-                        command.getName(),
-                        command.getAliases().size() > 1
-                                ? ", " + String.join(", ", command.getAliases())
-                                : ""
-                );
-                sender.sendMessage("");
+                printHelpSubCommandsAndAliases(sender, command);
                 return true;
             };
         }

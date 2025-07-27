@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils;
 
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
+import eu.decentsoftware.holograms.semver.SemanticVersion;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -104,36 +105,20 @@ public class Common {
     }
 
     /**
-     * Check whether the given version is higher than the current version.
+     * Check whether the given new version is higher than the current version.
      *
      * @param currentVersion The current version.
      * @param newVersion     The new version.
-     * @return Boolean.
+     * @return True if the new version is higher than the current version, false otherwise.
      */
     public static boolean isVersionHigher(String currentVersion, String newVersion) {
-        if (isVersionInvalid(currentVersion) || isVersionInvalid(newVersion)) {
+        try {
+            SemanticVersion currentVersionSemantic = SemanticVersion.fromString(currentVersion);
+            SemanticVersion newVersionSemantic = SemanticVersion.fromString(newVersion);
+            return currentVersionSemantic.compareTo(newVersionSemantic) < 0;
+        } catch (IllegalArgumentException e) {
+            Log.warn("Failed to compare versions '%s' and '%s': %s", currentVersion, newVersion, e.getMessage());
             return false;
         }
-
-        String[] currentVersionParts = currentVersion.split("\\.");
-        String[] newVersionParts = newVersion.split("\\.");
-
-        for (int i = 0; i < 3; i++) {
-            int currentVersionPart = Integer.parseInt(currentVersionParts[i]);
-            int newVersionPart = Integer.parseInt(newVersionParts[i]);
-
-            if (newVersionPart > currentVersionPart) {
-                return true;
-            } else if (newVersionPart < currentVersionPart) {
-                return false;
-            }
-        }
-
-        return false;
     }
-
-    private static boolean isVersionInvalid(String version2) {
-        return version2 == null || !version2.matches("\\d+\\.\\d+\\.\\d+(\\.\\d+)?");
-    }
-
 }
