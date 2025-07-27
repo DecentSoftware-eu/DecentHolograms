@@ -507,9 +507,18 @@ public class NMS_1_17 extends NMS {
         Validate.notNull(location);
         Validate.notNull(itemStack);
 
+        EntityType dropType;
+
+        try {
+            dropType = EntityType.valueOf("DROPPED_ITEM"); 
+        } catch (IllegalArgumentException e) {
+            // 1.21+ 
+            dropType = EntityType.valueOf("ITEM");
+        }
+	    
         List<Object> dataWatcherItems = new ArrayList<>();
         dataWatcherItems.add(DATA_WATCHER_ITEM_CONSTRUCTOR.newInstance(DWO_ITEM, CRAFT_ITEM_NMS_COPY_METHOD.invokeStatic(itemStack)));
-        showFakeEntity(player, location, getEntityTypeId(EntityType.DROPPED_ITEM), entityId);
+        showFakeEntity(player, location, getEntityTypeId(dropType), entityId);
         sendEntityMetadata(player, entityId, dataWatcherItems);
         teleportFakeEntity(player, location, entityId);
     }
