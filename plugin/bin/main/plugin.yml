@@ -1,0 +1,308 @@
+main: "eu.decentsoftware.holograms.plugin.DecentHologramsPlugin"
+api-version: 1.13
+softdepend:
+  - "PlaceholderAPI"
+  - "HeadDatabase"
+name: "DecentHolograms"
+description: ${description}
+version: ${version}
+author: d0by
+
+#commands:
+#  decentholograms:
+#    aliases: [dh, holograms, hologram, holo]
+#    usage: "/decentholograms <args>"
+#    description: "DecentHolograms插件的主命令。"
+
+permissions:
+  #
+  # Main permissions
+  dh.admin:
+    description: "允许玩家使用DecentHolograms所有功能。"
+    children: 
+      dh.command: true
+  dh.default:
+    default: true
+    description: "允许玩家在使用'/decentholograms'后查看版本信息。"
+    children:
+      dh.command.decentholograms: true
+      dh.command.version: true
+  #
+  # Command permissions
+  dh.command:
+    description: "允许玩家使用DecentHolograms的所有命令"
+    default: op
+    children:
+      dh.command.decentholograms: true
+      dh.command.version: true
+      dh.command.reload: true
+      dh.command.list: true
+      dh.command.help: true
+      dh.command.convert: true
+      dh.command.features: true
+      dh.command.holograms: true
+      dh.command.lines: true
+      dh.command.pages: true
+  #
+  # Main Command permissions
+  dh.command.decentholograms:
+    description: "允许玩家使用命令'/decentholograms'"
+  dh.command.version:
+    description: "允许玩家使用命令'/dh version'"
+    default: op
+  dh.command.reload:
+    description: "允许玩家使用命令'/dh reload'"
+    default: op
+  dh.command.list:
+    description: "允许玩家使用命令'/dh list [page]'"
+    default: op
+  dh.command.help:
+    description: "允许玩家使用命令'/dh help'"
+    default: op
+  dh.command.convert:
+    description: "允许玩家使用命令'/dh convert <plugin>'"
+    default: op
+  #
+  # Feature Sub-command permissions
+  dh.command.features:
+    description: "允许玩家使用命令'/dh features'及其所有子命令"
+    default: op
+    children: 
+      dh.command.features.disable: true
+      dh.command.features.enable: true
+      dh.command.features.help: true
+      dh.command.features.info: true
+      dh.command.features.list: true
+      dh.command.features.reload: true
+  dh.command.features.disable:
+    description: "允许玩家使用命令'/dh features disable <feature>'"
+    default: op
+  dh.command.features.enable:
+    description: "允许玩家使用命令'/dh features enable <feature>'"
+    default: op
+  dh.command.features.help:
+    description: "允许玩家使用命令'/dh features help'"
+    default: op
+  dh.command.features.info:
+    description: "允许玩家使用命令'/dh features info <feature>'"
+    default: op
+  dh.command.features.list:
+    description: "允许玩家使用命令'/dh features list'"
+    default: op
+  dh.command.features.reload:
+    description: "允许玩家使用命令'/dh features reload'"
+    default: op
+  #
+  # Hologram Sub-command permissions
+  dh.command.holograms:
+    description: "允许玩家使用命令'/dh holograms'及其所有子命令"
+    default: op
+    children: 
+      dh.command.holograms.update: true
+      dh.command.holograms.align: true
+      dh.command.holograms.center: true
+      dh.command.holograms.clone: true
+      dh.command.holograms.create: true
+      dh.command.holograms.delete: true
+      dh.command.holograms.disable: true
+      dh.command.holograms.setdisplayrange: true
+      dh.command.holograms.downorigin: true
+      dh.command.holograms.enable: true
+      dh.command.holograms.setfacing: true
+      dh.command.holograms.addflag: true
+      dh.command.holograms.removeflag: true
+      dh.command.holograms.help: true
+      dh.command.holograms.info: true
+      dh.command.holograms.lines: true
+      dh.command.holograms.movehere: true
+      dh.command.holograms.move: true
+      dh.command.holograms.near: true
+      dh.command.holograms.setpermission: true
+      dh.command.holograms.teleport: true
+      dh.command.holograms.setupdateinterval: true
+      dh.command.holograms.setupdaterange: true
+      dh.command.holograms.rename: true
+  dh.command.holograms.update:
+    description: "允许玩家使用命令'/dh holograms update <hologram>'"
+    default: op
+  dh.command.holograms.align:
+    description: "允许玩家使用命令'/dh holograms align <hologram> <X|Y|Z|XZ|FACE> <otherHologram>'"
+    default: op
+  dh.command.holograms.center:
+    description: "允许玩家使用命令'/dh holograms center <hologram>'"
+    default: op
+  dh.command.holograms.clone:
+    description: "允许玩家使用命令'/dh holograms clone <hologram> <n> [temp] [-l:<world>:<x>:<y>:<z>]'"
+    default: op
+  dh.command.holograms.create:
+    description: "允许玩家使用命令'/dh holograms create <n> [-l:<world>:<x>:<y>:<z>] [content]'"
+    default: op
+  dh.command.holograms.delete:
+    description: "允许玩家使用命令'/dh holograms delete <hologram>'"
+    default: op
+  dh.command.holograms.disable:
+    description: "允许玩家使用命令'/dh holograms disable <hologram>'"
+    default: op
+  dh.command.holograms.setdisplayrange:
+    description: "允许玩家使用命令'/dh holograms setdisplayrange <hologram> <range>'"
+    default: op
+  dh.command.holograms.downorigin:
+    description: "允许玩家使用命令'/dh holograms downorigin <hologram> <true|false>'"
+    default: op
+  dh.command.holograms.enable:
+    description: "允许玩家使用命令'/dh holograms enable <hologram>'"
+    default: op
+  dh.command.holograms.setfacing:
+    description: "允许玩家使用命令'/dh holograms setfacing <hologram> <facing>'"
+    default: op
+  dh.command.holograms.addflag:
+    description: "允许玩家使用命令'/dh holograms addflag <hologram> <flag>'"
+    default: op
+  dh.command.holograms.removeflag:
+    description: "允许玩家使用命令'/dh holograms removeflag <hologram> <flag>'"
+    default: op
+  dh.command.holograms.help:
+    description: "允许玩家使用命令'/dh holograms help'"
+    default: op
+  dh.command.holograms.info:
+    description: "允许玩家使用命令'/dh holograms info <hologram>'"
+    default: op
+  dh.command.holograms.lines:
+    description: "允许玩家使用命令'/dh holograms lines <hologram> <page> [listPage]'"
+    default: op
+  dh.command.holograms.movehere:
+    description: "允许玩家使用命令'/dh holograms movehere <hologram>'"
+    default: op
+  dh.command.holograms.move:
+    description: "允许玩家使用命令'/dh holograms move <hologram> <x> <y> <z>'"
+    default: op
+  dh.command.holograms.near:
+    description: "允许玩家使用命令'/dh holograms near <range>'"
+    default: op
+  dh.command.holograms.setpermission:
+    description: "允许玩家使用命令'/dh holograms setpermission <hologram> [permission]'"
+    default: op
+  dh.command.holograms.teleport:
+    description: "允许玩家使用命令'/dh holograms teleport <hologram>'"
+    default: op
+  dh.command.holograms.setupdateinterval:
+    description: "允许玩家使用命令'/dh holograms setupdateinterval <hologram> <interval>'"
+    default: op
+  dh.command.holograms.setupdaterange:
+    description: "允许玩家使用命令'/dh holograms setupdaterange <hologram> <range>'"
+    default: op
+  dh.command.holograms.rename:
+    description: "允许玩家使用命令'/dh holograms rename <hologram> <new_name>'"
+    default: op
+  #
+  # Line Sub-command permissions
+  dh.command.lines:
+    description: "允许玩家使用命令'/dh lines'及其所有子命令"
+    default: op
+    children: 
+      dh.command.lines.add: true
+      dh.command.lines.align: true
+      dh.command.lines.edit: true
+      dh.command.lines.addflag: true
+      dh.command.lines.removeflag: true
+      dh.command.lines.height: true
+      dh.command.lines.help: true
+      dh.command.lines.info: true
+      dh.command.lines.insert: true
+      dh.command.lines.offsetx: true
+      dh.command.lines.offsetz: true
+      dh.command.lines.setpermission: true
+      dh.command.lines.remove: true
+      dh.command.lines.set: true
+      dh.command.lines.swap: true
+      dh.command.lines.setfacing: true
+  dh.command.lines.add:
+    description: "允许玩家使用命令'/dh lines add <hologram> <page> [content]'"
+    default: op
+  dh.command.lines.align:
+    description: "允许玩家使用命令'/dh lines align <hologram> <page> <line1> <line2> <X|Z|XZ|FACE>'"
+    default: op
+  dh.command.lines.edit:
+    description: "允许玩家使用命令'/dh lines edit <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.addflag:
+    description: "允许玩家使用命令'/dh lines addflag <hologram> <page> <line> <flag>'"
+    default: op
+  dh.command.lines.removeflag:
+    description: "允许玩家使用命令'/dh lines removeflag <hologram> <page> <line> <flag>'"
+    default: op
+  dh.command.lines.height:
+    description: "允许玩家使用命令'/dh lines height <hologram> <page> <line> <height>'"
+    default: op
+  dh.command.lines.help:
+    description: "允许玩家使用命令'/dh lines help'"
+    default: op
+  dh.command.lines.info:
+    description: "允许玩家使用命令'/dh lines info <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.insert:
+    description: "允许玩家使用命令'/dh lines insert <hologram> <page> <line> [content]'"
+    default: op
+  dh.command.lines.offsetx:
+    description: "允许玩家使用命令'/dh lines offsetx <hologram> <page> <line> <offset>'"
+    default: op
+  dh.command.lines.offsetz:
+    description: "允许玩家使用命令'/dh lines offsetz <hologram> <page> <line> <offset>'"
+    default: op
+  dh.command.lines.setpermission:
+    description: "允许玩家使用命令'/dh lines setpermission <hologram> <page> <line> [permission]'"
+    default: op
+  dh.command.lines.remove:
+    description: "允许玩家使用命令'/dh lines remove <hologram> <page> <line>'"
+    default: op
+  dh.command.lines.set:
+    description: "允许玩家使用命令'/dh lines set <hologram> <page> <line> <content>'"
+    default: op
+  dh.command.lines.swap:
+    description: "允许玩家使用命令'/dh lines swap <hologram> <page> <line1> <line2>'"
+    default: op
+  dh.command.lines.setfacing:
+    description: "允许玩家使用命令'/dh lines setfacing <hologram> <page> <line> <facing>'"
+    default: op
+  #
+  # Page Sub-command permissions
+  dh.command.pages:
+    description: "允许玩家使用命令'/dh pages'及其所有子命令"
+    default: op
+    children: 
+      dh.command.pages.add: true
+      dh.command.pages.addflag: true
+      dh.command.pages.removeflag: true
+      dh.command.pages.help: true
+      dh.command.pages.info: true
+      dh.command.pages.insert: true
+      dh.command.pages.remove: true
+      dh.command.pages.swap: true
+      dh.command.pages.setpermission: true
+  dh.command.pages.add:
+    description: "允许玩家使用命令'/dh pages add <hologram> [content...]'"
+    default: op
+  dh.command.pages.addflag:
+    description: "允许玩家使用命令'/dh pages addflag <hologram> <page> <flag>'"
+    default: op
+  dh.command.pages.removeflag:
+    description: "允许玩家使用命令'/dh pages removeflag <hologram> <page> <flag>'"
+    default: op
+  dh.command.pages.help:
+    description: "允许玩家使用命令'/dh pages help'"
+    default: op
+  dh.command.pages.info:
+    description: "允许玩家使用命令'/dh pages info <hologram> <page>'"
+    default: op
+  dh.command.pages.insert:
+    description: "允许玩家使用命令'/dh pages insert <hologram> <page> [content...]'"
+    default: op
+  dh.command.pages.remove:
+    description: "允许玩家使用命令'/dh pages remove <hologram> <page>'"
+    default: op
+  dh.command.pages.swap:
+    description: "允许玩家使用命令'/dh pages swap <hologram> <page1> <page2>'"
+    default: op
+  dh.command.pages.setpermission:
+    description: "允许玩家使用命令'/dh pages setpermission <hologram> <page> [permission]'"
+    default: op

@@ -112,7 +112,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
             Common.tell(sender, " &8• &b" + subCommand.getUsage() + " &8- &7" + subCommand.getDescription());
         }
         sender.sendMessage("");
-        Common.tell(sender, " &7Aliases: &b" + getAliasesFormatted(command));
+        Common.tell(sender, " &7别名: &b" + getAliasesFormatted(command));
         sender.sendMessage("");
     }
 

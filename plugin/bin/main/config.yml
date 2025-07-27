@@ -1,0 +1,155 @@
+# # # # # # # # # # # # # # # # #
+#
+# 欢迎使用DecentHolograms配置文件。
+#
+# - 我们建议您访问我们的wiki，获取
+# 所有功能和配置选项的详细说明，
+# 因为本插件有大量功能和选项。
+#
+# - 您也可以加入我们的Discord服务器
+# 获取更多信息、支持和更新。我们的
+# Discord服务器是报告bug或提出
+# 改进建议的主要渠道。
+#
+# - 网站: www.decentholograms.eu
+# - Wiki: wiki.decentholograms.eu
+# - Discord: discord.decentsoftware.eu
+# - GitHub: github.decentsoftware.eu
+#
+# # # # # # # # # #
+
+defaults:
+  # 默认文本行内容
+  text: Blank Line
+  # 默认悬浮字显示范围（方块）
+  display-range: 48
+  # 默认悬浮字更新范围（方块）
+  update-range: 48
+  # 默认悬浮字更新间隔（刻）
+  update-interval: 20
+  # 缓存模式处理结果的最大数量
+  # 如果不了解这意味着什么，请勿更改
+  # 增加这个数字会导致更高的内存使用
+  # 范围: 5 - 10000
+  # 默认值: 500
+  lru-cache-size: 500
+  # 不同类型悬浮字行的默认高度
+  height:
+    text: 0.3
+    icon: 0.6
+    head: 0.75
+    smallhead: 0.6
+  # 向下原点的默认值
+  down-origin: false
+
+# 是否在插件启动时检查更新？[true/false]
+update-checker: true
+
+# 点击冷却时间（刻）
+click-cooldown: 1
+
+# 是否要在动画帧内替换占位符？
+#
+# 警告！将此设置为true将对CPU使用产生
+# 负面影响，所以如果你不需要在动画帧内
+# 使用占位符，请保持禁用状态。
+allow-placeholders-inside-animations: false
+
+# 如果为true，当玩家被传送或重生时，将更新悬浮字的可见性。
+#
+# 默认情况下，这是禁用的，因为它会导致视觉故障，
+# 即使玩家仅被传送了一小段距离，悬浮字仍会对他们消失然后重新出现。
+#
+# 有些客户端（或客户端版本）需要启用此选项，
+# 所以如果你发现悬浮字在玩家传送或重生后不显示，可以启用此选项。
+update-visibility-on-teleport: false
+
+# 将此设为true，如果你希望悬浮字在玩家视线水平出现。
+# 启用时，创建或移动悬浮字时，它们会定位在玩家视线高度。
+# 禁用时，创建或移动悬浮字时，它们会定位在玩家脚部高度（默认）。
+holograms-eye-level-positioning: false
+
+#
+# 设置DecentHolograms尝试通过名称和UUID获取玩家皮肤数据时的超时时间（秒）。
+# 值可以低至1秒，高至60秒。
+#
+# 注意: 增加此值可能对服务器性能产生负面影响，特别是在网络连接不佳时。
+#       仅在遇到以下警告时才应更改此值：
+#
+#       获取玩家<玩家名>的UUID失败
+#       原因: 连接超时或读取超时
+player-skin-connection-timeout: 5
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+# 伤害显示
+#
+# 每次成功攻击时显示的临时伤害显示
+#
+# # # # # # # # # #
+
+damage-display:
+  # 是否启用此功能？[true/false]
+  enabled: false
+  # 是否为玩家显示伤害？[true/false]
+  players: true
+  # 是否为生物显示伤害？[true/false]
+  mobs: true
+  # 是否显示0（或更少）的伤害？[true/false]
+  zero-damage: false
+  # 悬浮字持续时间（刻）
+  duration: 40
+  # 伤害占位符: {damage}
+  # 此处可使用动画和占位符
+  appearance: '&c{damage}'
+  # 暴击伤害的显示样式
+  critical-appearance: '&4&lCrit!&4 {damage}'
+  # 高度偏移
+  height: 0
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+# 治疗显示
+#
+# 每次生命值增加时显示的临时治疗显示
+#
+# # # # # # # # # #
+
+healing-display:
+  # 是否启用此功能？[true/false]
+  enabled: false
+  # 是否为玩家显示治疗？[true/false]
+  players: true
+  # 是否为生物显示治疗？[true/false]
+  mobs: true
+  # 悬浮字持续时间（刻）
+  duration: 40
+  # 治疗占位符: {heal}
+  # 此处可使用动画和占位符
+  appearance: '&a+ {heal}'
+  # 高度偏移
+  height: 0
+
+
+# # # # # # # # # # # # # # # # #
+#
+# 自定义文本替换
+#
+# 用自定义替换内容替换悬浮字中的特定模式，类似于HolographicDisplays
+#
+# # # # # # # # # #
+
+custom-replacements:
+  '[x]': '█'
+  '[X]': '█'
+  '[/]': '▌'
+  '[,]': '░'
+  '[,,]': '▒'
+  '[,,,]': '▓'
+  '[p]': '•'
+  '[P]': '•'
+  '[|]': '⎹'
