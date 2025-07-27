@@ -86,13 +86,14 @@ public class HologramItem {
 
     @SuppressWarnings("deprecation")
     private ItemStack applyNBT(Player player, ItemStack itemStack){
+        String parsedNbt = player != null ? PAPI.setPlaceholders(player, nbt) : nbt;
         if (Version.afterOrEqual(Version.v1_20_R4)) {
-            return NbtApiHook.applyNbtDataToItemStack(itemStack, nbt, player);
+            return NbtApiHook.applyNbtDataToItemStack(itemStack, NbtApiHook.ItemNbtData.fromJson(parsedNbt));
         } else {
             try {
-                Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
+                Bukkit.getUnsafe().modifyItemStack(itemStack, parsedNbt);
             } catch (Exception ex) {
-                Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+                Log.warn("Failed to apply NBT Data to Item: %s", ex, parsedNbt);
             }
 
             return itemStack;
