@@ -86,13 +86,14 @@ public class HologramItem {
 
     @SuppressWarnings("deprecation")
     private ItemStack applyNBT(Player player, ItemStack itemStack){
+        String parsedNbt = player != null ? PAPI.setPlaceholders(player, nbt) : nbt;
         if (Version.afterOrEqual(Version.v1_20_R4)) {
-            return NbtApiHook.applyNbtDataToItemStack(itemStack, nbt, player);
+            return NbtApiHook.applyNbtDataToItemStack(itemStack, NbtApiHook.ItemNbtData.fromJson(parsedNbt));
         } else {
             try {
-                Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
+                Bukkit.getUnsafe().modifyItemStack(itemStack, parsedNbt);
             } catch (Exception ex) {
-                Log.warn("Failed to apply NBT Data to Item: %s", ex, nbt);
+                Log.warn("Failed to apply NBT Data to Item: %s", ex, parsedNbt);
             }
 
             return itemStack;
@@ -171,6 +172,7 @@ public class HologramItem {
      *     <li>Enchantments (Will add {@value ENCHANTED_INDICATOR})</li>
      *     <li>Skull Owner/Texture (Texture is prioritized)</li>
      *     <li>CustomModelData (custom_model_data on newer MC versions).</li>
+     *     <li>item_model</li>
      * </ul>
      * 
      * @param itemStack The Item to convert into a HologramItem.
@@ -203,10 +205,8 @@ public class HologramItem {
             }
         }
 
-        float customModelData = NbtApiHook.extractCustomModelData(itemStack);
-        if (customModelData > 0.0) {
-            stringBuilder.append("{CustomModelData:").append(customModelData).append('}');
-        }
+        NbtApiHook.ItemNbtData nbtRead = NbtApiHook.readData(itemStack);
+        stringBuilder.append(nbtRead.getJson());
         return new HologramItem(stringBuilder.toString());
     }
 
