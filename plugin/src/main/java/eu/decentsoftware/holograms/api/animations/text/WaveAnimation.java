@@ -26,10 +26,12 @@ public class WaveAnimation extends TextAnimation {
         int currentStep = getCurrentStep(step, length + size);
         int index1 = currentStep > size ? currentStep - size : 0;
         int index2 = currentStep < size ? size - (size - currentStep) : currentStep;
+        String colPrimary = args[0];
+        String colSecondary = args.length == 1 ? "&f" : args[1];
         String start = index1 != 0 ? stripped.substring(0, index1) : "";
         String mid = length > index2 ? stripped.substring(index1, index2) : stripped.substring(index1);
         String end = length > index2 ? stripped.substring(index2) : "";
-        return args[0] + specialColors + start + args[1] + specialColors + mid + args[0] + specialColors + end;
+        return colPrimary + specialColors + start + colSecondary + specialColors + mid + colPrimary + specialColors + end;
     }
 
 }
