@@ -117,6 +117,16 @@ public class Lang {
     public static final Phrase FEATURE_ALREADY_DISABLED = new Phrase("feature.already_disabled", "{prefix}&cFeature \"%1$s\" is already disabled!");
     public static final Phrase FEATURE_RELOADED = new Phrase("feature.reloaded", "{prefix}Feature &b\"%1$s\"&7 has been reloaded!");
 
+    // Displays
+    public static final Phrase DISPLAY_DOES_NOT_EXIST = new Phrase("display.does_not_exist", "{prefix}&cDisplay with that name doesn't exist.");
+    public static final Phrase DISPLAY_ALREADY_EXISTS = new Phrase("display.already_exists", "{prefix}&cDisplay with that name already exists.");
+    public static final Phrase DISPLAY_INVALID_TYPE = new Phrase("display.invalid_type", "{prefix}&cInvalid display type '%1$s'. Valid types are: &b%2$s&7.");
+    public static final Phrase DISPLAY_INVALID_NAME = new Phrase("display.invalid_name", "{prefix}&cInvalid name '%1$s', only use alphanumerical characters, underscore and dash.");
+    public static final Phrase DISPLAY_CREATED = new Phrase("display.created", "{prefix}Display &b'%1$s'&7 has been created!");
+    public static final Phrase DISPLAY_DELETED = new Phrase("display.deleted", "{prefix}Display has been deleted!");
+    public static final Phrase DISPLAY_MOVED = new Phrase("display.moved", "{prefix}Display has been moved!");
+    public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing_set", "{prefix}Facing has been set!");
+
     /*
      *	General Methods
      */

@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.nms.v1_21_R5;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import eu.decentsoftware.holograms.shared.reflect.ReflectField;
 import io.netty.channel.ChannelPipeline;
@@ -26,14 +27,22 @@ public class NmsAdapterImpl implements NmsAdapter {
     private static final ReflectField<NetworkManager> NETWORK_MANAGER_FIELD = new ReflectField<>(
             ServerCommonPacketListenerImpl.class, "e");
     private final HologramRendererFactory hologramComponentFactory;
+    private final DisplayRendererFactory displayComponentFactory;
 
     public NmsAdapterImpl() {
-        this.hologramComponentFactory = new HologramRendererFactory(new EntityIdGenerator());
+        EntityIdGenerator entityIdGenerator = new EntityIdGenerator();
+        this.hologramComponentFactory = new HologramRendererFactory(entityIdGenerator);
+        this.displayComponentFactory = new DisplayRendererFactory(entityIdGenerator);
     }
 
     @Override
     public NmsHologramRendererFactory getHologramComponentFactory() {
         return hologramComponentFactory;
+    }
+
+    @Override
+    public NmsDisplayRendererFactory getDisplayRendererFactory() {
+        return displayComponentFactory;
     }
 
     @Override

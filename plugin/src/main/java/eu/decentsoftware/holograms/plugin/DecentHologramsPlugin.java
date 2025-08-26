@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.command.DecentDisplaysCommand;
 import eu.decentsoftware.holograms.hook.NbtApiHook;
 import eu.decentsoftware.holograms.plugin.commands.HologramsCommand;
 import eu.decentsoftware.holograms.plugin.features.DamageDisplayFeature;
@@ -45,6 +46,8 @@ public class DecentHologramsPlugin extends JavaPlugin {
         DecentCommand mainCommand = new HologramsCommand();
         commandManager.setMainCommand(mainCommand);
         commandManager.registerCommand(mainCommand);
+        DecentDisplaysCommand displaysCommand = new DecentDisplaysCommand(decentHolograms.getDisplayService());
+        commandManager.registerCommand(displaysCommand);
 
         // Enable NBT API to avoid lag spikes when parsing NBT for the first time.
         NbtApiHook.initialize();
