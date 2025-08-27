@@ -30,18 +30,19 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValidationException;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CommandInfo(
         usage = "/dh d set-attribute <name> <attribute>=<value>",
         description = "Set a display attribute.",
         aliases = {"setattribute", "attribute", "attr"}
 )
-public class SetAttributeDisplayCommand extends DecentCommand {
+class SetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final DisplayAttributeService attributeService;
 
-    public SetAttributeDisplayCommand(DisplayService displayService) {
+    SetAttributeDisplayCommand(DisplayService displayService) {
         super("set-attribute");
         this.displayService = displayService;
         this.attributeService = new DisplayAttributeService();
@@ -71,10 +72,11 @@ public class SetAttributeDisplayCommand extends DecentCommand {
 
             try {
                 attribute.applyValue(display, split[1]);
+                displayService.updateDisplayProperties(display);
                 Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attribute.getName(), split[1]);
                 return true;
             } catch (DisplayAttributeValidationException e) {
-                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attribute.getName());
+                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attribute.getName(), e.getMessage());
                 return true;
             }
         };
@@ -90,7 +92,24 @@ public class SetAttributeDisplayCommand extends DecentCommand {
                 if (display == null) {
                     return null;
                 }
-                return TabCompleteHandler.getPartialMatches(args[1], attributeService.getAvailableAttributes(display).keySet());
+                String[] split;
+                if (args[1].endsWith("=")) {
+                    split = new String[]{args[1].substring(0, args[1].length() - 1), ""};
+                } else {
+                    split = args[1].split("=");
+                }
+                if (split.length == 2) {
+                    DisplayAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
+                    return attribute.getValueHints(sender, split[1]).stream()
+                            .filter(s -> s.startsWith(split[1]))
+                            .map(s -> split[0] + "=" + s)
+                            .collect(Collectors.toList());
+                }
+                return TabCompleteHandler.getPartialMatches(args[1],
+                        attributeService.getAvailableAttributes(display).keySet().stream()
+                                .map(hint -> hint + "=")
+                                .collect(Collectors.toList())
+                );
             }
             return null;
         };

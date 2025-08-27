@@ -47,7 +47,7 @@ public class Vector3fDisplayAttribute<D> implements DisplayAttribute {
 
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
-        return Arrays.asList("0,0,0", "1,1,1");
+        return Arrays.asList("0,0,0", "0.5,0.5,0.5", "1,1,1");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Vector3fDisplayAttribute<D> implements DisplayAttribute {
         }
         DisplayVector3f vector = parseValue(value);
         if (vector == null) {
-            throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected a vector.");
+            throw new DisplayAttributeValidationException("Expected a vector in the format x,y,z.");
         }
         this.applyValue.accept(applicableDisplayType.cast(display), vector);
     }

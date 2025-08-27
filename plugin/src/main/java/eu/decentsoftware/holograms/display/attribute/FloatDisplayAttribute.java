@@ -64,10 +64,10 @@ public class FloatDisplayAttribute<D> implements DisplayAttribute {
         }
         Float floatValue = parseValue(value);
         if (floatValue == null) {
-            throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected a number.");
+            throw new DisplayAttributeValidationException("Expected a decimal number.");
         }
         if (floatValue < minValue || floatValue > maxValue) {
-            throw new IllegalArgumentException("Value out of range: " + value + " (expected: " + minValue + " - " + maxValue + ")");
+            throw new DisplayAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
         }
         applyValue.accept(applicableDisplayType.cast(display), floatValue);
     }

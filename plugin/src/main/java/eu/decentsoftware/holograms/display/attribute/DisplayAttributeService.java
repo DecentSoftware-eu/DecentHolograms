@@ -38,7 +38,6 @@ public class DisplayAttributeService {
             new Vector3fDisplayAttribute<>("translation", DisplayBase::setTranslation, DisplayBase.class),
             new Vector3fDisplayAttribute<>("scale", DisplayBase::setScale, DisplayBase.class),
             new EnumDisplayAttribute<>("billboard", DisplayBillboardConstraints.class, DisplayBase::setBillboardConstraints, DisplayBase.class),
-            new FloatDisplayAttribute<>("view-range", DisplayBase::setViewRange, DisplayBase.class),
             new FloatDisplayAttribute<>("shadow-radius", DisplayBase::setShadowRadius, DisplayBase.class),
             new FloatDisplayAttribute<>("shadow-strength", DisplayBase::setShadowStrength, DisplayBase.class)
     );

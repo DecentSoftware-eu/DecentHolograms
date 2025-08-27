@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class ColorDisplayAttribute<D> implements DisplayAttribute {
 
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("[0-9a-fA-F]{6}|[0-9a-fA-F]{8}");
-    private static final Pattern ARGB_PATTERN = Pattern.compile("((?a:[0-9]{1,3}),)?(?r:[0-9]{1,3}),(?g:[0-9]{1,3}),(?b:[0-9]{1,3})");
+    private static final Pattern ARGB_PATTERN = Pattern.compile("((?<a>\\d{1,3}),)?(?<r>\\d{1,3}),(?<g>\\d{1,3}),(?<b>\\d{1,3})");
     private final String name;
     private final BiConsumer<D, DisplayColor> applyValue;
     private final Class<D> applicableDisplayType;
@@ -51,34 +51,9 @@ public class ColorDisplayAttribute<D> implements DisplayAttribute {
 
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
-        return Arrays.asList(
-                "9000FF",
-                "00FF00",
-                "0000FF",
-                "FFFF00",
-                "FF0000",
-                "00AAFF",
-                "000000",
-                "FFFFFF",
-                "FF00FF00",
-                "005500FF",
-                "0000FFFF",
-                "FFFF00FF",
-                "FF0000FF",
-                "00FF66FF",
-                "00000000",
-                "FF00FF00",
-                "255,0,255",
-                "0,255,0",
-                "0,0,255",
-                "255,255,0",
-                "255,0,0",
-                "0,255,255",
-                "0,0,0",
-                "255,255,255",
-                "128,255,0,255",
-                "255,0,255,255"
-        );
+        return Arrays.asList("9000FF", "00FF00", "0000FF", "FFFF00", "FF0000", "00AAFF", "000000", "FFFFFF", "FF00FF00", "005500FF",
+                "0000FFFF", "FFFF00FF", "FF0000FF", "00FF66FF", "00000000", "FF00FF00", "255,0,255", "0,255,0", "0,0,255", "255,255,0",
+                "255,0,0", "0,255,255", "0,0,0", "255,255,255", "128,255,0,255", "255,0,255,255");
     }
 
     @Override
@@ -88,7 +63,7 @@ public class ColorDisplayAttribute<D> implements DisplayAttribute {
         }
         DisplayColor color = parseValue(value);
         if (color == null) {
-            throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected a HEX color (e.g. 9000FF or FF00FF00), an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255) or an integer color value.");
+            throw new DisplayAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00), an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255) or an integer color value.");
         }
         applyValue.accept(applicableDisplayType.cast(display), color);
     }

@@ -64,10 +64,10 @@ public class IntegerDisplayAttribute<D> implements DisplayAttribute {
         }
         Integer parsedValue = parseValue(value);
         if (parsedValue == null) {
-            throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected a number.");
+            throw new DisplayAttributeValidationException("Expected an integer.");
         }
         if (parsedValue < minValue || parsedValue > maxValue) {
-            throw new IllegalArgumentException("Value out of range: " + parsedValue + " (expected: " + minValue + " - " + maxValue + ")");
+            throw new DisplayAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
         }
         applyValue.accept(applicableDisplayType.cast(display), parsedValue);
     }
