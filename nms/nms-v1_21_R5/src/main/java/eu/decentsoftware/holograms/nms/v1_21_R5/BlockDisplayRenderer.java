@@ -41,7 +41,7 @@ class BlockDisplayRenderer implements NmsBlockDisplayRenderer {
                 .withSpawnEntity(entityId, EntityType.BLOCK_DISPLAY, offsetPosition(position))
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
                         .withNoGravity()
-                        .withEntityProperties(false, false, false, false, false, blockDisplayData.getGlowColor() != null, false)
+                        .withGlowing(blockDisplayData.getGlowColor() != null)
                         .withBlockDisplayBlockData(blockDisplayData.getMaterial())
                         .withDisplayTranslation(blockDisplayData.getTranslation())
                         .withDisplayScale(blockDisplayData.getScale())
@@ -60,7 +60,7 @@ class BlockDisplayRenderer implements NmsBlockDisplayRenderer {
         BlockDisplayData blockDisplayData = data.getContent();
         EntityPacketsBuilder.create()
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                        .withEntityProperties(false, false, false, false, false, blockDisplayData.getGlowColor() != null, false)
+                        .withGlowing(blockDisplayData.getGlowColor() != null)
                         .withDisplayTranslation(blockDisplayData.getTranslation())
                         .withDisplayScale(blockDisplayData.getScale())
                         .withDisplayBillboardConstraints(blockDisplayData.getBillboardConstraints())

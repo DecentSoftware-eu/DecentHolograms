@@ -41,7 +41,7 @@ class ItemDisplayRenderer implements NmsItemDisplayRenderer {
                 .withSpawnEntity(entityId, EntityType.ITEM_DISPLAY, offsetPosition(position))
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
                         .withNoGravity()
-                        .withEntityProperties(false, false, false, false, false, itemDisplayData.getGlowColor() != null, false)
+                        .withGlowing(itemDisplayData.getGlowColor() != null)
                         .withItemDisplayData(itemDisplayData.getDisplayType())
                         .withItemDisplayItemStack(itemDisplayData.getDisplayedItem())
                         .withDisplayTranslation(itemDisplayData.getTranslation())
@@ -61,7 +61,7 @@ class ItemDisplayRenderer implements NmsItemDisplayRenderer {
         ItemDisplayData itemDisplayData = data.getContent();
         EntityPacketsBuilder.create()
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
-                        .withEntityProperties(false, false, false, false, false, itemDisplayData.getGlowColor() != null, false)
+                        .withGlowing(itemDisplayData.getGlowColor() != null)
                         .withItemDisplayData(itemDisplayData.getDisplayType())
                         .withDisplayTranslation(itemDisplayData.getTranslation())
                         .withDisplayScale(itemDisplayData.getScale())

@@ -50,40 +50,8 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withEntityProperties(boolean onFire, boolean crouched, boolean sprinting, boolean swimming, boolean invisible, boolean glowing, boolean elytraFlying) {
-        /*
-         * Entity Properties:
-         * 0x01 - On Fire
-         * 0x02 - Crouched
-         * 0x08 - Sprinting
-         * 0x10 - Swimming
-         * 0x20 - Invisible
-         * 0x40 - Has glowing effect
-         * 0x80 - If flying with an elytra
-         */
-
-        byte data = 0x00;
-        if (onFire) {
-            data |= 0x01;
-        }
-        if (crouched) {
-            data |= 0x02;
-        }
-        if (sprinting) {
-            data |= 0x08;
-        }
-        if (swimming) {
-            data |= 0x10;
-        }
-        if (invisible) {
-            data |= 0x20;
-        }
-        if (glowing) {
-            data |= 0x40;
-        }
-        if (elytraFlying) {
-            data |= 0x80;
-        }
+    EntityMetadataBuilder withGlowing(boolean glowing) {
+        byte data = (byte) (glowing ? 0x40 : 0x00);
 
         watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct(data));
         return this;
