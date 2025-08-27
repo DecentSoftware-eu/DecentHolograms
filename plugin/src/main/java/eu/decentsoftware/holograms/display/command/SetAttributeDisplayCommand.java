@@ -73,6 +73,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
             try {
                 attribute.applyValue(display, split[1]);
                 displayService.updateDisplayProperties(display);
+                displayService.saveDisplay(display);
                 Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attribute.getName(), split[1]);
                 return true;
             } catch (DisplayAttributeValidationException e) {
