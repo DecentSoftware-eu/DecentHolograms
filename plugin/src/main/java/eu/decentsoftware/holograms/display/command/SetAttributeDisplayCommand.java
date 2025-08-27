@@ -32,7 +32,7 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValidationE
 import java.util.Map;
 
 @CommandInfo(
-        usage = "/dd set-attribute <name> <attribute>=<value>",
+        usage = "/dh d set-attribute <name> <attribute>=<value>",
         description = "Set a display attribute.",
         aliases = {"setattribute", "attribute", "attr"}
 )

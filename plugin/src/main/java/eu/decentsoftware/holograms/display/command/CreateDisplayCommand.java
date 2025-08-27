@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CommandInfo(
-        usage = "/dd create <name> <type> [content]",
+        usage = "/dh d create <name> <type> [content]",
         description = "Create a new display",
         permissions = {"dh.command.displays.create"},
         aliases = {"new", "c"},

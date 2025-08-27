@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayService;
 
 @CommandInfo(
-        usage = "/dd delete <name>",
+        usage = "/dh d delete <name>",
         description = "Delete an existing display",
         permissions = {"dh.command.displays.delete"},
         aliases = {"del"}

@@ -26,9 +26,9 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.utils.Common;
 
 @CommandInfo(
-        permissions = "dh.display.command.help",
-        usage = "/dd help",
+        usage = "/dh d help",
         description = "Show general displays help.",
+        permissions = {"dh.display.command.help"},
         aliases = {"?"}
 )
 class DisplaysHelpCommand extends DecentCommand {
@@ -44,7 +44,7 @@ class DisplaysHelpCommand extends DecentCommand {
             Common.tell(sender, " &3&lDECENT DISPLAYS HELP");
             Common.tell(sender, " All general commands.");
             sender.sendMessage("");
-            CommandBase command = DecentDisplaysCommand.getInstance();
+            CommandBase command = DisplaysCommand.getInstance();
             printHelpSubCommandsAndAliases(sender, command);
             return true;
         };

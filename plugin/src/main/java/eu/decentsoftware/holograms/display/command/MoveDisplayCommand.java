@@ -31,7 +31,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.entity.Player;
 
 @CommandInfo(
-        usage = "/dd move <name> <x> <y> <z>",
+        usage = "/dh d move <name> <x> <y> <z>",
         description = "Move an existing display",
         permissions = {"dh.command.displays.move"},
         aliases = {"mv"}

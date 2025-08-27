@@ -26,21 +26,21 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayService;
 
 @CommandInfo(
-        usage = "/decentdisplays",
-        description = "Base command for decent displays",
+        usage = "/dh displays help",
+        description = "Base command for decent displays.",
         permissions = {"dh.command.decentdisplays"},
-        aliases = {"ddisplays", "displays", "display", "dd"}
+        aliases = {"display", "d"}
 )
-public class DecentDisplaysCommand extends DecentCommand {
+public class DisplaysCommand extends DecentCommand {
 
-    private static DecentDisplaysCommand instance;
+    private static DisplaysCommand instance;
 
-    public static DecentDisplaysCommand getInstance() {
+    public static DisplaysCommand getInstance() {
         return instance;
     }
 
-    public DecentDisplaysCommand(DisplayService displayService) {
-        super("decentdisplays");
+    public DisplaysCommand(DisplayService displayService) {
+        super("displays");
         instance = this;
 
         addSubCommand(new DisplaysHelpCommand());
@@ -53,16 +53,12 @@ public class DecentDisplaysCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (sender.hasPermission("dh.admin")) {
-                if (args.length == 0) {
-                    Lang.USE_HELP.send(sender);
-                    return true;
-                }
-                Lang.UNKNOWN_SUB_COMMAND.send(sender);
+            if (args.length == 0) {
                 Lang.USE_HELP.send(sender);
-            } else {
-                Lang.sendVersionMessage(sender);
+                return true;
             }
+            Lang.UNKNOWN_SUB_COMMAND.send(sender);
+            Lang.USE_HELP.send(sender);
             return true;
         };
     }
