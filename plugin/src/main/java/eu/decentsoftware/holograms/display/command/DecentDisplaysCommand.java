@@ -47,6 +47,7 @@ public class DecentDisplaysCommand extends DecentCommand {
         addSubCommand(new CreateDisplayCommand(displayService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));
+        addSubCommand(new SetAttributeDisplayCommand(displayService));
     }
 
     @Override

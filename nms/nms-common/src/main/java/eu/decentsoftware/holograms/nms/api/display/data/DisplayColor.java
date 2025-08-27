@@ -25,11 +25,19 @@ public class DisplayColor {
     private final int green;
     private final int blue;
 
-    private DisplayColor(int alpha, int red, int green, int blue) {
+    public DisplayColor(int alpha, int red, int green, int blue) {
         this.alpha = alpha;
         this.red = red;
         this.green = green;
         this.blue = blue;
+    }
+
+    public static DisplayColor fromRGBorARGB(int rgbOrArgb) {
+        if ((rgbOrArgb >> 24) == 0x00) {
+            return fromRGB(rgbOrArgb);
+        } else {
+            return fromARGB(rgbOrArgb);
+        }
     }
 
     public static DisplayColor fromARGB(int argb) {
