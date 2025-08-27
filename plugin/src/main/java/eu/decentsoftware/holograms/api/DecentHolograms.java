@@ -14,9 +14,7 @@ import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
-import eu.decentsoftware.holograms.display.DisplayRenderingService;
-import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayVisibilityService;
+import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
@@ -54,7 +52,7 @@ public final class DecentHolograms {
     private FeatureManager featureManager;
     private AnimationManager animationManager;
     private Ticker ticker;
-    private DisplayService displayService;
+    private DisplayModule displayModule;
     private boolean updateAvailable;
 
     DecentHolograms(@NonNull JavaPlugin plugin) {
@@ -74,7 +72,8 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        this.displayService = new DisplayService(new DisplayRenderingService(new DisplayVisibilityService()));
+        this.displayModule = new DisplayModule(plugin);
+        this.displayModule.initialize();
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(this), this.plugin);
@@ -87,7 +86,7 @@ public final class DecentHolograms {
     }
 
     void disable() {
-        this.displayService.shutdown();
+        this.displayModule.shutdown();
         this.nmsPacketListenerService.shutdown();
         this.featureManager.destroy();
         this.hologramManager.destroy();
@@ -113,6 +112,7 @@ public final class DecentHolograms {
         this.animationManager.reload();
         this.hologramManager.reload();
         this.featureManager.reload();
+        this.displayModule.reload();
 
         EventFactory.fireReloadEvent();
     }

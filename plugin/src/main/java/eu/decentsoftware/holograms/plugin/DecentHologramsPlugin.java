@@ -46,7 +46,7 @@ public class DecentHologramsPlugin extends JavaPlugin {
         DecentCommand mainCommand = new HologramsCommand();
         commandManager.setMainCommand(mainCommand);
         commandManager.registerCommand(mainCommand);
-        DecentDisplaysCommand displaysCommand = new DecentDisplaysCommand(decentHolograms.getDisplayService());
+        DecentDisplaysCommand displaysCommand = new DecentDisplaysCommand(decentHolograms.getDisplayModule().getDisplayService());
         commandManager.registerCommand(displaysCommand);
 
         // Enable NBT API to avoid lag spikes when parsing NBT for the first time.

@@ -1,0 +1,63 @@
+/*
+ * This file is part of DecentHolograms, licensed under the GNU GPL v3.0 License.
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package eu.decentsoftware.holograms.display;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.java.JavaPlugin;
+
+/**
+ * Manages the display module, including initialization, reloading, and shutdown.
+ *
+ * @author d0by
+ */
+public class DisplayModule {
+
+    private final JavaPlugin plugin;
+    private final DisplayService displayService;
+    private final DisplayUpdater displayUpdater;
+    private final DisplayListener displayListener;
+
+    public DisplayModule(JavaPlugin plugin) {
+        this.plugin = plugin;
+        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService());
+        this.displayService = new DisplayService(renderingService);
+        this.displayUpdater = new DisplayUpdater(displayService, renderingService);
+        this.displayListener = new DisplayListener(displayService);
+    }
+
+    public void initialize() {
+        this.displayUpdater.register();
+        Bukkit.getPluginManager().registerEvents(displayListener, plugin);
+    }
+
+    public void reload() {
+        this.displayService.reload();
+    }
+
+    public void shutdown() {
+        HandlerList.unregisterAll(displayListener);
+        this.displayUpdater.unregister();
+        this.displayService.shutdown();
+    }
+
+    public DisplayService getDisplayService() {
+        return displayService;
+    }
+}

@@ -18,47 +18,42 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.utils.tick.ITicked;
+import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DisplayService implements ITicked {
+public class DisplayService {
 
     private final DisplayRenderingService renderingService;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
     public DisplayService(DisplayRenderingService renderingService) {
         this.renderingService = renderingService;
-        this.register();
     }
 
     public void shutdown() {
-        this.unregister();
         this.displays.values().forEach(renderingService::hideForEveryone);
         this.displays.clear();
     }
 
-    @Override
-    public String getId() {
-        return "display_service";
-    }
-
-    @Override
-    public long getInterval() {
-        return 20;
-    }
-
-    @Override
-    public void tick() {
-        for (DisplayBase display : displays.values()) {
-            renderingService.updateVisibility(display);
-        }
+    public void reload() {
+        // TODO: reload displays
     }
 
     public DisplayBase getDisplay(String name) {
         return displays.get(name);
+    }
+
+    public void registerDisplay(DisplayBase display) {
+        displays.putIfAbsent(display.getName(), display);
+    }
+
+    public void saveDisplay(DisplayBase display) {
+        registerDisplay(display);
+        // TODO: Save display to file
     }
 
     public boolean deleteDisplay(String name) {
@@ -83,12 +78,19 @@ public class DisplayService implements ITicked {
         renderingService.updateDisplayLocation(displayBase);
     }
 
-    public void saveDisplay(DisplayBase display) {
-        displays.putIfAbsent(display.getName(), display);
-//        dao.saveDisplay(display);
+    public void hideDisplaysForPlayer(Player player) {
+        displays.values().forEach(display -> renderingService.hideDisplayForPlayer(display, player));
+    }
+
+    public void updateVisibilityForPlayer(Player player) {
+        displays.values().forEach(display -> renderingService.updateVisibility(display, player));
     }
 
     public Set<String> getRegisteredDisplayNames() {
         return displays.keySet();
+    }
+
+    public Collection<DisplayBase> getRegisteredDisplays() {
+        return displays.values();
     }
 }

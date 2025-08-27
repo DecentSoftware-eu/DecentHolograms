@@ -34,6 +34,12 @@ public class DisplayRenderingService {
         this.visibilityService = visibilityService;
     }
 
+    public void hideDisplayForPlayer(DisplayBase display, Player player) {
+        if (visibilityService.isShownToPlayer(display, player)) {
+            hideForPlayer(display, player);
+        }
+    }
+
     public void hideForEveryone(DisplayBase display) {
         Bukkit.getOnlinePlayers().forEach(player -> hideForPlayer(display, player));
     }
@@ -42,7 +48,7 @@ public class DisplayRenderingService {
         Bukkit.getOnlinePlayers().forEach(player -> updateVisibility(display, player));
     }
 
-    private void updateVisibility(DisplayBase display, Player player) {
+    public void updateVisibility(DisplayBase display, Player player) {
         if (visibilityService.shouldBeShownToPlayer(display, player)) {
             if (!visibilityService.isShownToPlayer(display, player)) {
                 showForPlayer(display, player);
