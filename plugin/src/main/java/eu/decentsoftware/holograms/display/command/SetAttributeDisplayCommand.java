@@ -51,7 +51,12 @@ class SetAttributeDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            DisplayBase display = displayService.getDisplay(args[0]);
+            if (args.length < 2) {
+                Lang.USE_HELP.send(sender);
+                return true;
+            }
+
+            DisplayBase<?> display = displayService.getDisplay(args[0]);
             if (display == null) {
                 Lang.DISPLAY_DOES_NOT_EXIST.send(sender);
                 return true;
@@ -89,7 +94,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                DisplayBase display = displayService.getDisplay(args[0]);
+                DisplayBase<?> display = displayService.getDisplay(args[0]);
                 if (display == null) {
                     return null;
                 }

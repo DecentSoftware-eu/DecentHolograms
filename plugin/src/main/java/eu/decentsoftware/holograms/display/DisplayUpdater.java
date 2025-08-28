@@ -39,7 +39,7 @@ public class DisplayUpdater extends Ticked {
     public void tick() {
         long currentTick = tickCounter.getAndIncrement();
         if (currentTick % 20 == 0) {
-            for (DisplayBase display : displayService.getRegisteredDisplays()) {
+            for (DisplayBase<?> display : displayService.getRegisteredDisplays()) {
                 renderingService.updateVisibility(display);
                 renderingService.updateContent(display);
             }

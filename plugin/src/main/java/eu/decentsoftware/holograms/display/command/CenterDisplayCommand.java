@@ -50,7 +50,7 @@ class CenterDisplayCommand extends DecentCommand {
             }
 
             String name = args[0];
-            DisplayBase display = displayService.getDisplay(name);
+            DisplayBase<?> display = displayService.getDisplay(name);
             if (display == null) {
                 Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
                 return true;

@@ -27,8 +27,8 @@ import eu.decentsoftware.holograms.display.DisplayService;
 
 @CommandInfo(
         usage = "/dh displays help",
-        description = "Base command for decent displays.",
-        permissions = {"dh.command.decentdisplays"},
+        description = "All commands for editing displays.",
+        permissions = {"dh.command.displays"},
         aliases = {"display", "d"}
 )
 public class DisplaysCommand extends DecentCommand {

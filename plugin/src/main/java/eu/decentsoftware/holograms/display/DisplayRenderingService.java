@@ -34,21 +34,21 @@ public class DisplayRenderingService {
         this.visibilityService = visibilityService;
     }
 
-    public void hideDisplayForPlayer(DisplayBase display, Player player) {
+    public void hideDisplayForPlayer(DisplayBase<?> display, Player player) {
         if (visibilityService.isShownToPlayer(display, player)) {
             hideForPlayer(display, player);
         }
     }
 
-    public void hideForEveryone(DisplayBase display) {
+    public void hideForEveryone(DisplayBase<?> display) {
         Bukkit.getOnlinePlayers().forEach(player -> hideForPlayer(display, player));
     }
 
-    public void updateVisibility(DisplayBase display) {
+    public void updateVisibility(DisplayBase<?> display) {
         Bukkit.getOnlinePlayers().forEach(player -> updateVisibility(display, player));
     }
 
-    public void updateVisibility(DisplayBase display, Player player) {
+    public void updateVisibility(DisplayBase<?> display, Player player) {
         if (visibilityService.shouldBeShownToPlayer(display, player)) {
             if (!visibilityService.isShownToPlayer(display, player)) {
                 showForPlayer(display, player);
@@ -60,39 +60,39 @@ public class DisplayRenderingService {
         }
     }
 
-    private void showForPlayer(DisplayBase display, Player player) {
-        NmsDisplayRenderer renderer = display.getDisplayRenderer();
+    private <T> void showForPlayer(DisplayBase<T> display, Player player) {
+        NmsDisplayRenderer<T> renderer = display.getDisplayRenderer();
         renderer.display(player, getPartData(display, player));
         visibilityService.addViewer(display, player);
     }
 
-    public void updateContent(DisplayBase display) {
+    public <T> void updateContent(DisplayBase<T> display) {
         performForAllViewers(display, (player, renderer) -> renderer.updateContent(player, getPartData(display, player)));
     }
 
-    public void updateProperties(DisplayBase display) {
+    public <T> void updateProperties(DisplayBase<T> display) {
         performForAllViewers(display, (player, renderer) -> renderer.updateProperties(player, getPartData(display, player)));
     }
 
-    public void updateDisplayLocation(DisplayBase display) {
+    public <T> void updateDisplayLocation(DisplayBase<T> display) {
         performForAllViewers(display, (player, renderer) -> renderer.move(player, getPartData(display, player)));
     }
 
-    private void performForAllViewers(DisplayBase display, BiConsumer<Player, NmsDisplayRenderer> consumer) {
+    private <T> void performForAllViewers(DisplayBase<T> display, BiConsumer<Player, NmsDisplayRenderer<T>> consumer) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
-                NmsDisplayRenderer renderer = display.getDisplayRenderer();
+                NmsDisplayRenderer<T> renderer = display.getDisplayRenderer();
                 consumer.accept(onlinePlayer, renderer);
             }
         }
     }
 
-    private void hideForPlayer(DisplayBase display, Player player) {
+    private void hideForPlayer(DisplayBase<?> display, Player player) {
         display.getDisplayRenderer().hide(player);
         visibilityService.removeViewer(display, player);
     }
 
-    private NmsHologramPartData getPartData(DisplayBase display, Player player) {
+    private <T> NmsHologramPartData<T> getPartData(DisplayBase<T> display, Player player) {
         return new NmsHologramPartData<>(
                 () -> {
                     DecentLocation location = display.getLocation();

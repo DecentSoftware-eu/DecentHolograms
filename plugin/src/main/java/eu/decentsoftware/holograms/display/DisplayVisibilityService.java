@@ -28,22 +28,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DisplayVisibilityService {
 
-    private static final int DISPLAY_RANGE = 48;
+    private static final int DISPLAY_RANGE = 256;
     private final Map<String, Set<UUID>> viewersMap = new ConcurrentHashMap<>();
 
-    public boolean isShownToPlayer(DisplayBase display, Player player) {
+    public boolean isShownToPlayer(DisplayBase<?> display, Player player) {
         return getViewers(display).contains(player.getUniqueId());
     }
 
-    public void addViewer(DisplayBase display, Player player) {
+    public void addViewer(DisplayBase<?> display, Player player) {
         getViewers(display).add(player.getUniqueId());
     }
 
-    public void removeViewer(DisplayBase display, Player player) {
+    public void removeViewer(DisplayBase<?> display, Player player) {
         getViewers(display).remove(player.getUniqueId());
     }
 
-    public boolean shouldBeShownToPlayer(DisplayBase display, Player player) {
+    public boolean shouldBeShownToPlayer(DisplayBase<?> display, Player player) {
         DecentLocation displayLocation = display.getLocation();
         Location playerLocation = player.getLocation();
         if (!displayLocation.isSameWorld(playerLocation)) {
@@ -55,7 +55,7 @@ public class DisplayVisibilityService {
         return true;
     }
 
-    private Set<UUID> getViewers(DisplayBase display) {
+    private Set<UUID> getViewers(DisplayBase<?> display) {
         return viewersMap.computeIfAbsent(display.getName(), k -> ConcurrentHashMap.newKeySet());
     }
 }

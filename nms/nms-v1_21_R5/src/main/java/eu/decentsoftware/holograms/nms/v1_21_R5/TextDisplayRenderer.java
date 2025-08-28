@@ -102,7 +102,7 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
 
     @Override
     public int[] getEntityIds() {
-        return new int[0];
+        return new int[]{entityId};
     }
 
     private DecentPosition offsetPosition(DecentPosition position) {

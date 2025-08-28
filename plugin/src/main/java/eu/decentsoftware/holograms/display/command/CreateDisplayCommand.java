@@ -82,7 +82,7 @@ class CreateDisplayCommand extends DecentCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            DisplayBase display = createDisplay(type, name, args, decentLocationFromBukkitLocation(location));
+            DisplayBase<?> display = createDisplay(type, name, args, decentLocationFromBukkitLocation(location));
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);

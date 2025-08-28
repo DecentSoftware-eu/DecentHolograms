@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TextDisplay extends DisplayBase {
+public class TextDisplay extends DisplayBase<TextDisplayData> {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final List<String> lines;

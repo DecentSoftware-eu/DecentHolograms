@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class BlockDisplay extends DisplayBase {
+public class BlockDisplay extends DisplayBase<BlockDisplayData> {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final NmsBlockDisplayRenderer renderer;

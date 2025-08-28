@@ -41,7 +41,9 @@ public class HologramsCommand extends DecentCommand {
 		addSubCommand(new ReloadSubCommand());
 		addSubCommand(new ListSubCommand());
 		addSubCommand(new HologramSubCommand());
-        addSubCommand(new DisplaysCommand(displayService));
+        if (Version.afterOrEqual(Version.v1_19_R3)) {
+            addSubCommand(new DisplaysCommand(displayService));
+        }
 		addSubCommand(new LineSubCommand());
 		addSubCommand(new FeatureSubCommand());
 		addSubCommand(new PageSubCommand());

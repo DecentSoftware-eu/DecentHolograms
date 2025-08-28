@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,15 +44,24 @@ public class DisplayModule {
     }
 
     public void initialize() {
+        if (Version.before(Version.v1_19_R3)) {
+            return;
+        }
         this.displayUpdater.register();
         Bukkit.getPluginManager().registerEvents(displayListener, plugin);
     }
 
     public void reload() {
+        if (Version.before(Version.v1_19_R3)) {
+            return;
+        }
         this.displayService.reload();
     }
 
     public void shutdown() {
+        if (Version.before(Version.v1_19_R3)) {
+            return;
+        }
         HandlerList.unregisterAll(displayListener);
         this.displayUpdater.unregister();
         this.displayService.shutdown();

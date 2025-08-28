@@ -20,12 +20,11 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 import org.bukkit.entity.Player;
 
-public abstract class DisplayBase {
+public abstract class DisplayBase<T> {
 
     protected final String name;
     protected DecentLocation location;
@@ -42,9 +41,9 @@ public abstract class DisplayBase {
         this.location = location;
     }
 
-    public abstract <T extends DisplayData> T createDisplayData(Player player);
+    public abstract T createDisplayData(Player player);
 
-    public abstract <T extends DisplayData> NmsDisplayRenderer<T> getDisplayRenderer();
+    public abstract NmsDisplayRenderer<T> getDisplayRenderer();
 
     public String getName() {
         return name;

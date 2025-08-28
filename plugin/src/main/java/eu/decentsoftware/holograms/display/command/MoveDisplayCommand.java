@@ -54,7 +54,7 @@ class MoveDisplayCommand extends DecentCommand {
             }
 
             String name = args[0];
-            DisplayBase display = displayService.getDisplay(name);
+            DisplayBase<?> display = displayService.getDisplay(name);
             if (display == null) {
                 Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
                 return true;
@@ -76,7 +76,7 @@ class MoveDisplayCommand extends DecentCommand {
     @Override
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
-            DisplayBase display;
+            DisplayBase<?> display;
             DecentLocation location;
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());

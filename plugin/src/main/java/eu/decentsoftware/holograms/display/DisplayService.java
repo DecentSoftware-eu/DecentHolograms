@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DisplayService {
 
     private final DisplayRenderingService renderingService;
-    private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
+    private final Map<String, DisplayBase<?>> displays = new ConcurrentHashMap<>();
 
     public DisplayService(DisplayRenderingService renderingService) {
         this.renderingService = renderingService;
@@ -43,38 +43,38 @@ public class DisplayService {
         // TODO: reload displays
     }
 
-    public DisplayBase getDisplay(String name) {
+    public DisplayBase<?> getDisplay(String name) {
         return displays.get(name);
     }
 
-    public void registerDisplay(DisplayBase display) {
+    public void registerDisplay(DisplayBase<?> display) {
         displays.putIfAbsent(display.getName(), display);
     }
 
-    public void saveDisplay(DisplayBase display) {
+    public void saveDisplay(DisplayBase<?> display) {
         registerDisplay(display);
         // TODO: Save display to file
     }
 
     public boolean deleteDisplay(String name) {
-        DisplayBase removedDisplay = displays.remove(name);
+        DisplayBase<?> removedDisplay = displays.remove(name);
         renderingService.hideForEveryone(removedDisplay);
         return removedDisplay != null;
     }
 
-    public void updateDisplayVisibility(DisplayBase display) {
+    public void updateDisplayVisibility(DisplayBase<?> display) {
         renderingService.updateVisibility(display);
     }
 
-    public void updateDisplayContent(DisplayBase displayBase) {
+    public void updateDisplayContent(DisplayBase<?> displayBase) {
         renderingService.updateContent(displayBase);
     }
 
-    public void updateDisplayProperties(DisplayBase displayBase) {
+    public void updateDisplayProperties(DisplayBase<?> displayBase) {
         renderingService.updateProperties(displayBase);
     }
 
-    public void updateDisplayLocation(DisplayBase displayBase) {
+    public void updateDisplayLocation(DisplayBase<?> displayBase) {
         renderingService.updateDisplayLocation(displayBase);
     }
 
@@ -90,7 +90,7 @@ public class DisplayService {
         return displays.keySet();
     }
 
-    public Collection<DisplayBase> getRegisteredDisplays() {
+    public Collection<DisplayBase<?>> getRegisteredDisplays() {
         return displays.values();
     }
 }
