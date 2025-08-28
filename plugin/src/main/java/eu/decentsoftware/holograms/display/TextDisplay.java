@@ -80,7 +80,6 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
         if (brightnessOverride != null) {
             data.setBrightnessOverride(brightnessOverride);
         }
-        data.setViewRange(viewRange);
         data.setShadowRadius(shadowRadius);
         data.setShadowStrength(shadowStrength);
         return data;

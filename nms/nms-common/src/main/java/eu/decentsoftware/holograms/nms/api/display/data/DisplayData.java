@@ -24,7 +24,6 @@ public class DisplayData {
     private DisplayVector3f scale = new DisplayVector3f(1, 1, 1);
     private DisplayBillboardConstraints billboardConstraints = DisplayBillboardConstraints.CENTER;
     private DisplayBrightness brightnessOverride;
-    private float viewRange = 1.0f;
     private float shadowRadius = 0.0f;
     private float shadowStrength = 1.0f;
 
@@ -58,14 +57,6 @@ public class DisplayData {
 
     public void setBrightnessOverride(DisplayBrightness brightnessOverride) {
         this.brightnessOverride = brightnessOverride;
-    }
-
-    public float getViewRange() {
-        return viewRange;
-    }
-
-    public void setViewRange(float viewRange) {
-        this.viewRange = viewRange;
     }
 
     public float getShadowRadius() {

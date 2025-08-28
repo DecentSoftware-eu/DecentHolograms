@@ -32,7 +32,6 @@ public abstract class DisplayBase<T> {
     protected DisplayVector3f scale;
     protected DisplayBillboardConstraints billboardConstraints;
     protected DisplayBrightness brightnessOverride;
-    protected float viewRange = 1.0f;
     protected float shadowRadius = 0.0f;
     protected float shadowStrength = 1.0f;
 
@@ -87,14 +86,6 @@ public abstract class DisplayBase<T> {
 
     public void setBrightnessOverride(DisplayBrightness brightnessOverride) {
         this.brightnessOverride = brightnessOverride;
-    }
-
-    public float getViewRange() {
-        return viewRange;
-    }
-
-    public void setViewRange(float viewRange) {
-        this.viewRange = viewRange;
     }
 
     public float getShadowRadius() {

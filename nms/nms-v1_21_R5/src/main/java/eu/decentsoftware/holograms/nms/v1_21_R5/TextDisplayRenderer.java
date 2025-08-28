@@ -39,7 +39,6 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
                         .withDisplayScale(textDisplayData.getScale())
                         .withDisplayBillboardConstraints(textDisplayData.getBillboardConstraints())
                         .withDisplayBrightness(textDisplayData.getBrightnessOverride())
-                        .withDisplayViewRange(textDisplayData.getViewRange())
                         .withDisplayShadowRadius(textDisplayData.getShadowRadius())
                         .withDisplayShadowStrength(textDisplayData.getShadowStrength())
                         .toWatchableObjects())
@@ -64,7 +63,6 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
                         .withDisplayScale(textDisplayData.getScale())
                         .withDisplayBillboardConstraints(textDisplayData.getBillboardConstraints())
                         .withDisplayBrightness(textDisplayData.getBrightnessOverride())
-                        .withDisplayViewRange(textDisplayData.getViewRange())
                         .withDisplayShadowRadius(textDisplayData.getShadowRadius())
                         .withDisplayShadowStrength(textDisplayData.getShadowStrength())
                         .toWatchableObjects())
@@ -97,7 +95,8 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
     @Override
     public double getHeight(NmsHologramPartData<TextDisplayData> data) {
         DisplayVector3f scale = data.getContent().getScale();
-        return TEXT_DISPLAY_BASE_HEIGHT * scale.getY();
+        int lineCount = data.getContent().getText().size();
+        return TEXT_DISPLAY_BASE_HEIGHT * lineCount * scale.getY();
     }
 
     @Override

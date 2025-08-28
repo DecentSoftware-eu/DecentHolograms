@@ -57,7 +57,6 @@ public class BlockDisplay extends DisplayBase<BlockDisplayData> {
         if (brightnessOverride != null) {
             data.setBrightnessOverride(brightnessOverride);
         }
-        data.setViewRange(viewRange);
         data.setShadowRadius(shadowRadius);
         data.setShadowStrength(shadowStrength);
         return data;
