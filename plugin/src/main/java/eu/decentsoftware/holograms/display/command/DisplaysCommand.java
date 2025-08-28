@@ -53,7 +53,13 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new TeleportDisplayCommand(displayService));
         addSubCommand(new FacingDisplayCommand(displayService));
         addSubCommand(new ListDisplaysCommand(displayService));
-
+        addSubCommand(new CloneDisplayCommand(displayService));
+        addSubCommand(new BlockDisplaySetBlockCommand(displayService));
+        addSubCommand(new ItemDisplaySetItemCommand(displayService));
+        addSubCommand(new TextDisplayAddLineCommand(displayService));
+        addSubCommand(new TextDisplayInsertLineCommand(displayService));
+        addSubCommand(new TextDisplayRemoveLineCommand(displayService));
+        addSubCommand(new TextDisplaySetLineCommand(displayService));
     }
 
     @Override

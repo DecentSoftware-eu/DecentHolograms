@@ -51,7 +51,7 @@ public class Vector3fDisplayAttribute<D> implements DisplayAttribute {
     }
 
     @Override
-    public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
+    public void applyValue(@NotNull DisplayBase<?> display, @NotNull String value) {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new DisplayAttributeValidationException("Attribute is not applicable to this display type.");
         }

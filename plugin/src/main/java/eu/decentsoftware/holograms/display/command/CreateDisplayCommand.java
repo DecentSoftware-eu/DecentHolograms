@@ -101,7 +101,7 @@ class CreateDisplayCommand extends DecentCommand {
         );
     }
 
-    private DisplayBase createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
+    private DisplayBase<?> createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
         switch (type) {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
@@ -127,10 +127,10 @@ class CreateDisplayCommand extends DecentCommand {
     @Override
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
-            if (args.length == 1) {
+            if (args.length == 2) {
                 return Stream.of(DisplayType.values())
                         .map(Enum::name)
-                        .filter(s -> s.toUpperCase().startsWith(args[0].toUpperCase()))
+                        .filter(s -> s.toUpperCase().startsWith(args[1].toUpperCase()))
                         .collect(Collectors.toList());
             }
             return null;

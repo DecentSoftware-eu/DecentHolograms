@@ -129,9 +129,18 @@ public class Lang {
     public static final Phrase DISPLAY_ATTRIBUTE_DOES_NOT_EXIST = new Phrase("display.attribute.does_not_exist", "{prefix}Attribute &b'%1$s'&7 does not exist for that display.");
     public static final Phrase DISPLAY_ATTRIBUTE_INVALID_VALUE = new Phrase("display.attribute.invalid_value", "{prefix}&cInvalid value '%1$s' for attribute '%2$s'&c. %3$s");
     public static final Phrase DISPLAY_ATTRIBUTE_SET = new Phrase("display.attribute.set", "{prefix}Set attribute &b'%1$s'&7 to &b'%2$s'&7.");
-    public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}Teleported!");
+    public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}&aTeleported!");
     public static final Phrase DISPLAY_WORLD_DOES_NOT_EXIST = new Phrase("display.world_does_not_exist", "{prefix}&cWorld of display '%1$s' doesn't exist!");
     public static final Phrase DISPLAY_LIST_NO_DISPLAYS = new Phrase("display.list.no_displays", "{prefix}There are currently no displays.");
+    public static final Phrase DISPLAY_WRONG_TYPE = new Phrase("display.wrong_type", "{prefix}&cDisplay is not of type '%1$s'.");
+    public static final Phrase DISPLAY_INVALID_BLOCK_TYPE = new Phrase("display.invalid_block_type", "{prefix}&cInvalid block type: '%1$s'");
+    public static final Phrase DISPLAY_BLOCK_SET = new Phrase("display.block_set", "{prefix}Set block of display &b'%1$s'&7 to &b'%2$s'&7.");
+    public static final Phrase DISPLAY_ITEM_SET = new Phrase("display.item_set", "{prefix}Set item of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_ADDED = new Phrase("display.text.line_added", "{prefix}Added line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SET = new Phrase("display.text.line_set", "{prefix}Set line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_REMOVED = new Phrase("display.text.line_removed", "{prefix}Removed line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_INSERTED = new Phrase("display.text.line_inserted", "{prefix}Inserted line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SWAPPED = new Phrase("display.text.line_swapped", "{prefix}Swapped lines &b%2$d&7 and &b%3$d&7 of display &b'%1$s'&7.");
 
     /*
      *	General Methods

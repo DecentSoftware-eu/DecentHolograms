@@ -32,14 +32,6 @@ public class DisplayColor {
         this.blue = blue;
     }
 
-    public static DisplayColor fromRGBorARGB(int rgbOrArgb) {
-        if ((rgbOrArgb >> 24) == 0x00) {
-            return fromRGB(rgbOrArgb);
-        } else {
-            return fromARGB(rgbOrArgb);
-        }
-    }
-
     public static DisplayColor fromARGB(int argb) {
         return new DisplayColor((argb >> 24) & 0xFF, (argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF);
     }
