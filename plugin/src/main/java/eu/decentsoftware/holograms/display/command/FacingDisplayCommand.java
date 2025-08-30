@@ -47,7 +47,7 @@ class FacingDisplayCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
             float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, "Yaw must be a valid number between -180 and 180.");

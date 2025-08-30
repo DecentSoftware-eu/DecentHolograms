@@ -51,7 +51,7 @@ class TextDisplaySetLineCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(3, args);
-            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
+            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
             int index = Validator.getInteger(args[1], 1, textDisplay.getLines().size(), "Line index out of bounds.");
@@ -70,7 +70,7 @@ class TextDisplaySetLineCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                DisplayBase<?> display = displayService.getDisplay(args[0]);
+                DisplayBase display = displayService.getDisplay(args[0]);
                 if (!(display instanceof TextDisplay)) {
                     return null;
                 }

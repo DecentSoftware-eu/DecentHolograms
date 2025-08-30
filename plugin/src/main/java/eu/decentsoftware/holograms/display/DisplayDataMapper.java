@@ -29,18 +29,7 @@ import org.bukkit.entity.Player;
 
 public class DisplayDataMapper {
 
-    public <T> T map(DisplayBase<T> display, Player player) {
-        if (display instanceof TextDisplay) {
-            return (T) mapTextDisplay((TextDisplay) display, player);
-        } else if (display instanceof ItemDisplay) {
-            return (T) mapItemDisplay((ItemDisplay) display, player);
-        } else if (display instanceof BlockDisplay) {
-            return (T) mapBlockDisplay((BlockDisplay) display);
-        }
-        return null;
-    }
-
-    private TextDisplayData mapTextDisplay(TextDisplay textDisplay, Player player) {
+    public TextDisplayData mapTextDisplay(TextDisplay textDisplay, Player player) {
         TextDisplayData data = new TextDisplayData();
         setCommonAttributes(textDisplay, data);
         data.setText(textDisplay.getText(player));
@@ -53,7 +42,7 @@ public class DisplayDataMapper {
         return data;
     }
 
-    private ItemDisplayData mapItemDisplay(ItemDisplay itemDisplay, Player player) {
+    public ItemDisplayData mapItemDisplay(ItemDisplay itemDisplay, Player player) {
         ItemDisplayData data = new ItemDisplayData();
         setCommonAttributes(itemDisplay, data);
         data.setDisplayedItem(itemDisplay.getDisplayedItem().parse(player));
@@ -62,7 +51,7 @@ public class DisplayDataMapper {
         return data;
     }
 
-    private BlockDisplayData mapBlockDisplay(BlockDisplay blockDisplay) {
+    public BlockDisplayData mapBlockDisplay(BlockDisplay blockDisplay) {
         BlockDisplayData data = new BlockDisplayData();
         setCommonAttributes(blockDisplay, data);
         data.setMaterial(blockDisplay.getMaterial());
@@ -70,7 +59,7 @@ public class DisplayDataMapper {
         return data;
     }
 
-    private void setCommonAttributes(DisplayBase<?> display, DisplayData data) {
+    private void setCommonAttributes(DisplayBase display, DisplayData data) {
         data.setTranslation(mapAttribute(NmsDisplayAttributeType.TRANSLATION, display.getTranslationAttribute()));
         data.setScale(mapAttribute(NmsDisplayAttributeType.SCALE, display.getScaleAttribute()));
         data.setBillboardConstraints(mapAttribute(NmsDisplayAttributeType.BILLBOARD, display.getBillboardAttribute()));

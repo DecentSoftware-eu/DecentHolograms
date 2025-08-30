@@ -52,7 +52,7 @@ class TeleportDisplayCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(1, args);
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
             World world = Bukkit.getWorld(location.getWorldName());

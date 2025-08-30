@@ -18,28 +18,21 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
-import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsTextDisplayRenderer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TextDisplay extends DisplayBase<TextDisplayData> {
+public class TextDisplay extends DisplayBase {
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final List<String> lines;
-    private final NmsTextDisplayRenderer renderer;
     private DisplayAttribute<Integer> lineWidthAttribute;
     private DisplayAttribute<DisplayColor> backgroundColorAttribute;
     private DisplayAttribute<Byte> textOpacityAttribute;
@@ -50,18 +43,12 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
     public TextDisplay(String name, DecentLocation location) {
         super(name, location);
         this.lines = new ArrayList<>();
-        this.renderer = DECENT_HOLOGRAMS.getNmsAdapter().getDisplayRendererFactory().createTextDisplayRenderer();
     }
 
     public List<String> getText(Player player) {
         return lines.stream()
                 .map(line -> Common.colorize(PAPI.setPlaceholders(player, line)))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public NmsDisplayRenderer<TextDisplayData> getDisplayRenderer() {
-        return renderer;
     }
 
     @Override

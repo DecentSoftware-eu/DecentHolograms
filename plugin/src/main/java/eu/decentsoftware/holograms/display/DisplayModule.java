@@ -19,6 +19,9 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
+import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
+import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,9 +38,11 @@ public class DisplayModule {
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
 
-    public DisplayModule(JavaPlugin plugin) {
+    public DisplayModule(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory) {
         this.plugin = plugin;
-        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService(), new DisplayDataMapper());
+        DisplayDataMapper dataMapper = new DisplayDataMapper();
+        DisplayRenderingAdapterFactory renderingAdapterFactory = new DisplayRenderingAdapterFactory(dataMapper, rendererFactory);
+        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService(), renderingAdapterFactory);
         this.displayService = new DisplayService(renderingService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);

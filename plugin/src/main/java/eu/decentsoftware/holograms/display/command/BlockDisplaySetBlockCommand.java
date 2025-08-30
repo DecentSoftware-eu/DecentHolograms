@@ -53,7 +53,7 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.BLOCK);
+            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.BLOCK);
 
             String blockType = args[1];
             Material material = DecentMaterial.parseMaterial(blockType);

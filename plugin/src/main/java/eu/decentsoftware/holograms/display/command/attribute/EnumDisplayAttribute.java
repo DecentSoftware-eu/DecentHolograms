@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-public class EnumDisplayAttribute<E, D extends DisplayBase<?>> implements DisplayAttribute {
+public class EnumDisplayAttribute<E, D extends DisplayBase> implements DisplayAttribute {
 
     private final String name;
     private final Class<E> enumClass;
@@ -60,7 +60,7 @@ public class EnumDisplayAttribute<E, D extends DisplayBase<?>> implements Displa
     }
 
     @Override
-    public void applyValue(@NotNull DisplayBase<?> display, @NotNull String value) {
+    public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         E enumValue = this.parseValue(value);
         if (enumValue == null) {
             throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected one of: " +

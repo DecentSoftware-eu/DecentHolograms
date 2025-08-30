@@ -79,7 +79,7 @@ class CreateDisplayCommand extends DecentCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            DisplayBase<?> display = createDisplay(type, name, args, DecentLocation.fromBukkitLocation(location));
+            DisplayBase display = createDisplay(type, name, args, DecentLocation.fromBukkitLocation(location));
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);
@@ -87,7 +87,7 @@ class CreateDisplayCommand extends DecentCommand {
         };
     }
 
-    private DisplayBase<?> createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
+    private DisplayBase createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
         switch (type) {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);

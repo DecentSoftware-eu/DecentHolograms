@@ -88,16 +88,6 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
                 .sendTo(player);
     }
 
-    @Override
-    public double getHeight(NmsHologramPartData<TextDisplayData> data) {
-        return 0d;
-    }
-
-    @Override
-    public int[] getEntityIds() {
-        return new int[]{entityId};
-    }
-
     private DecentPosition offsetPosition(DecentPosition position) {
         return position;
     }

@@ -78,7 +78,7 @@ public class DisplayAttributeService {
         attributes.forEach(attribute -> addAttribute(map, attribute));
     }
 
-    public Map<String, DisplayAttribute> getAvailableAttributes(DisplayBase<?> display) {
+    public Map<String, DisplayAttribute> getAvailableAttributes(DisplayBase display) {
         if (display instanceof TextDisplay) {
             return TEXT_ATTRIBUTES;
         } else if (display instanceof ItemDisplay) {

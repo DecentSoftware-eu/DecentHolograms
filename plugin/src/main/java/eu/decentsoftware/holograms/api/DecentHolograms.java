@@ -72,7 +72,7 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        this.displayModule = new DisplayModule(plugin);
+        this.displayModule = new DisplayModule(plugin, nmsAdapter.getDisplayRendererFactory());
         this.displayModule.initialize();
 
         PluginManager pm = Bukkit.getPluginManager();

@@ -328,16 +328,16 @@ public final class Validator {
         }
     }
 
-    public static DisplayBase<?> getDisplay(DisplayService displayService, String name) {
-        DisplayBase<?> display = displayService.getDisplay(name);
+    public static DisplayBase getDisplay(DisplayService displayService, String name) {
+        DisplayBase display = displayService.getDisplay(name);
         if (display == null) {
             throw new DecentCommandException(Lang.DISPLAY_DOES_NOT_EXIST.getValue(), name);
         }
         return display;
     }
 
-    public static DisplayBase<?> getDisplayOfType(DisplayService displayService, String name, DisplayType requiredType) {
-        DisplayBase<?> display = getDisplay(displayService, name);
+    public static DisplayBase getDisplayOfType(DisplayService displayService, String name, DisplayType requiredType) {
+        DisplayBase display = getDisplay(displayService, name);
         DisplayType displayType = display.getType();
         if (displayType != requiredType) {
             throw new DecentCommandException(Lang.DISPLAY_WRONG_TYPE.getValue(), requiredType);

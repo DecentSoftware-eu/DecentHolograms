@@ -50,7 +50,7 @@ class TextDisplayAddLineCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
+            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             String text = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             TextDisplay textDisplay = (TextDisplay) display;

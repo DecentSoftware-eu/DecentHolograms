@@ -53,7 +53,7 @@ class CloneDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             // TODO: Clone Display
             sender.sendMessage("Not Implemented Yet.");

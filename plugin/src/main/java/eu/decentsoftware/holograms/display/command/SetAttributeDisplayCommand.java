@@ -53,7 +53,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             String[] split = args[1].split("=");
             if (split.length != 2) {
@@ -87,7 +87,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                DisplayBase<?> display = displayService.getDisplay(args[0]);
+                DisplayBase display = displayService.getDisplay(args[0]);
                 if (display == null) {
                     return null;
                 }

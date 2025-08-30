@@ -50,7 +50,7 @@ class MoveHereDisplayCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(1, args);
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             Location location = ((Player) sender).getLocation();
             display.setLocation(DecentLocation.fromBukkitLocation(location));

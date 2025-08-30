@@ -58,7 +58,7 @@ public class ColorDisplayAttribute<D> implements DisplayAttribute {
     }
 
     @Override
-    public void applyValue(@NotNull DisplayBase<?> display, @NotNull String value) {
+    public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new DisplayAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
         }

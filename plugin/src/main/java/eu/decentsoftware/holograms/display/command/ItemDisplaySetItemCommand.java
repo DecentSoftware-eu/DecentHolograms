@@ -54,7 +54,7 @@ class ItemDisplaySetItemCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
+            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
 
             String itemDefinition = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             HologramItem hologramItem = new HologramItem(itemDefinition);

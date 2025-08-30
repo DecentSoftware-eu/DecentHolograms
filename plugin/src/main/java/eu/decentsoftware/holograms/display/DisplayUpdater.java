@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
+import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,7 +40,7 @@ public class DisplayUpdater extends Ticked {
     public void tick() {
         long currentTick = tickCounter.getAndIncrement();
         if (currentTick % 20 == 0) {
-            for (DisplayBase<?> display : displayService.getRegisteredDisplays()) {
+            for (DisplayBase display : displayService.getRegisteredDisplays()) {
                 renderingService.updateVisibility(display);
                 renderingService.updateContent(display);
             }

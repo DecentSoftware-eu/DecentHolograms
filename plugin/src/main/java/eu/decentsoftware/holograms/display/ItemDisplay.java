@@ -18,33 +18,20 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
-import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsItemDisplayRenderer;
 
-public class ItemDisplay extends DisplayBase<ItemDisplayData> {
+public class ItemDisplay extends DisplayBase {
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-    private final NmsItemDisplayRenderer renderer;
     private HologramItem displayedItem;
     private DisplayAttribute<ItemDisplayType> displayTypeAttribute;
     private DisplayAttribute<DisplayColor> glowColorAttribute;
 
     public ItemDisplay(String name, DecentLocation location) {
         super(name, location);
-        this.renderer = DECENT_HOLOGRAMS.getNmsAdapter().getDisplayRendererFactory().createItemDisplayRenderer();
-    }
-
-    @Override
-    public NmsDisplayRenderer<ItemDisplayData> getDisplayRenderer() {
-        return renderer;
     }
 
     @Override

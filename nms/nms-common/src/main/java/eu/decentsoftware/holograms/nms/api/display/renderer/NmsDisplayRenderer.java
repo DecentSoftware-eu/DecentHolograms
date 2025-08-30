@@ -19,11 +19,49 @@
 package eu.decentsoftware.holograms.nms.api.display.renderer;
 
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRenderer;
 import org.bukkit.entity.Player;
 
-public interface NmsDisplayRenderer<T> extends NmsHologramRenderer<T> {
+public interface NmsDisplayRenderer<T> {
 
+    /**
+     * Displays the display content to the specified player at the given position.
+     *
+     * @param player The player who will see the display.
+     * @param data   The display part data containing the position and content to display.
+     */
+    void display(Player player, NmsHologramPartData<T> data);
+
+    /**
+     * Updates the properties of a display for the specified player.
+     * This method can be used to modify attributes such as scale, rotation, or other property-specific details.
+     *
+     * @param player The player who sees the display.
+     * @param data   The display part data containing the updated properties.
+     */
     void updateProperties(Player player, NmsHologramPartData<T> data);
+
+    /**
+     * Updates the content of an already displayed display for the given player.
+     * This can be used to modify text, change an item, or update an entity.
+     *
+     * @param player The player who sees the display.
+     * @param data   The display part data containing the new content.
+     */
+    void updateContent(Player player, NmsHologramPartData<T> data);
+
+    /**
+     * Moves the display to a new position for the specified player.
+     *
+     * @param player The player who sees the display.
+     * @param data   The display part data containing the new position.
+     */
+    void move(Player player, NmsHologramPartData<T> data);
+
+    /**
+     * Hides the display from the specified player.
+     *
+     * @param player The player from whom the display should be hidden.
+     */
+    void hide(Player player);
 
 }

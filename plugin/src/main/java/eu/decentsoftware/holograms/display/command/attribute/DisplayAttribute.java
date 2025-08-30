@@ -54,6 +54,6 @@ public interface DisplayAttribute {
      * @param value   The value to apply.
      * @throws DisplayAttributeValidationException If the given value is invalid for the given display.
      */
-    void applyValue(@NotNull DisplayBase<?> display, @NotNull String value);
+    void applyValue(@NotNull DisplayBase display, @NotNull String value);
 
 }

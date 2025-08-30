@@ -18,31 +18,18 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
-import eu.decentsoftware.holograms.nms.api.display.data.BlockDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsBlockDisplayRenderer;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 import org.bukkit.Material;
 
-public class BlockDisplay extends DisplayBase<BlockDisplayData> {
+public class BlockDisplay extends DisplayBase {
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
-    private final NmsBlockDisplayRenderer renderer;
     private Material material;
     private DisplayAttribute<DisplayColor> glowColorAttribute;
 
     public BlockDisplay(String name, DecentLocation location) {
         super(name, location);
-        this.renderer = DECENT_HOLOGRAMS.getNmsAdapter().getDisplayRendererFactory().createBlockDisplayRenderer();
-    }
-
-    @Override
-    public NmsDisplayRenderer<BlockDisplayData> getDisplayRenderer() {
-        return renderer;
     }
 
     @Override

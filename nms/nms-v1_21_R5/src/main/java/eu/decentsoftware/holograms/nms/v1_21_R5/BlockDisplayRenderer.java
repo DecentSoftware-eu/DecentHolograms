@@ -94,16 +94,6 @@ class BlockDisplayRenderer implements NmsBlockDisplayRenderer {
                 .sendTo(player);
     }
 
-    @Override
-    public double getHeight(NmsHologramPartData<BlockDisplayData> data) {
-        return 0;
-    }
-
-    @Override
-    public int[] getEntityIds() {
-        return new int[]{entityId};
-    }
-
     private DecentPosition offsetPosition(DecentPosition position) {
         return position;
     }

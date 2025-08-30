@@ -23,9 +23,8 @@ import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 
-public abstract class DisplayBase<T> {
+public abstract class DisplayBase {
 
     protected final String name;
     protected DecentLocation location;
@@ -40,8 +39,6 @@ public abstract class DisplayBase<T> {
         this.name = name;
         this.location = location;
     }
-
-    public abstract NmsDisplayRenderer<T> getDisplayRenderer();
 
     public abstract DisplayType getType();
 

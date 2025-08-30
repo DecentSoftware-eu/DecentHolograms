@@ -52,7 +52,7 @@ class MoveDisplayCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(4, args);
-            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
             double x = Validator.getLocationValue(args[1], location.getX());
@@ -84,7 +84,7 @@ class MoveDisplayCommand extends DecentCommand {
     }
 
     private List<String> getCoordinateSuggestions(String[] args, ToDoubleFunction<DecentLocation> getCurrentCoordinate) {
-        DisplayBase<?> display = displayService.getDisplay(args[0]);
+        DisplayBase display = displayService.getDisplay(args[0]);
         DecentLocation location = display == null ? null : display.getLocation();
         if (location != null) {
             return Lists.newArrayList(String.valueOf(getCurrentCoordinate.applyAsDouble(location)), "~");
