@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.rendering.DisplayDataMapper;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;

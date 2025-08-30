@@ -16,9 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display;
+package eu.decentsoftware.holograms.display.rendering;
 
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.BlockDisplay;
+import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.ItemDisplay;
+import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.nms.api.display.data.BlockDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayData;
