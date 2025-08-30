@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class DisplayVisibilityService {
 
@@ -57,5 +59,11 @@ public class DisplayVisibilityService {
 
     private Set<UUID> getViewers(DisplayBase<?> display) {
         return viewersMap.computeIfAbsent(display.getName(), k -> ConcurrentHashMap.newKeySet());
+    }
+
+    public Set<Player> getViewersAsPlayers(DisplayBase<?> display) {
+        return getViewers(display).stream()
+                .map(Bukkit::getPlayer)
+                .collect(Collectors.toSet());
     }
 }

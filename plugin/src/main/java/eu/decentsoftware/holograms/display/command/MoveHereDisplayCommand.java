@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -48,30 +49,14 @@ class MoveHereDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 1) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
+            Validator.validateArgsCount(1, args);
+            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
 
             Location location = ((Player) sender).getLocation();
-            display.setLocation(new DecentLocation(
-                    location.getWorld().getName(),
-                    location.getX(),
-                    location.getY(),
-                    location.getZ(),
-                    location.getYaw(),
-                    location.getPitch()
-            ));
+            display.setLocation(DecentLocation.fromBukkitLocation(location));
             displayService.updateDisplayLocation(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_MOVED.send(sender, name);
+            Lang.DISPLAY_MOVED.send(sender, display.getName());
             return true;
         };
     }

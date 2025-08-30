@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.plugin.Validator;
 
 @CommandInfo(
         usage = "/dh d delete <name>",
@@ -43,10 +44,7 @@ class DeleteDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 1) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
+            Validator.validateArgsCount(1, args);
 
             String name = args[0];
             boolean deleted = displayService.deleteDisplay(name);

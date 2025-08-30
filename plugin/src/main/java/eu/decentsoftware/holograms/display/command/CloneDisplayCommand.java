@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.plugin.Validator;
 
 @CommandInfo(
         usage = "/dh d clone <name> <clone_name>",
@@ -43,12 +44,8 @@ class CloneDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
 
-            String name = args[0];
             String cloneName = args[1];
 
             if (displayService.getDisplay(cloneName) != null) {
@@ -56,11 +53,7 @@ class CloneDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
+            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
 
             // TODO: Clone Display
             sender.sendMessage("Not Implemented Yet.");

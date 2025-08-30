@@ -11,6 +11,12 @@ import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import eu.decentsoftware.holograms.display.BlockDisplay;
+import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.display.ItemDisplay;
+import eu.decentsoftware.holograms.display.TextDisplay;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
@@ -316,4 +322,37 @@ public final class Validator {
         return number;
     }
 
+    public static void validateArgsCount(int requiredArgsCount, String[] args) {
+        if (args.length < requiredArgsCount) {
+            throw new DecentCommandException(Lang.USE_HELP.getValue());
+        }
+    }
+
+    public static DisplayBase<?> getDisplay(DisplayService displayService, String name) {
+        DisplayBase<?> display = displayService.getDisplay(name);
+        if (display == null) {
+            throw new DecentCommandException(Lang.DISPLAY_DOES_NOT_EXIST.getValue(), name);
+        }
+        return display;
+    }
+
+    public static DisplayBase<?> getDisplayOfType(DisplayService displayService, String name, DisplayType requiredType) {
+        DisplayBase<?> display = getDisplay(displayService, name);
+        DisplayType displayType = getDisplayType(display);
+        if (displayType != requiredType) {
+            throw new DecentCommandException(Lang.DISPLAY_WRONG_TYPE.getValue(), requiredType);
+        }
+        return display;
+    }
+
+    private static DisplayType getDisplayType(DisplayBase<?> display) {
+        if (display instanceof TextDisplay) {
+            return DisplayType.TEXT;
+        } else if (display instanceof ItemDisplay) {
+            return DisplayType.ITEM;
+        } else if (display instanceof BlockDisplay) {
+            return DisplayType.BLOCK;
+        }
+        throw new IllegalStateException("Unknown display type");
+    }
 }

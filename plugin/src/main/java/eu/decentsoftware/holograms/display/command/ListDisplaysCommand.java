@@ -53,14 +53,14 @@ class ListDisplaysCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            List<DisplayBase> displays = new ArrayList<>(displayService.getRegisteredDisplays());
+            List<DisplayBase<?>> displays = new ArrayList<>(displayService.getRegisteredDisplays());
             if (displays.isEmpty()) {
                 Lang.DISPLAY_LIST_NO_DISPLAYS.send(sender);
                 return true;
             }
             int currentPage = args.length >= 1 ? Validator.getInteger(args[0], "Page must be a valid integer.") - 1 : 0;
             List<String> header = Lists.newArrayList("", " &3&lDISPLAYS LIST - #" + (currentPage + 1), " &fList of all existing displays.", "");
-            Function<DisplayBase, String> parseItem = display -> {
+            Function<DisplayBase<?>, String> parseItem = display -> {
                 DecentLocation l = display.getLocation();
                 return String.format(" &8• &b%s &8| &7%s, %.2f, %.2f, %.2f", display.getName(), l.getWorldName(), l.getX(), l.getY(), l.getZ());
             };

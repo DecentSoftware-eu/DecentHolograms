@@ -28,7 +28,10 @@ import eu.decentsoftware.holograms.display.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 @CommandInfo(
         usage = "/dh d move <name> <x> <y> <z>",
@@ -48,17 +51,8 @@ class MoveDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 4) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
+            Validator.validateArgsCount(4, args);
+            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
             double x = Validator.getLocationValue(args[1], location.getX());
@@ -68,7 +62,7 @@ class MoveDisplayCommand extends DecentCommand {
             displayService.updateDisplayLocation(display);
             displayService.saveDisplay(display);
 
-            Lang.DISPLAY_MOVED.send(sender, name);
+            Lang.DISPLAY_MOVED.send(sender, display.getName());
             return true;
         };
     }
@@ -76,33 +70,25 @@ class MoveDisplayCommand extends DecentCommand {
     @Override
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
-            DisplayBase<?> display;
-            DecentLocation location;
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2 && Validator.isPlayer(sender)) {
-                display = displayService.getDisplay(args[0]);
-                location = display == null ? null : display.getLocation();
-                if (location != null) {
-                    return Lists.newArrayList(String.valueOf(location.getX()), "~");
-                }
-                return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getX()));
+                return getCoordinateSuggestions(args, DecentLocation::getX);
             } else if (args.length == 3 && Validator.isPlayer(sender)) {
-                display = displayService.getDisplay(args[0]);
-                location = display == null ? null : display.getLocation();
-                if (location != null) {
-                    return Lists.newArrayList(String.valueOf(location.getY()), "~");
-                }
-                return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getY()));
+                return getCoordinateSuggestions(args, DecentLocation::getY);
             } else if (args.length == 4 && Validator.isPlayer(sender)) {
-                display = displayService.getDisplay(args[0]);
-                location = display == null ? null : display.getLocation();
-                if (location != null) {
-                    return Lists.newArrayList(String.valueOf(location.getZ()), "~");
-                }
-                return Lists.newArrayList(String.valueOf(((Player) sender).getLocation().getZ()));
+                return getCoordinateSuggestions(args, DecentLocation::getZ);
             }
             return null;
         };
+    }
+
+    private List<String> getCoordinateSuggestions(String[] args, ToDoubleFunction<DecentLocation> getCurrentCoordinate) {
+        DisplayBase<?> display = displayService.getDisplay(args[0]);
+        DecentLocation location = display == null ? null : display.getLocation();
+        if (location != null) {
+            return Lists.newArrayList(String.valueOf(getCurrentCoordinate.applyAsDouble(location)), "~");
+        }
+        return Collections.emptyList();
     }
 }

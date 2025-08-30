@@ -61,10 +61,7 @@ class CreateDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
 
             String name = args[0];
             if (!name.matches(Common.NAME_REGEX)) {
@@ -82,23 +79,12 @@ class CreateDisplayCommand extends DecentCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            DisplayBase<?> display = createDisplay(type, name, args, decentLocationFromBukkitLocation(location));
+            DisplayBase<?> display = createDisplay(type, name, args, DecentLocation.fromBukkitLocation(location));
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);
             return true;
         };
-    }
-
-    private DecentLocation decentLocationFromBukkitLocation(Location location) {
-        return new DecentLocation(
-                location.getWorld().getName(),
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getYaw(),
-                location.getPitch()
-        );
     }
 
     private DisplayBase<?> createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {

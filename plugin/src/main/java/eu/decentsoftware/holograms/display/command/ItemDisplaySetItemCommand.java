@@ -29,6 +29,7 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
+import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Material;
 
 import java.util.Arrays;
@@ -52,21 +53,8 @@ class ItemDisplaySetItemCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
-            if (!(display instanceof ItemDisplay)) {
-                Lang.DISPLAY_WRONG_TYPE.send(sender, DisplayType.ITEM.name());
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
 
             String itemDefinition = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             HologramItem hologramItem = new HologramItem(itemDefinition);
@@ -75,7 +63,7 @@ class ItemDisplaySetItemCommand extends DecentCommand {
             itemDisplay.setDisplayedItem(hologramItem);
             displayService.updateDisplayContent(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_ITEM_SET.send(sender, name);
+            Lang.DISPLAY_ITEM_SET.send(sender, display.getName());
             return true;
         };
     }

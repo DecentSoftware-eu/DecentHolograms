@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -244,6 +245,19 @@ public final class DecentLocation {
         return new DecentLocation(worldName, x, y, z, yaw, pitch);
     }
 
+    /**
+     * Converts this {@code DecentLocation} into an immutable {@link DecentPosition}.
+     * The resulting position includes the x, y, z coordinates, yaw, and pitch
+     * values of this location.
+     *
+     * @return A new {@link DecentPosition} instance based on this location's coordinates, yaw, and pitch.
+     */
+    @Contract(value = " -> new", pure = true)
+    @NotNull
+    public DecentPosition toDecentPosition() {
+        return new DecentPosition(x, y, z, yaw, pitch);
+    }
+
     @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
@@ -281,4 +295,22 @@ public final class DecentLocation {
                 "}";
     }
 
+    /**
+     * Converts a Bukkit {@link Location} object into a {@link DecentLocation} instance.
+     *
+     * @param location The Bukkit Location to convert. Must not be null.
+     * @return A new DecentLocation instance based on the provided location's world, coordinates, yaw, and pitch.
+     */
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    public static DecentLocation fromBukkitLocation(@NotNull Location location) {
+        return new DecentLocation(
+                location.getWorld().getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getYaw(),
+                location.getPitch()
+        );
+    }
 }

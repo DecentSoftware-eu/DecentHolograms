@@ -46,17 +46,8 @@ class FacingDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
             float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, "Yaw must be a valid number between -180 and 180.");
@@ -73,7 +64,7 @@ class FacingDisplayCommand extends DecentCommand {
             ));
             displayService.updateDisplayLocation(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_FACING_SET.send(sender, name);
+            Lang.DISPLAY_FACING_SET.send(sender, display.getName());
             return true;
         };
     }

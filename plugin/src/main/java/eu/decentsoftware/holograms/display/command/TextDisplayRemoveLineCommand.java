@@ -50,28 +50,15 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
-            if (!(display instanceof TextDisplay)) {
-                Lang.DISPLAY_WRONG_TYPE.send(sender, DisplayType.TEXT.name());
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
             int index = Validator.getInteger(args[1], 1, textDisplay.getLines().size(), "Line index out of bounds.");
             textDisplay.removeLine(index - 1);
             displayService.updateDisplayContent(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_TEXT_LINE_REMOVED.send(sender, name, index);
+            Lang.DISPLAY_TEXT_LINE_REMOVED.send(sender, display.getName(), index);
             return true;
         };
     }

@@ -28,6 +28,7 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Material;
 
 import java.util.Arrays;
@@ -51,21 +52,8 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
-            if (!(display instanceof BlockDisplay)) {
-                Lang.DISPLAY_WRONG_TYPE.send(sender, DisplayType.BLOCK.name());
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.BLOCK);
 
             String blockType = args[1];
             Material material = DecentMaterial.parseMaterial(blockType);
@@ -78,7 +66,7 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
             blockDisplay.setMaterial(material);
             displayService.updateDisplayContent(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_BLOCK_SET.send(sender, name, blockType);
+            Lang.DISPLAY_BLOCK_SET.send(sender, display.getName(), blockType);
             return true;
         };
     }

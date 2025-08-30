@@ -27,6 +27,7 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Arrays;
 
@@ -48,28 +49,15 @@ class TextDisplayAddLineCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            String name = args[0];
-            DisplayBase<?> display = displayService.getDisplay(name);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender, name);
-                return true;
-            }
-            if (!(display instanceof TextDisplay)) {
-                Lang.DISPLAY_WRONG_TYPE.send(sender, DisplayType.TEXT.name());
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             String text = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             TextDisplay textDisplay = (TextDisplay) display;
             textDisplay.addLine(text);
             displayService.updateDisplayContent(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_TEXT_LINE_ADDED.send(sender, name);
+            Lang.DISPLAY_TEXT_LINE_ADDED.send(sender, display.getName());
             return true;
         };
     }

@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
-import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -49,14 +48,12 @@ public class DisplayRenderingService {
     }
 
     public void updateVisibility(DisplayBase<?> display, Player player) {
-        if (visibilityService.shouldBeShownToPlayer(display, player)) {
-            if (!visibilityService.isShownToPlayer(display, player)) {
-                showForPlayer(display, player);
-            }
-        } else {
-            if (visibilityService.isShownToPlayer(display, player)) {
-                hideForPlayer(display, player);
-            }
+        boolean shouldBeShownToPlayer = visibilityService.shouldBeShownToPlayer(display, player);
+        boolean isShownToPlayer = visibilityService.isShownToPlayer(display, player);
+        if (shouldBeShownToPlayer && !isShownToPlayer) {
+            showForPlayer(display, player);
+        } else if (!shouldBeShownToPlayer && isShownToPlayer) {
+            hideForPlayer(display, player);
         }
     }
 
@@ -79,11 +76,9 @@ public class DisplayRenderingService {
     }
 
     private <T> void performForAllViewers(DisplayBase<T> display, BiConsumer<Player, NmsDisplayRenderer<T>> consumer) {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
-                NmsDisplayRenderer<T> renderer = display.getDisplayRenderer();
-                consumer.accept(onlinePlayer, renderer);
-            }
+        for (Player onlinePlayer : visibilityService.getViewersAsPlayers(display)) {
+            NmsDisplayRenderer<T> renderer = display.getDisplayRenderer();
+            consumer.accept(onlinePlayer, renderer);
         }
     }
 
@@ -94,16 +89,7 @@ public class DisplayRenderingService {
 
     private <T> NmsHologramPartData<T> getPartData(DisplayBase<T> display, Player player) {
         return new NmsHologramPartData<>(
-                () -> {
-                    DecentLocation location = display.getLocation();
-                    return new DecentPosition(
-                            location.getX(),
-                            location.getY(),
-                            location.getZ(),
-                            location.getYaw(),
-                            location.getPitch()
-                    );
-                },
+                () -> display.getLocation().toDecentPosition(),
                 () -> display.createDisplayData(player)
         );
     }

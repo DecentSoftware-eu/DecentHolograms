@@ -28,6 +28,7 @@ import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValidationException;
+import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,16 +52,8 @@ class SetAttributeDisplayCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            if (args.length < 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
-            DisplayBase<?> display = displayService.getDisplay(args[0]);
-            if (display == null) {
-                Lang.DISPLAY_DOES_NOT_EXIST.send(sender);
-                return true;
-            }
+            Validator.validateArgsCount(2, args);
+            DisplayBase<?> display = Validator.getDisplay(displayService, args[0]);
 
             String[] split = args[1].split("=");
             if (split.length != 2) {
