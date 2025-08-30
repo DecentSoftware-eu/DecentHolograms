@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeService;
 
 @CommandInfo(
         usage = "/dh displays help",
@@ -47,13 +48,15 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new CreateDisplayCommand(displayService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));
-        addSubCommand(new SetAttributeDisplayCommand(displayService));
+        DisplayAttributeService attributeService = new DisplayAttributeService();
+        addSubCommand(new SetAttributeDisplayCommand(displayService, attributeService));
+//        addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeService));
         addSubCommand(new CenterDisplayCommand(displayService));
         addSubCommand(new MoveHereDisplayCommand(displayService));
         addSubCommand(new TeleportDisplayCommand(displayService));
         addSubCommand(new FacingDisplayCommand(displayService));
         addSubCommand(new ListDisplaysCommand(displayService));
-        addSubCommand(new CloneDisplayCommand(displayService));
+//        addSubCommand(new CloneDisplayCommand(displayService));
         addSubCommand(new BlockDisplaySetBlockCommand(displayService));
         addSubCommand(new ItemDisplaySetItemCommand(displayService));
         addSubCommand(new TextDisplayAddLineCommand(displayService));

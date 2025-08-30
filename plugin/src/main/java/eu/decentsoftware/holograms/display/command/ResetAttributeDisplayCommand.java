@@ -27,24 +27,23 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.command.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeService;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeValidationException;
 import eu.decentsoftware.holograms.plugin.Validator;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @CommandInfo(
-        usage = "/dh d set-attribute <name> <attribute>=<value>",
-        description = "Set a display attribute.",
-        aliases = {"setattribute", "attribute", "attr"}
+        usage = "/dh d reset-attribute <name> <attribute>",
+        description = "Reset a display attribute to the default value.",
+        aliases = {"resetattribute", "unsetattribute"}
 )
-class SetAttributeDisplayCommand extends DecentCommand {
+class ResetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final DisplayAttributeService attributeService;
 
-    SetAttributeDisplayCommand(DisplayService displayService, DisplayAttributeService attributeService) {
-        super("set-attribute");
+    ResetAttributeDisplayCommand(DisplayService displayService, DisplayAttributeService attributeService) {
+        super("reset-attribute");
         this.displayService = displayService;
         this.attributeService = attributeService;
     }
@@ -55,29 +54,19 @@ class SetAttributeDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            String[] split = args[1].split("=");
-            if (split.length != 2) {
-                Lang.USE_HELP.send(sender);
-                return true;
-            }
-
             Map<String, DisplayAttribute> attributes = attributeService.getAvailableAttributes(display);
-            DisplayAttribute attribute = attributes.get(split[0]);
+            DisplayAttribute attribute = attributes.get(args[1]);
             if (attribute == null) {
-                Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, split[0]);
+                Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, args[1]);
                 return true;
             }
 
-            try {
-                attribute.applyValue(display, split[1]);
-                displayService.updateDisplayProperties(display);
-                displayService.saveDisplay(display);
-                Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attribute.getName(), split[1]);
-                return true;
-            } catch (DisplayAttributeValidationException e) {
-                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attribute.getName(), e.getMessage());
-                return true;
-            }
+            // TODO: Reset Attribute
+//            attribute.resetValue(display);
+            displayService.updateDisplayProperties(display);
+            displayService.saveDisplay(display);
+            Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attribute.getName());
+            return true;
         };
     }
 
@@ -88,30 +77,10 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
-                if (display == null) {
-                    return null;
+                if (display != null) {
+                    return TabCompleteHandler.getPartialMatches(args[1],
+                            new ArrayList<>(attributeService.getAvailableAttributes(display).keySet()));
                 }
-                String[] split;
-                if (args[1].endsWith("=")) {
-                    split = new String[]{args[1].substring(0, args[1].length() - 1), ""};
-                } else {
-                    split = args[1].split("=");
-                }
-                if (split.length == 2) {
-                    DisplayAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
-                    if (attribute == null) {
-                        return null;
-                    }
-                    return attribute.getValueHints(sender, split[1]).stream()
-                            .filter(s -> s.startsWith(split[1]))
-                            .map(s -> split[0] + "=" + s)
-                            .collect(Collectors.toList());
-                }
-                return TabCompleteHandler.getPartialMatches(args[1],
-                        attributeService.getAvailableAttributes(display).keySet().stream()
-                                .map(hint -> hint + "=")
-                                .collect(Collectors.toList())
-                );
             }
             return null;
         };
