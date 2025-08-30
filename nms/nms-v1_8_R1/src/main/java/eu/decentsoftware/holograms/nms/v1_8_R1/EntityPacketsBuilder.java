@@ -143,18 +143,18 @@ class EntityPacketsBuilder {
         return this;
     }
 
-    EntityPacketsBuilder withPassenger(int entityId, int passenger) {
-        return updatePassenger(entityId, passenger);
+    EntityPacketsBuilder attachEntity(int attachedEntityId, int vehicleEntityId) {
+        return updatePassenger(attachedEntityId, vehicleEntityId);
     }
 
-    EntityPacketsBuilder withRemovePassenger(int entityId) {
-        return updatePassenger(entityId, -1);
+    EntityPacketsBuilder unattachEntity(int attachedEntityId) {
+        return updatePassenger(attachedEntityId, -1);
     }
 
-    private EntityPacketsBuilder updatePassenger(int entityId, int passenger) {
+    private EntityPacketsBuilder updatePassenger(int attachedEntityId, int vehicleEntityId) {
         PacketDataSerializerWrapper serializer = PacketDataSerializerWrapper.getInstance();
-        serializer.writeInt(passenger);
-        serializer.writeInt(entityId);
+        serializer.writeInt(attachedEntityId);
+        serializer.writeInt(vehicleEntityId);
         serializer.writeByte(0); // Leash
 
         PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
