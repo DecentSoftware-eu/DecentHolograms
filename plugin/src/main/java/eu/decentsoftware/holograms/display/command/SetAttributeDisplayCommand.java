@@ -106,6 +106,9 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 }
                 if (split.length == 2) {
                     DisplayAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
+                    if (attribute == null) {
+                        return null;
+                    }
                     return attribute.getValueHints(sender, split[1]).stream()
                             .filter(s -> s.startsWith(split[1]))
                             .map(s -> split[0] + "=" + s)
