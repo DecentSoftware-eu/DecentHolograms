@@ -23,8 +23,8 @@ import org.bukkit.inventory.ItemStack;
 public class ItemDisplayData extends DisplayData {
 
     private ItemStack displayedItem;
-    private ItemDisplayType displayType;
-    private DisplayColor glowColor;
+    private NmsDisplayAttribute<ItemDisplayType> displayType;
+    private NmsDisplayAttribute<DisplayColor> glowColor;
 
     public ItemStack getDisplayedItem() {
         return displayedItem;
@@ -34,19 +34,19 @@ public class ItemDisplayData extends DisplayData {
         this.displayedItem = displayedItem;
     }
 
-    public ItemDisplayType getDisplayType() {
+    public NmsDisplayAttribute<ItemDisplayType> getDisplayType() {
         return displayType;
     }
 
-    public void setDisplayType(ItemDisplayType displayType) {
+    public void setDisplayType(NmsDisplayAttribute<ItemDisplayType> displayType) {
         this.displayType = displayType;
     }
 
-    public DisplayColor getGlowColor() {
+    public NmsDisplayAttribute<DisplayColor> getGlowColor() {
         return glowColor;
     }
 
-    public void setGlowColor(DisplayColor glowColor) {
+    public void setGlowColor(NmsDisplayAttribute<DisplayColor> glowColor) {
         this.glowColor = glowColor;
     }
 }

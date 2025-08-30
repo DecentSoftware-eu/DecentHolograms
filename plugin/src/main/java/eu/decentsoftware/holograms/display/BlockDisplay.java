@@ -20,19 +20,20 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.BlockDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsBlockDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 public class BlockDisplay extends DisplayBase<BlockDisplayData> {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final NmsBlockDisplayRenderer renderer;
     private Material material;
-    private DisplayColor glowColor;
+    private DisplayAttribute<DisplayColor> glowColorAttribute;
 
     public BlockDisplay(String name, DecentLocation location) {
         super(name, location);
@@ -40,31 +41,13 @@ public class BlockDisplay extends DisplayBase<BlockDisplayData> {
     }
 
     @Override
-    public BlockDisplayData createDisplayData(Player player) {
-        BlockDisplayData data = new BlockDisplayData();
-        data.setMaterial(material);
-        data.setGlowColor(glowColor);
-
-        if (translation != null) {
-            data.setTranslation(translation);
-        }
-        if (scale != null) {
-            data.setScale(scale);
-        }
-        if (billboardConstraints != null) {
-            data.setBillboardConstraints(billboardConstraints);
-        }
-        if (brightnessOverride != null) {
-            data.setBrightnessOverride(brightnessOverride);
-        }
-        data.setShadowRadius(shadowRadius);
-        data.setShadowStrength(shadowStrength);
-        return data;
+    public NmsDisplayRenderer<BlockDisplayData> getDisplayRenderer() {
+        return renderer;
     }
 
     @Override
-    public NmsDisplayRenderer<BlockDisplayData> getDisplayRenderer() {
-        return renderer;
+    public DisplayType getType() {
+        return DisplayType.BLOCK;
     }
 
     public Material getMaterial() {
@@ -76,10 +59,18 @@ public class BlockDisplay extends DisplayBase<BlockDisplayData> {
     }
 
     public DisplayColor getGlowColor() {
-        return glowColor;
+        return glowColorAttribute.getValue();
     }
 
     public void setGlowColor(DisplayColor glowColor) {
-        this.glowColor = glowColor;
+        this.glowColorAttribute = new FixedDisplayAttribute<>(glowColor);
+    }
+
+    public DisplayAttribute<DisplayColor> getGlowColorAttribute() {
+        return glowColorAttribute;
+    }
+
+    public void setGlowColorAttribute(DisplayAttribute<DisplayColor> glowColorAttribute) {
+        this.glowColorAttribute = glowColorAttribute;
     }
 }

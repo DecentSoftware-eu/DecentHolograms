@@ -20,58 +20,58 @@ package eu.decentsoftware.holograms.nms.api.display.data;
 
 public class DisplayData {
 
-    private DisplayVector3f translation = new DisplayVector3f(0, 0, 0);
-    private DisplayVector3f scale = new DisplayVector3f(1, 1, 1);
-    private DisplayBillboardConstraints billboardConstraints = DisplayBillboardConstraints.CENTER;
-    private DisplayBrightness brightnessOverride;
-    private float shadowRadius = 0.0f;
-    private float shadowStrength = 1.0f;
+    private NmsDisplayAttribute<DisplayVector3f> translation;
+    private NmsDisplayAttribute<DisplayVector3f> scale;
+    private NmsDisplayAttribute<DisplayBillboardConstraints> billboardConstraints;
+    private NmsDisplayAttribute<DisplayBrightness> brightnessOverride;
+    private NmsDisplayAttribute<Float> shadowRadius;
+    private NmsDisplayAttribute<Float> shadowStrength;
 
-    public DisplayVector3f getTranslation() {
+    public NmsDisplayAttribute<DisplayVector3f> getTranslation() {
         return translation;
     }
 
-    public void setTranslation(DisplayVector3f translation) {
+    public void setTranslation(NmsDisplayAttribute<DisplayVector3f> translation) {
         this.translation = translation;
     }
 
-    public DisplayVector3f getScale() {
+    public NmsDisplayAttribute<DisplayVector3f> getScale() {
         return scale;
     }
 
-    public void setScale(DisplayVector3f scale) {
+    public void setScale(NmsDisplayAttribute<DisplayVector3f> scale) {
         this.scale = scale;
     }
 
-    public DisplayBillboardConstraints getBillboardConstraints() {
+    public NmsDisplayAttribute<DisplayBillboardConstraints> getBillboardConstraints() {
         return billboardConstraints;
     }
 
-    public void setBillboardConstraints(DisplayBillboardConstraints billboardConstraints) {
+    public void setBillboardConstraints(NmsDisplayAttribute<DisplayBillboardConstraints> billboardConstraints) {
         this.billboardConstraints = billboardConstraints;
     }
 
-    public DisplayBrightness getBrightnessOverride() {
+    public NmsDisplayAttribute<DisplayBrightness> getBrightnessOverride() {
         return brightnessOverride;
     }
 
-    public void setBrightnessOverride(DisplayBrightness brightnessOverride) {
+    public void setBrightnessOverride(NmsDisplayAttribute<DisplayBrightness> brightnessOverride) {
         this.brightnessOverride = brightnessOverride;
     }
 
-    public float getShadowRadius() {
+    public NmsDisplayAttribute<Float> getShadowRadius() {
         return shadowRadius;
     }
 
-    public void setShadowRadius(float shadowRadius) {
+    public void setShadowRadiusAttribute(NmsDisplayAttribute<Float> shadowRadius) {
         this.shadowRadius = shadowRadius;
     }
 
-    public float getShadowStrength() {
+    public NmsDisplayAttribute<Float> getShadowStrength() {
         return shadowStrength;
     }
 
-    public void setShadowStrength(float shadowStrength) {
+    public void setShadowStrengthAttribute(NmsDisplayAttribute<Float> shadowStrength) {
         this.shadowStrength = shadowStrength;
     }
 }

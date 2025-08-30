@@ -28,9 +28,11 @@ import java.util.function.BiConsumer;
 public class DisplayRenderingService {
 
     private final DisplayVisibilityService visibilityService;
+    private final DisplayDataMapper displayDataMapper;
 
-    public DisplayRenderingService(DisplayVisibilityService visibilityService) {
+    public DisplayRenderingService(DisplayVisibilityService visibilityService, DisplayDataMapper displayDataMapper) {
         this.visibilityService = visibilityService;
+        this.displayDataMapper = displayDataMapper;
     }
 
     public void hideDisplayForPlayer(DisplayBase<?> display, Player player) {
@@ -90,7 +92,7 @@ public class DisplayRenderingService {
     private <T> NmsHologramPartData<T> getPartData(DisplayBase<T> display, Player player) {
         return new NmsHologramPartData<>(
                 () -> display.getLocation().toDecentPosition(),
-                () -> display.createDisplayData(player)
+                () -> displayDataMapper.map(display, player)
         );
     }
 }

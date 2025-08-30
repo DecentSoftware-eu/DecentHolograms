@@ -37,7 +37,7 @@ public class DisplayModule {
 
     public DisplayModule(JavaPlugin plugin) {
         this.plugin = plugin;
-        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService());
+        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService(), new DisplayDataMapper());
         this.displayService = new DisplayService(renderingService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);

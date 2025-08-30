@@ -16,28 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.nms.api.display.data;
+package eu.decentsoftware.holograms.display.attributes;
 
-import org.bukkit.Material;
+public class FixedDisplayAttribute<T> implements DisplayAttribute<T> {
 
-public class BlockDisplayData extends DisplayData {
+    private final T value;
 
-    private Material material;
-    private NmsDisplayAttribute<DisplayColor> glowColor;
-
-    public Material getMaterial() {
-        return material;
+    public FixedDisplayAttribute(T value) {
+        this.value = value;
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public NmsDisplayAttribute<DisplayColor> getGlowColor() {
-        return glowColor;
-    }
-
-    public void setGlowColor(NmsDisplayAttribute<DisplayColor> glowColor) {
-        this.glowColor = glowColor;
+    @Override
+    public T getValue() {
+        return this.value;
     }
 }

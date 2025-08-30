@@ -16,28 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.nms.api.display.data;
+package eu.decentsoftware.holograms.display.attributes;
 
-import org.bukkit.Material;
+public interface DisplayAttribute<T> {
 
-public class BlockDisplayData extends DisplayData {
+    /*
 
-    private Material material;
-    private NmsDisplayAttribute<DisplayColor> glowColor;
+    getValue,
+    getDefaultValue,
+    setValue,
 
-    public Material getMaterial() {
-        return material;
-    }
+    for plugin:
+    - save to config,
+    - load from config
 
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
+    for commands:
+    - suggestions,
+    - parse from string,
+    - validate (min, max, etc.),
+    - update display
 
-    public NmsDisplayAttribute<DisplayColor> getGlowColor() {
-        return glowColor;
-    }
+     */
 
-    public void setGlowColor(NmsDisplayAttribute<DisplayColor> glowColor) {
-        this.glowColor = glowColor;
-    }
+    T getValue();
+
 }

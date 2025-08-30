@@ -23,12 +23,12 @@ import java.util.List;
 public class TextDisplayData extends DisplayData {
 
     private List<String> text;
-    private int lineWidth = 200;
-    private DisplayColor backgroundColor;
-    private byte textOpacity = -1;
-    private boolean textShadow = false;
-    private boolean seeThrough = false;
-    private TextDisplayAlignment textAlignment = TextDisplayAlignment.CENTER;
+    private NmsDisplayAttribute<Integer> lineWidthAttribute;
+    private NmsDisplayAttribute<DisplayColor> backgroundColorAttribute;
+    private NmsDisplayAttribute<Byte> textOpacityAttribute;
+    private NmsDisplayAttribute<Boolean> textShadowAttribute;
+    private NmsDisplayAttribute<Boolean> seeThroughAttribute;
+    private NmsDisplayAttribute<TextDisplayAlignment> alignmentAttribute;
 
     public List<String> getText() {
         return text;
@@ -38,51 +38,51 @@ public class TextDisplayData extends DisplayData {
         this.text = text;
     }
 
-    public int getLineWidth() {
-        return lineWidth;
+    public NmsDisplayAttribute<Integer> getLineWidthAttribute() {
+        return lineWidthAttribute;
     }
 
-    public void setLineWidth(int lineWidth) {
-        this.lineWidth = lineWidth;
+    public void setLineWidthAttribute(NmsDisplayAttribute<Integer> lineWidthAttribute) {
+        this.lineWidthAttribute = lineWidthAttribute;
     }
 
-    public DisplayColor getBackgroundColor() {
-        return backgroundColor;
+    public NmsDisplayAttribute<DisplayColor> getBackgroundColorAttribute() {
+        return backgroundColorAttribute;
     }
 
-    public void setBackgroundColor(DisplayColor backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    public void setBackgroundColorAttribute(NmsDisplayAttribute<DisplayColor> backgroundColorAttribute) {
+        this.backgroundColorAttribute = backgroundColorAttribute;
     }
 
-    public byte getTextOpacity() {
-        return textOpacity;
+    public NmsDisplayAttribute<Byte> getTextOpacityAttribute() {
+        return textOpacityAttribute;
     }
 
-    public void setTextOpacity(byte textOpacity) {
-        this.textOpacity = textOpacity;
+    public void setTextOpacityAttribute(NmsDisplayAttribute<Byte> textOpacityAttribute) {
+        this.textOpacityAttribute = textOpacityAttribute;
     }
 
-    public boolean isTextShadow() {
-        return textShadow;
+    public NmsDisplayAttribute<Boolean> getTextShadowAttribute() {
+        return textShadowAttribute;
     }
 
-    public void setTextShadow(boolean textShadow) {
-        this.textShadow = textShadow;
+    public void setTextShadowAttribute(NmsDisplayAttribute<Boolean> textShadowAttribute) {
+        this.textShadowAttribute = textShadowAttribute;
     }
 
-    public boolean isSeeThrough() {
-        return seeThrough;
+    public NmsDisplayAttribute<Boolean> getSeeThroughAttribute() {
+        return seeThroughAttribute;
     }
 
-    public void setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
+    public void setSeeThroughAttribute(NmsDisplayAttribute<Boolean> seeThroughAttribute) {
+        this.seeThroughAttribute = seeThroughAttribute;
     }
 
-    public TextDisplayAlignment getTextAlignment() {
-        return textAlignment;
+    public NmsDisplayAttribute<TextDisplayAlignment> getAlignmentAttribute() {
+        return alignmentAttribute;
     }
 
-    public void setTextAlignment(TextDisplayAlignment textAlignment) {
-        this.textAlignment = textAlignment;
+    public void setAlignmentAttribute(NmsDisplayAttribute<TextDisplayAlignment> alignmentAttribute) {
+        this.alignmentAttribute = alignmentAttribute;
     }
 }

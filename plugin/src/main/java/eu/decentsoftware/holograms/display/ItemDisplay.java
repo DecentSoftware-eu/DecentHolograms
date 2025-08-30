@@ -21,20 +21,21 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsItemDisplayRenderer;
-import org.bukkit.entity.Player;
 
 public class ItemDisplay extends DisplayBase<ItemDisplayData> {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final NmsItemDisplayRenderer renderer;
     private HologramItem displayedItem;
-    private ItemDisplayType displayType = ItemDisplayType.NONE;
-    private DisplayColor glowColor;
+    private DisplayAttribute<ItemDisplayType> displayTypeAttribute;
+    private DisplayAttribute<DisplayColor> glowColorAttribute;
 
     public ItemDisplay(String name, DecentLocation location) {
         super(name, location);
@@ -42,34 +43,13 @@ public class ItemDisplay extends DisplayBase<ItemDisplayData> {
     }
 
     @Override
-    public ItemDisplayData createDisplayData(Player player) {
-        ItemDisplayData data = new ItemDisplayData();
-        data.setDisplayedItem(displayedItem.parse(player));
-        if (displayType != null) {
-            data.setDisplayType(displayType);
-        }
-        data.setGlowColor(glowColor);
-
-        if (translation != null) {
-            data.setTranslation(translation);
-        }
-        if (scale != null) {
-            data.setScale(scale);
-        }
-        if (billboardConstraints != null) {
-            data.setBillboardConstraints(billboardConstraints);
-        }
-        if (brightnessOverride != null) {
-            data.setBrightnessOverride(brightnessOverride);
-        }
-        data.setShadowRadius(shadowRadius);
-        data.setShadowStrength(shadowStrength);
-        return data;
+    public NmsDisplayRenderer<ItemDisplayData> getDisplayRenderer() {
+        return renderer;
     }
 
     @Override
-    public NmsDisplayRenderer<ItemDisplayData> getDisplayRenderer() {
-        return renderer;
+    public DisplayType getType() {
+        return DisplayType.ITEM;
     }
 
     public HologramItem getDisplayedItem() {
@@ -81,18 +61,34 @@ public class ItemDisplay extends DisplayBase<ItemDisplayData> {
     }
 
     public ItemDisplayType getDisplayType() {
-        return displayType;
+        return displayTypeAttribute.getValue();
     }
 
     public void setDisplayType(ItemDisplayType displayType) {
-        this.displayType = displayType;
+        this.displayTypeAttribute = new FixedDisplayAttribute<>(displayType);
     }
 
     public DisplayColor getGlowColor() {
-        return glowColor;
+        return glowColorAttribute.getValue();
     }
 
     public void setGlowColor(DisplayColor glowColor) {
-        this.glowColor = glowColor;
+        this.glowColorAttribute = new FixedDisplayAttribute<>(glowColor);
+    }
+
+    public DisplayAttribute<ItemDisplayType> getDisplayTypeAttribute() {
+        return displayTypeAttribute;
+    }
+
+    public void setDisplayTypeAttribute(DisplayAttribute<ItemDisplayType> displayTypeAttribute) {
+        this.displayTypeAttribute = displayTypeAttribute;
+    }
+
+    public DisplayAttribute<DisplayColor> getGlowColorAttribute() {
+        return glowColorAttribute;
+    }
+
+    public void setGlowColorAttribute(DisplayAttribute<DisplayColor> glowColorAttribute) {
+        this.glowColorAttribute = glowColorAttribute;
     }
 }

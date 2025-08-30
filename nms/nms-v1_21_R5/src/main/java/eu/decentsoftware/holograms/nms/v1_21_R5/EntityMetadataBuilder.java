@@ -6,6 +6,7 @@ import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
+import eu.decentsoftware.holograms.nms.api.display.data.NmsDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -104,19 +105,41 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withDisplayTranslation(DisplayVector3f translation) {
-        Vector3f translationVector = new Vector3f(translation.getX(), translation.getY(), translation.getZ());
+    EntityMetadataBuilder withDisplayTranslation(NmsDisplayAttribute<DisplayVector3f> translationAttribute) {
+        if (translationAttribute == null) {
+            return this;
+        }
+
+        DisplayVector3f translation = translationAttribute.getValue();
+        Vector3f translationVector;
+        if (translation == null) {
+            translationVector = new Vector3f(0.0f, 0.0f, 0.0f);
+        } else {
+            translationVector = new Vector3f(translation.getX(), translation.getY(), translation.getZ());
+        }
+
         watchableObjects.add(EntityMetadataType.DISPLAY_TRANSLATION.construct(translationVector));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayScale(DisplayVector3f scale) {
-        Vector3f scaleVector = new Vector3f(scale.getX(), scale.getY(), scale.getZ());
+    EntityMetadataBuilder withDisplayScale(NmsDisplayAttribute<DisplayVector3f> scaleAttribute) {
+        if (scaleAttribute == null) {
+            return this;
+        }
+
+        DisplayVector3f scale = scaleAttribute.getValue();
+        Vector3f scaleVector;
+        if (scale == null) {
+            scaleVector = new Vector3f(1.0f, 1.0f, 1.0f);
+        } else {
+            scaleVector = new Vector3f(scale.getX(), scale.getY(), scale.getZ());
+        }
+
         watchableObjects.add(EntityMetadataType.DISPLAY_SCALE.construct(scaleVector));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayBillboardConstraints(DisplayBillboardConstraints constraints) {
+    EntityMetadataBuilder withDisplayBillboardConstraints(NmsDisplayAttribute<DisplayBillboardConstraints> billboardAttribute) {
         /*
          * Billboard Constraints:
          * - 0x00 - fixed
@@ -124,9 +147,13 @@ class EntityMetadataBuilder {
          * - 0x02 - horizontal
          * - 0x03 - center
          */
+        if (billboardAttribute == null) {
+            return this;
+        }
 
+        DisplayBillboardConstraints constraints = billboardAttribute.getValue();
         if (constraints == null) {
-            constraints = DisplayBillboardConstraints.CENTER;
+            constraints = DisplayBillboardConstraints.FIXED;
         }
         byte data = switch (constraints) {
             case VERTICAL -> 0x01;
@@ -139,7 +166,12 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withDisplayBrightness(DisplayBrightness brightness) {
+    EntityMetadataBuilder withDisplayBrightness(NmsDisplayAttribute<DisplayBrightness> brightnessAttribute) {
+        if (brightnessAttribute == null) {
+            return this;
+        }
+
+        DisplayBrightness brightness = brightnessAttribute.getValue();
         int brightnessInt;
         if (brightness == null) {
             brightnessInt = -1;
@@ -151,22 +183,34 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withDisplayViewRange(float viewRange) {
-        watchableObjects.add(EntityMetadataType.DISPLAY_VIEW_RANGE.construct(viewRange));
+    EntityMetadataBuilder withDisplayShadowRadius(NmsDisplayAttribute<Float> shadowRadius) {
+        if (shadowRadius == null) {
+            return this;
+        }
+
+        float shadowRadiusFloat = shadowRadius.getValue() == null ? 0.0f : shadowRadius.getValue();
+
+        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_RADIUS.construct(shadowRadiusFloat));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayShadowRadius(float shadowRadius) {
-        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_RADIUS.construct(shadowRadius));
+    EntityMetadataBuilder withDisplayShadowStrength(NmsDisplayAttribute<Float> shadowStrength) {
+        if (shadowStrength == null) {
+            return this;
+        }
+
+        float shadowStrengthFloat = shadowStrength.getValue() == null ? 1.0f : shadowStrength.getValue();
+
+        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_STRENGTH.construct(shadowStrengthFloat));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayShadowStrength(float shadowStrength) {
-        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_STRENGTH.construct(shadowStrength));
-        return this;
-    }
+    EntityMetadataBuilder withDisplayGlowColorOverride(NmsDisplayAttribute<DisplayColor> glowColorOverrideAttribute) {
+        if (glowColorOverrideAttribute == null) {
+            return this;
+        }
 
-    EntityMetadataBuilder withDisplayGlowColorOverride(DisplayColor glowColorOverride) {
+        DisplayColor glowColorOverride = glowColorOverrideAttribute.getValue();
         int glowColorRgb = glowColorOverride == null ? -1 : glowColorOverride.asRGB();
 
         watchableObjects.add(EntityMetadataType.DISPLAY_GLOW_COLOR_OVERRIDE.construct(glowColorRgb));
@@ -186,24 +230,39 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayLineWidth(int lineWidth) {
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_LINE_WIDTH.construct(lineWidth));
+    EntityMetadataBuilder withTextDisplayLineWidth(NmsDisplayAttribute<Integer> lineWidth) {
+        if (lineWidth == null) {
+            return this;
+        }
+
+        int lineWidthInt = lineWidth.getValue() == null ? 200 : lineWidth.getValue();
+
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_LINE_WIDTH.construct(lineWidthInt));
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayBackground(DisplayColor backgroundColor) {
+    EntityMetadataBuilder withTextDisplayBackground(NmsDisplayAttribute<DisplayColor> backgroundColorAttribute) {
+        if (backgroundColorAttribute == null) {
+            return this;
+        }
+        DisplayColor backgroundColor = backgroundColorAttribute.getValue();
         int backgroundColorRgb = backgroundColor == null ? 0x40000000 : backgroundColor.asARGB();
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_BACKGROUND.construct(backgroundColorRgb));
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayTextOpacity(byte textOpacity) {
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacity));
+    EntityMetadataBuilder withTextDisplayTextOpacity(NmsDisplayAttribute<Byte> textOpacity) {
+        if (textOpacity == null) {
+            return this;
+        }
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacity.getValue()));
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayProperties(boolean hasShadow, boolean isSeeThrough, boolean useDefaultBackgroundColor, TextDisplayAlignment align) {
+    EntityMetadataBuilder withTextDisplayProperties(NmsDisplayAttribute<Boolean> hasShadowAttribute,
+                                                    NmsDisplayAttribute<Boolean> isSeeThroughAttribute,
+                                                    NmsDisplayAttribute<TextDisplayAlignment> alignAttribute) {
         /*
          * Text Display Data:
          * 0x01 - Has shadow
@@ -214,19 +273,18 @@ class EntityMetadataBuilder {
          */
 
         byte data = 0x00;
-        if (hasShadow) {
+        if (hasShadowAttribute != null && hasShadowAttribute.getValue()) {
             data |= 0x01;
         }
-        if (isSeeThrough) {
+        if (isSeeThroughAttribute != null && isSeeThroughAttribute.getValue()) {
             data |= 0x02;
         }
-        if (useDefaultBackgroundColor) {
-            data |= 0x04;
-        }
-        if (align == TextDisplayAlignment.LEFT) {
-            data |= 0x08;
-        } else if (align == TextDisplayAlignment.RIGHT) {
-            data |= 0x10;
+        if (alignAttribute != null) {
+            if (alignAttribute.getValue() == TextDisplayAlignment.LEFT) {
+                data |= 0x08;
+            } else if (alignAttribute.getValue() == TextDisplayAlignment.RIGHT) {
+                data |= 0x10;
+            }
         }
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_DATA.construct(data));
@@ -238,7 +296,7 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withItemDisplayData(ItemDisplayType displayType) {
+    EntityMetadataBuilder withItemDisplayData(NmsDisplayAttribute<ItemDisplayType> displayTypeAttribute) {
         /*
          * Display type:
          * 0x00 - NONE
@@ -251,7 +309,11 @@ class EntityMetadataBuilder {
          * 0x07 - GROUND
          * 0x08 - FIXED
          */
+        if (displayTypeAttribute == null) {
+            return this;
+        }
 
+        ItemDisplayType displayType = displayTypeAttribute.getValue();
         if (displayType == null) {
             displayType = ItemDisplayType.NONE;
         }

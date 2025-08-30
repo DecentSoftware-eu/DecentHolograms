@@ -18,26 +18,21 @@
 
 package eu.decentsoftware.holograms.nms.api.display.data;
 
-import org.bukkit.Material;
+public class NmsDisplayAttribute<T> {
 
-public class BlockDisplayData extends DisplayData {
+    private final NmsDisplayAttributeType type;
+    private final T value;
 
-    private Material material;
-    private NmsDisplayAttribute<DisplayColor> glowColor;
-
-    public Material getMaterial() {
-        return material;
+    public NmsDisplayAttribute(NmsDisplayAttributeType type, T value) {
+        this.type = type;
+        this.value = value;
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public NmsDisplayAttributeType getType() {
+        return this.type;
     }
 
-    public NmsDisplayAttribute<DisplayColor> getGlowColor() {
-        return glowColor;
-    }
-
-    public void setGlowColor(NmsDisplayAttribute<DisplayColor> glowColor) {
-        this.glowColor = glowColor;
+    public T getValue() {
+        return this.value;
     }
 }

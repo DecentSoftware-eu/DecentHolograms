@@ -22,6 +22,8 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
+import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
@@ -38,12 +40,12 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
     private final List<String> lines;
     private final NmsTextDisplayRenderer renderer;
-    private int lineWidth = 200;
-    private DisplayColor backgroundColor;
-    private byte textOpacity = -1;
-    private boolean textShadow = false;
-    private boolean seeThrough = false;
-    private TextDisplayAlignment alignment = TextDisplayAlignment.CENTER;
+    private DisplayAttribute<Integer> lineWidthAttribute;
+    private DisplayAttribute<DisplayColor> backgroundColorAttribute;
+    private DisplayAttribute<Byte> textOpacityAttribute;
+    private DisplayAttribute<Boolean> textShadowAttribute;
+    private DisplayAttribute<Boolean> seeThroughAttribute;
+    private DisplayAttribute<TextDisplayAlignment> alignmentAttribute;
 
     public TextDisplay(String name, DecentLocation location) {
         super(name, location);
@@ -51,41 +53,7 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
         this.renderer = DECENT_HOLOGRAMS.getNmsAdapter().getDisplayRendererFactory().createTextDisplayRenderer();
     }
 
-    @Override
-    public TextDisplayData createDisplayData(Player player) {
-        TextDisplayData data = new TextDisplayData();
-        data.setText(getText(player));
-        if (lineWidth <= 0) {
-            data.setLineWidth(lineWidth);
-        }
-        if (backgroundColor != null) {
-            data.setBackgroundColor(backgroundColor);
-        }
-        data.setTextOpacity(textOpacity);
-        data.setTextShadow(textShadow);
-        data.setSeeThrough(seeThrough);
-        if (alignment != null) {
-            data.setTextAlignment(alignment);
-        }
-
-        if (translation != null) {
-            data.setTranslation(translation);
-        }
-        if (scale != null) {
-            data.setScale(scale);
-        }
-        if (billboardConstraints != null) {
-            data.setBillboardConstraints(billboardConstraints);
-        }
-        if (brightnessOverride != null) {
-            data.setBrightnessOverride(brightnessOverride);
-        }
-        data.setShadowRadius(shadowRadius);
-        data.setShadowStrength(shadowStrength);
-        return data;
-    }
-
-    private List<String> getText(Player player) {
+    public List<String> getText(Player player) {
         return lines.stream()
                 .map(line -> Common.colorize(PAPI.setPlaceholders(player, line)))
                 .collect(Collectors.toList());
@@ -94,6 +62,11 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
     @Override
     public NmsDisplayRenderer<TextDisplayData> getDisplayRenderer() {
         return renderer;
+    }
+
+    @Override
+    public DisplayType getType() {
+        return DisplayType.TEXT;
     }
 
     public void addLine(String line) {
@@ -126,50 +99,98 @@ public class TextDisplay extends DisplayBase<TextDisplayData> {
     }
 
     public int getLineWidth() {
-        return lineWidth;
+        return lineWidthAttribute.getValue();
     }
 
     public void setLineWidth(int lineWidth) {
-        this.lineWidth = lineWidth;
+        this.lineWidthAttribute = new FixedDisplayAttribute<>(lineWidth);
     }
 
     public DisplayColor getBackgroundColor() {
-        return backgroundColor;
+        return backgroundColorAttribute.getValue();
     }
 
     public void setBackgroundColor(DisplayColor backgroundColor) {
-        this.backgroundColor = backgroundColor;
+        this.backgroundColorAttribute = new FixedDisplayAttribute<>(backgroundColor);
     }
 
     public byte getTextOpacity() {
-        return textOpacity;
+        return textOpacityAttribute.getValue();
     }
 
     public void setTextOpacity(byte textOpacity) {
-        this.textOpacity = textOpacity;
+        this.textOpacityAttribute = new FixedDisplayAttribute<>(textOpacity);
     }
 
     public boolean isTextShadow() {
-        return textShadow;
+        return textShadowAttribute.getValue();
     }
 
     public void setTextShadow(boolean textShadow) {
-        this.textShadow = textShadow;
+        this.textShadowAttribute = new FixedDisplayAttribute<>(textShadow);
     }
 
     public boolean isSeeThrough() {
-        return seeThrough;
+        return seeThroughAttribute.getValue();
     }
 
     public void setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
+        this.seeThroughAttribute = new FixedDisplayAttribute<>(seeThrough);
     }
 
     public TextDisplayAlignment getAlignment() {
-        return alignment;
+        return alignmentAttribute.getValue();
     }
 
     public void setAlignment(TextDisplayAlignment alignment) {
-        this.alignment = alignment;
+        this.alignmentAttribute = new FixedDisplayAttribute<>(alignment);
+    }
+
+    public DisplayAttribute<Integer> getLineWidthAttribute() {
+        return lineWidthAttribute;
+    }
+
+    public void setLineWidthAttribute(DisplayAttribute<Integer> lineWidthAttribute) {
+        this.lineWidthAttribute = lineWidthAttribute;
+    }
+
+    public DisplayAttribute<DisplayColor> getBackgroundColorAttribute() {
+        return backgroundColorAttribute;
+    }
+
+    public void setBackgroundColorAttribute(DisplayAttribute<DisplayColor> backgroundColorAttribute) {
+        this.backgroundColorAttribute = backgroundColorAttribute;
+    }
+
+    public DisplayAttribute<Byte> getTextOpacityAttribute() {
+        return textOpacityAttribute;
+    }
+
+    public void setTextOpacityAttribute(DisplayAttribute<Byte> textOpacityAttribute) {
+        this.textOpacityAttribute = textOpacityAttribute;
+    }
+
+    public DisplayAttribute<Boolean> getTextShadowAttribute() {
+        return textShadowAttribute;
+    }
+
+    public void setTextShadowAttribute(DisplayAttribute<Boolean> textShadowAttribute) {
+        this.textShadowAttribute = textShadowAttribute;
+    }
+
+    public DisplayAttribute<Boolean> getSeeThroughAttribute() {
+        return seeThroughAttribute;
+    }
+
+    public void setSeeThroughAttribute(DisplayAttribute<Boolean> seeThroughAttribute) {
+        this.seeThroughAttribute = seeThroughAttribute;
+    }
+
+    public DisplayAttribute<TextDisplayAlignment> getAlignmentAttribute() {
+        return alignmentAttribute;
+    }
+
+    public void setAlignmentAttribute(DisplayAttribute<TextDisplayAlignment> alignmentAttribute) {
+        this.alignmentAttribute = alignmentAttribute;
     }
 }

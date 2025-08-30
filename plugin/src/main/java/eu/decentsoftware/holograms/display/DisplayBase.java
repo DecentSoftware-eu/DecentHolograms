@@ -18,31 +18,32 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
-import org.bukkit.entity.Player;
 
 public abstract class DisplayBase<T> {
 
     protected final String name;
     protected DecentLocation location;
-    protected DisplayVector3f translation;
-    protected DisplayVector3f scale;
-    protected DisplayBillboardConstraints billboardConstraints;
-    protected DisplayBrightness brightnessOverride;
-    protected float shadowRadius = 0.0f;
-    protected float shadowStrength = 1.0f;
+    protected DisplayAttribute<DisplayVector3f> translationAttribute;
+    protected DisplayAttribute<DisplayVector3f> scaleAttribute;
+    protected DisplayAttribute<DisplayBillboardConstraints> billboardAttribute;
+    protected DisplayAttribute<DisplayBrightness> brightnessAttribute;
+    protected DisplayAttribute<Float> shadowRadiusAttribute;
+    protected DisplayAttribute<Float> shadowStrengthAttribute;
 
     protected DisplayBase(String name, DecentLocation location) {
         this.name = name;
         this.location = location;
     }
 
-    public abstract T createDisplayData(Player player);
-
     public abstract NmsDisplayRenderer<T> getDisplayRenderer();
+
+    public abstract DisplayType getType();
 
     public String getName() {
         return name;
@@ -57,50 +58,98 @@ public abstract class DisplayBase<T> {
     }
 
     public DisplayVector3f getTranslation() {
-        return translation;
+        return translationAttribute.getValue();
     }
 
     public void setTranslation(DisplayVector3f translation) {
-        this.translation = translation;
+        this.translationAttribute = new FixedDisplayAttribute<>(translation);
     }
 
     public DisplayVector3f getScale() {
-        return scale;
+        return scaleAttribute.getValue();
     }
 
     public void setScale(DisplayVector3f scale) {
-        this.scale = scale;
+        this.scaleAttribute = new FixedDisplayAttribute<>(scale);
     }
 
     public DisplayBillboardConstraints getBillboardConstraints() {
-        return billboardConstraints;
+        return billboardAttribute.getValue();
     }
 
     public void setBillboardConstraints(DisplayBillboardConstraints billboardConstraints) {
-        this.billboardConstraints = billboardConstraints;
+        this.billboardAttribute = new FixedDisplayAttribute<>(billboardConstraints);
     }
 
     public DisplayBrightness getBrightnessOverride() {
-        return brightnessOverride;
+        return brightnessAttribute.getValue();
     }
 
     public void setBrightnessOverride(DisplayBrightness brightnessOverride) {
-        this.brightnessOverride = brightnessOverride;
+        this.brightnessAttribute = new FixedDisplayAttribute<>(brightnessOverride);
     }
 
     public float getShadowRadius() {
-        return shadowRadius;
+        return shadowRadiusAttribute.getValue();
     }
 
     public void setShadowRadius(float shadowRadius) {
-        this.shadowRadius = shadowRadius;
+        this.shadowRadiusAttribute = new FixedDisplayAttribute<>(shadowRadius);
     }
 
     public float getShadowStrength() {
-        return shadowStrength;
+        return shadowStrengthAttribute.getValue();
     }
 
     public void setShadowStrength(float shadowStrength) {
-        this.shadowStrength = shadowStrength;
+        this.shadowStrengthAttribute = new FixedDisplayAttribute<>(shadowStrength);
+    }
+
+    public DisplayAttribute<DisplayVector3f> getTranslationAttribute() {
+        return translationAttribute;
+    }
+
+    public void setTranslationAttribute(DisplayAttribute<DisplayVector3f> translationAttribute) {
+        this.translationAttribute = translationAttribute;
+    }
+
+    public DisplayAttribute<DisplayVector3f> getScaleAttribute() {
+        return scaleAttribute;
+    }
+
+    public void setScaleAttribute(DisplayAttribute<DisplayVector3f> scaleAttribute) {
+        this.scaleAttribute = scaleAttribute;
+    }
+
+    public DisplayAttribute<DisplayBillboardConstraints> getBillboardAttribute() {
+        return billboardAttribute;
+    }
+
+    public void setBillboardAttribute(DisplayAttribute<DisplayBillboardConstraints> billboardAttribute) {
+        this.billboardAttribute = billboardAttribute;
+    }
+
+    public DisplayAttribute<DisplayBrightness> getBrightnessAttribute() {
+        return brightnessAttribute;
+    }
+
+    public void setBrightnessAttribute(DisplayAttribute<DisplayBrightness> brightnessAttribute) {
+        this.brightnessAttribute = brightnessAttribute;
+    }
+
+    public DisplayAttribute<Float> getShadowRadiusAttribute() {
+        return shadowRadiusAttribute;
+    }
+
+    public void setShadowRadiusAttribute(DisplayAttribute<Float> shadowRadiusAttribute) {
+        this.shadowRadiusAttribute = shadowRadiusAttribute;
+    }
+
+    public DisplayAttribute<Float> getShadowStrengthAttribute() {
+        return shadowStrengthAttribute;
+    }
+
+    public void setShadowStrengthAttribute(DisplayAttribute<Float> shadowStrengthAttribute) {
+        this.shadowStrengthAttribute = shadowStrengthAttribute;
     }
 }

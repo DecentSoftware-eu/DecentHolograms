@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.nms.v1_21_R5;
 
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsTextDisplayRenderer;
 import eu.decentsoftware.holograms.shared.DecentPosition;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 class TextDisplayRenderer implements NmsTextDisplayRenderer {
 
-    private static final double TEXT_DISPLAY_BASE_HEIGHT = 0.25d;
     private final int entityId;
 
     TextDisplayRenderer(EntityIdGenerator entityIdGenerator) {
@@ -27,14 +25,13 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
                         .withNoGravity()
                         .withTextDisplayText(textDisplayData.getText())
                         .withTextDisplayProperties(
-                                textDisplayData.isTextShadow(),
-                                textDisplayData.isSeeThrough(),
-                                textDisplayData.getBackgroundColor() == null,
-                                textDisplayData.getTextAlignment()
+                                textDisplayData.getTextShadowAttribute(),
+                                textDisplayData.getSeeThroughAttribute(),
+                                textDisplayData.getAlignmentAttribute()
                         )
-                        .withTextDisplayTextOpacity(textDisplayData.getTextOpacity())
-                        .withTextDisplayBackground(textDisplayData.getBackgroundColor())
-                        .withTextDisplayLineWidth(textDisplayData.getLineWidth())
+                        .withTextDisplayTextOpacity(textDisplayData.getTextOpacityAttribute())
+                        .withTextDisplayBackground(textDisplayData.getBackgroundColorAttribute())
+                        .withTextDisplayLineWidth(textDisplayData.getLineWidthAttribute())
                         .withDisplayTranslation(textDisplayData.getTranslation())
                         .withDisplayScale(textDisplayData.getScale())
                         .withDisplayBillboardConstraints(textDisplayData.getBillboardConstraints())
@@ -51,14 +48,13 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
         EntityPacketsBuilder.create()
                 .withEntityMetadata(entityId, EntityMetadataBuilder.create()
                         .withTextDisplayProperties(
-                                textDisplayData.isTextShadow(),
-                                textDisplayData.isSeeThrough(),
-                                textDisplayData.getBackgroundColor() == null,
-                                textDisplayData.getTextAlignment()
+                                textDisplayData.getTextShadowAttribute(),
+                                textDisplayData.getSeeThroughAttribute(),
+                                textDisplayData.getAlignmentAttribute()
                         )
-                        .withTextDisplayTextOpacity(textDisplayData.getTextOpacity())
-                        .withTextDisplayBackground(textDisplayData.getBackgroundColor())
-                        .withTextDisplayLineWidth(textDisplayData.getLineWidth())
+                        .withTextDisplayTextOpacity(textDisplayData.getTextOpacityAttribute())
+                        .withTextDisplayBackground(textDisplayData.getBackgroundColorAttribute())
+                        .withTextDisplayLineWidth(textDisplayData.getLineWidthAttribute())
                         .withDisplayTranslation(textDisplayData.getTranslation())
                         .withDisplayScale(textDisplayData.getScale())
                         .withDisplayBillboardConstraints(textDisplayData.getBillboardConstraints())
@@ -94,9 +90,7 @@ class TextDisplayRenderer implements NmsTextDisplayRenderer {
 
     @Override
     public double getHeight(NmsHologramPartData<TextDisplayData> data) {
-        DisplayVector3f scale = data.getContent().getScale();
-        int lineCount = data.getContent().getText().size();
-        return TEXT_DISPLAY_BASE_HEIGHT * lineCount * scale.getY();
+        return 0d;
     }
 
     @Override

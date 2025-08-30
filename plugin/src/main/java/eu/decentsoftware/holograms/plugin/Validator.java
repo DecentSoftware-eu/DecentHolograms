@@ -338,21 +338,10 @@ public final class Validator {
 
     public static DisplayBase<?> getDisplayOfType(DisplayService displayService, String name, DisplayType requiredType) {
         DisplayBase<?> display = getDisplay(displayService, name);
-        DisplayType displayType = getDisplayType(display);
+        DisplayType displayType = display.getType();
         if (displayType != requiredType) {
             throw new DecentCommandException(Lang.DISPLAY_WRONG_TYPE.getValue(), requiredType);
         }
         return display;
-    }
-
-    private static DisplayType getDisplayType(DisplayBase<?> display) {
-        if (display instanceof TextDisplay) {
-            return DisplayType.TEXT;
-        } else if (display instanceof ItemDisplay) {
-            return DisplayType.ITEM;
-        } else if (display instanceof BlockDisplay) {
-            return DisplayType.BLOCK;
-        }
-        throw new IllegalStateException("Unknown display type");
     }
 }
