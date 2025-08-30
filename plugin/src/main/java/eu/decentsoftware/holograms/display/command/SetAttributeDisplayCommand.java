@@ -25,9 +25,9 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValidationException;
+import eu.decentsoftware.holograms.display.command.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeService;
+import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeValidationException;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Map;

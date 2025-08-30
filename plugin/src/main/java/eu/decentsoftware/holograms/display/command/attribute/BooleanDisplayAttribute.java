@@ -16,32 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute;
+package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class IntegerDisplayAttribute<D> implements DisplayAttribute {
+public class BooleanDisplayAttribute<D> implements DisplayAttribute {
 
     private final String name;
-    private final int minValue;
-    private final int maxValue;
-    private final BiConsumer<D, Integer> applyValue;
+    private final BiConsumer<D, Boolean> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public IntegerDisplayAttribute(String name, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
-        this(name, Integer.MIN_VALUE, Integer.MAX_VALUE, applyValue, applicableDisplayType);
-    }
-
-    public IntegerDisplayAttribute(String name, int minValue, int maxValue, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
+    public BooleanDisplayAttribute(String name, BiConsumer<D, Boolean> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
     }
@@ -54,7 +47,10 @@ public class IntegerDisplayAttribute<D> implements DisplayAttribute {
 
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
-        return Collections.emptyList();
+        String currentValueLowerCase = currentString.toLowerCase();
+        return Stream.of("true", "false")
+                .filter(hint -> hint.startsWith(currentValueLowerCase))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -62,21 +58,11 @@ public class IntegerDisplayAttribute<D> implements DisplayAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new DisplayAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        Integer parsedValue = parseValue(value);
-        if (parsedValue == null) {
-            throw new DisplayAttributeValidationException("Expected an integer.");
-        }
-        if (parsedValue < minValue || parsedValue > maxValue) {
-            throw new DisplayAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
-        }
+        Boolean parsedValue = parseValue(value);
         applyValue.accept(applicableDisplayType.cast(display), parsedValue);
     }
 
-    private Integer parseValue(@NotNull String valueString) {
-        try {
-            return Integer.parseInt(valueString);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+    private Boolean parseValue(@NotNull String valueString) {
+        return Boolean.parseBoolean(valueString);
     }
 }
