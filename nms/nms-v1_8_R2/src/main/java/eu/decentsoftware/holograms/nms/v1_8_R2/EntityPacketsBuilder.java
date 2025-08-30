@@ -29,9 +29,13 @@ class EntityPacketsBuilder {
     private static final ReflectField<DataWatcher> SPAWN_ENTITY_LIVING_PACKET_DATA_WATCHER_FIELD = new ReflectField<>(
             PacketPlayOutSpawnEntityLiving.class, "l");
     private final List<Packet<?>> packets;
+    private final DataWatcher emptyDataWatcher;
 
     private EntityPacketsBuilder() {
         this.packets = new ArrayList<>();
+        this.emptyDataWatcher = DataWatcherBuilder.create()
+                .withEmptyEntityProperties()
+                .toDataWatcher();
     }
 
     void sendTo(Player player) {
@@ -63,7 +67,7 @@ class EntityPacketsBuilder {
     }
 
     EntityPacketsBuilder withSpawnEntityLiving(int entityId, EntityType type, DecentPosition position) {
-        return withSpawnEntityLiving(entityId, type, position, new DataWatcher(null));
+        return withSpawnEntityLiving(entityId, type, position, emptyDataWatcher);
     }
 
     EntityPacketsBuilder withSpawnEntityLiving(int entityId, EntityType type, DecentPosition position, DataWatcher dataWatcher) {
