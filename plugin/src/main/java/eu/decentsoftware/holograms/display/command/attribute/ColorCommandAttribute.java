@@ -29,7 +29,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ColorDisplayAttribute<D> implements DisplayAttribute {
+public class ColorCommandAttribute<D> implements CommandAttribute {
 
     private static final Pattern RGB_HEX_COLOR_PATTERN = Pattern.compile("[0-9a-fA-F]{6}");
     private static final Pattern ARGB_HEX_COLOR_PATTERN = Pattern.compile("[0-9a-fA-F]{8}");
@@ -38,7 +38,7 @@ public class ColorDisplayAttribute<D> implements DisplayAttribute {
     private final BiConsumer<D, DisplayColor> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public ColorDisplayAttribute(String name, BiConsumer<D, DisplayColor> applyValue, Class<D> applicableDisplayType) {
+    public ColorCommandAttribute(String name, BiConsumer<D, DisplayColor> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
@@ -60,11 +60,11 @@ public class ColorDisplayAttribute<D> implements DisplayAttribute {
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
-            throw new DisplayAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
+            throw new CommandAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
         }
         DisplayColor color = parseValue(value);
         if (color == null) {
-            throw new DisplayAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00) or an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255).");
+            throw new CommandAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00) or an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255).");
         }
         applyValue.accept(applicableDisplayType.cast(display), color);
     }

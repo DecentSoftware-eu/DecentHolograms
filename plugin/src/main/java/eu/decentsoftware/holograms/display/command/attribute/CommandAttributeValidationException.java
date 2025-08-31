@@ -18,8 +18,8 @@
 
 package eu.decentsoftware.holograms.display.command.attribute;
 
-public class DisplayAttributeValidationException extends RuntimeException {
-    public DisplayAttributeValidationException(String message) {
+public class CommandAttributeValidationException extends RuntimeException {
+    public CommandAttributeValidationException(String message) {
         super(message);
     }
 }

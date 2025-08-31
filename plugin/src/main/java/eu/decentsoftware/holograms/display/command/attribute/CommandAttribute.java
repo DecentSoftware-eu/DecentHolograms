@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface DisplayAttribute {
+public interface CommandAttribute {
 
     /**
      * Gets the name of the attribute.
@@ -52,7 +52,7 @@ public interface DisplayAttribute {
      *
      * @param display The display to apply the value to.
      * @param value   The value to apply.
-     * @throws DisplayAttributeValidationException If the given value is invalid for the given display.
+     * @throws CommandAttributeValidationException If the given value is invalid for the given display.
      */
     void applyValue(@NotNull DisplayBase display, @NotNull String value);
 

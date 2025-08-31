@@ -22,24 +22,19 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class EnumDisplayAttribute<E, D extends DisplayBase> implements DisplayAttribute {
+public class BooleanCommandAttribute<D> implements CommandAttribute {
 
     private final String name;
-    private final Class<E> enumClass;
-    private final BiConsumer<D, E> applyValue;
+    private final BiConsumer<D, Boolean> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public EnumDisplayAttribute(String name,
-                                Class<E> enumClass,
-                                BiConsumer<D, E> applyValue,
-                                Class<D> applicableDisplayType) {
+    public BooleanCommandAttribute(String name, BiConsumer<D, Boolean> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
-        this.enumClass = enumClass;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
     }
@@ -53,35 +48,21 @@ public class EnumDisplayAttribute<E, D extends DisplayBase> implements DisplayAt
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
         String currentValueLowerCase = currentString.toLowerCase();
-        return Arrays.stream(enumClass.getEnumConstants())
-                .map(Object::toString)
-                .filter(hint -> hint.toLowerCase().startsWith(currentValueLowerCase))
+        return Stream.of("true", "false")
+                .filter(hint -> hint.startsWith(currentValueLowerCase))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
-        E enumValue = this.parseValue(value);
-        if (enumValue == null) {
-            throw new DisplayAttributeValidationException("Invalid value for attribute " + name + ". Expected one of: " +
-                    Arrays.stream(enumClass.getEnumConstants())
-                            .map(Object::toString)
-                            .collect(Collectors.joining(", ")));
-        }
-
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
-            throw new DisplayAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-
-        this.applyValue.accept(applicableDisplayType.cast(display), enumValue);
+        Boolean parsedValue = parseValue(value);
+        applyValue.accept(applicableDisplayType.cast(display), parsedValue);
     }
 
-    private E parseValue(@NotNull String valueString) {
-        for (E constant : enumClass.getEnumConstants()) {
-            if (constant.toString().equalsIgnoreCase(valueString)) {
-                return constant;
-            }
-        }
-        return null;
+    private Boolean parseValue(@NotNull String valueString) {
+        return Boolean.parseBoolean(valueString);
     }
 }

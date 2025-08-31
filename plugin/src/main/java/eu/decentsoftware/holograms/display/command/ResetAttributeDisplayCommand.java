@@ -25,8 +25,8 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeService;
+import eu.decentsoftware.holograms.display.command.attribute.CommandAttribute;
+import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ import java.util.Map;
 class ResetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
-    private final DisplayAttributeService attributeService;
+    private final CommandAttributeService attributeService;
 
-    ResetAttributeDisplayCommand(DisplayService displayService, DisplayAttributeService attributeService) {
+    ResetAttributeDisplayCommand(DisplayService displayService, CommandAttributeService attributeService) {
         super("reset-attribute");
         this.displayService = displayService;
         this.attributeService = attributeService;
@@ -54,8 +54,8 @@ class ResetAttributeDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            Map<String, DisplayAttribute> attributes = attributeService.getAvailableAttributes(display);
-            DisplayAttribute attribute = attributes.get(args[1]);
+            Map<String, CommandAttribute> attributes = attributeService.getAvailableAttributes(display);
+            CommandAttribute attribute = attributes.get(args[1]);
             if (attribute == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, args[1]);
                 return true;

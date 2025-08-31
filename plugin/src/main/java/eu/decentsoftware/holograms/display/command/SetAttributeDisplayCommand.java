@@ -25,9 +25,9 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeService;
-import eu.decentsoftware.holograms.display.command.attribute.DisplayAttributeValidationException;
+import eu.decentsoftware.holograms.display.command.attribute.CommandAttribute;
+import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
+import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeValidationException;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Map;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 class SetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
-    private final DisplayAttributeService attributeService;
+    private final CommandAttributeService attributeService;
 
-    SetAttributeDisplayCommand(DisplayService displayService, DisplayAttributeService attributeService) {
+    SetAttributeDisplayCommand(DisplayService displayService, CommandAttributeService attributeService) {
         super("set-attribute");
         this.displayService = displayService;
         this.attributeService = attributeService;
@@ -61,8 +61,8 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            Map<String, DisplayAttribute> attributes = attributeService.getAvailableAttributes(display);
-            DisplayAttribute attribute = attributes.get(split[0]);
+            Map<String, CommandAttribute> attributes = attributeService.getAvailableAttributes(display);
+            CommandAttribute attribute = attributes.get(split[0]);
             if (attribute == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, split[0]);
                 return true;
@@ -74,7 +74,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 displayService.saveDisplay(display);
                 Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attribute.getName(), split[1]);
                 return true;
-            } catch (DisplayAttributeValidationException e) {
+            } catch (CommandAttributeValidationException e) {
                 Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attribute.getName(), e.getMessage());
                 return true;
             }
@@ -98,7 +98,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
                     split = args[1].split("=");
                 }
                 if (split.length == 2) {
-                    DisplayAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
+                    CommandAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
                     if (attribute == null) {
                         return null;
                     }

@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class IntegerDisplayAttribute<D> implements DisplayAttribute {
+public class IntegerCommandAttribute<D> implements CommandAttribute {
 
     private final String name;
     private final int minValue;
@@ -34,11 +34,11 @@ public class IntegerDisplayAttribute<D> implements DisplayAttribute {
     private final BiConsumer<D, Integer> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public IntegerDisplayAttribute(String name, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
+    public IntegerCommandAttribute(String name, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
         this(name, Integer.MIN_VALUE, Integer.MAX_VALUE, applyValue, applicableDisplayType);
     }
 
-    public IntegerDisplayAttribute(String name, int minValue, int maxValue, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
+    public IntegerCommandAttribute(String name, int minValue, int maxValue, BiConsumer<D, Integer> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -60,14 +60,14 @@ public class IntegerDisplayAttribute<D> implements DisplayAttribute {
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
-            throw new DisplayAttributeValidationException("Attribute is not applicable to this display type.");
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         Integer parsedValue = parseValue(value);
         if (parsedValue == null) {
-            throw new DisplayAttributeValidationException("Expected an integer.");
+            throw new CommandAttributeValidationException("Expected an integer.");
         }
         if (parsedValue < minValue || parsedValue > maxValue) {
-            throw new DisplayAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
+            throw new CommandAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
         }
         applyValue.accept(applicableDisplayType.cast(display), parsedValue);
     }

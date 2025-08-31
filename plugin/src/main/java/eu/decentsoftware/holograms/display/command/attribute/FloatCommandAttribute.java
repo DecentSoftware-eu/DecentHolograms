@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class FloatDisplayAttribute<D> implements DisplayAttribute {
+public class FloatCommandAttribute<D> implements CommandAttribute {
 
     private final String name;
     private final float minValue;
@@ -34,11 +34,11 @@ public class FloatDisplayAttribute<D> implements DisplayAttribute {
     private final BiConsumer<D, Float> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public FloatDisplayAttribute(String name, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
+    public FloatCommandAttribute(String name, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
         this(name, Float.MIN_VALUE, Float.MAX_VALUE, applyValue, applicableDisplayType);
     }
 
-    public FloatDisplayAttribute(String name, float minValue, float maxValue, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
+    public FloatCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -60,14 +60,14 @@ public class FloatDisplayAttribute<D> implements DisplayAttribute {
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
-            throw new DisplayAttributeValidationException("Attribute is not applicable to this display type.");
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         Float floatValue = parseValue(value);
         if (floatValue == null) {
-            throw new DisplayAttributeValidationException("Expected a decimal number.");
+            throw new CommandAttributeValidationException("Expected a decimal number.");
         }
         if (floatValue < minValue || floatValue > maxValue) {
-            throw new DisplayAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
+            throw new CommandAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
         }
         applyValue.accept(applicableDisplayType.cast(display), floatValue);
     }
