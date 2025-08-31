@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attributes.StaticDisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 

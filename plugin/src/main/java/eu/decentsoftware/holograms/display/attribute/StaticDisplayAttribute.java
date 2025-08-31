@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attributes;
+package eu.decentsoftware.holograms.display.attribute;
 
 public class StaticDisplayAttribute<T> implements DisplayAttribute<T> {
 

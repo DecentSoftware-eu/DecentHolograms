@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.BlockDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayData;
