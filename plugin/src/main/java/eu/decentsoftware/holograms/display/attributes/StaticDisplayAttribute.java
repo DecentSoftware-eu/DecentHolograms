@@ -18,11 +18,11 @@
 
 package eu.decentsoftware.holograms.display.attributes;
 
-public class FixedDisplayAttribute<T> implements DisplayAttribute<T> {
+public class StaticDisplayAttribute<T> implements DisplayAttribute<T> {
 
     private final T value;
 
-    public FixedDisplayAttribute(T value) {
+    public StaticDisplayAttribute(T value) {
         this.value = value;
     }
 

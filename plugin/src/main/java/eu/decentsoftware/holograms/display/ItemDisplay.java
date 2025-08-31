@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 
@@ -52,7 +52,7 @@ public class ItemDisplay extends DisplayBase {
     }
 
     public void setDisplayType(ItemDisplayType displayType) {
-        this.displayTypeAttribute = new FixedDisplayAttribute<>(displayType);
+        this.displayTypeAttribute = new StaticDisplayAttribute<>(displayType);
     }
 
     public DisplayColor getGlowColor() {
@@ -60,7 +60,7 @@ public class ItemDisplay extends DisplayBase {
     }
 
     public void setGlowColor(DisplayColor glowColor) {
-        this.glowColorAttribute = new FixedDisplayAttribute<>(glowColor);
+        this.glowColorAttribute = new StaticDisplayAttribute<>(glowColor);
     }
 
     public DisplayAttribute<ItemDisplayType> getDisplayTypeAttribute() {

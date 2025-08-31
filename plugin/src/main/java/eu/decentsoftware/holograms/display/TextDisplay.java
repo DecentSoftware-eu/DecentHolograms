@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 
@@ -80,7 +80,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setLineWidth(int lineWidth) {
-        this.lineWidthAttribute = new FixedDisplayAttribute<>(lineWidth);
+        this.lineWidthAttribute = new StaticDisplayAttribute<>(lineWidth);
     }
 
     public DisplayColor getBackgroundColor() {
@@ -88,7 +88,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setBackgroundColor(DisplayColor backgroundColor) {
-        this.backgroundColorAttribute = new FixedDisplayAttribute<>(backgroundColor);
+        this.backgroundColorAttribute = new StaticDisplayAttribute<>(backgroundColor);
     }
 
     public byte getTextOpacity() {
@@ -96,7 +96,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setTextOpacity(byte textOpacity) {
-        this.textOpacityAttribute = new FixedDisplayAttribute<>(textOpacity);
+        this.textOpacityAttribute = new StaticDisplayAttribute<>(textOpacity);
     }
 
     public boolean isTextShadow() {
@@ -104,7 +104,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setTextShadow(boolean textShadow) {
-        this.textShadowAttribute = new FixedDisplayAttribute<>(textShadow);
+        this.textShadowAttribute = new StaticDisplayAttribute<>(textShadow);
     }
 
     public boolean isSeeThrough() {
@@ -112,7 +112,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setSeeThrough(boolean seeThrough) {
-        this.seeThroughAttribute = new FixedDisplayAttribute<>(seeThrough);
+        this.seeThroughAttribute = new StaticDisplayAttribute<>(seeThrough);
     }
 
     public TextDisplayAlignment getAlignment() {
@@ -120,7 +120,7 @@ public class TextDisplay extends DisplayBase {
     }
 
     public void setAlignment(TextDisplayAlignment alignment) {
-        this.alignmentAttribute = new FixedDisplayAttribute<>(alignment);
+        this.alignmentAttribute = new StaticDisplayAttribute<>(alignment);
     }
 
     public DisplayAttribute<Integer> getLineWidthAttribute() {

@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
+import eu.decentsoftware.holograms.display.attributes.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
@@ -59,7 +59,7 @@ public abstract class DisplayBase {
     }
 
     public void setTranslation(DisplayVector3f translation) {
-        this.translationAttribute = new FixedDisplayAttribute<>(translation);
+        this.translationAttribute = new StaticDisplayAttribute<>(translation);
     }
 
     public DisplayVector3f getScale() {
@@ -67,7 +67,7 @@ public abstract class DisplayBase {
     }
 
     public void setScale(DisplayVector3f scale) {
-        this.scaleAttribute = new FixedDisplayAttribute<>(scale);
+        this.scaleAttribute = new StaticDisplayAttribute<>(scale);
     }
 
     public DisplayBillboardConstraints getBillboardConstraints() {
@@ -75,7 +75,7 @@ public abstract class DisplayBase {
     }
 
     public void setBillboardConstraints(DisplayBillboardConstraints billboardConstraints) {
-        this.billboardAttribute = new FixedDisplayAttribute<>(billboardConstraints);
+        this.billboardAttribute = new StaticDisplayAttribute<>(billboardConstraints);
     }
 
     public DisplayBrightness getBrightnessOverride() {
@@ -83,7 +83,7 @@ public abstract class DisplayBase {
     }
 
     public void setBrightnessOverride(DisplayBrightness brightnessOverride) {
-        this.brightnessAttribute = new FixedDisplayAttribute<>(brightnessOverride);
+        this.brightnessAttribute = new StaticDisplayAttribute<>(brightnessOverride);
     }
 
     public float getShadowRadius() {
@@ -91,7 +91,7 @@ public abstract class DisplayBase {
     }
 
     public void setShadowRadius(float shadowRadius) {
-        this.shadowRadiusAttribute = new FixedDisplayAttribute<>(shadowRadius);
+        this.shadowRadiusAttribute = new StaticDisplayAttribute<>(shadowRadius);
     }
 
     public float getShadowStrength() {
@@ -99,7 +99,7 @@ public abstract class DisplayBase {
     }
 
     public void setShadowStrength(float shadowStrength) {
-        this.shadowStrengthAttribute = new FixedDisplayAttribute<>(shadowStrength);
+        this.shadowStrengthAttribute = new StaticDisplayAttribute<>(shadowStrength);
     }
 
     public DisplayAttribute<DisplayVector3f> getTranslationAttribute() {
