@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.parser.Vector3fDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ import java.util.function.BiConsumer;
 
 public class Vector3FCommandAttribute<D> implements CommandAttribute {
 
+    private static final Vector3fDisplayAttributeParser PARSER = new Vector3fDisplayAttributeParser();
     private final String name;
     private final BiConsumer<D, DisplayVector3f> applyValue;
     private final Class<D> applicableDisplayType;
@@ -55,25 +57,10 @@ public class Vector3FCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        DisplayVector3f vector = parseValue(value);
+        DisplayVector3f vector = PARSER.parseValue(value);
         if (vector == null) {
             throw new CommandAttributeValidationException("Expected a vector in the format x,y,z.");
         }
         this.applyValue.accept(applicableDisplayType.cast(display), vector);
-    }
-
-    private DisplayVector3f parseValue(@NotNull String valueString) {
-        String[] parts = valueString.split(",");
-        if (parts.length != 3) {
-            return null;
-        }
-        try {
-            float x = Float.parseFloat(parts[0].trim());
-            float y = Float.parseFloat(parts[1].trim());
-            float z = Float.parseFloat(parts[2].trim());
-            return new DisplayVector3f(x, y, z);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }

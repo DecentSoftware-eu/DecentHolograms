@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.parser.FloatDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +29,7 @@ import java.util.function.BiConsumer;
 
 public class FloatCommandAttribute<D> implements CommandAttribute {
 
+    private static final FloatDisplayAttributeParser PARSER = new FloatDisplayAttributeParser();
     private final String name;
     private final float minValue;
     private final float maxValue;
@@ -62,7 +64,7 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        Float floatValue = parseValue(value);
+        Float floatValue = PARSER.parseValue(value);
         if (floatValue == null) {
             throw new CommandAttributeValidationException("Expected a decimal number.");
         }
@@ -70,13 +72,5 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
         }
         applyValue.accept(applicableDisplayType.cast(display), floatValue);
-    }
-
-    private Float parseValue(@NotNull String valueString) {
-        try {
-            return Float.parseFloat(valueString);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }

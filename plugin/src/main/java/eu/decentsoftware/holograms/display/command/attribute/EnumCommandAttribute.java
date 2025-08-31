@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,12 +28,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-public class EnumCommandAttribute<E, D extends DisplayBase> implements CommandAttribute {
+public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> implements CommandAttribute {
 
     private final String name;
     private final Class<E> enumClass;
     private final BiConsumer<D, E> applyValue;
     private final Class<D> applicableDisplayType;
+    private final EnumDisplayAttributeParser<E> parser;
 
     public EnumCommandAttribute(String name,
                                 Class<E> enumClass,
@@ -42,6 +44,7 @@ public class EnumCommandAttribute<E, D extends DisplayBase> implements CommandAt
         this.enumClass = enumClass;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
+        this.parser = new EnumDisplayAttributeParser<>(enumClass);
     }
 
     @NotNull
@@ -61,7 +64,7 @@ public class EnumCommandAttribute<E, D extends DisplayBase> implements CommandAt
 
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
-        E enumValue = this.parseValue(value);
+        E enumValue = parser.parseValue(value);
         if (enumValue == null) {
             throw new CommandAttributeValidationException("Invalid value for attribute " + name + ". Expected one of: " +
                     Arrays.stream(enumClass.getEnumConstants())
@@ -74,14 +77,5 @@ public class EnumCommandAttribute<E, D extends DisplayBase> implements CommandAt
         }
 
         this.applyValue.accept(applicableDisplayType.cast(display), enumValue);
-    }
-
-    private E parseValue(@NotNull String valueString) {
-        for (E constant : enumClass.getEnumConstants()) {
-            if (constant.toString().equalsIgnoreCase(valueString)) {
-                return constant;
-            }
-        }
-        return null;
     }
 }

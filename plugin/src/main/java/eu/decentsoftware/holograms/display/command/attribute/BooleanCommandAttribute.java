@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.parser.BooleanDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
 
 public class BooleanCommandAttribute<D> implements CommandAttribute {
 
+    private static final BooleanDisplayAttributeParser PARSER = new BooleanDisplayAttributeParser();
     private final String name;
     private final BiConsumer<D, Boolean> applyValue;
     private final Class<D> applicableDisplayType;
@@ -58,11 +60,7 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        Boolean parsedValue = parseValue(value);
+        Boolean parsedValue = PARSER.parseValue(value);
         applyValue.accept(applicableDisplayType.cast(display), parsedValue);
-    }
-
-    private Boolean parseValue(@NotNull String valueString) {
-        return Boolean.parseBoolean(valueString);
     }
 }

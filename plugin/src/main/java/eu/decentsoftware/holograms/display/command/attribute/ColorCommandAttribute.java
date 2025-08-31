@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.parser.ColorDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -26,14 +27,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ColorCommandAttribute<D> implements CommandAttribute {
 
-    private static final Pattern RGB_HEX_COLOR_PATTERN = Pattern.compile("[0-9a-fA-F]{6}");
-    private static final Pattern ARGB_HEX_COLOR_PATTERN = Pattern.compile("[0-9a-fA-F]{8}");
-    private static final Pattern ARGB_PATTERN = Pattern.compile("((?<a>\\d{1,3}),)?(?<r>\\d{1,3}),(?<g>\\d{1,3}),(?<b>\\d{1,3})");
+    private static final ColorDisplayAttributeParser PARSER = new ColorDisplayAttributeParser();
     private final String name;
     private final BiConsumer<D, DisplayColor> applyValue;
     private final Class<D> applicableDisplayType;
@@ -62,58 +59,10 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
         }
-        DisplayColor color = parseValue(value);
+        DisplayColor color = PARSER.parseValue(value);
         if (color == null) {
             throw new CommandAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00) or an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255).");
         }
         applyValue.accept(applicableDisplayType.cast(display), color);
-    }
-
-    private DisplayColor parseValue(@NotNull String valueString) {
-        int length = valueString.length();
-        if (length == 6 && RGB_HEX_COLOR_PATTERN.matcher(valueString).matches()) {
-            return parseFromRgbHex(valueString);
-        } else if (length == 8 && ARGB_HEX_COLOR_PATTERN.matcher(valueString).matches()) {
-            return parseFromArgbHex(valueString);
-        }
-        Matcher matcher = ARGB_PATTERN.matcher(valueString);
-        if (matcher.matches()) {
-            return parseFromArgb10(matcher);
-        }
-        return null;
-    }
-
-    private DisplayColor parseFromArgb10(Matcher matcher) {
-        int a;
-        if (matcher.group("a") != null) {
-            a = Integer.parseInt(matcher.group("a"));
-        } else {
-            a = 255;
-        }
-        int r = Integer.parseInt(matcher.group("r"));
-        int g = Integer.parseInt(matcher.group("g"));
-        int b = Integer.parseInt(matcher.group("b"));
-        if (a < 0 || a > 255 || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-            return null;
-        }
-        return new DisplayColor(a, r, g, b);
-    }
-
-    private DisplayColor parseFromArgbHex(String hex) {
-        try {
-            int color = Integer.parseUnsignedInt(hex, 16);
-            return DisplayColor.fromARGB(color);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    private DisplayColor parseFromRgbHex(String hex) {
-        try {
-            int color = Integer.parseUnsignedInt(hex, 16);
-            return DisplayColor.fromRGB(color);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }
