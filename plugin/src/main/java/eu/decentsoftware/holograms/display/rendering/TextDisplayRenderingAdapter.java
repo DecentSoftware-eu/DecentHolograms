@@ -27,31 +27,35 @@ import org.bukkit.entity.Player;
 public class TextDisplayRenderingAdapter implements DisplayRenderingAdapter<TextDisplay> {
 
     private final DisplayDataMapper dataMapper;
+    private final TextProcessingService textProcessingService;
     private final NmsDisplayRenderer<TextDisplayData> renderer;
 
-    public TextDisplayRenderingAdapter(DisplayDataMapper dataMapper, NmsDisplayRenderer<TextDisplayData> renderer) {
+    public TextDisplayRenderingAdapter(DisplayDataMapper dataMapper,
+                                       TextProcessingService textProcessingService,
+                                       NmsDisplayRenderer<TextDisplayData> renderer) {
         this.dataMapper = dataMapper;
+        this.textProcessingService = textProcessingService;
         this.renderer = renderer;
     }
 
     @Override
     public void display(TextDisplay display, Player player) {
-        renderer.display(player, getPartData(display, player));
+        renderer.display(player, getPartData(display, player, true));
     }
 
     @Override
     public void updateProperties(TextDisplay display, Player player) {
-        renderer.updateProperties(player, getPartData(display, player));
+        renderer.updateProperties(player, getPartData(display, player, false));
     }
 
     @Override
-    public void updateContent(TextDisplay display, Player player) {
-        renderer.updateContent(player, getPartData(display, player));
+    public void updateContent(TextDisplay display, Player player, boolean fullUpdate) {
+        renderer.updateContent(player, getPartData(display, player, fullUpdate));
     }
 
     @Override
     public void move(TextDisplay display, Player player) {
-        renderer.move(player, getPartData(display, player));
+        renderer.move(player, getPartData(display, player, false));
     }
 
     @Override
@@ -59,10 +63,10 @@ public class TextDisplayRenderingAdapter implements DisplayRenderingAdapter<Text
         renderer.hide(player);
     }
 
-    private NmsHologramPartData<TextDisplayData> getPartData(TextDisplay display, Player player) {
+    private NmsHologramPartData<TextDisplayData> getPartData(TextDisplay display, Player player, boolean updateText) {
         return new NmsHologramPartData<>(
                 () -> display.getLocation().toDecentPosition(),
-                () -> dataMapper.mapTextDisplay(display, player)
+                () -> dataMapper.mapTextDisplay(display, textProcessingService.processText(display, player, updateText))
         );
     }
 }

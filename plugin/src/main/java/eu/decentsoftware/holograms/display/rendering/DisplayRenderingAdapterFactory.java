@@ -28,15 +28,19 @@ public class DisplayRenderingAdapterFactory {
 
     private final DisplayDataMapper dataMapper;
     private final NmsDisplayRendererFactory rendererFactory;
+    private final TextProcessingService textProcessingService;
 
-    public DisplayRenderingAdapterFactory(DisplayDataMapper dataMapper, NmsDisplayRendererFactory rendererFactory) {
+    public DisplayRenderingAdapterFactory(DisplayDataMapper dataMapper,
+                                          NmsDisplayRendererFactory rendererFactory,
+                                          TextProcessingService textProcessingService) {
         this.dataMapper = dataMapper;
         this.rendererFactory = rendererFactory;
+        this.textProcessingService = textProcessingService;
     }
 
     public DisplayRenderingAdapter<? extends DisplayBase> createAdapter(DisplayBase display) {
         if (display instanceof TextDisplay) {
-            return new TextDisplayRenderingAdapter(dataMapper, rendererFactory.createTextDisplayRenderer());
+            return new TextDisplayRenderingAdapter(dataMapper, textProcessingService, rendererFactory.createTextDisplayRenderer());
         } else if (display instanceof ItemDisplay) {
             return new ItemDisplayRenderingAdapter(dataMapper, rendererFactory.createItemDisplayRenderer());
         } else if (display instanceof BlockDisplay) {

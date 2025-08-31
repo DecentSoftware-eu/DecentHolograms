@@ -45,7 +45,7 @@ public class ItemDisplayRenderingAdapter implements DisplayRenderingAdapter<Item
     }
 
     @Override
-    public void updateContent(ItemDisplay display, Player player) {
+    public void updateContent(ItemDisplay display, Player player, boolean fullUpdate) {
         renderer.updateContent(player, getPartData(display, player));
     }
 

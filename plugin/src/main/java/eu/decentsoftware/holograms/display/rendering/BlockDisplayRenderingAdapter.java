@@ -45,7 +45,7 @@ public class BlockDisplayRenderingAdapter implements DisplayRenderingAdapter<Blo
     }
 
     @Override
-    public void updateContent(BlockDisplay display, Player player) {
+    public void updateContent(BlockDisplay display, Player player, boolean fullUpdate) {
         renderer.updateContent(player, getPartData(display));
     }
 

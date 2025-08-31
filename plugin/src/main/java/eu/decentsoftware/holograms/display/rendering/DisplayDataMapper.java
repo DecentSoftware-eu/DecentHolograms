@@ -18,11 +18,11 @@
 
 package eu.decentsoftware.holograms.display.rendering;
 
-import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.BlockDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayData;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayData;
@@ -31,12 +31,14 @@ import eu.decentsoftware.holograms.nms.api.display.data.NmsDisplayAttributeType;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class DisplayDataMapper {
 
-    public TextDisplayData mapTextDisplay(TextDisplay textDisplay, Player player) {
+    public TextDisplayData mapTextDisplay(TextDisplay textDisplay, List<String> lines) {
         TextDisplayData data = new TextDisplayData();
         setCommonAttributes(textDisplay, data);
-        data.setText(textDisplay.getText(player));
+        data.setText(lines);
         data.setLineWidthAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_LINE_WIDTH, textDisplay.getLineWidthAttribute()));
         data.setBackgroundColorAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_BACKGROUND_COLOR, textDisplay.getBackgroundColorAttribute()));
         data.setTextOpacityAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_OPACITY, textDisplay.getTextOpacityAttribute()));

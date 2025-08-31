@@ -26,7 +26,7 @@ public interface DisplayRenderingAdapter<T> {
 
     void updateProperties(T display, Player player);
 
-    void updateContent(T display, Player player);
+    void updateContent(T display, Player player, boolean fullUpdate);
 
     void move(T display, Player player);
 

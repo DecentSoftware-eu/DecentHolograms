@@ -39,13 +39,12 @@ public class DisplayUpdater extends Ticked {
     @Override
     public void tick() {
         long currentTick = tickCounter.getAndIncrement();
-        if (currentTick % 20 == 0) {
-            for (DisplayBase display : displayService.getRegisteredDisplays()) {
+        for (DisplayBase display : displayService.getRegisteredDisplays()) {
+            if (currentTick % 20 == 0) {
                 renderingService.updateVisibility(display);
                 renderingService.updateContent(display);
             }
+            renderingService.updateContentAnimations(display);
         }
-
-        // TODO: update animations
     }
 }

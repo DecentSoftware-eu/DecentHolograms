@@ -18,17 +18,13 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.display.attributes.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attributes.FixedDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TextDisplay extends DisplayBase {
 
@@ -43,12 +39,6 @@ public class TextDisplay extends DisplayBase {
     public TextDisplay(String name, DecentLocation location) {
         super(name, location);
         this.lines = new ArrayList<>();
-    }
-
-    public List<String> getText(Player player) {
-        return lines.stream()
-                .map(line -> Common.colorize(PAPI.setPlaceholders(player, line)))
-                .collect(Collectors.toList());
     }
 
     @Override

@@ -64,7 +64,15 @@ public class DisplayRenderingService {
     }
 
     public void updateContent(DisplayBase display) {
-        performForAllViewers(display, (player, adapter) -> adapter.updateContent(display, player));
+        updateContent(display, true);
+    }
+
+    public void updateContentAnimations(DisplayBase display) {
+        updateContent(display, false);
+    }
+
+    private void updateContent(DisplayBase display, boolean fullUpdate) {
+        performForAllViewers(display, (player, adapter) -> adapter.updateContent(display, player, fullUpdate));
     }
 
     public void updateProperties(DisplayBase display) {
