@@ -41,15 +41,14 @@ public class CommandAttributeService {
 
     static {
         List<CommandAttribute> generalAttributes = Arrays.asList(
-                 // TODO: add limits
-                new Vector3FCommandAttribute<>("translation", DisplayBase::setTranslation, DisplayBase.class),
-                 // TODO: add limits
-                new Vector3FCommandAttribute<>("scale", DisplayBase::setScale, DisplayBase.class),
+                // TODO: add limits
+                new Vector3fCommandAttribute<>("translation", DisplayBase::setTranslation, DisplayBase.class),
+                // TODO: add limits
+                new Vector3fCommandAttribute<>("scale", DisplayBase::setScale, DisplayBase.class),
                 new EnumCommandAttribute<>("billboard", DisplayBillboardConstraints.class, DisplayBase::setBillboardConstraints, DisplayBase.class),
-                 // TODO: add limits
-                new FloatCommandAttribute<>("shadow-radius", DisplayBase::setShadowRadius, DisplayBase.class),
-                 // TODO: add limits
-                new FloatCommandAttribute<>("shadow-strength", DisplayBase::setShadowStrength, DisplayBase.class)
+                new BrightnessCommandAttribute(DisplayBase::setBrightnessOverride),
+                new FloatCommandAttribute<>("shadow-radius", 0, 32, DisplayBase::setShadowRadius, DisplayBase.class),
+                new FloatCommandAttribute<>("shadow-strength", 0, 32, DisplayBase::setShadowStrength, DisplayBase.class)
         );
 
         Map<String, CommandAttribute> textAttributes = new HashMap<>();

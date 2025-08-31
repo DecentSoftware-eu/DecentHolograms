@@ -19,8 +19,9 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.display.attribute.parser.Vector3fDisplayAttributeParser;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
+import eu.decentsoftware.holograms.display.attribute.parser.BrightnessDisplayAttributeParser;
+import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParseException;
+import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,39 +29,44 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class Vector3FCommandAttribute<D> implements CommandAttribute {
+public class BrightnessCommandAttribute implements CommandAttribute {
 
-    private static final Vector3fDisplayAttributeParser PARSER = new Vector3fDisplayAttributeParser();
-    private final String name;
-    private final BiConsumer<D, DisplayVector3f> applyValue;
-    private final Class<D> applicableDisplayType;
+    private static final BrightnessDisplayAttributeParser PARSER = new BrightnessDisplayAttributeParser();
+    private final BiConsumer<DisplayBase, DisplayBrightness> applyValue;
 
-    public Vector3FCommandAttribute(String name, BiConsumer<D, DisplayVector3f> applyValue, Class<D> applicableDisplayType) {
-        this.name = name;
+    public BrightnessCommandAttribute(BiConsumer<DisplayBase, DisplayBrightness> applyValue) {
         this.applyValue = applyValue;
-        this.applicableDisplayType = applicableDisplayType;
     }
 
     @NotNull
     @Override
     public String getName() {
-        return name;
+        return "brightness";
     }
 
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
-        return Arrays.asList("0,0,0", "0.5,0.5,0.5", "1,1,1");
+        return Arrays.asList(
+                "0,0",
+                "5,5",
+                "10,10",
+                "15,15",
+                "5,0",
+                "10,0",
+                "15,0",
+                "0,5",
+                "0,10",
+                "0,15"
+        );
     }
 
     @Override
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
-        if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
-            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
+        try {
+            DisplayBrightness brightness = PARSER.parseValue(value);
+            applyValue.accept(display, brightness);
+        } catch (DisplayAttributeParseException e) {
+            throw new CommandAttributeValidationException(e.getMessage());
         }
-        DisplayVector3f vector = PARSER.parseValue(value);
-        if (vector == null) {
-            throw new CommandAttributeValidationException("Expected a vector in the format x,y,z.");
-        }
-        this.applyValue.accept(applicableDisplayType.cast(display), vector);
     }
 }

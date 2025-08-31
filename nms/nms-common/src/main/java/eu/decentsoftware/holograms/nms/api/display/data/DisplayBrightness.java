@@ -37,9 +37,7 @@ public class DisplayBrightness {
      * @param blockLight the block light level, between 0-15
      * @param skyLight   the sky light level, between 0-15
      */
-    public DisplayBrightness(int blockLight, int skyLight) {
-        Preconditions.checkArgument(0 <= blockLight && blockLight <= 15, "blockLight out of range 0-15: %s", blockLight);
-        Preconditions.checkArgument(0 <= skyLight && skyLight <= 15, "skyLight out of range 0-15: %s", skyLight);
+    private DisplayBrightness(int blockLight, int skyLight) {
         this.blockLight = blockLight;
         this.skyLight = skyLight;
     }
@@ -60,5 +58,20 @@ public class DisplayBrightness {
      */
     public int getSkyLight() {
         return this.skyLight;
+    }
+
+    /**
+     * Creates a new DisplayBrightness instance with the specified block light and sky light levels.
+     * Both blockLight and skyLight values must be between 0 and 15, inclusive.
+     *
+     * @param blockLight the block light level, must be within the range 0-15
+     * @param skyLight   the sky light level, must be within the range 0-15
+     * @return a DisplayBrightness instance with the specified blockLight and skyLight levels
+     * @throws IllegalArgumentException if blockLight or skyLight is outside the valid range (0-15)
+     */
+    public static DisplayBrightness of(int blockLight, int skyLight) {
+        Preconditions.checkArgument(0 <= blockLight && blockLight <= 15, "blockLight out of range 0-15: %s", blockLight);
+        Preconditions.checkArgument(0 <= skyLight && skyLight <= 15, "skyLight out of range 0-15: %s", skyLight);
+        return new DisplayBrightness(blockLight, skyLight);
     }
 }

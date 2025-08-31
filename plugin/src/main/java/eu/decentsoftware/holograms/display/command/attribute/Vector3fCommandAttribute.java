@@ -19,31 +19,24 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.display.attribute.parser.FloatDisplayAttributeParser;
+import eu.decentsoftware.holograms.display.attribute.parser.Vector3fDisplayAttributeParser;
+import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class FloatCommandAttribute<D> implements CommandAttribute {
+public class Vector3fCommandAttribute<D> implements CommandAttribute {
 
-    private static final FloatDisplayAttributeParser PARSER = new FloatDisplayAttributeParser();
+    private static final Vector3fDisplayAttributeParser PARSER = new Vector3fDisplayAttributeParser();
     private final String name;
-    private final float minValue;
-    private final float maxValue;
-    private final BiConsumer<D, Float> applyValue;
+    private final BiConsumer<D, DisplayVector3f> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public FloatCommandAttribute(String name, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
-        this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, applicableDisplayType);
-    }
-
-    public FloatCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
+    public Vector3fCommandAttribute(String name, BiConsumer<D, DisplayVector3f> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
     }
@@ -56,7 +49,7 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
 
     @Override
     public List<String> getValueHints(@NotNull CommandSender sender, @NotNull String currentString) {
-        return Collections.emptyList();
+        return Arrays.asList("0,0,0", "0.5,0.5,0.5", "1,1,1");
     }
 
     @Override
@@ -64,13 +57,10 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        Float floatValue = PARSER.parseValue(value);
-        if (floatValue == null) {
-            throw new CommandAttributeValidationException("Expected a decimal number.");
+        DisplayVector3f vector = PARSER.parseValue(value);
+        if (vector == null) {
+            throw new CommandAttributeValidationException("Expected a vector in the format x,y,z.");
         }
-        if (floatValue < minValue || floatValue > maxValue) {
-            throw new CommandAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
-        }
-        applyValue.accept(applicableDisplayType.cast(display), floatValue);
+        this.applyValue.accept(applicableDisplayType.cast(display), vector);
     }
 }
