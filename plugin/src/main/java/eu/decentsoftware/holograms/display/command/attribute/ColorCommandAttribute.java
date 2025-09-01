@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.parser.ColorDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.command.CommandSender;
@@ -32,10 +34,10 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
 
     private static final ColorDisplayAttributeParser PARSER = new ColorDisplayAttributeParser();
     private final String name;
-    private final BiConsumer<D, DisplayColor> applyValue;
+    private final BiConsumer<D, DisplayAttribute<DisplayColor>> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public ColorCommandAttribute(String name, BiConsumer<D, DisplayColor> applyValue, Class<D> applicableDisplayType) {
+    public ColorCommandAttribute(String name, BiConsumer<D, DisplayAttribute<DisplayColor>> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
@@ -63,6 +65,14 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
         if (color == null) {
             throw new CommandAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00) or an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255).");
         }
-        applyValue.accept(applicableDisplayType.cast(display), color);
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(color));
+    }
+
+    @Override
+    public void resetValue(@NotNull DisplayBase display) {
+        if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
+        }
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
     }
 }

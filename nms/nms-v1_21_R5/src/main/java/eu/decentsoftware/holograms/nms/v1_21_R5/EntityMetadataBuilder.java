@@ -187,7 +187,6 @@ class EntityMetadataBuilder {
         if (shadowRadius == null) {
             return this;
         }
-
         float shadowRadiusFloat = shadowRadius.getValue() == null ? 0.0f : shadowRadius.getValue();
 
         watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_RADIUS.construct(shadowRadiusFloat));
@@ -198,7 +197,6 @@ class EntityMetadataBuilder {
         if (shadowStrength == null) {
             return this;
         }
-
         float shadowStrengthFloat = shadowStrength.getValue() == null ? 1.0f : shadowStrength.getValue();
 
         watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_STRENGTH.construct(shadowStrengthFloat));
@@ -209,7 +207,6 @@ class EntityMetadataBuilder {
         if (glowColorOverrideAttribute == null) {
             return this;
         }
-
         DisplayColor glowColorOverride = glowColorOverrideAttribute.getValue();
         int glowColorRgb = glowColorOverride == null ? -1 : glowColorOverride.asRGB();
 
@@ -234,7 +231,6 @@ class EntityMetadataBuilder {
         if (lineWidth == null) {
             return this;
         }
-
         int lineWidthInt = lineWidth.getValue() == null ? 200 : lineWidth.getValue();
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_LINE_WIDTH.construct(lineWidthInt));
@@ -256,7 +252,9 @@ class EntityMetadataBuilder {
         if (textOpacity == null) {
             return this;
         }
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacity.getValue()));
+        byte textOpacityByte = textOpacity.getValue() == null ? -1 : textOpacity.getValue();
+
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacityByte));
         return this;
     }
 

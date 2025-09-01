@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.parser.FloatDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -33,14 +35,14 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
     private final String name;
     private final float minValue;
     private final float maxValue;
-    private final BiConsumer<D, Float> applyValue;
+    private final BiConsumer<D, DisplayAttribute<Float>> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public FloatCommandAttribute(String name, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
+    public FloatCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Float>> applyValue, Class<D> applicableDisplayType) {
         this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, applicableDisplayType);
     }
 
-    public FloatCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, Float> applyValue, Class<D> applicableDisplayType) {
+    public FloatCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, DisplayAttribute<Float>> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -71,6 +73,14 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
         if (floatValue < minValue || floatValue > maxValue) {
             throw new CommandAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
         }
-        applyValue.accept(applicableDisplayType.cast(display), floatValue);
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(floatValue));
+    }
+
+    @Override
+    public void resetValue(@NotNull DisplayBase display) {
+        if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
+        }
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
     }
 }

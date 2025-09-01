@@ -56,4 +56,10 @@ public interface CommandAttribute {
      */
     void applyValue(@NotNull DisplayBase display, @NotNull String value);
 
+    /**
+     * Resets the value of this attribute on the given display to its default value.
+     *
+     * @param display The display to reset the value on.
+     */
+    void resetValue(@NotNull DisplayBase display);
 }

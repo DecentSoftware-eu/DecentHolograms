@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 
@@ -73,54 +72,6 @@ public class TextDisplay extends DisplayBase {
 
     public List<String> getLines() {
         return lines;
-    }
-
-    public int getLineWidth() {
-        return lineWidthAttribute.getValue();
-    }
-
-    public void setLineWidth(int lineWidth) {
-        this.lineWidthAttribute = new StaticDisplayAttribute<>(lineWidth);
-    }
-
-    public DisplayColor getBackgroundColor() {
-        return backgroundColorAttribute.getValue();
-    }
-
-    public void setBackgroundColor(DisplayColor backgroundColor) {
-        this.backgroundColorAttribute = new StaticDisplayAttribute<>(backgroundColor);
-    }
-
-    public byte getTextOpacity() {
-        return textOpacityAttribute.getValue();
-    }
-
-    public void setTextOpacity(byte textOpacity) {
-        this.textOpacityAttribute = new StaticDisplayAttribute<>(textOpacity);
-    }
-
-    public boolean isTextShadow() {
-        return textShadowAttribute.getValue();
-    }
-
-    public void setTextShadow(boolean textShadow) {
-        this.textShadowAttribute = new StaticDisplayAttribute<>(textShadow);
-    }
-
-    public boolean isSeeThrough() {
-        return seeThroughAttribute.getValue();
-    }
-
-    public void setSeeThrough(boolean seeThrough) {
-        this.seeThroughAttribute = new StaticDisplayAttribute<>(seeThrough);
-    }
-
-    public TextDisplayAlignment getAlignment() {
-        return alignmentAttribute.getValue();
-    }
-
-    public void setAlignment(TextDisplayAlignment alignment) {
-        this.alignmentAttribute = new StaticDisplayAttribute<>(alignment);
     }
 
     public DisplayAttribute<Integer> getLineWidthAttribute() {

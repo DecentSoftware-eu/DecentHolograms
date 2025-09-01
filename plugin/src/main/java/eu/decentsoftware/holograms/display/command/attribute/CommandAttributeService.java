@@ -41,36 +41,34 @@ public class CommandAttributeService {
 
     static {
         List<CommandAttribute> generalAttributes = Arrays.asList(
-                // TODO: add limits
-                new Vector3fCommandAttribute<>("translation", DisplayBase::setTranslation, DisplayBase.class),
-                // TODO: add limits
-                new Vector3fCommandAttribute<>("scale", DisplayBase::setScale, DisplayBase.class),
-                new EnumCommandAttribute<>("billboard", DisplayBillboardConstraints.class, DisplayBase::setBillboardConstraints, DisplayBase.class),
-                new BrightnessCommandAttribute(DisplayBase::setBrightnessOverride),
-                new FloatCommandAttribute<>("shadow-radius", 0, 32, DisplayBase::setShadowRadius, DisplayBase.class),
-                new FloatCommandAttribute<>("shadow-strength", 0, 32, DisplayBase::setShadowStrength, DisplayBase.class)
+                new Vector3fCommandAttribute<>("translation", -8, 8, DisplayBase::setTranslationAttribute, DisplayBase.class),
+                new Vector3fCommandAttribute<>("scale", 0, 100, DisplayBase::setScaleAttribute, DisplayBase.class),
+                new EnumCommandAttribute<>("billboard", DisplayBillboardConstraints.class, DisplayBase::setBillboardAttribute, DisplayBase.class),
+                new BrightnessCommandAttribute(DisplayBase::setBrightnessAttribute),
+                new FloatCommandAttribute<>("shadow-radius", 0, 32, DisplayBase::setShadowRadiusAttribute, DisplayBase.class),
+                new FloatCommandAttribute<>("shadow-strength", 0, 32, DisplayBase::setShadowStrengthAttribute, DisplayBase.class)
         );
 
         Map<String, CommandAttribute> textAttributes = new HashMap<>();
         addAllAttributes(textAttributes, generalAttributes);
         // TODO: add limits, or remove and make constant
-        addAttribute(textAttributes, new IntegerCommandAttribute<>("line-width", 0, Integer.MAX_VALUE, TextDisplay::setLineWidth, TextDisplay.class));
-        addAttribute(textAttributes, new ColorCommandAttribute<>("background-color", TextDisplay::setBackgroundColor, TextDisplay.class));
-        addAttribute(textAttributes, new IntegerCommandAttribute<>("text-opacity", 0, 255, (display, value) -> display.setTextOpacity(value.byteValue()), TextDisplay.class));
-        addAttribute(textAttributes, new BooleanCommandAttribute<>("see-through", TextDisplay::setSeeThrough, TextDisplay.class));
-        addAttribute(textAttributes, new BooleanCommandAttribute<>("text-shadow", TextDisplay::setTextShadow, TextDisplay.class));
-        addAttribute(textAttributes, new EnumCommandAttribute<>("alignment", TextDisplayAlignment.class, TextDisplay::setAlignment, TextDisplay.class));
+        addAttribute(textAttributes, new IntegerCommandAttribute<>("line-width", 0, Integer.MAX_VALUE, TextDisplay::setLineWidthAttribute, TextDisplay.class));
+        addAttribute(textAttributes, new ColorCommandAttribute<>("background-color", TextDisplay::setBackgroundColorAttribute, TextDisplay.class));
+        addAttribute(textAttributes, new ByteCommandAttribute<>("text-opacity", TextDisplay::setTextOpacityAttribute, TextDisplay.class));
+        addAttribute(textAttributes, new BooleanCommandAttribute<>("see-through", TextDisplay::setSeeThroughAttribute, TextDisplay.class));
+        addAttribute(textAttributes, new BooleanCommandAttribute<>("text-shadow", TextDisplay::setTextShadowAttribute, TextDisplay.class));
+        addAttribute(textAttributes, new EnumCommandAttribute<>("alignment", TextDisplayAlignment.class, TextDisplay::setAlignmentAttribute, TextDisplay.class));
         TEXT_ATTRIBUTES = ImmutableMap.copyOf(textAttributes);
 
         Map<String, CommandAttribute> itemAttributes = new HashMap<>();
         addAllAttributes(itemAttributes, generalAttributes);
-        addAttribute(itemAttributes, new EnumCommandAttribute<>("display-type", ItemDisplayType.class, ItemDisplay::setDisplayType, ItemDisplay.class));
-        addAttribute(itemAttributes, new ColorCommandAttribute<>("glow-color", ItemDisplay::setGlowColor, ItemDisplay.class));
+        addAttribute(itemAttributes, new EnumCommandAttribute<>("display-type", ItemDisplayType.class, ItemDisplay::setDisplayTypeAttribute, ItemDisplay.class));
+        addAttribute(itemAttributes, new ColorCommandAttribute<>("glow-color", ItemDisplay::setGlowColorAttribute, ItemDisplay.class));
         ITEM_ATTRIBUTES = ImmutableMap.copyOf(itemAttributes);
 
         Map<String, CommandAttribute> blockAttributes = new HashMap<>();
         addAllAttributes(blockAttributes, generalAttributes);
-        addAttribute(blockAttributes, new ColorCommandAttribute<>("glow-color", BlockDisplay::setGlowColor, BlockDisplay.class));
+        addAttribute(blockAttributes, new ColorCommandAttribute<>("glow-color", BlockDisplay::setGlowColorAttribute, BlockDisplay.class));
         BLOCK_ATTRIBUTES = ImmutableMap.copyOf(blockAttributes);
     }
 

@@ -29,13 +29,12 @@ import eu.decentsoftware.holograms.display.command.attribute.CommandAttribute;
 import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
 import eu.decentsoftware.holograms.plugin.Validator;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 @CommandInfo(
         usage = "/dh d reset-attribute <name> <attribute>",
         description = "Reset a display attribute to the default value.",
-        aliases = {"resetattribute", "unsetattribute"}
+        aliases = {"resetattribute", "unset-attribute", "unsetattribute"}
 )
 class ResetAttributeDisplayCommand extends DecentCommand {
 
@@ -61,8 +60,7 @@ class ResetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            // TODO: Reset Attribute
-//            attribute.resetValue(display);
+            attribute.resetValue(display);
             displayService.updateDisplayProperties(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attribute.getName());
@@ -78,8 +76,7 @@ class ResetAttributeDisplayCommand extends DecentCommand {
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
                 if (display != null) {
-                    return TabCompleteHandler.getPartialMatches(args[1],
-                            new ArrayList<>(attributeService.getAvailableAttributes(display).keySet()));
+                    return TabCompleteHandler.getPartialMatches(args[1], attributeService.getAvailableAttributes(display).keySet());
                 }
             }
             return null;

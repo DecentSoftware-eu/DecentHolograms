@@ -52,8 +52,16 @@ class MoveHereDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(1, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            Location location = ((Player) sender).getLocation();
-            display.setLocation(DecentLocation.fromBukkitLocation(location));
+            DecentLocation displayLocation = display.getLocation();
+            Location playerLocation = ((Player) sender).getLocation();
+            display.setLocation(new DecentLocation(
+                    playerLocation.getWorld().getName(),
+                    playerLocation.getX(),
+                    playerLocation.getY(),
+                    playerLocation.getZ(),
+                    displayLocation.getYaw(),
+                    displayLocation.getPitch()
+            ));
             displayService.updateDisplayLocation(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_MOVED.send(sender, display.getName());

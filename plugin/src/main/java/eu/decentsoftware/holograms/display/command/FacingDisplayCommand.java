@@ -50,9 +50,9 @@ class FacingDisplayCommand extends DecentCommand {
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation location = display.getLocation();
-            float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, "Yaw must be a valid number between -180 and 180.");
+            float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, Lang.DISPLAY_FACING_INVALID_YAW.getValue());
             float pitch = args.length > 2
-                    ? Validator.getFloat(args[2], -90.0f, 90.0f, "Pitch must be a valid number between -90 and 90.")
+                    ? Validator.getFloat(args[2], -90.0f, 90.0f, Lang.DISPLAY_FACING_INVALID_PITCH.getValue())
                     : location.getPitch();
             display.setLocation(new DecentLocation(
                     location.getWorldName(),

@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.Material;
 
@@ -43,14 +42,6 @@ public class BlockDisplay extends DisplayBase {
 
     public void setMaterial(Material material) {
         this.material = material;
-    }
-
-    public DisplayColor getGlowColor() {
-        return glowColorAttribute.getValue();
-    }
-
-    public void setGlowColor(DisplayColor glowColor) {
-        this.glowColorAttribute = new StaticDisplayAttribute<>(glowColor);
     }
 
     public DisplayAttribute<DisplayColor> getGlowColorAttribute() {

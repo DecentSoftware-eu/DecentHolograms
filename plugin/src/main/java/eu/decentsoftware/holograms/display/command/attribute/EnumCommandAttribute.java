@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -32,13 +34,13 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
 
     private final String name;
     private final Class<E> enumClass;
-    private final BiConsumer<D, E> applyValue;
+    private final BiConsumer<D, DisplayAttribute<E>> applyValue;
     private final Class<D> applicableDisplayType;
     private final EnumDisplayAttributeParser<E> parser;
 
     public EnumCommandAttribute(String name,
                                 Class<E> enumClass,
-                                BiConsumer<D, E> applyValue,
+                                BiConsumer<D, DisplayAttribute<E>> applyValue,
                                 Class<D> applicableDisplayType) {
         this.name = name;
         this.enumClass = enumClass;
@@ -76,6 +78,14 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
             throw new CommandAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
         }
 
-        this.applyValue.accept(applicableDisplayType.cast(display), enumValue);
+        this.applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(enumValue));
+    }
+
+    @Override
+    public void resetValue(@NotNull DisplayBase display) {
+        if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
+        }
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
     }
 }

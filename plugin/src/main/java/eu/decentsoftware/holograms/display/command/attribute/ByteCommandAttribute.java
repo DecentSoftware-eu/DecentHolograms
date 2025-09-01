@@ -29,20 +29,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class IntegerCommandAttribute<D> implements CommandAttribute {
+public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttribute {
 
     private static final IntegerDisplayAttributeParser PARSER = new IntegerDisplayAttributeParser();
     private final String name;
     private final int minValue;
     private final int maxValue;
-    private final BiConsumer<D, DisplayAttribute<Integer>> applyValue;
+    private final BiConsumer<D, DisplayAttribute<Byte>> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public IntegerCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Integer>> applyValue, Class<D> applicableDisplayType) {
-        this(name, Integer.MIN_VALUE, Integer.MAX_VALUE, applyValue, applicableDisplayType);
+    public ByteCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Byte>> applyValue, Class<D> applicableDisplayType) {
+        this(name, 0, 255, applyValue, applicableDisplayType);
     }
 
-    public IntegerCommandAttribute(String name, int minValue, int maxValue, BiConsumer<D, DisplayAttribute<Integer>> applyValue, Class<D> applicableDisplayType) {
+    public ByteCommandAttribute(String name, int minValue, int maxValue, BiConsumer<D, DisplayAttribute<Byte>> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -73,7 +73,7 @@ public class IntegerCommandAttribute<D> implements CommandAttribute {
         if (parsedValue < minValue || parsedValue > maxValue) {
             throw new CommandAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(parsedValue));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(parsedValue.byteValue()));
     }
 
     @Override

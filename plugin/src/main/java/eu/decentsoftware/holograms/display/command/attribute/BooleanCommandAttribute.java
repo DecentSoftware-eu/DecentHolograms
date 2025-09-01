@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.parser.BooleanDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -32,10 +34,10 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
 
     private static final BooleanDisplayAttributeParser PARSER = new BooleanDisplayAttributeParser();
     private final String name;
-    private final BiConsumer<D, Boolean> applyValue;
+    private final BiConsumer<D, DisplayAttribute<Boolean>> applyValue;
     private final Class<D> applicableDisplayType;
 
-    public BooleanCommandAttribute(String name, BiConsumer<D, Boolean> applyValue, Class<D> applicableDisplayType) {
+    public BooleanCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Boolean>> applyValue, Class<D> applicableDisplayType) {
         this.name = name;
         this.applyValue = applyValue;
         this.applicableDisplayType = applicableDisplayType;
@@ -61,6 +63,14 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         Boolean parsedValue = PARSER.parseValue(value);
-        applyValue.accept(applicableDisplayType.cast(display), parsedValue);
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(parsedValue));
+    }
+
+    @Override
+    public void resetValue(@NotNull DisplayBase display) {
+        if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
+            throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
+        }
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
     }
 }

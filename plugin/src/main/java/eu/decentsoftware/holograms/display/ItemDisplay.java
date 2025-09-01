@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 
@@ -45,22 +44,6 @@ public class ItemDisplay extends DisplayBase {
 
     public void setDisplayedItem(HologramItem displayedItem) {
         this.displayedItem = displayedItem;
-    }
-
-    public ItemDisplayType getDisplayType() {
-        return displayTypeAttribute.getValue();
-    }
-
-    public void setDisplayType(ItemDisplayType displayType) {
-        this.displayTypeAttribute = new StaticDisplayAttribute<>(displayType);
-    }
-
-    public DisplayColor getGlowColor() {
-        return glowColorAttribute.getValue();
-    }
-
-    public void setGlowColor(DisplayColor glowColor) {
-        this.glowColorAttribute = new StaticDisplayAttribute<>(glowColor);
     }
 
     public DisplayAttribute<ItemDisplayType> getDisplayTypeAttribute() {

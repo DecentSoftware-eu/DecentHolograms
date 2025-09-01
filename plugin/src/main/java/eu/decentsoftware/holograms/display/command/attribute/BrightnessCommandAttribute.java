@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.display.command.attribute;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.parser.BrightnessDisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParseException;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
@@ -32,9 +34,9 @@ import java.util.function.BiConsumer;
 public class BrightnessCommandAttribute implements CommandAttribute {
 
     private static final BrightnessDisplayAttributeParser PARSER = new BrightnessDisplayAttributeParser();
-    private final BiConsumer<DisplayBase, DisplayBrightness> applyValue;
+    private final BiConsumer<DisplayBase, DisplayAttribute<DisplayBrightness>> applyValue;
 
-    public BrightnessCommandAttribute(BiConsumer<DisplayBase, DisplayBrightness> applyValue) {
+    public BrightnessCommandAttribute(BiConsumer<DisplayBase, DisplayAttribute<DisplayBrightness>> applyValue) {
         this.applyValue = applyValue;
     }
 
@@ -64,9 +66,14 @@ public class BrightnessCommandAttribute implements CommandAttribute {
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         try {
             DisplayBrightness brightness = PARSER.parseValue(value);
-            applyValue.accept(display, brightness);
+            applyValue.accept(display, new StaticDisplayAttribute<>(brightness));
         } catch (DisplayAttributeParseException e) {
             throw new CommandAttributeValidationException(e.getMessage());
         }
+    }
+
+    @Override
+    public void resetValue(@NotNull DisplayBase display) {
+        applyValue.accept(display, new StaticDisplayAttribute<>(null));
     }
 }
