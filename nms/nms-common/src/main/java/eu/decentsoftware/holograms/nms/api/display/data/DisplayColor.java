@@ -47,4 +47,20 @@ public class DisplayColor {
     public int asRGB() {
         return (red << 16) | (green << 8) | blue;
     }
+
+    public int getAlpha() {
+        return alpha;
+    }
+
+    public int getRed() {
+        return red;
+    }
+
+    public int getGreen() {
+        return green;
+    }
+
+    public int getBlue() {
+        return blue;
+    }
 }

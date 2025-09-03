@@ -20,6 +20,8 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
+import eu.decentsoftware.holograms.display.config.DisplayDao;
 import eu.decentsoftware.holograms.display.rendering.DisplayDataMapper;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
@@ -47,8 +49,11 @@ public class DisplayModule {
         TextProcessingService textProcessingService = new TextProcessingService(animationManager);
         DisplayRenderingAdapterFactory renderingAdapterFactory = new DisplayRenderingAdapterFactory(
                 dataMapper, rendererFactory, textProcessingService);
-        DisplayRenderingService renderingService = new DisplayRenderingService(new DisplayVisibilityService(), renderingAdapterFactory);
-        this.displayService = new DisplayService(renderingService);
+        DisplayVisibilityService visibilityService = new DisplayVisibilityService();
+        DisplayRenderingService renderingService = new DisplayRenderingService(visibilityService, renderingAdapterFactory);
+        AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
+        DisplayDao displayDao = new DisplayDao(plugin, attributeDefinitionRegistry);
+        this.displayService = new DisplayService(displayDao, renderingService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);
     }
@@ -57,6 +62,7 @@ public class DisplayModule {
         if (Version.before(Version.v1_19_R3)) {
             return;
         }
+        this.displayService.reload();
         this.displayUpdater.register();
         Bukkit.getPluginManager().registerEvents(displayListener, plugin);
     }

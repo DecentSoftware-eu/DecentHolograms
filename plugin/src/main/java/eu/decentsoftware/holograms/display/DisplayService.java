@@ -18,20 +18,26 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.display.config.DisplayConfigException;
+import eu.decentsoftware.holograms.display.config.DisplayDao;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DisplayService {
 
+    private final DisplayDao dao;
     private final DisplayRenderingService renderingService;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
-    public DisplayService(DisplayRenderingService renderingService) {
+    public DisplayService(DisplayDao dao, DisplayRenderingService renderingService) {
+        this.dao = dao;
         this.renderingService = renderingService;
     }
 
@@ -41,7 +47,18 @@ public class DisplayService {
     }
 
     public void reload() {
-        // TODO: reload displays
+        shutdown();
+
+        try {
+            List<DisplayBase> loadedDisplays = dao.loadAllDisplays();
+            for (DisplayBase display : loadedDisplays) {
+                registerDisplay(display);
+                renderingService.updateVisibility(display);
+            }
+            Log.info("Loaded %d displays", loadedDisplays.size());
+        } catch (DisplayConfigException e) {
+            Log.error("Failed to load displays", e);
+        }
     }
 
     public DisplayBase getDisplay(String name) {
@@ -54,7 +71,7 @@ public class DisplayService {
 
     public void saveDisplay(DisplayBase display) {
         registerDisplay(display);
-        // TODO: Save display to file
+        dao.saveDisplay(display);
     }
 
     public boolean deleteDisplay(String name) {
