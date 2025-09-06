@@ -33,6 +33,7 @@ import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -92,7 +93,9 @@ class CreateDisplayCommand extends DecentCommand {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
                 TextDisplay textDisplay = new TextDisplay(name, location);
-                textDisplay.setLines(Arrays.asList(text.split("\\\\n")));
+                TextDisplayPage page = new TextDisplayPage();
+                page.setLines(Arrays.asList(text.split("\\\\n")));
+                textDisplay.addPage(page);
                 return textDisplay;
             case ITEM:
                 String itemContent = Validator.getLineContent(args, 2);

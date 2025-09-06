@@ -25,44 +25,48 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.display.text.TextDisplayView;
+import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 import eu.decentsoftware.holograms.plugin.Validator;
-
-import java.util.Arrays;
+import org.bukkit.entity.Player;
 
 @CommandInfo(
-        usage = "/dh d setline <name> <page> <index> <text>",
-        description = "Set a line of text in a Text Display.",
-        permissions = {"dh.command.displays.text.setline"}
+        usage = "/dh d page-switch <name> <page>",
+        description = "Switch to another page of a Text Display.",
+        permissions = {"dh.command.displays.page.switch"},
+        aliases = {"pageswitch", "switchpage"},
+        playerOnly = true
 )
-class TextDisplaySetLineCommand extends DecentCommand {
+class TextDisplayPageSwitchCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final DisplayTabCompleteHelper tabCompleteHelper;
+    private final TextDisplayViewService textDisplayViewService;
 
-    TextDisplaySetLineCommand(DisplayService displayService, DisplayTabCompleteHelper tabCompleteHelper) {
-        super("setline");
+    TextDisplayPageSwitchCommand(DisplayService displayService,
+                                 DisplayTabCompleteHelper tabCompleteHelper,
+                                 TextDisplayViewService textDisplayViewService) {
+        super("page-switch");
         this.displayService = displayService;
         this.tabCompleteHelper = tabCompleteHelper;
+        this.textDisplayViewService = textDisplayViewService;
     }
 
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            Validator.validateArgsCount(4, args);
-            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
+            Validator.validateArgsCount(2, args);
+            DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Line index out of bounds.");
-            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
-            int index = Validator.getInteger(args[2], 1, page.getLines().size(), "Line index out of bounds.");
-            String text = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
-            page.setLine(index - 1, text);
+            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
+            Player player = (Player) sender;
+
+            TextDisplayView view = textDisplayViewService.getView(textDisplay.getName(), player.getUniqueId());
+            view.setCurrentPage(pageIndex - 1);
             displayService.updateDisplayContent(display);
-            displayService.saveDisplay(display);
-            Lang.DISPLAY_TEXT_LINE_SET.send(sender, display.getName(), index);
+            Lang.DISPLAY_TEXT_PAGE_SWITCHED.send(sender, display.getName(), pageIndex);
             return true;
         };
     }
@@ -74,8 +78,6 @@ class TextDisplaySetLineCommand extends DecentCommand {
                 return tabCompleteHelper.getDisplayNames(args[0]);
             } else if (args.length == 2) {
                 return tabCompleteHelper.getPageIndexes(args[0], args[1]);
-            } else if (args.length == 3) {
-                return tabCompleteHelper.getLineIndexes(args[0], args[1], args[2]);
             }
             return null;
         };

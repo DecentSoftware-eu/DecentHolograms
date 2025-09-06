@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
+import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 
 @CommandInfo(
         usage = "/dh displays help",
@@ -40,7 +41,7 @@ public class DisplaysCommand extends DecentCommand {
         return instance;
     }
 
-    public DisplaysCommand(DisplayService displayService) {
+    public DisplaysCommand(DisplayService displayService, TextDisplayViewService textDisplayViewService) {
         super("displays");
         instance = this;
 
@@ -59,10 +60,12 @@ public class DisplaysCommand extends DecentCommand {
 //        addSubCommand(new CloneDisplayCommand(displayService));
         addSubCommand(new BlockDisplaySetBlockCommand(displayService));
         addSubCommand(new ItemDisplaySetItemCommand(displayService));
-        addSubCommand(new TextDisplayAddLineCommand(displayService));
-        addSubCommand(new TextDisplayInsertLineCommand(displayService));
-        addSubCommand(new TextDisplayRemoveLineCommand(displayService));
-        addSubCommand(new TextDisplaySetLineCommand(displayService));
+        DisplayTabCompleteHelper tabCompleteHelper = new DisplayTabCompleteHelper(displayService);
+        addSubCommand(new TextDisplayAddLineCommand(displayService, tabCompleteHelper));
+        addSubCommand(new TextDisplayInsertLineCommand(displayService, tabCompleteHelper));
+        addSubCommand(new TextDisplayRemoveLineCommand(displayService, tabCompleteHelper));
+        addSubCommand(new TextDisplaySetLineCommand(displayService, tabCompleteHelper));
+        addSubCommand(new TextDisplayPageSwitchCommand(displayService, tabCompleteHelper, textDisplayViewService));
     }
 
     @Override

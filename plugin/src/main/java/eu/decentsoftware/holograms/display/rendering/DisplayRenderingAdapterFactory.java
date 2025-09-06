@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.text.TextProcessingService;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
 
 public class DisplayRenderingAdapterFactory {

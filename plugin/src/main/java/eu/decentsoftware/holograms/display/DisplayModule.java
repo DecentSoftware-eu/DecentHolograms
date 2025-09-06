@@ -25,7 +25,8 @@ import eu.decentsoftware.holograms.display.config.DisplayDao;
 import eu.decentsoftware.holograms.display.rendering.DisplayDataMapper;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
-import eu.decentsoftware.holograms.display.rendering.TextProcessingService;
+import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
+import eu.decentsoftware.holograms.display.text.TextProcessingService;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -42,18 +43,20 @@ public class DisplayModule {
     private final DisplayService displayService;
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
+    private final TextDisplayViewService textDisplayViewService;
 
     public DisplayModule(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory, AnimationManager animationManager) {
         this.plugin = plugin;
         DisplayDataMapper dataMapper = new DisplayDataMapper();
-        TextProcessingService textProcessingService = new TextProcessingService(animationManager);
+        textDisplayViewService = new TextDisplayViewService();
+        TextProcessingService textProcessingService = new TextProcessingService(textDisplayViewService, animationManager);
         DisplayRenderingAdapterFactory renderingAdapterFactory = new DisplayRenderingAdapterFactory(
                 dataMapper, rendererFactory, textProcessingService);
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
         DisplayRenderingService renderingService = new DisplayRenderingService(visibilityService, renderingAdapterFactory);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayDao displayDao = new DisplayDao(plugin, attributeDefinitionRegistry);
-        this.displayService = new DisplayService(displayDao, renderingService);
+        this.displayService = new DisplayService(displayDao, renderingService, textDisplayViewService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);
     }
@@ -85,5 +88,9 @@ public class DisplayModule {
 
     public DisplayService getDisplayService() {
         return displayService;
+    }
+
+    public TextDisplayViewService getTextDisplayViewService() {
+        return textDisplayViewService;
     }
 }

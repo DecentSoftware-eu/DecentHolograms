@@ -27,7 +27,7 @@ import java.util.List;
 
 public class TextDisplay extends DisplayBase {
 
-    private final List<String> lines;
+    private final List<TextDisplayPage> pages;
     private DisplayAttribute<Integer> lineWidthAttribute;
     private DisplayAttribute<DisplayColor> backgroundColorAttribute;
     private DisplayAttribute<Byte> textOpacityAttribute;
@@ -37,7 +37,7 @@ public class TextDisplay extends DisplayBase {
 
     public TextDisplay(String name, DecentLocation location) {
         super(name, location);
-        this.lines = new ArrayList<>();
+        this.pages = new ArrayList<>();
     }
 
     @Override
@@ -45,33 +45,37 @@ public class TextDisplay extends DisplayBase {
         return DisplayType.TEXT;
     }
 
-    public void addLine(String line) {
-        this.lines.add(line);
+    public TextDisplayPage getPage(int index) {
+        return this.pages.get(index);
     }
 
-    public void addLine(int index, String line) {
-        this.lines.add(index, line);
+    public void addPage(TextDisplayPage page) {
+        this.pages.add(page);
     }
 
-    public void setLine(int index, String line) {
-        this.lines.set(index, line);
+    public void addPage(int index, TextDisplayPage page) {
+        this.pages.add(index, page);
     }
 
-    public void removeLine(int index) {
-        this.lines.remove(index);
+    public void setPage(int index, TextDisplayPage page) {
+        this.pages.set(index, page);
     }
 
-    public void clearLines() {
-        this.lines.clear();
+    public void removePage(int index) {
+        this.pages.remove(index);
     }
 
-    public void setLines(List<String> lines) {
-        this.lines.clear();
-        this.lines.addAll(lines);
+    public void clearPages() {
+        this.pages.clear();
     }
 
-    public List<String> getLines() {
-        return lines;
+    public void setPages(List<TextDisplayPage> pages) {
+        this.pages.clear();
+        this.pages.addAll(pages);
+    }
+
+    public List<TextDisplayPage> getPages() {
+        return pages;
     }
 
     public DisplayAttribute<Integer> getLineWidthAttribute() {

@@ -27,36 +27,39 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @CommandInfo(
-        usage = "/dh d insertline <name> <index> <text>",
+        usage = "/dh d insertline <name> <page> <index> <text>",
         description = "Insert a line of text in a Text Display.",
         permissions = {"dh.command.displays.text.insertline"}
 )
 class TextDisplayInsertLineCommand extends DecentCommand {
 
     private final DisplayService displayService;
+    private final DisplayTabCompleteHelper tabCompleteHelper;
 
-    TextDisplayInsertLineCommand(DisplayService displayService) {
+    TextDisplayInsertLineCommand(DisplayService displayService, DisplayTabCompleteHelper tabCompleteHelper) {
         super("insertline");
         this.displayService = displayService;
+        this.tabCompleteHelper = tabCompleteHelper;
     }
 
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            Validator.validateArgsCount(3, args);
+            Validator.validateArgsCount(4, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            int index = Validator.getInteger(args[1], 1, textDisplay.getLines().size(), "Line index out of bounds.");
-            String text = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-            textDisplay.addLine(index - 1, text);
+            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Line index out of bounds.");
+            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
+            int index = Validator.getInteger(args[2], 1, page.getLines().size(), "Line index out of bounds.");
+            String text = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+            page.addLine(index - 1, text);
             displayService.updateDisplayContent(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_LINE_INSERTED.send(sender, display.getName(), index);
@@ -68,17 +71,11 @@ class TextDisplayInsertLineCommand extends DecentCommand {
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
             if (args.length == 1) {
-                return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
+                return tabCompleteHelper.getDisplayNames(args[0]);
             } else if (args.length == 2) {
-                DisplayBase display = displayService.getDisplay(args[0]);
-                if (!(display instanceof TextDisplay)) {
-                    return null;
-                }
-                TextDisplay textDisplay = (TextDisplay) display;
-                return TabCompleteHandler.getPartialMatches(args[1], TabCompleteHandler.getPartialMatches(args[1], IntStream
-                        .rangeClosed(1, textDisplay.getLines().size())
-                        .boxed().map(String::valueOf)
-                        .collect(Collectors.toList())));
+                return tabCompleteHelper.getPageIndexes(args[0], args[1]);
+            } else if (args.length == 3) {
+                return tabCompleteHelper.getLineIndexes(args[0], args[1], args[2]);
             }
             return null;
         };

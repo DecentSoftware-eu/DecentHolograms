@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayDao;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -34,11 +35,13 @@ public class DisplayService {
 
     private final DisplayDao dao;
     private final DisplayRenderingService renderingService;
+    private final TextDisplayViewService viewService;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
-    public DisplayService(DisplayDao dao, DisplayRenderingService renderingService) {
+    public DisplayService(DisplayDao dao, DisplayRenderingService renderingService, TextDisplayViewService viewService) {
         this.dao = dao;
         this.renderingService = renderingService;
+        this.viewService = viewService;
     }
 
     public void shutdown() {
@@ -97,7 +100,10 @@ public class DisplayService {
     }
 
     public void hideDisplaysForPlayer(Player player) {
-        displays.values().forEach(display -> renderingService.hideDisplayForPlayer(display, player));
+        displays.values().forEach(display -> {
+            renderingService.hideDisplayForPlayer(display, player);
+            viewService.clearView(display.getName(), player.getUniqueId());
+        });
     }
 
     public void updateVisibilityForPlayer(Player player) {

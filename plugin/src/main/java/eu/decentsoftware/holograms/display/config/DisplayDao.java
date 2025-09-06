@@ -28,6 +28,7 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValueType;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
@@ -100,7 +101,9 @@ public class DisplayDao {
 
     private void saveTextDisplay(TextDisplay display, DisplayConfig config) {
         List<Map<String, Object>> pages = new ArrayList<>();
-        pages.add(Collections.singletonMap("lines", display.getLines()));
+        for (TextDisplayPage page : display.getPages()) {
+            pages.add(Collections.singletonMap("lines", page.getLines()));
+        }
 
         config.set("pages", pages);
         saveAttribute(config, "attributes.line-width", display.getLineWidthAttribute(), config::set);
@@ -214,7 +217,11 @@ public class DisplayDao {
         DisplayAttribute<TextDisplayAlignment> alignmentAttribute = loadDisplayAttribute(config, "alignment");
 
         TextDisplay textDisplay = new TextDisplay(id, location);
-        textDisplay.setLines(pageLines.get(0));
+        for (List<String> pageLine : pageLines) {
+            TextDisplayPage page = new TextDisplayPage();
+            page.setLines(pageLine);
+            textDisplay.addPage(page);
+        }
         textDisplay.setLineWidthAttribute(lineWidthAttribute);
         textDisplay.setBackgroundColorAttribute(backgroundColorAttribute);
         textDisplay.setTextOpacityAttribute(textOpacityAttribute);

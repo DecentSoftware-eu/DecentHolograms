@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 )
 public class HologramsCommand extends DecentCommand {
 
-	public HologramsCommand(DisplayService displayService) {
+	public HologramsCommand(DisplayService displayService, TextDisplayViewService textDisplayViewService) {
 		super("decentholograms");
 
 		addSubCommand(new HelpSubCommand());
@@ -42,7 +42,7 @@ public class HologramsCommand extends DecentCommand {
 		addSubCommand(new ListSubCommand());
 		addSubCommand(new HologramSubCommand());
         if (Version.afterOrEqual(Version.v1_19_R3)) {
-            addSubCommand(new DisplaysCommand(displayService));
+            addSubCommand(new DisplaysCommand(displayService, textDisplayViewService));
         }
 		addSubCommand(new LineSubCommand());
 		addSubCommand(new FeatureSubCommand());

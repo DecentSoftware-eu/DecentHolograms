@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.rendering;
 
 import eu.decentsoftware.holograms.display.TextDisplay;
+import eu.decentsoftware.holograms.display.text.TextProcessingService;
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRenderer;
