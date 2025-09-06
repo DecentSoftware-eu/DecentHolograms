@@ -57,16 +57,8 @@ public class TextDisplay extends DisplayBase {
         this.pages.add(index, page);
     }
 
-    public void setPage(int index, TextDisplayPage page) {
-        this.pages.set(index, page);
-    }
-
     public void removePage(int index) {
         this.pages.remove(index);
-    }
-
-    public void clearPages() {
-        this.pages.clear();
     }
 
     public void setPages(List<TextDisplayPage> pages) {

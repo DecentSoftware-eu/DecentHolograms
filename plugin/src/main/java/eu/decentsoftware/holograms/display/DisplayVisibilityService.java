@@ -48,13 +48,8 @@ public class DisplayVisibilityService {
     public boolean shouldBeShownToPlayer(DisplayBase display, Player player) {
         DecentLocation displayLocation = display.getLocation();
         Location playerLocation = player.getLocation();
-        if (!displayLocation.isSameWorld(playerLocation)) {
-            return false;
-        }
-        if (displayLocation.distanceSquared(playerLocation) > DISPLAY_RANGE * DISPLAY_RANGE) {
-            return false;
-        }
-        return true;
+        return displayLocation.isSameWorld(playerLocation)
+                && displayLocation.distanceSquared(playerLocation) <= DISPLAY_RANGE * DISPLAY_RANGE;
     }
 
     private Set<UUID> getViewers(DisplayBase display) {

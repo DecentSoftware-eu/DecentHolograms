@@ -45,10 +45,6 @@ public class TextDisplayPage {
         this.lines.remove(index);
     }
 
-    public void clearLines() {
-        this.lines.clear();
-    }
-
     public void setLines(List<String> lines) {
         this.lines.clear();
         this.lines.addAll(lines);

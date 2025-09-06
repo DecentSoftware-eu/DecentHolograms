@@ -25,48 +25,39 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.text.TextDisplayView;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.entity.Player;
 
 @CommandInfo(
-        usage = "/dh d page-switch <name> <page>",
-        description = "Switch to another page of a Text Display.",
-        permissions = {"dh.command.displays.page.switch"},
-        aliases = {"pageswitch", "switchpage"},
-        playerOnly = true
+        usage = "/dh d removepage <name> <index>",
+        description = "Remove a page of text from a Text Display.",
+        permissions = {"dh.command.displays.text.removepage"},
+        aliases = {"rempage"}
 )
-class TextDisplayPageSwitchCommand extends DecentCommand {
+class TextDisplayRemovePageCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final DisplayTabCompleteHelper tabCompleteHelper;
-    private final TextDisplayViewService textDisplayViewService;
 
-    TextDisplayPageSwitchCommand(DisplayService displayService,
-                                 DisplayTabCompleteHelper tabCompleteHelper,
-                                 TextDisplayViewService textDisplayViewService) {
-        super("page-switch");
+    TextDisplayRemovePageCommand(DisplayService displayService, DisplayTabCompleteHelper tabCompleteHelper) {
+        super("removepage");
         this.displayService = displayService;
         this.tabCompleteHelper = tabCompleteHelper;
-        this.textDisplayViewService = textDisplayViewService;
     }
 
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
-            DisplayBase display = Validator.getDisplay(displayService, args[0]);
+            DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
             int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
-            Player player = (Player) sender;
-
-            TextDisplayView view = textDisplayViewService.getView(textDisplay.getName(), player.getUniqueId());
-            view.setCurrentPage(pageIndex - 1);
+            textDisplay.removePage(pageIndex - 1);
             displayService.updateDisplayContent(display);
-            Lang.DISPLAY_TEXT_PAGE_SWITCHED.send(sender, display.getName(), pageIndex);
+            displayService.saveDisplay(display);
+            Lang.DISPLAY_TEXT_PAGE_REMOVED.send(sender, display.getName(), pageIndex);
             return true;
         };
     }

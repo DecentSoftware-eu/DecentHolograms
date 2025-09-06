@@ -147,7 +147,7 @@ public class Lang {
     public static final Phrase DISPLAY_TEXT_PAGE_ADDED = new Phrase("display.text.page_added", "{prefix}Added page to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_INSERTED = new Phrase("display.text.page_inserted", "{prefix}Inserted page to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_SWITCHED = new Phrase("display.text.page.switched", "{prefix}Switched to page &b%2$d&7 of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_PAGE_DELETED = new Phrase("display.text.page_deleted", "{prefix}Deleted page &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_PAGE_REMOVED = new Phrase("display.text.page_removed", "{prefix}Removed page &b%2$d&7 of display &b'%1$s'&7.");
 
     /*
      *	General Methods
