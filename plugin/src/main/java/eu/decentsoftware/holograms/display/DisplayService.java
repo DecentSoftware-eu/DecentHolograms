@@ -79,8 +79,12 @@ public class DisplayService {
 
     public boolean deleteDisplay(String name) {
         DisplayBase removedDisplay = displays.remove(name);
+        if (removedDisplay == null) {
+            return false;
+        }
         renderingService.hideForEveryone(removedDisplay);
-        return removedDisplay != null;
+        dao.deleteDisplay(removedDisplay);
+        return true;
     }
 
     public void updateDisplayVisibility(DisplayBase display) {

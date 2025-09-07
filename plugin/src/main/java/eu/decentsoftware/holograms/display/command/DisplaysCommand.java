@@ -57,7 +57,6 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new TeleportDisplayCommand(displayService));
         addSubCommand(new FacingDisplayCommand(displayService));
         addSubCommand(new ListDisplaysCommand(displayService));
-//        addSubCommand(new CloneDisplayCommand(displayService));
         addSubCommand(new BlockDisplaySetBlockCommand(displayService));
         addSubCommand(new ItemDisplaySetItemCommand(displayService));
         DisplayTabCompleteHelper tabCompleteHelper = new DisplayTabCompleteHelper(displayService);

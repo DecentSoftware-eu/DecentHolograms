@@ -43,6 +43,8 @@ import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +66,21 @@ public class DisplayDao {
     public DisplayDao(JavaPlugin plugin, AttributeDefinitionRegistry attributeDefinitionRegistry) {
         this.plugin = plugin;
         this.attributeDefinitionRegistry = attributeDefinitionRegistry;
+    }
+
+    /**
+     * Deletes a display from the database.
+     *
+     * @param display Display to delete.
+     * @return True if the display was deleted successfully. False if the display was not found.
+     */
+    public boolean deleteDisplay(DisplayBase display) {
+        File file = new File(plugin.getDataFolder(), "displays/" + display.getName() + ".yml");
+        try {
+            return Files.deleteIfExists(file.toPath());
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
