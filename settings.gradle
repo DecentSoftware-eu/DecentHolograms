@@ -16,6 +16,10 @@ pluginManagement {
     }
 }
 
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
 rootProject.name = 'DecentHolograms'
 
 include ':shared'
@@ -52,3 +56,5 @@ include ':nms:nms-v1_21_R2'
 include ':nms:nms-v1_21_R3'
 include ':nms:nms-v1_21_R4'
 include ':nms:nms-v1_21_R5'
+include ':nms:nms-v1_21_R6'
+include ':nms:nms-paper_v1_21_R6'

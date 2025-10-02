@@ -8,8 +8,30 @@ import java.lang.reflect.Field;
 // Never make this class final! (mocking)
 public class ReflectUtil {
 
+    public static boolean isPaper = false;
+
+    static {
+        try {
+            ReflectUtil.getClass("io.papermc.paper.PaperBootstrap");
+            isPaper = true;
+        } catch (ClassNotFoundException ignored) {}
+    }
+
     private ReflectUtil() {
         throw new IllegalAccessError("Utility class");
+    }
+
+    /**
+     * Get the value of a static field in a class.
+     *
+     * @param clazz     The class that has the field.
+     * @param fieldName The name of the field.
+*    * @param paperName The name of the paper (mojmap) field
+     * @param <T>       Type of the field.
+     * @return The value of the field.
+     */
+    public static <T> T getFieldValue(Class<?> clazz, String fieldName, String paperName) {
+        return getFieldValue(clazz, isPaper ? paperName : fieldName);
     }
 
     /**
