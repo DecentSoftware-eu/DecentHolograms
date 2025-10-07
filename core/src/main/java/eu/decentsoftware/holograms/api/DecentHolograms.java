@@ -139,7 +139,7 @@ public final class DecentHolograms {
         ExpansionConfigSource configSource = new DefaultExpansionConfigSource(fileSystemService.getExpansionConfigsDirectory());
         ExpansionActivator activator = new DefaultExpansionActivator(
                 new DefaultAppContextFactory(),
-                new DefaultExpansionContextFactory(commandManager, nmsPacketListenerService, configSource, getLogger()),
+                new DefaultExpansionContextFactory(commandManager, nmsPacketListenerService, configSource, plugin, getLogger()),
                 configSource,
                 getLogger());
 

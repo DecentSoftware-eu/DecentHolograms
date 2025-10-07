@@ -5,6 +5,10 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfig;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,23 +29,27 @@ public class DefaultExpansionContext implements ExpansionContext {
     private final CommandManager commandManager;
     private final NmsPacketListenerService packetListenerService;
     private final ExpansionConfig config;
+    private final Plugin plugin;
     private final Logger logger;
 
     private final Map<UUID, Runnable> commandUnregisterCallbacks;
     private final List<NmsPacketListener> registeredPacketListeners;
+    private final List<Listener> registeredBukkitListeners;
     private final List<ExpansionContextEventHandler> eventHandlers;
 
     private boolean closed;
 
     public DefaultExpansionContext(
             CommandManager commandManager,
-            NmsPacketListenerService packetListenerService, ExpansionConfig config, Logger logger) {
+            NmsPacketListenerService packetListenerService, ExpansionConfig config, Plugin plugin, Logger logger) {
         this.commandManager = commandManager;
         this.packetListenerService = packetListenerService;
         this.config = config;
+        this.plugin = plugin;
         this.logger = logger;
         this.commandUnregisterCallbacks = new ConcurrentHashMap<>();
         this.registeredPacketListeners = new CopyOnWriteArrayList<>();
+        this.registeredBukkitListeners = new CopyOnWriteArrayList<>();
         this.eventHandlers = new CopyOnWriteArrayList<>();
         this.closed = false;
     }
@@ -105,6 +113,13 @@ public class DefaultExpansionContext implements ExpansionContext {
     }
 
     @Override
+    public void registerBukkitListener(Listener listener) {
+        Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
+
+        registeredBukkitListeners.add(listener);
+    }
+
+    @Override
     public void addContextEventHandler(ExpansionContextEventHandler handler) {
         eventHandlers.add(handler);
     }
@@ -144,6 +159,9 @@ public class DefaultExpansionContext implements ExpansionContext {
             packetListenerService.unregisterAutoListener(listener);
         }
         registeredPacketListeners.clear();
+
+        registeredBukkitListeners.forEach(HandlerList::unregisterAll);
+        registeredBukkitListeners.clear();
 
         closed = true;
 

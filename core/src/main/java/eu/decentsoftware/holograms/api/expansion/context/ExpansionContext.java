@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.expansion.context;
 
 import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfig;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
@@ -41,6 +42,13 @@ public interface ExpansionContext {
      * @param listener the NMS packet listener to unregister
      */
     void unregisterNmsPacketListener(NmsPacketListener listener);
+
+    /**
+     * Registers a bukkit listener.
+     *
+     * @param listener The bukkit listener to register
+     */
+    void registerBukkitListener(Listener listener);
 
     /**
      * Adds an event handler to listen for context events.
