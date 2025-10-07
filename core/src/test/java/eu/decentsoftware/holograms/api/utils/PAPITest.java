@@ -16,10 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.utils;
+package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.api.utils.PAPI;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
