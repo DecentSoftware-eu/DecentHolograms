@@ -1,0 +1,17 @@
+dependencies {
+    childProjects.each { name, childProject ->
+        implementation childProject
+    }
+}
+
+compileJava {
+    dependsOn childProjects.values().collect { child ->
+        child.tasks.named("jar")
+    }
+}
+
+subprojects {
+    dependencies {
+        implementation project(":core")
+    }
+}

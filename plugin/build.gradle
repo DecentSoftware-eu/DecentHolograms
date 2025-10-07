@@ -6,43 +6,9 @@ plugins {
 version = "2.9.7"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
-repositories {
-    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url = "https://repo.codemc.io/repository/maven-public/" }
-    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
-}
-
-configurations {
-    // Make compileOnly dependencies available in tests
-    testImplementation {
-        extendsFrom compileOnly
-    }
-}
-
 dependencies {
-    implementation project(":nms")
-    implementation project(":nms:nms-common")
-
-    compileOnly(libs.spigot)
-    compileOnly(libs.placeholderapi)
-    compileOnly(libs.headdatabase.api)
-
-    implementation(libs.bstats.bukkit)
-    implementation(libs.item.nbt.api)
-    implementation(libs.xseries)
-
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-    compileOnly(libs.annotations)
-    annotationProcessor(libs.annotations)
-
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.junit.jupiter.params)
-    testImplementation(libs.junit.jupiter.engine)
-    testRuntimeOnly(libs.junit.platform.launcher)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
-    testImplementation(libs.mockito.junit.jupiter)
+    implementation project(":core")
+    implementation project(":expansion")
 }
 
 processResources {
@@ -66,6 +32,8 @@ shadowJar {
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+
+    mergeServiceFiles()
 }
 
 publishing {
@@ -75,8 +43,4 @@ publishing {
             artifactId = "decentholograms"
         }
     }
-}
-
-test {
-    useJUnitPlatform()
 }

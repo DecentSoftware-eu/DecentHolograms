@@ -18,6 +18,7 @@ pluginManagement {
 
 rootProject.name = 'DecentHolograms'
 
+include ':core'
 include ':shared'
 include ':plugin'
 include ':nms'
@@ -52,3 +53,5 @@ include ':nms:nms-v1_21_R2'
 include ':nms:nms-v1_21_R3'
 include ':nms:nms-v1_21_R4'
 include ':nms:nms-v1_21_R5'
+include ':expansion'
+include ':expansion:display-entities'
