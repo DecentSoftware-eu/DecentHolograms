@@ -14,19 +14,19 @@ import java.util.Optional;
 class EntityMetadataType<T> {
 
     private static final DataWatcherObject<Byte> ENTITY_PROPERTIES_OBJECT
-            = ReflectUtil.getFieldValue(Entity.class, "aA", "DATA_SHARED_FLAGS_ID");
+            = ReflectUtil.getFieldValue(Entity.class, "aA");
     private static final DataWatcherObject<Optional<IChatBaseComponent>> ENTITY_CUSTOM_NAME_OBJECT
-            = ReflectUtil.getFieldValue(Entity.class, "bm", "DATA_CUSTOM_NAME");
+            = ReflectUtil.getFieldValue(Entity.class, "bm");
     private static final DataWatcherObject<Boolean> ENTITY_CUSTOM_NAME_VISIBLE_OBJECT
-            = ReflectUtil.getFieldValue(Entity.class, "bn", "DATA_CUSTOM_NAME_VISIBLE");
+            = ReflectUtil.getFieldValue(Entity.class, "bn");
     private static final DataWatcherObject<Boolean> ENTITY_SILENT_OBJECT
-            = ReflectUtil.getFieldValue(Entity.class, "bo", "DATA_SILENT");
+            = ReflectUtil.getFieldValue(Entity.class, "bo");
     private static final DataWatcherObject<Boolean> ENTITY_HAS_NO_GRAVITY_OBJECT
-            = ReflectUtil.getFieldValue(Entity.class, "bp", "DATA_NO_GRAVITY");
+            = ReflectUtil.getFieldValue(Entity.class, "bp");
     private static final DataWatcherObject<Byte> ARMOR_STAND_PROPERTIES_OBJECT
-            = ReflectUtil.getFieldValue(EntityArmorStand.class, "n", "DATA_CLIENT_FLAGS");
+            = ReflectUtil.getFieldValue(EntityArmorStand.class, "n");
     private static final DataWatcherObject<ItemStack> ITEM_STACK_OBJECT
-            = ReflectUtil.getFieldValue(EntityItem.class, "c", "DATA_ITEM");
+            = ReflectUtil.getFieldValue(EntityItem.class, "c");
 
     static final EntityMetadataType<Byte> ENTITY_PROPERTIES = new EntityMetadataType<>(ENTITY_PROPERTIES_OBJECT);
     static final EntityMetadataType<Optional<IChatBaseComponent>> ENTITY_CUSTOM_NAME = new EntityMetadataType<>(ENTITY_CUSTOM_NAME_OBJECT);

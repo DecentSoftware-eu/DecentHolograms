@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class EntityIdGenerator {
 
-    private static final ReflectField<AtomicInteger> ENTITY_COUNT_FIELD = new ReflectField<>(Entity.class, "c", "ENTITY_COUNTER");
+    private static final ReflectField<AtomicInteger> ENTITY_COUNT_FIELD = new ReflectField<>(Entity.class, "c");
 
     int getFreeEntityId() {
         try {

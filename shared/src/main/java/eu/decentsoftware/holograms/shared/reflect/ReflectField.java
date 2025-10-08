@@ -8,11 +8,6 @@ public class ReflectField<T> {
     private final String fieldName;
     private Field field;
 
-    public ReflectField(Class<?> clazz, String fieldName, String paperName) {
-        this.parentClass = clazz;
-        this.fieldName = ReflectUtil.isPaper ? paperName : fieldName;
-    }
-
     public ReflectField(Class<?> clazz, String fieldName) {
         this.parentClass = clazz;
         this.fieldName = fieldName;

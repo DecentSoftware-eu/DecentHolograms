@@ -24,7 +24,7 @@ public class NmsAdapterImpl implements NmsAdapter {
     private static final String PACKET_HANDLER_NAME = "decent_holograms_packet_handler";
     private static final String DEFAULT_PIPELINE_TAIL = "DefaultChannelPipeline$TailContext#0";
     private static final ReflectField<NetworkManager> NETWORK_MANAGER_FIELD = new ReflectField<>(
-            ServerCommonPacketListenerImpl.class, "e", "connection");
+            ServerCommonPacketListenerImpl.class, "e");
     private final HologramRendererFactory hologramComponentFactory;
 
     public NmsAdapterImpl() {
