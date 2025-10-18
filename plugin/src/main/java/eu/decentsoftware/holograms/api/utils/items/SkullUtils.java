@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -68,6 +70,14 @@ public final class SkullUtils {
      */
     @Nullable
     public static String getSkullTexture(@NonNull ItemStack itemStack) {
+        if (!(itemStack.getItemMeta() instanceof SkullMeta)) {
+            return null;
+        }
+
+        if (Version.after(Version.v1_21_R5)) {
+            return XSkull.of(itemStack).getProfileValue();
+        }
+
         Method propertyValueMethod;
         try {
             ItemMeta meta = itemStack.getItemMeta();
@@ -80,10 +90,14 @@ public final class SkullUtils {
                 profileField.setAccessible(true);
             }
             Object profileObject = profileField.get(meta);
-            if (profileObject == null) return null;
+            if (profileObject == null) {
+                return null;
+            }
 
             GameProfile profile = (GameProfile) (gameProfileFieldResolvableProfile == null ? profileObject : gameProfileFieldResolvableProfile.get(profileObject));
-            if (profile == null) return null;
+            if (profile == null) {
+                return null;
+            }
 
             if (valueResolver == null) {
                 try {
@@ -136,6 +150,15 @@ public final class SkullUtils {
      * @param texture   The new skull texture (Base64).
      */
     public static void setSkullTexture(@NonNull ItemStack itemStack, @NonNull String texture) {
+        if (!(itemStack.getItemMeta() instanceof SkullMeta)) {
+            return;
+        }
+
+        if (Version.after(Version.v1_21_R5)) {
+            XSkull.of(itemStack).profile(Profileable.detect(texture)).apply();
+            return;
+        }
+
         try {
             ItemMeta meta = itemStack.getItemMeta();
             if (meta instanceof SkullMeta) {
