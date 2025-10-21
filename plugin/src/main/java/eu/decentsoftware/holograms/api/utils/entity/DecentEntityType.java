@@ -47,6 +47,7 @@ public final class DecentEntityType {
                 XEntityType.ITEM_FRAME,
                 XEntityType.LEASH_KNOT,
                 XEntityType.LIGHTNING_BOLT,
+                XEntityType.MANNEQUIN,
                 XEntityType.MARKER,
                 XEntityType.MINECART,
                 XEntityType.PAINTING,

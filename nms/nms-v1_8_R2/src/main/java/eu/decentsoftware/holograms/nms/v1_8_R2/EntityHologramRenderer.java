@@ -30,7 +30,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
                 .withSpawnEntityLiving(armorStandEntityId, EntityType.ARMOR_STAND, offsetPosition(position), armorStandDataWatcher)
                 .withSpawnEntityLivingOrObject(entityId, content, position)
                 .withTeleportEntity(entityId, position)
-                .withPassenger(armorStandEntityId, entityId)
+                .attachEntity(entityId, armorStandEntityId)
                 .sendTo(player);
     }
 
@@ -39,11 +39,11 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
         DecentPosition position = data.getPosition();
         EntityType content = data.getContent();
         EntityPacketsBuilder.create()
-                .withRemovePassenger(armorStandEntityId)
+                .unattachEntity(entityId)
                 .withRemoveEntity(entityId)
                 .withSpawnEntityLivingOrObject(entityId, content, position)
                 .withTeleportEntity(entityId, position)
-                .withPassenger(armorStandEntityId, entityId)
+                .attachEntity(entityId, armorStandEntityId)
                 .sendTo(player);
     }
 
@@ -59,7 +59,7 @@ class EntityHologramRenderer implements NmsEntityHologramRenderer {
     @Override
     public void hide(Player player) {
         EntityPacketsBuilder.create()
-                .withRemovePassenger(armorStandEntityId)
+                .unattachEntity(entityId)
                 .withRemoveEntity(entityId)
                 .withRemoveEntity(armorStandEntityId)
                 .sendTo(player);

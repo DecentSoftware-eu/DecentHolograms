@@ -28,6 +28,11 @@ class DataWatcherBuilder {
         return this;
     }
 
+    DataWatcherBuilder withEmptyEntityProperties() {
+        EntityMetadataType.ENTITY_PROPERTIES.addToDataWatcher(dataWatcher, (byte) 0x00);
+        return this;
+    }
+
     DataWatcherBuilder withArmorStandProperties(boolean small, boolean marker) {
         /*
          * Armor Stand Properties:
