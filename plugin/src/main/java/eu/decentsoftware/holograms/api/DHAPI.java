@@ -1,21 +1,24 @@
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.holograms.Hologram;
-import eu.decentsoftware.holograms.api.holograms.HologramLine;
-import eu.decentsoftware.holograms.api.holograms.HologramPage;
-import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
-import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import lombok.experimental.UtilityClass;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.HologramPage;
+import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
+import eu.decentsoftware.holograms.api.holograms.enums.VisibilityMode;
+import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import lombok.experimental.UtilityClass;
 
 /**
  * A simple access point to the DecentHolograms API.
@@ -860,6 +863,143 @@ public final class DHAPI {
         hologram.realignLines();
         hologram.updateAll(true);
         hologram.save();
+    }
+
+    /*
+     *  Visibility Control Methods
+     */
+
+    /**
+     * Set the visibility mode for a hologram for a specific player.
+     * This allows you to control whether the hologram should be automatically shown/hidden
+     * based on display range or if it should be forced to a specific state.
+     *
+     * <p>Example usage:</p>
+     * <pre>
+     * // Force hide a hologram for a player (won't auto-show when entering display range)
+     * DHAPI.setHologramVisibilityMode("myHologram", player, VisibilityMode.FORCE_HIDDEN);
+     *
+     * // Force show a hologram for a player (ignores display range)
+     * DHAPI.setHologramVisibilityMode("myHologram", player, VisibilityMode.FORCE_VISIBLE);
+     *
+     * // Reset to default behavior
+     * DHAPI.setHologramVisibilityMode("myHologram", player, VisibilityMode.DEFAULT);
+     * </pre>
+     *
+     * @param name   The hologram name.
+     * @param player The player.
+     * @param mode   The visibility mode.
+     * @throws IllegalArgumentException If any of the arguments is null or hologram doesn't exist.
+     * @see VisibilityMode
+     * @since 3.0.0
+     */
+    public static void setHologramVisibilityMode(String name, Player player, VisibilityMode mode) throws IllegalArgumentException {
+        Validate.notNull(name);
+        Validate.notNull(player);
+        Validate.notNull(mode);
+
+        Hologram hologram = getHologram(name);
+        if (hologram == null) {
+            throw new IllegalArgumentException("Hologram with name '" + name + "' does not exist.");
+        }
+        hologram.setVisibilityMode(player, mode);
+    }
+
+    /**
+     * Set the visibility mode for a hologram for a specific player.
+     *
+     * @param hologram The hologram.
+     * @param player   The player.
+     * @param mode     The visibility mode.
+     * @throws IllegalArgumentException If any of the arguments is null.
+     * @see VisibilityMode
+     * @since 3.0.0
+     */
+    public static void setHologramVisibilityMode(Hologram hologram, Player player, VisibilityMode mode) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        Validate.notNull(player);
+        Validate.notNull(mode);
+
+        hologram.setVisibilityMode(player, mode);
+    }
+
+    /**
+     * Get the visibility mode for a hologram for a specific player.
+     *
+     * @param name   The hologram name.
+     * @param player The player.
+     * @return The visibility mode, or DEFAULT if not set.
+     * @throws IllegalArgumentException If any of the arguments is null or hologram doesn't exist.
+     * @see VisibilityMode
+     * @since 3.0.0
+     */
+    public static VisibilityMode getHologramVisibilityMode(String name, Player player) throws IllegalArgumentException {
+        Validate.notNull(name);
+        Validate.notNull(player);
+
+        Hologram hologram = getHologram(name);
+        if (hologram == null) {
+            throw new IllegalArgumentException("Hologram with name '" + name + "' does not exist.");
+        }
+        return hologram.getVisibilityMode(player);
+    }
+
+    /**
+     * Get the visibility mode for a hologram for a specific player.
+     *
+     * @param hologram The hologram.
+     * @param player   The player.
+     * @return The visibility mode, or DEFAULT if not set.
+     * @throws IllegalArgumentException If any of the arguments is null.
+     * @see VisibilityMode
+     * @since 3.0.0
+     */
+    public static VisibilityMode getHologramVisibilityMode(Hologram hologram, Player player) throws IllegalArgumentException {
+        Validate.notNull(hologram);
+        Validate.notNull(player);
+
+        return hologram.getVisibilityMode(player);
+    }
+
+    /**
+     * Hide all holograms for a specific player by setting their visibility mode to FORCE_HIDDEN.
+     * This is useful for optimization plugins that want to hide all holograms without
+     * constantly checking and re-hiding them.
+     *
+     * <p>Example usage:</p>
+     * <pre>
+     * // Hide all holograms for a player
+     * DHAPI.hideAllHolograms(player);
+     *
+     * // Later, show them again
+     * DHAPI.showAllHolograms(player);
+     * </pre>
+     *
+     * @param player The player.
+     * @throws IllegalArgumentException If player is null.
+     * @since 3.0.0
+     */
+    public static void hideAllHolograms(Player player) throws IllegalArgumentException {
+        Validate.notNull(player);
+
+        for (Hologram hologram : Hologram.getCachedHolograms()) {
+            hologram.setVisibilityMode(player, VisibilityMode.FORCE_HIDDEN);
+        }
+    }
+
+    /**
+     * Show all holograms for a specific player by resetting their visibility mode to DEFAULT.
+     *
+     * @param player The player.
+     * @throws IllegalArgumentException If player is null.
+     * @since 3.0.0
+     */
+    public static void showAllHolograms(Player player) throws IllegalArgumentException {
+        Validate.notNull(player);
+
+        for (Hologram hologram : Hologram.getCachedHolograms()) {
+            hologram.setVisibilityMode(player, VisibilityMode.DEFAULT);
+        }
     }
 
 
