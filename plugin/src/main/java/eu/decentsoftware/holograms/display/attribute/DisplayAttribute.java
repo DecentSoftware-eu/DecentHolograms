@@ -20,24 +20,6 @@ package eu.decentsoftware.holograms.display.attribute;
 
 public interface DisplayAttribute<T> {
 
-    /*
-
-    getValue,
-    getDefaultValue,
-    setValue,
-
-    for plugin:
-    - save to config,
-    - load from config
-
-    for commands:
-    - suggestions,
-    - parse from string,
-    - validate (min, max, etc.),
-    - update display
-
-     */
-
     T getValue();
 
 }
