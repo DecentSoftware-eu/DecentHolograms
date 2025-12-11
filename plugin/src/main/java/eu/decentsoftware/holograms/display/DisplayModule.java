@@ -83,6 +83,7 @@ public class DisplayModule {
         }
         HandlerList.unregisterAll(displayListener);
         this.displayUpdater.unregister();
+        this.textDisplayViewService.shutdown();
         this.displayService.shutdown();
     }
 
