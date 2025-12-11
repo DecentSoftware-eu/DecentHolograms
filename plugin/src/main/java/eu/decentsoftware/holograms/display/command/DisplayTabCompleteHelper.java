@@ -30,19 +30,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DisplayTabCompleteHelper {
+class DisplayTabCompleteHelper {
 
     private final DisplayService displayService;
 
-    public DisplayTabCompleteHelper(DisplayService displayService) {
+    DisplayTabCompleteHelper(DisplayService displayService) {
         this.displayService = displayService;
     }
 
-    public List<String> getDisplayNames(String input) {
+    List<String> getDisplayNames(String input) {
         return TabCompleteHandler.getPartialMatches(input, displayService.getRegisteredDisplayNames());
     }
 
-    public List<String> getPageIndexes(String displayName, String input) {
+    List<String> getPageIndexes(String displayName, String input) {
         DisplayBase display = displayService.getDisplay(displayName);
         if (!(display instanceof TextDisplay)) {
             return Collections.emptyList();
@@ -54,7 +54,7 @@ public class DisplayTabCompleteHelper {
                 .collect(Collectors.toList())));
     }
 
-    public List<String> getLineIndexes(String displayName, String pageIndex, String input) {
+    List<String> getLineIndexes(String displayName, String pageIndex, String input) {
         DisplayBase display = displayService.getDisplay(displayName);
         if (!(display instanceof TextDisplay)) {
             return Collections.emptyList();
