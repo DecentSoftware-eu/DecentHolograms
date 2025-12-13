@@ -142,6 +142,12 @@ public class HologramLine extends HologramObject {
     private HologramEntity entity;
     private NmsHologramRenderer<?> previousRenderer;
     private NmsHologramRenderer<?> renderer;
+    /**
+     * This object serves as a mutex for all rendering-related operations.
+     *
+     * @since 2.9.9
+     */
+    private final Object renderMutex = new Object();
 
     private volatile boolean containsAnimations;
     private volatile boolean containsPlaceholders;
@@ -185,9 +191,11 @@ public class HologramLine extends HologramObject {
      * @param content The new content of the line.
      */
     public void setContent(@Nullable String content) {
-        this.content = content == null ? "" : content;
-        this.parseContent();
-        this.update(true);
+        synchronized (renderMutex) {
+            this.content = content == null ? "" : content;
+            this.parseContent();
+            this.update(true);
+        }
     }
 
     /**
@@ -212,58 +220,60 @@ public class HologramLine extends HologramObject {
      * Parse the current content String.
      */
     public void parseContent() {
-        HologramLineType prevType = type;
-        String contentU = content.toUpperCase(Locale.ROOT);
-        if (contentU.startsWith("#ICON:")) {
-            type = HologramLineType.ICON;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_ICON;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createIconRenderer();
-            }
-            item = new HologramItem(content.substring("#ICON:".length()));
+        synchronized (renderMutex) {
+            HologramLineType prevType = type;
+            String contentU = content.toUpperCase(Locale.ROOT);
+            if (contentU.startsWith("#ICON:")) {
+                type = HologramLineType.ICON;
+                if (prevType != type) {
+                    height = Settings.DEFAULT_HEIGHT_ICON;
+                    previousRenderer = renderer;
+                    renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createIconRenderer();
+                }
+                item = new HologramItem(content.substring("#ICON:".length()));
 
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#SMALLHEAD:")) {
-            type = HologramLineType.SMALLHEAD;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createSmallHeadRenderer();
-            }
-            item = new HologramItem(content.substring("#SMALLHEAD:".length()));
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#HEAD:")) {
-            type = HologramLineType.HEAD;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_HEAD;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createHeadRenderer();
-            }
-            item = new HologramItem(content.substring("#HEAD:".length()));
-            containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
-        } else if (contentU.startsWith("#ENTITY:")) {
-            type = HologramLineType.ENTITY;
-            String entityContent = content.substring("#ENTITY:".length()).trim();
-            entity = new HologramEntity(entityContent);
-            if (prevType != type) {
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
-            }
-            NmsHologramPartData<EntityType> data = new NmsHologramPartData<>(getPositionSupplier(), () -> entity.getType());
-            height = ((NmsEntityHologramRenderer) renderer).getHeight(data);
-            setOffsetY(-(height));
-        } else {
-            type = HologramLineType.TEXT;
-            if (prevType != type) {
-                height = Settings.DEFAULT_HEIGHT_TEXT;
-                previousRenderer = renderer;
-                renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createTextRenderer();
-            }
-            text = parseCustomReplacements();
+                containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
+            } else if (contentU.startsWith("#SMALLHEAD:")) {
+                type = HologramLineType.SMALLHEAD;
+                if (prevType != type) {
+                    height = Settings.DEFAULT_HEIGHT_SMALLHEAD;
+                    previousRenderer = renderer;
+                    renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createSmallHeadRenderer();
+                }
+                item = new HologramItem(content.substring("#SMALLHEAD:".length()));
+                containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
+            } else if (contentU.startsWith("#HEAD:")) {
+                type = HologramLineType.HEAD;
+                if (prevType != type) {
+                    height = Settings.DEFAULT_HEIGHT_HEAD;
+                    previousRenderer = renderer;
+                    renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createHeadRenderer();
+                }
+                item = new HologramItem(content.substring("#HEAD:".length()));
+                containsPlaceholders = PAPI.containsPlaceholders(item.getContent());
+            } else if (contentU.startsWith("#ENTITY:")) {
+                type = HologramLineType.ENTITY;
+                String entityContent = content.substring("#ENTITY:".length()).trim();
+                entity = new HologramEntity(entityContent);
+                if (prevType != type) {
+                    previousRenderer = renderer;
+                    renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createEntityRenderer();
+                }
+                NmsHologramPartData<EntityType> data = new NmsHologramPartData<>(getPositionSupplier(), () -> entity.getType());
+                height = ((NmsEntityHologramRenderer) renderer).getHeight(data);
+                setOffsetY(-(height));
+            } else {
+                type = HologramLineType.TEXT;
+                if (prevType != type) {
+                    height = Settings.DEFAULT_HEIGHT_TEXT;
+                    previousRenderer = renderer;
+                    renderer = DECENT_HOLOGRAMS.getNmsAdapter().getHologramComponentFactory().createTextRenderer();
+                }
+                text = parseCustomReplacements();
 
-            containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
-            containsPlaceholders = PAPI.containsPlaceholders(text);
+                containsAnimations = DECENT_HOLOGRAMS.getAnimationManager().containsAnimations(text);
+                containsPlaceholders = PAPI.containsPlaceholders(text);
+            }
         }
     }
 
@@ -306,7 +316,9 @@ public class HologramLine extends HologramObject {
      */
     @NonNull
     public HologramLineType getType() {
-        return type != null ? type : HologramLineType.UNKNOWN;
+        synchronized (renderMutex) {
+            return type != null ? type : HologramLineType.UNKNOWN;
+        }
     }
 
     /*
@@ -406,10 +418,12 @@ public class HologramLine extends HologramObject {
      * @param player The player to update visibility for.
      */
     public void updateVisibility(@NonNull Player player) {
-        if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
-            hide(player);
-        } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
-            show(player);
+        synchronized (renderMutex) {
+            if (isVisible(player) && !(hasPermission(player) && isInDisplayRange(player))) {
+                hide(player);
+            } else if (!isVisible(player) && hasPermission(player) && isInDisplayRange(player)) {
+                show(player);
+            }
         }
     }
 
@@ -419,21 +433,23 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void show(Player... players) {
-        if (isDisabled()) {
-            return;
-        }
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(false, players);
-        for (Player player : playerList) {
-            if (player == null) {
-                continue;
+        synchronized (renderMutex) {
+            if (isDisabled()) {
+                return;
             }
-            if (parent != null && parent.getParent().isHideState(player)) {
-                continue;
-            }
-            if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
-                renderer.display(player, getPartData(player, true, false));
-                viewers.add(player.getUniqueId());
+            hidePreviousIfNecessary();
+            List<Player> playerList = getPlayers(false, players);
+            for (Player player : playerList) {
+                if (player == null) {
+                    continue;
+                }
+                if (parent != null && parent.getParent().isHideState(player)) {
+                    continue;
+                }
+                if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
+                    renderer.display(player, getPartData(player, true, false));
+                    viewers.add(player.getUniqueId());
+                }
             }
         }
     }
@@ -456,17 +472,19 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void update(boolean force, Player... players) {
-        if (isDisabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) {
-            return;
-        }
+        synchronized (renderMutex) {
+            if (isDisabled() || hasFlag(EnumFlag.DISABLE_UPDATING)) {
+                return;
+            }
 
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(true, players);
-        for (Player player : playerList) {
-            if (renderer instanceof NmsTextHologramRenderer) {
-                updateTextIfNecessary(player, true);
-            } else if (containsPlaceholders || force) {
-                renderer.updateContent(player, getPartData(player, true, true));
+            hidePreviousIfNecessary();
+            List<Player> playerList = getPlayers(true, players);
+            for (Player player : playerList) {
+                if (renderer instanceof NmsTextHologramRenderer) {
+                    updateTextIfNecessary(player, true);
+                } else if (containsPlaceholders || force) {
+                    renderer.updateContent(player, getPartData(player, true, true));
+                }
             }
         }
     }
@@ -483,25 +501,29 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void updateLocation(boolean updateRotation, Player... players) {
-        if (isDisabled()) {
-            return;
-        }
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(true, players);
-        for (Player player : playerList) {
-            renderer.move(player, getPartData(player, false, true));
+        synchronized (renderMutex) {
+            if (isDisabled()) {
+                return;
+            }
+            hidePreviousIfNecessary();
+            List<Player> playerList = getPlayers(true, players);
+            for (Player player : playerList) {
+                renderer.move(player, getPartData(player, false, true));
+            }
         }
     }
 
     public void updateAnimations(Player... players) {
-        if (isDisabled() || type != HologramLineType.TEXT || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-            return;
-        }
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(true, players);
-        for (Player player : playerList) {
-            if (renderer instanceof NmsTextHologramRenderer) {
-                updateTextIfNecessary(player, false);
+        synchronized (renderMutex) {
+            if (isDisabled() || type != HologramLineType.TEXT || hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
+                return;
+            }
+            hidePreviousIfNecessary();
+            List<Player> playerList = getPlayers(true, players);
+            for (Player player : playerList) {
+                if (renderer instanceof NmsTextHologramRenderer) {
+                    updateTextIfNecessary(player, false);
+                }
             }
         }
     }
@@ -561,21 +583,25 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void hide(Player... players) {
-        hidePreviousIfNecessary();
-        List<Player> playerList = getPlayers(true, players);
-        for (Player player : playerList) {
-            renderer.hide(player);
-            viewers.remove(player.getUniqueId());
+        synchronized (renderMutex) {
+            hidePreviousIfNecessary();
+            List<Player> playerList = getPlayers(true, players);
+            for (Player player : playerList) {
+                renderer.hide(player);
+                viewers.remove(player.getUniqueId());
+            }
         }
     }
 
     private void hidePreviousIfNecessary() {
-        if (previousRenderer == null) {
-            return;
-        }
+        synchronized (renderMutex) {
+            if (previousRenderer == null) {
+                return;
+            }
 
-        getViewerPlayers().forEach(previousRenderer::hide);
-        previousRenderer = null;
+            getViewerPlayers().forEach(previousRenderer::hide);
+            previousRenderer = null;
+        }
     }
 
     public boolean isInDisplayRange(@NonNull Player player) {
