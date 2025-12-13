@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.hook.NbtApiHook;
+import eu.decentsoftware.holograms.integration.Integration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -46,7 +47,7 @@ public class HologramItem {
             if (material.name().contains("SKULL") || material.name().contains("HEAD")) {
                 String extrasFinal = parseExtras(player);
                 if (StringUtils.isNotEmpty(extrasFinal)) {
-                    if (extrasFinal.startsWith("HEADDATABASE_") && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+                    if (extrasFinal.startsWith("HEADDATABASE_") && Integration.HEAD_DATABASE.isAvailable()) {
                         String headDatabaseId = extrasFinal.substring("HEADDATABASE_".length());
                         itemBuilder.withItemStack(HeadDatabaseUtils.getHeadItemStackById(headDatabaseId));
                     } else if (extrasFinal.length() <= 16) {

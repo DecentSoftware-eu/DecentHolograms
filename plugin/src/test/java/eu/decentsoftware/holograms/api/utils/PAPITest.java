@@ -18,10 +18,12 @@
 
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.integration.Integration;
+import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,12 +33,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PAPITest {
 
     @Mock
-    private PluginManager pluginManager;
+    private DecentHolograms plugin;
+    @Mock
+    private IntegrationAvailabilityService integrationAvailabilityService;
     @Mock
     private Player player;
 
@@ -47,10 +52,12 @@ class PAPITest {
 
     @Test
     void testSetPlaceholders_PlaceholderAPINotEnabled() {
-        try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class);
+        try (MockedStatic<DecentHologramsAPI> mockedDecentHologramsAPI = mockStatic(DecentHologramsAPI.class);
              MockedStatic<PlaceholderAPI> mockedPlaceholderAPI = mockStatic(PlaceholderAPI.class)) {
-            mockedBukkit.when(Bukkit::getPluginManager).thenReturn(pluginManager);
-            mockedBukkit.when(() -> pluginManager.isPluginEnabled("PlaceholderAPI")).thenReturn(false);
+            mockedDecentHologramsAPI.when(DecentHologramsAPI::get).thenReturn(plugin);
+            when(plugin.getIntegrationAvailabilityService()).thenReturn(integrationAvailabilityService);
+            when(integrationAvailabilityService.isIntegrationAvailable(Integration.PLACEHOLDER_API))
+                    .thenReturn(false);
 
             String result = PAPI.setPlaceholders(player, "Test %placeholder%");
 
@@ -61,10 +68,12 @@ class PAPITest {
 
     @Test
     void testSetPlaceholders_PlaceholderAPIThrows() {
-        try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class);
+        try (MockedStatic<DecentHologramsAPI> mockedDecentHologramsAPI = mockStatic(DecentHologramsAPI.class);
              MockedStatic<PlaceholderAPI> mockedPlaceholderAPI = mockStatic(PlaceholderAPI.class)) {
-            mockedBukkit.when(Bukkit::getPluginManager).thenReturn(pluginManager);
-            mockedBukkit.when(() -> pluginManager.isPluginEnabled("PlaceholderAPI")).thenReturn(true);
+            mockedDecentHologramsAPI.when(DecentHologramsAPI::get).thenReturn(plugin);
+            when(plugin.getIntegrationAvailabilityService()).thenReturn(integrationAvailabilityService);
+            when(integrationAvailabilityService.isIntegrationAvailable(Integration.PLACEHOLDER_API))
+                    .thenReturn(true);
             mockedPlaceholderAPI.when(() -> PlaceholderAPI.setPlaceholders(player, "Test %placeholder%"))
                     .thenThrow(new RuntimeException("PlaceholderAPI exception"));
 
@@ -77,10 +86,12 @@ class PAPITest {
 
     @Test
     void testSetPlaceholders() {
-        try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class);
+        try (MockedStatic<DecentHologramsAPI> mockedDecentHologramsAPI = mockStatic(DecentHologramsAPI.class);
              MockedStatic<PlaceholderAPI> mockedPlaceholderAPI = mockStatic(PlaceholderAPI.class)) {
-            mockedBukkit.when(Bukkit::getPluginManager).thenReturn(pluginManager);
-            mockedBukkit.when(() -> pluginManager.isPluginEnabled("PlaceholderAPI")).thenReturn(true);
+            mockedDecentHologramsAPI.when(DecentHologramsAPI::get).thenReturn(plugin);
+            when(plugin.getIntegrationAvailabilityService()).thenReturn(integrationAvailabilityService);
+            when(integrationAvailabilityService.isIntegrationAvailable(Integration.PLACEHOLDER_API))
+                    .thenReturn(true);
             mockedPlaceholderAPI.when(() -> PlaceholderAPI.setPlaceholders(player, "Test %placeholder%"))
                     .thenReturn("Test replaced");
 

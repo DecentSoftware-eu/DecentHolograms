@@ -1,8 +1,8 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.integration.Integration;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class PAPI {
      * @return True if PlaceholderAPI is available.
      */
     public static boolean isAvailable() {
-        return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        return Integration.PLACEHOLDER_API.isAvailable();
     }
 
     /**
@@ -42,7 +42,7 @@ public class PAPI {
     }
 
     /**
-     * Set placeholders to given List of Strings for given Player.
+     * Set placeholders to the given List of Strings for a given Player.
      *
      * @param player     The player.
      * @param stringList The string list.

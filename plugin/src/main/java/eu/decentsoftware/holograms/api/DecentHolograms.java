@@ -15,6 +15,7 @@ import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
+import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
@@ -45,6 +46,7 @@ public final class DecentHolograms {
 
     private final JavaPlugin plugin;
     private NmsAdapter nmsAdapter;
+    private IntegrationAvailabilityService integrationAvailabilityService;
     private NmsPacketListenerService nmsPacketListenerService;
     private HologramManager hologramManager;
     private CommandManager commandManager;
@@ -63,6 +65,9 @@ public final class DecentHolograms {
         Settings.reload();
         Lang.reload();
 
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        this.integrationAvailabilityService = new IntegrationAvailabilityService(plugin, pluginManager);
+        this.integrationAvailabilityService.initialize();
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
         this.commandManager = new CommandManager();
@@ -71,9 +76,8 @@ public final class DecentHolograms {
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
 
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new PlayerListener(this), this.plugin);
-        pm.registerEvents(new WorldListener(hologramManager), this.plugin);
+        pluginManager.registerEvents(new PlayerListener(this), this.plugin);
+        pluginManager.registerEvents(new WorldListener(hologramManager), this.plugin);
 
         setupMetrics();
         checkForUpdates();
@@ -92,6 +96,7 @@ public final class DecentHolograms {
             hologram.destroy();
         }
 
+        this.integrationAvailabilityService.shutdown();
         BungeeUtils.destroy();
     }
 
