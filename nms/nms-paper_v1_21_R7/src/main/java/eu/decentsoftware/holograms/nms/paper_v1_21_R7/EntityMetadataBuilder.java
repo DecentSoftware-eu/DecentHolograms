@@ -62,8 +62,8 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withCustomName(String customName) {
-        Component Component = CraftChatMessage.fromStringOrNull(customName);
-        Optional<Component> optionalComponent = Optional.ofNullable(Component);
+        Component component = CraftChatMessage.fromStringOrNull(customName);
+        Optional<Component> optionalComponent = Optional.ofNullable(component);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalComponent));
         boolean visible = !Strings.isNullOrEmpty(customName);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME_VISIBLE.construct(visible));

@@ -45,12 +45,9 @@ class InboundPacketHandler extends ChannelInboundHandlerAdapter {
         //
         // https://minecraft.wiki/w/Java_Edition_protocol#Interact
         return switch (ordinal) {
-            case 1:
-                yield player.isSneaking() ? NmsEntityInteractAction.SHIFT_LEFT_CLICK : NmsEntityInteractAction.LEFT_CLICK;
-            case 0, 2:
-                yield player.isSneaking() ? NmsEntityInteractAction.SHIFT_RIGHT_CLICK : NmsEntityInteractAction.RIGHT_CLICK;
-            default:
-                throw new DecentHologramsNmsException("Unknown entity use action: " + ordinal);
+            case 1 -> player.isSneaking() ? NmsEntityInteractAction.SHIFT_LEFT_CLICK : NmsEntityInteractAction.LEFT_CLICK;
+            case 0, 2 -> player.isSneaking() ? NmsEntityInteractAction.SHIFT_RIGHT_CLICK : NmsEntityInteractAction.RIGHT_CLICK;
+            default -> throw new DecentHologramsNmsException("Unknown entity use action: " + ordinal);
         };
     }
 

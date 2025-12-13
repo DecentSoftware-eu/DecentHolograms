@@ -36,14 +36,14 @@ class EntityMetadataType<T> {
     static final EntityMetadataType<Byte> ARMOR_STAND_PROPERTIES = new EntityMetadataType<>(ARMOR_STAND_PROPERTIES_OBJECT);
     static final EntityMetadataType<ItemStack> ITEM_STACK = new EntityMetadataType<>(ITEM_STACK_OBJECT);
 
-    private final EntityDataAccessor<T> EntityDataAccessor;
+    private final EntityDataAccessor<T> entityDataAccessor;
 
-    private EntityMetadataType(EntityDataAccessor<T> EntityDataAccessor) {
-        this.EntityDataAccessor = EntityDataAccessor;
+    private EntityMetadataType(EntityDataAccessor<T> entityDataAccessor) {
+        this.entityDataAccessor = entityDataAccessor;
     }
 
     SynchedEntityData.DataItem<T> construct(T value) {
-        return new SynchedEntityData.DataItem<>(EntityDataAccessor, value);
+        return new SynchedEntityData.DataItem<>(entityDataAccessor, value);
     }
 
 }

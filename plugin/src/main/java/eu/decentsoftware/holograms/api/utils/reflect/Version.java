@@ -42,8 +42,8 @@ public enum Version {
     v1_21_R4(21, Platform.ALL, "1.21.5"),
     v1_21_R5(21, Platform.ALL, "1.21.6", "1.21.7", "1.21.8"),
     v1_21_R6(21, Platform.SPIGOT, "1.21.9", "1.21.10"),
-    v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
     paper_v1_21_R6(21, Platform.PAPER, "1.21.9", "1.21.10"),
+    v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
     paper_v1_21_R7(21, Platform.PAPER, "1.21.11")
     ;
 

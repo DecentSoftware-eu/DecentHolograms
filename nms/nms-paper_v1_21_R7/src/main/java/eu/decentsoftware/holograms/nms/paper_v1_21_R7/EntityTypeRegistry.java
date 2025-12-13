@@ -28,7 +28,6 @@ final class EntityTypeRegistry {
 
     private static NamespacedKey getNamespacedKey(org.bukkit.entity.EntityType entityType) {
         try {
-            // Using the deprecated #getKey method because #getKeyOrThrow and #getKeyOrNull don't exist on Paper.
             return entityType.getKey();
         } catch (IllegalStateException e) {
             throw new DecentHologramsNmsException("Couldn't get key for entity type: " + entityType);
