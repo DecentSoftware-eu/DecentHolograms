@@ -4,7 +4,7 @@ placeholderapi = "2.11.6"
 headdatabase-api = "1.3.2"
 bstats = "3.1.0"
 item-nbt-api = "2.15.5"
-xseries = "13.5.1"
+xseries = "13.6.0"
 lombok = "1.18.38"
 annotations = "26.0.2"
 # Test
