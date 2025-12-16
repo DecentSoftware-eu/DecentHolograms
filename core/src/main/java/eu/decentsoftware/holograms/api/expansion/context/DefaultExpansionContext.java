@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class DefaultExpansionContext implements ExpansionContext {
     private final CommandManager commandManager;
     private final NmsPacketListenerService packetListenerService;
     private final ExpansionConfig config;
+    private final File dataFolder;
     private final Plugin plugin;
     private final Logger logger;
 
@@ -41,10 +43,12 @@ public class DefaultExpansionContext implements ExpansionContext {
 
     public DefaultExpansionContext(
             CommandManager commandManager,
-            NmsPacketListenerService packetListenerService, ExpansionConfig config, Plugin plugin, Logger logger) {
+            NmsPacketListenerService packetListenerService,
+            ExpansionConfig config, File dataFolder, Plugin plugin, Logger logger) {
         this.commandManager = commandManager;
         this.packetListenerService = packetListenerService;
         this.config = config;
+        this.dataFolder = dataFolder;
         this.plugin = plugin;
         this.logger = logger;
         this.commandUnregisterCallbacks = new ConcurrentHashMap<>();
@@ -127,6 +131,11 @@ public class DefaultExpansionContext implements ExpansionContext {
     @Override
     public ExpansionConfig getExpansionConfig() {
         return config;
+    }
+
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
     }
 
     /**

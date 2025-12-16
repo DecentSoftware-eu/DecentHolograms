@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.expansion.Expansion;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
+import eu.decentsoftware.holograms.plugin.file.FileSystemService;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,10 +18,10 @@ import java.io.File;
  * @author ZorTik
  */
 public class DefaultExpansionConfigSource implements ExpansionConfigSource {
-    private final File configsDirectory;
+    private final FileSystemService fileSystemService;
 
-    public DefaultExpansionConfigSource(File configsDirectory) {
-        this.configsDirectory = configsDirectory;
+    public DefaultExpansionConfigSource(FileSystemService fileSystemService) {
+        this.fileSystemService = fileSystemService;
     }
 
     /**
@@ -104,9 +105,10 @@ public class DefaultExpansionConfigSource implements ExpansionConfigSource {
      * @return the ensured configuration file
      */
     private File ensureExpansionConfigFile(Expansion expansion) {
-        FileUtils.ensureFolder(configsDirectory);
+        File expansionContainer = fileSystemService.getExpansionDataDirectory(expansion.getId());
+        FileUtils.ensureFolder(expansionContainer);
 
-        File configFile = new File(configsDirectory, expansion.getId() + ".yml");
+        File configFile = new File(expansionContainer, "config.yml");
         FileUtils.ensureFile(configFile);
 
         return configFile;

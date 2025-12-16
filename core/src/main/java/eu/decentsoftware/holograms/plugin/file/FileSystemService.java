@@ -12,9 +12,10 @@ public interface FileSystemService {
     File getExpansionJarsDirectory();
 
     /**
-     * Gets the directory where configuration files for expansions are stored.
+     * Gets the directory for a specific expansion's data.
      *
-     * @return the directory for expansion configuration files
+     * @param expansionId the unique identifier of the expansion
+     * @return the directory for the specified expansion's data
      */
-    File getExpansionConfigsDirectory();
+    File getExpansionDataDirectory(String expansionId);
 }

@@ -17,8 +17,10 @@ public class DefaultFileSystemService implements FileSystemService {
     }
 
     @Override
-    public File getExpansionConfigsDirectory() {
-        return new File(getExpansionsDirectory(), "configs");
+    public File getExpansionDataDirectory(String expansionId) {
+        File expansionsContainer = new File(plugin.getDataFolder(), "expansions-data");
+
+        return new File(expansionsContainer, expansionId);
     }
 
     private File getExpansionsDirectory() {

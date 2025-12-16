@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfig;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
 import org.bukkit.event.Listener;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -63,6 +64,13 @@ public interface ExpansionContext {
      * @return the current expansion configuration
      */
     ExpansionConfig getExpansionConfig();
+
+    /**
+     * Gets the data folder for the expansion.
+     *
+     * @return the data folder
+     */
+    File getDataFolder();
 
     /**
      * Cleans up all associated resources with the holding expansion.

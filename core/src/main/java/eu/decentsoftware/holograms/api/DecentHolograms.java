@@ -136,10 +136,12 @@ public final class DecentHolograms {
     }
 
     private ExpansionRegistry buildExpansionRegistry() {
-        ExpansionConfigSource configSource = new DefaultExpansionConfigSource(fileSystemService.getExpansionConfigsDirectory());
+        ExpansionConfigSource configSource = new DefaultExpansionConfigSource(fileSystemService);
         ExpansionActivator activator = new DefaultExpansionActivator(
                 new DefaultAppContextFactory(),
-                new DefaultExpansionContextFactory(commandManager, nmsPacketListenerService, configSource, plugin, getLogger()),
+                new DefaultExpansionContextFactory(
+                        commandManager,
+                        nmsPacketListenerService, configSource, fileSystemService, plugin, getLogger()),
                 configSource,
                 getLogger());
 
