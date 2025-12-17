@@ -10,6 +10,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Default implementation of ExpansionConfigSource.
@@ -82,6 +83,8 @@ public class DefaultExpansionConfigSource implements ExpansionConfigSource {
      */
     @Override
     public void saveConfig(Expansion expansion, ExpansionConfig config) {
+        Objects.requireNonNull(config, "config cannot be null");
+
         File file = ensureExpansionConfigFile(expansion);
 
         YamlConfiguration section = YamlConfiguration.loadConfiguration(file);
@@ -105,6 +108,8 @@ public class DefaultExpansionConfigSource implements ExpansionConfigSource {
      * @return the ensured configuration file
      */
     private File ensureExpansionConfigFile(Expansion expansion) {
+        Objects.requireNonNull(expansion, "expansion cannot be null");
+
         File expansionContainer = fileSystemService.getExpansionDataDirectory(expansion.getId());
         FileUtils.ensureFolder(expansionContainer);
 
