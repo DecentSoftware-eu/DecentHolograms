@@ -31,14 +31,12 @@ import eu.decentsoftware.holograms.nms.api.display.data.NmsDisplayAttributeType;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayData;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class DisplayDataMapper {
 
-    public TextDisplayData mapTextDisplay(TextDisplay textDisplay, List<String> lines) {
+    public TextDisplayData mapTextDisplay(TextDisplay textDisplay, String text) {
         TextDisplayData data = new TextDisplayData();
         setCommonAttributes(textDisplay, data);
-        data.setText(lines);
+        data.setText(text);
         data.setLineWidthAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_LINE_WIDTH, textDisplay.getLineWidthAttribute()));
         data.setBackgroundColorAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_BACKGROUND_COLOR, textDisplay.getBackgroundColorAttribute()));
         data.setTextOpacityAttribute(mapAttribute(NmsDisplayAttributeType.TEXT_OPACITY, textDisplay.getTextOpacityAttribute()));

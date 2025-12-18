@@ -18,11 +18,9 @@
 
 package eu.decentsoftware.holograms.nms.api.display.data;
 
-import java.util.List;
-
 public class TextDisplayData extends DisplayData {
 
-    private List<String> text;
+    private String text;
     private NmsDisplayAttribute<Integer> lineWidthAttribute;
     private NmsDisplayAttribute<DisplayColor> backgroundColorAttribute;
     private NmsDisplayAttribute<Byte> textOpacityAttribute;
@@ -30,11 +28,11 @@ public class TextDisplayData extends DisplayData {
     private NmsDisplayAttribute<Boolean> seeThroughAttribute;
     private NmsDisplayAttribute<TextDisplayAlignment> alignmentAttribute;
 
-    public List<String> getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(List<String> text) {
+    public void setText(String text) {
         this.text = text;
     }
 

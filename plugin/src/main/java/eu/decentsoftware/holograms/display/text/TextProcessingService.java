@@ -22,11 +22,10 @@ import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.display.TextDisplay;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TextProcessingService {
 
@@ -38,28 +37,40 @@ public class TextProcessingService {
         this.animationManager = animationManager;
     }
 
-    public List<String> processText(TextDisplay display, Player player, boolean updatePlaceholders) {
+    public String processText(TextDisplay display, Player player, boolean updatePlaceholders) {
         TextDisplayView view = viewService.getView(display.getName(), player.getUniqueId());
-        CachedProcessedText cachedProcessedText = view.getCachedProcessedText();
-        List<String> processedText;
-        if (updatePlaceholders || cachedProcessedText == null) {
-            boolean containsAnimations = false;
-            List<String> processedLines = new ArrayList<>();
-            for (String line : display.getPage(view.getCurrentPage()).getLines()) {
-                processedLines.add(PAPI.setPlaceholders(player, line));
-                if (animationManager.containsAnimations(line)) {
-                    containsAnimations = true;
-                }
-            }
-            processedText = processedLines;
-            cachedProcessedText = CachedProcessedText.of(processedText, containsAnimations);
-            view.setCachedProcessedText(cachedProcessedText);
-        }
+        updateCachedProcessedTextIfNecessary(display, player, updatePlaceholders, view);
 
-        boolean containsAnimations = cachedProcessedText.containsAnimations();
-        return cachedProcessedText.getProcessedText().stream()
-                .map(line -> containsAnimations ? animationManager.parseTextAnimations(line) : line)
-                .map(Common::colorize)
-                .collect(Collectors.toList());
+        CachedProcessedText cachedProcessedText = view.getCachedProcessedText();
+        String processedText = cachedProcessedText.getProcessedText();
+        if (cachedProcessedText.containsAnimations()) {
+            processedText = animationManager.parseTextAnimations(processedText);
+        }
+        processedText = Common.colorize(processedText);
+        return processedText;
+    }
+
+    private void updateCachedProcessedTextIfNecessary(TextDisplay display, Player player, boolean updatePlaceholders, TextDisplayView view) {
+        CachedProcessedText cachedProcessedText = view.getCachedProcessedText();
+        if (updatePlaceholders || cachedProcessedText == null) {
+            List<String> lines = display.getPage(view.getCurrentPage()).getLines();
+            CachedProcessedText updatedCachedProcessedText = processText(player, lines);
+            view.setCachedProcessedText(updatedCachedProcessedText);
+        }
+    }
+
+    private CachedProcessedText processText(Player player, List<String> lines) {
+        String processedText = linesToString(lines);
+        processedText = replacePlaceholders(player, processedText);
+        boolean containsAnimations = animationManager.containsAnimations(processedText);
+        return CachedProcessedText.of(processedText, containsAnimations);
+    }
+
+    private String replacePlaceholders(Player player, String processedText) {
+        return PAPI.setPlaceholders(player, processedText);
+    }
+
+    private String linesToString(List<String> lines) {
+        return String.join(ChatColor.RESET + "\n", lines);
     }
 }

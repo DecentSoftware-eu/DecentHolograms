@@ -18,22 +18,20 @@
 
 package eu.decentsoftware.holograms.display.text;
 
-import java.util.List;
-
 public class CachedProcessedText {
-    private final List<String> processedText;
+    private final String processedText;
     private final boolean containsAnimations;
 
-    private CachedProcessedText(List<String> processedText, boolean containsAnimations) {
+    private CachedProcessedText(String processedText, boolean containsAnimations) {
         this.processedText = processedText;
         this.containsAnimations = containsAnimations;
     }
 
-    public static CachedProcessedText of(List<String> processedText, boolean containsAnimations) {
+    public static CachedProcessedText of(String processedText, boolean containsAnimations) {
         return new CachedProcessedText(processedText, containsAnimations);
     }
 
-    public List<String> getProcessedText() {
+    public String getProcessedText() {
         return processedText;
     }
 

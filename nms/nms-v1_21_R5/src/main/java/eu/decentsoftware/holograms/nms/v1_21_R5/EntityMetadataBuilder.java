@@ -13,7 +13,6 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.level.block.Block;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.util.CraftChatMessage;
@@ -214,12 +213,11 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayText(List<String> textLines) {
+    EntityMetadataBuilder withTextDisplayText(String text) {
         IChatBaseComponent component;
-        if (textLines == null || textLines.isEmpty()) {
+        if (text == null) {
             component = null;
         } else {
-            String text = String.join(ChatColor.RESET + "\n", textLines);
             component = CraftChatMessage.fromString(text, true, true)[0];
         }
 
