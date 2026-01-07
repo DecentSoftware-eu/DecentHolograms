@@ -135,6 +135,7 @@ public class Lang {
     public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}&aTeleported!");
     public static final Phrase DISPLAY_WORLD_DOES_NOT_EXIST = new Phrase("display.world_does_not_exist", "{prefix}&cWorld of display '%1$s' doesn't exist!");
     public static final Phrase DISPLAY_LIST_NO_DISPLAYS = new Phrase("display.list.no_displays", "{prefix}There are currently no displays.");
+    public static final Phrase DISPLAY_NEARBY_NO_DISPLAYS = new Phrase("display.nearby.no_displays", "{prefix}There are no displays nearby.");
     public static final Phrase DISPLAY_WRONG_TYPE = new Phrase("display.wrong_type", "{prefix}&cDisplay is not of type '%1$s'.");
     public static final Phrase DISPLAY_INVALID_BLOCK_TYPE = new Phrase("display.invalid_block_type", "{prefix}&cInvalid block type: '%1$s'");
     public static final Phrase DISPLAY_BLOCK_SET = new Phrase("display.block_set", "{prefix}Set block of display &b'%1$s'&7 to &b'%2$s'&7.");

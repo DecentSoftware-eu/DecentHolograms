@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class DisplayService {
 
@@ -120,5 +121,11 @@ public class DisplayService {
 
     public Collection<DisplayBase> getRegisteredDisplays() {
         return displays.values();
+    }
+
+    public Collection<DisplayBase> getRegisteredDisplaysInRadius(DecentLocation location, double radius) {
+        return displays.values().stream()
+                .filter(display -> display.getLocation().distanceSquared(location) <= radius * radius)
+                .collect(Collectors.toList());
     }
 }
