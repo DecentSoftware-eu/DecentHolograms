@@ -52,6 +52,7 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new MoveDisplayCommand(displayService));
         DisplayCloneService displayCloneService = new DisplayCloneService();
         addSubCommand(new RenameDisplayCommand(displayService, displayCloneService));
+        addSubCommand(new CloneDisplayCommand(displayService, displayCloneService));
         CommandAttributeService attributeService = new CommandAttributeService();
         addSubCommand(new SetAttributeDisplayCommand(displayService, attributeService));
         addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeService));
