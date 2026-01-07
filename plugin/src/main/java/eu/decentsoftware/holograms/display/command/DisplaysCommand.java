@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
+import eu.decentsoftware.holograms.display.DisplayCloneService;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
 import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
@@ -49,6 +50,8 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new CreateDisplayCommand(displayService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));
+        DisplayCloneService displayCloneService = new DisplayCloneService();
+        addSubCommand(new RenameDisplayCommand(displayService, displayCloneService));
         CommandAttributeService attributeService = new CommandAttributeService();
         addSubCommand(new SetAttributeDisplayCommand(displayService, attributeService));
         addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeService));

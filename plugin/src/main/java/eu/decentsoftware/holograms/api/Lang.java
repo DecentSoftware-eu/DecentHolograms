@@ -125,6 +125,7 @@ public class Lang {
     public static final Phrase DISPLAY_CREATED = new Phrase("display.created", "{prefix}Display &b'%1$s'&7 has been created!");
     public static final Phrase DISPLAY_DELETED = new Phrase("display.deleted", "{prefix}Display has been deleted!");
     public static final Phrase DISPLAY_MOVED = new Phrase("display.moved", "{prefix}Display has been moved!");
+    public static final Phrase DISPLAY_RENAMED = new Phrase("display.renamed", "{prefix}Display has been renamed!");
     public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing_set", "{prefix}Facing has been set!");
     public static final Phrase DISPLAY_FACING_INVALID_YAW = new Phrase("display.facing_invalid_yaw", "{prefix}&cYaw must be a valid number between -180 and 180 degrees.");
     public static final Phrase DISPLAY_FACING_INVALID_PITCH = new Phrase("display.facing_invalid_pitch", "{prefix}&cPitch must be a valid number between -90 and 90 degrees.");
