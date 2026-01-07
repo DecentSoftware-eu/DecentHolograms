@@ -182,6 +182,10 @@ public class DisplayConfig extends FileConfig {
         return blockLight;
     }
 
+    public void setEnum(String path, Enum<?> value) {
+        set(path, value == null ? null : value.name());
+    }
+
     public <T> DisplayAttribute<T> getDisplayAttribute(String path, AttributeDefinition<T> definition) {
         if (isConfigurationSection(path)) {
             DisplayAttributeValueType valueType = getEnum(path + ".value-type", DisplayAttributeValueType.class, DisplayAttributeValueType.STATIC);
@@ -220,7 +224,7 @@ public class DisplayConfig extends FileConfig {
                 value = (DisplayBrightness) definition.getDefaultValue();
             }
             return new StaticDisplayAttribute<>((T) value);
-        } else if (definition.getValueType().isAssignableFrom(Enum.class)) {
+        } else if (definition.getValueType().isEnum()) {
             Enum<?> value = getEnum(path + ".value", (Class<? extends Enum<?>>) definition.getValueType());
             if (value == null) {
                 value = (Enum<?>) definition.getDefaultValue();

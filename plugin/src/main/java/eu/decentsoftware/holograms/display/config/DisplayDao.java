@@ -96,7 +96,7 @@ public class DisplayDao {
 
         saveAttribute(config, "attributes.translation", display.getTranslationAttribute(), config::setDisplayVector3f);
         saveAttribute(config, "attributes.scale", display.getScaleAttribute(), config::setDisplayVector3f);
-        saveAttribute(config, "attributes.billboard", display.getBillboardAttribute(), config::set);
+        saveAttribute(config, "attributes.billboard", display.getBillboardAttribute(), config::setEnum);
         saveAttribute(config, "attributes.brightness", display.getBrightnessAttribute(), config::setDisplayBrightness);
         saveAttribute(config, "attributes.shadow-radius", display.getShadowRadiusAttribute(), config::set);
         saveAttribute(config, "attributes.shadow-strength", display.getShadowStrengthAttribute(), config::set);
@@ -128,12 +128,12 @@ public class DisplayDao {
         saveAttribute(config, "attributes.text-opacity", display.getTextOpacityAttribute(), config::set);
         saveAttribute(config, "attributes.text-shadow", display.getTextShadowAttribute(), config::set);
         saveAttribute(config, "attributes.see-through", display.getSeeThroughAttribute(), config::set);
-        saveAttribute(config, "attributes.alignment", display.getAlignmentAttribute(), config::set);
+        saveAttribute(config, "attributes.alignment", display.getAlignmentAttribute(), config::setEnum);
     }
 
     private void saveItemDisplay(ItemDisplay display, DisplayConfig config) {
         config.set("item", display.getDisplayedItem().getContent());
-        saveAttribute(config, "attributes.display-type", display.getDisplayTypeAttribute(), config::set);
+        saveAttribute(config, "attributes.display-type", display.getDisplayTypeAttribute(), config::setEnum);
         saveAttribute(config, "attributes.glow-color", display.getGlowColorAttribute(), config::setDisplayColor);
     }
 
