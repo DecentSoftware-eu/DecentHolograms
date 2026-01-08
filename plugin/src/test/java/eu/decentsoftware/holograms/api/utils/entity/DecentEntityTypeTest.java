@@ -65,6 +65,7 @@ class DecentEntityTypeTest {
                 XEntityType.LIGHTNING_BOLT,
                 XEntityType.MARKER,
                 XEntityType.MINECART,
+                XEntityType.MANNEQUIN,
                 XEntityType.PAINTING,
                 XEntityType.PLAYER,
                 XEntityType.SMALL_FIREBALL,

@@ -15,6 +15,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.message.Message;
+import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -823,7 +824,6 @@ public class LineSubCommand extends DecentCommand {
 				case "#HEAD:":
 				case "#SMALLHEAD:":
 					return TabCompleteHandler.getPartialMatches(args[1], items);
-				
 				case "#ENTITY:":
 					return TabCompleteHandler.getPartialMatches(args[1], DecentEntityType.getAllowedEntityTypeNames());
 			}
@@ -833,15 +833,14 @@ public class LineSubCommand extends DecentCommand {
 				List<String> names = Bukkit.getOnlinePlayers().stream()
 					.map(player -> "(" + player.getName() + ")")
 					.collect(Collectors.toList());
-				
-				if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+
+				if (Integration.PLACEHOLDER_API.isAvailable()) {
 					names.add("(%player_name%)");
 				}
-				
-				if (Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+				if (Integration.HEAD_DATABASE.isAvailable()) {
 					names.add("(HEADDATABASE_<id>)");
 				}
-				
+
 				return TabCompleteHandler.getPartialMatches(args[args.length - 1], names);
 			}
 			
@@ -850,7 +849,6 @@ public class LineSubCommand extends DecentCommand {
 				return Collections.singletonList("!ENCHANTED");
 			}
 		}
-		
 		return Collections.emptyList();
 	}
 	

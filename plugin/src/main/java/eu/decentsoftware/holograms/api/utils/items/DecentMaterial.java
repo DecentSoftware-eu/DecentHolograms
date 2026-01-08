@@ -31,13 +31,13 @@ public final class DecentMaterial {
     }
 
     public static Material parseMaterial(String materialName) {
-        // Backwards compatibility
+        // Backward compatibility
         Material materialFromAliases = Material.getMaterial(MATERIAL_ALIASES.get(Common.removeSpacingChars(materialName).toLowerCase()));
         if (materialFromAliases != null) {
             return materialFromAliases;
         }
         Optional<XMaterial> xMaterialOptional = XMaterial.matchXMaterial(materialName);
-        return xMaterialOptional.map(XMaterial::parseMaterial).orElse(null);
+        return xMaterialOptional.map(XMaterial::get).orElse(null);
     }
 
     @SuppressWarnings("deprecation")
