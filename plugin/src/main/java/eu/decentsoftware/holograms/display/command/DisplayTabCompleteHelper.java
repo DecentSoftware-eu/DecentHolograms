@@ -60,7 +60,7 @@ class DisplayTabCompleteHelper {
             return Collections.emptyList();
         }
         TextDisplay textDisplay = (TextDisplay) display;
-        TextDisplayPage page = textDisplay.getPage(Validator.getInteger(pageIndex));
+        TextDisplayPage page = textDisplay.getPage(Validator.getInteger(pageIndex) - 1);
         if (page == null) {
             return Collections.emptyList();
         }
