@@ -42,6 +42,9 @@ public class DisplayUpdater extends Ticked {
         for (DisplayBase display : displayService.getRegisteredDisplays()) {
             if (currentTick % 20 == 0) {
                 renderingService.updateVisibility(display);
+            }
+            long displayUpdateInterval = display.getSettings().getUpdateInterval();
+            if (currentTick % displayUpdateInterval == 0) {
                 renderingService.updateContent(display);
             }
             renderingService.updateContentAnimations(display);
