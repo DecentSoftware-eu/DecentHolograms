@@ -29,8 +29,8 @@ public class ItemDisplay extends DisplayBase {
     private DisplayAttribute<ItemDisplayType> displayTypeAttribute;
     private DisplayAttribute<DisplayColor> glowColorAttribute;
 
-    public ItemDisplay(String name, DecentLocation location) {
-        super(name, location);
+    public ItemDisplay(String name, DecentLocation location, DisplaySettings settings) {
+        super(name, location, settings);
     }
 
     @Override

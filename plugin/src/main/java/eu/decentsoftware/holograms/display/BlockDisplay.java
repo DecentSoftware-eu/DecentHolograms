@@ -27,8 +27,8 @@ public class BlockDisplay extends DisplayBase {
     private Material material;
     private DisplayAttribute<DisplayColor> glowColorAttribute;
 
-    public BlockDisplay(String name, DecentLocation location) {
-        super(name, location);
+    public BlockDisplay(String name, DecentLocation location, DisplaySettings settings) {
+        super(name, location, settings);
     }
 
     @Override

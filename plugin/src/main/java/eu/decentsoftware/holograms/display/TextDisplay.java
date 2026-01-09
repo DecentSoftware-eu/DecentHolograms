@@ -35,8 +35,8 @@ public class TextDisplay extends DisplayBase {
     private DisplayAttribute<Boolean> seeThroughAttribute;
     private DisplayAttribute<TextDisplayAlignment> alignmentAttribute;
 
-    public TextDisplay(String name, DecentLocation location) {
-        super(name, location);
+    public TextDisplay(String name, DecentLocation location, DisplaySettings settings) {
+        super(name, location, settings);
         this.pages = new ArrayList<>();
     }
 

@@ -39,7 +39,8 @@ public class DisplayCloneService {
     }
 
     private TextDisplay cloneTextDisplay(TextDisplay display, String newName) {
-        TextDisplay clone = new TextDisplay(newName, display.getLocation());
+        DisplaySettings settings = cloneSettings(display);
+        TextDisplay clone = new TextDisplay(newName, display.getLocation(), settings);
         clone.setPages(display.getPages());
         setCommonAttributes(display, clone);
         clone.setLineWidthAttribute(display.getLineWidthAttribute());
@@ -52,7 +53,8 @@ public class DisplayCloneService {
     }
 
     private BlockDisplay cloneBlockDisplay(BlockDisplay display, String newName) {
-        BlockDisplay clone = new BlockDisplay(newName, display.getLocation());
+        DisplaySettings settings = cloneSettings(display);
+        BlockDisplay clone = new BlockDisplay(newName, display.getLocation(), settings);
         clone.setMaterial(display.getMaterial());
         setCommonAttributes(display, clone);
         clone.setGlowColorAttribute(display.getGlowColorAttribute());
@@ -60,7 +62,8 @@ public class DisplayCloneService {
     }
 
     private ItemDisplay cloneItemDisplay(ItemDisplay display, String newName) {
-        ItemDisplay clone = new ItemDisplay(newName, display.getLocation());
+        DisplaySettings settings = cloneSettings(display);
+        ItemDisplay clone = new ItemDisplay(newName, display.getLocation(), settings);
         clone.setDisplayedItem(display.getDisplayedItem());
         setCommonAttributes(display, clone);
         clone.setDisplayTypeAttribute(display.getDisplayTypeAttribute());
@@ -75,5 +78,14 @@ public class DisplayCloneService {
         target.setBrightnessAttribute(source.getBrightnessAttribute());
         target.setShadowRadiusAttribute(source.getShadowRadiusAttribute());
         target.setShadowStrengthAttribute(source.getShadowStrengthAttribute());
+    }
+
+    private DisplaySettings cloneSettings(DisplayBase source) {
+        DisplaySettings sourceSettings = source.getSettings();
+        DisplaySettings settings = new DisplaySettings();
+        settings.setEnabled(sourceSettings.isEnabled());
+        settings.setDisplayRange(sourceSettings.getDisplayRange());
+        settings.setUpdateInterval(sourceSettings.getUpdateInterval());
+        return settings;
     }
 }

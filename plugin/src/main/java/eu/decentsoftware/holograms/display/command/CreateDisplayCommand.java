@@ -30,6 +30,7 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
@@ -92,7 +93,7 @@ class CreateDisplayCommand extends DecentCommand {
         switch (type) {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
-                TextDisplay textDisplay = new TextDisplay(name, location);
+                TextDisplay textDisplay = new TextDisplay(name, location, new DisplaySettings());
                 TextDisplayPage page = new TextDisplayPage();
                 page.setLines(Arrays.asList(text.split("\\\\n")));
                 textDisplay.addPage(page);
@@ -100,12 +101,12 @@ class CreateDisplayCommand extends DecentCommand {
             case ITEM:
                 String itemContent = Validator.getLineContent(args, 2);
                 HologramItem item = new HologramItem(itemContent);
-                ItemDisplay itemDisplay = new ItemDisplay(name, location);
+                ItemDisplay itemDisplay = new ItemDisplay(name, location, new DisplaySettings());
                 itemDisplay.setDisplayedItem(item);
                 return itemDisplay;
             case BLOCK:
                 Material material = DecentMaterial.parseMaterial(args.length > 2 ? args[2] : "STONE");
-                BlockDisplay blockDisplay = new BlockDisplay(name, location);
+                BlockDisplay blockDisplay = new BlockDisplay(name, location, new DisplaySettings());
                 blockDisplay.setMaterial(material);
                 return blockDisplay;
             default:

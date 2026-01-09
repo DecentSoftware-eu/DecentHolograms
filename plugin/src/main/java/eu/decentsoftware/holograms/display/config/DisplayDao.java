@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
@@ -94,6 +95,7 @@ public class DisplayDao {
         DisplayType type = display.getType();
         config.set("type", type.name());
 
+        saveDisplaySettings(config, display.getSettings());
         saveAttribute(config, "attributes.translation", display.getTranslationAttribute(), config::setDisplayVector3f);
         saveAttribute(config, "attributes.scale", display.getScaleAttribute(), config::setDisplayVector3f);
         saveAttribute(config, "attributes.billboard", display.getBillboardAttribute(), config::setEnum);
@@ -114,6 +116,12 @@ public class DisplayDao {
         }
 
         config.saveData();
+    }
+
+    private void saveDisplaySettings(DisplayConfig config, DisplaySettings settings) {
+        config.set("settings.enabled", settings.isEnabled());
+        config.set("settings.display-range", settings.getDisplayRange());
+        config.set("settings.update-interval", settings.getUpdateInterval());
     }
 
     private void saveTextDisplay(TextDisplay display, DisplayConfig config) {
@@ -233,7 +241,7 @@ public class DisplayDao {
         DisplayAttribute<Boolean> seeThroughAttribute = loadDisplayAttribute(config, "see-through");
         DisplayAttribute<TextDisplayAlignment> alignmentAttribute = loadDisplayAttribute(config, "alignment");
 
-        TextDisplay textDisplay = new TextDisplay(id, location);
+        TextDisplay textDisplay = new TextDisplay(id, location, loadDisplaySettings(config));
         for (List<String> pageLine : pageLines) {
             TextDisplayPage page = new TextDisplayPage();
             page.setLines(pageLine);
@@ -281,7 +289,7 @@ public class DisplayDao {
         DisplayAttribute<ItemDisplayType> displayTypeAttribute = loadDisplayAttribute(config, "display-type");
         DisplayAttribute<DisplayColor> glowColorAttribute = loadDisplayAttribute(config, "glow-color");
 
-        ItemDisplay itemDisplay = new ItemDisplay(id, location);
+        ItemDisplay itemDisplay = new ItemDisplay(id, location, loadDisplaySettings(config));
         itemDisplay.setDisplayedItem(item);
         itemDisplay.setDisplayTypeAttribute(displayTypeAttribute);
         itemDisplay.setGlowColorAttribute(glowColorAttribute);
@@ -300,7 +308,7 @@ public class DisplayDao {
         Material material = loadMaterial(config);
         DisplayAttribute<DisplayColor> glowColorAttribute = loadDisplayAttribute(config, "glow-color");
 
-        BlockDisplay display = new BlockDisplay(id, location);
+        BlockDisplay display = new BlockDisplay(id, location, loadDisplaySettings(config));
         display.setMaterial(material);
         display.setGlowColorAttribute(glowColorAttribute);
         return display;
@@ -332,5 +340,19 @@ public class DisplayDao {
         } catch (ClassCastException e) {
             throw new DisplayConfigException("Attribute " + name + " has invalid data type");
         }
+    }
+
+    private DisplaySettings loadDisplaySettings(DisplayConfig config) {
+        DisplaySettings settings = new DisplaySettings();
+        if (config.isBoolean("settings.enabled")) {
+            settings.setEnabled(config.getBoolean("settings.enabled"));
+        }
+        if (config.isDouble("settings.display-range")) {
+            settings.setDisplayRange(config.getDouble("settings.display-range"));
+        }
+        if (config.isLong("settings.update-interval")) {
+            settings.setUpdateInterval(config.getLong("settings.update-interval"));
+        }
+        return settings;
     }
 }

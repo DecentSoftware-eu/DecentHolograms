@@ -27,6 +27,7 @@ public abstract class DisplayBase {
 
     protected final String name;
     protected DecentLocation location;
+    protected DisplaySettings settings;
     protected DisplayAttribute<DisplayVector3f> translationAttribute;
     protected DisplayAttribute<DisplayVector3f> scaleAttribute;
     protected DisplayAttribute<DisplayBillboardConstraints> billboardAttribute;
@@ -34,9 +35,10 @@ public abstract class DisplayBase {
     protected DisplayAttribute<Float> shadowRadiusAttribute;
     protected DisplayAttribute<Float> shadowStrengthAttribute;
 
-    protected DisplayBase(String name, DecentLocation location) {
+    protected DisplayBase(String name, DecentLocation location, DisplaySettings settings) {
         this.name = name;
         this.location = location;
+        this.settings = settings;
     }
 
     public abstract DisplayType getType();
@@ -51,6 +53,14 @@ public abstract class DisplayBase {
 
     public void setLocation(DecentLocation location) {
         this.location = location;
+    }
+
+    public DisplaySettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(DisplaySettings settings) {
+        this.settings = settings;
     }
 
     public DisplayAttribute<DisplayVector3f> getTranslationAttribute() {
