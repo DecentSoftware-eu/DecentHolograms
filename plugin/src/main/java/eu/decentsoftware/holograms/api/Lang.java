@@ -130,6 +130,7 @@ public class Lang {
     public static final Phrase DISPLAY_ENABLED = new Phrase("display.enabled", "{prefix}Display has been enabled!");
     public static final Phrase DISPLAY_DISABLED = new Phrase("display.disabled", "{prefix}Display has been disabled!");
     public static final Phrase DISPLAY_DISPLAY_RANGE_SET = new Phrase("display.display_range_set", "{prefix}Display range has been set!");
+    public static final Phrase DISPLAY_UPDATE_INTERVAL_SET = new Phrase("display.update_interval_set", "{prefix}Update interval has been set!");
     public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing_set", "{prefix}Facing has been set!");
     public static final Phrase DISPLAY_FACING_INVALID_YAW = new Phrase("display.facing_invalid_yaw", "{prefix}&cYaw must be a valid number between -180 and 180 degrees.");
     public static final Phrase DISPLAY_FACING_INVALID_PITCH = new Phrase("display.facing_invalid_pitch", "{prefix}&cPitch must be a valid number between -90 and 90 degrees.");
