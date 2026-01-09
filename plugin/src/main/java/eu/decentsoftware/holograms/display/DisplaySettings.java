@@ -45,7 +45,7 @@ public class DisplaySettings {
     /**
      * The interval in ticks at which the display is updated for players within the update range.
      */
-    private long updateInterval;
+    private int updateInterval;
 
     public DisplaySettings() {
         this.enabled = true;

@@ -350,8 +350,8 @@ public class DisplayDao {
         if (config.isDouble("settings.display-range")) {
             settings.setDisplayRange(config.getDouble("settings.display-range"));
         }
-        if (config.isLong("settings.update-interval")) {
-            settings.setUpdateInterval(config.getLong("settings.update-interval"));
+        if (config.isInt("settings.update-interval")) {
+            settings.setUpdateInterval(config.getInt("settings.update-interval"));
         }
         return settings;
     }
