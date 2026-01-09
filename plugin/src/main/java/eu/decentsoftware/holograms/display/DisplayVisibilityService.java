@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 public class DisplayVisibilityService {
 
-    private static final int DISPLAY_RANGE = 256;
     private final Map<String, Set<UUID>> viewersMap = new ConcurrentHashMap<>();
 
     public boolean isShownToPlayer(DisplayBase display, Player player) {
@@ -46,10 +45,15 @@ public class DisplayVisibilityService {
     }
 
     public boolean shouldBeShownToPlayer(DisplayBase display, Player player) {
+        return isPlayerWithinDisplayRange(display, player);
+    }
+
+    private boolean isPlayerWithinDisplayRange(DisplayBase display, Player player) {
+        double displayRange = display.getSettings().getDisplayRange();
         DecentLocation displayLocation = display.getLocation();
         Location playerLocation = player.getLocation();
         return displayLocation.isSameWorld(playerLocation)
-                && displayLocation.distanceSquared(playerLocation) <= DISPLAY_RANGE * DISPLAY_RANGE;
+                && displayLocation.distanceSquared(playerLocation) <= displayRange * displayRange;
     }
 
     private Set<UUID> getViewers(DisplayBase display) {
