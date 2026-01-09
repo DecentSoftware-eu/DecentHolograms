@@ -45,7 +45,11 @@ public class DisplayVisibilityService {
     }
 
     public boolean shouldBeShownToPlayer(DisplayBase display, Player player) {
-        return isPlayerWithinDisplayRange(display, player);
+        return isDisplayEnabled(display) && isPlayerWithinDisplayRange(display, player);
+    }
+
+    private boolean isDisplayEnabled(DisplayBase display) {
+        return display.getSettings().isEnabled();
     }
 
     private boolean isPlayerWithinDisplayRange(DisplayBase display, Player player) {
