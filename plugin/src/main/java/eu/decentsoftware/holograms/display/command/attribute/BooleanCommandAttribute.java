@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,11 +36,16 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
     private static final BooleanDisplayAttributeParser PARSER = new BooleanDisplayAttributeParser();
     private final String name;
     private final BiConsumer<D, DisplayAttribute<Boolean>> applyValue;
+    private final Function<D, DisplayAttribute<Boolean>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public BooleanCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Boolean>> applyValue, Class<D> applicableDisplayType) {
+    public BooleanCommandAttribute(String name,
+                                   BiConsumer<D, DisplayAttribute<Boolean>> applyValue,
+                                   Function<D, DisplayAttribute<Boolean>> getAttribute,
+                                   Class<D> applicableDisplayType) {
         this.name = name;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -72,5 +78,14 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<Boolean> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().toString();
     }
 }

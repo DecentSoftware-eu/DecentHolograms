@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class IntegerCommandAttribute<D> implements CommandAttribute {
 
@@ -36,17 +37,27 @@ public class IntegerCommandAttribute<D> implements CommandAttribute {
     private final int minValue;
     private final int maxValue;
     private final BiConsumer<D, DisplayAttribute<Integer>> applyValue;
+    private final Function<D, DisplayAttribute<Integer>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public IntegerCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Integer>> applyValue, Class<D> applicableDisplayType) {
-        this(name, Integer.MIN_VALUE, Integer.MAX_VALUE, applyValue, applicableDisplayType);
+    public IntegerCommandAttribute(String name,
+                                   BiConsumer<D, DisplayAttribute<Integer>> applyValue,
+                                   Function<D, DisplayAttribute<Integer>> getAttribute,
+                                   Class<D> applicableDisplayType) {
+        this(name, Integer.MIN_VALUE, Integer.MAX_VALUE, applyValue, getAttribute, applicableDisplayType);
     }
 
-    public IntegerCommandAttribute(String name, int minValue, int maxValue, BiConsumer<D, DisplayAttribute<Integer>> applyValue, Class<D> applicableDisplayType) {
+    public IntegerCommandAttribute(String name,
+                                   int minValue,
+                                   int maxValue,
+                                   BiConsumer<D, DisplayAttribute<Integer>> applyValue,
+                                   Function<D, DisplayAttribute<Integer>> getAttribute,
+                                   Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -82,5 +93,14 @@ public class IntegerCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<Integer> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().toString();
     }
 }

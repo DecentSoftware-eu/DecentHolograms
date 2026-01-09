@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class FloatCommandAttribute<D> implements CommandAttribute {
 
@@ -36,17 +37,27 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
     private final float minValue;
     private final float maxValue;
     private final BiConsumer<D, DisplayAttribute<Float>> applyValue;
+    private final Function<D, DisplayAttribute<Float>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public FloatCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Float>> applyValue, Class<D> applicableDisplayType) {
-        this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, applicableDisplayType);
+    public FloatCommandAttribute(String name,
+                                 BiConsumer<D, DisplayAttribute<Float>> applyValue,
+                                 Function<D, DisplayAttribute<Float>> getAttribute,
+                                 Class<D> applicableDisplayType) {
+        this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, getAttribute, applicableDisplayType);
     }
 
-    public FloatCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, DisplayAttribute<Float>> applyValue, Class<D> applicableDisplayType) {
+    public FloatCommandAttribute(String name,
+                                 float minValue,
+                                 float maxValue,
+                                 BiConsumer<D, DisplayAttribute<Float>> applyValue,
+                                 Function<D, DisplayAttribute<Float>> getAttribute,
+                                 Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -82,5 +93,14 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<Float> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().toString();
     }
 }

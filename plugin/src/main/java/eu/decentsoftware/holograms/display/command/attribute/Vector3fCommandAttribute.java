@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class Vector3fCommandAttribute<D> implements CommandAttribute {
 
@@ -37,17 +38,27 @@ public class Vector3fCommandAttribute<D> implements CommandAttribute {
     private final float minValue;
     private final float maxValue;
     private final BiConsumer<D, DisplayAttribute<DisplayVector3f>> applyValue;
+    private final Function<D, DisplayAttribute<DisplayVector3f>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public Vector3fCommandAttribute(String name, BiConsumer<D, DisplayAttribute<DisplayVector3f>> applyValue, Class<D> applicableDisplayType) {
-        this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, applicableDisplayType);
+    public Vector3fCommandAttribute(String name,
+                                    BiConsumer<D, DisplayAttribute<DisplayVector3f>> applyValue,
+                                    Function<D, DisplayAttribute<DisplayVector3f>> getAttribute,
+                                    Class<D> applicableDisplayType) {
+        this(name, -Float.MAX_VALUE, Float.MAX_VALUE, applyValue, getAttribute, applicableDisplayType);
     }
 
-    public Vector3fCommandAttribute(String name, float minValue, float maxValue, BiConsumer<D, DisplayAttribute<DisplayVector3f>> applyValue, Class<D> applicableDisplayType) {
+    public Vector3fCommandAttribute(String name,
+                                    float minValue,
+                                    float maxValue,
+                                    BiConsumer<D, DisplayAttribute<DisplayVector3f>> applyValue,
+                                    Function<D, DisplayAttribute<DisplayVector3f>> getAttribute,
+                                    Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -89,5 +100,15 @@ public class Vector3fCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<DisplayVector3f> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        DisplayVector3f vector = attribute.getValue();
+        return String.format("%.2f,%.2f,%.2f", vector.getX(), vector.getY(), vector.getZ());
     }
 }

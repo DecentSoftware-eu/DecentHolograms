@@ -63,4 +63,8 @@ public class DisplayColor {
     public int getBlue() {
         return blue;
     }
+
+    public String asHex() {
+        return String.format("%02X%02X%02X%02X", alpha, red, green, blue);
+    }
 }

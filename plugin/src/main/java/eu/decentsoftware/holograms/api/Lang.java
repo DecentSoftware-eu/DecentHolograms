@@ -134,6 +134,8 @@ public class Lang {
     public static final Phrase DISPLAY_ATTRIBUTE_INVALID_VALUE = new Phrase("display.attribute.invalid_value", "{prefix}&cInvalid value '%1$s' for attribute '%2$s'&c. %3$s");
     public static final Phrase DISPLAY_ATTRIBUTE_SET = new Phrase("display.attribute.set", "{prefix}Set attribute &b'%1$s'&7 to &b'%2$s'&7.");
     public static final Phrase DISPLAY_ATTRIBUTE_RESET = new Phrase("display.attribute.reset", "{prefix}Reset attribute &b'%1$s'&7.");
+    public static final Phrase DISPLAY_ATTRIBUTE_GET = new Phrase("display.attribute.get", "{prefix}Attribute &b'%1$s'&7 is set to value: &b'%2$s'&7.");
+    public static final Phrase DISPLAY_ATTRIBUTE_GET_NOT_SET = new Phrase("display.attribute.get_not_set", "{prefix}Attribute &b'%1$s'&7 is not set.");
     public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}&aTeleported!");
     public static final Phrase DISPLAY_WORLD_DOES_NOT_EXIST = new Phrase("display.world_does_not_exist", "{prefix}&cWorld of display '%1$s' doesn't exist!");
     public static final Phrase DISPLAY_LIST_NO_DISPLAYS = new Phrase("display.list.no_displays", "{prefix}There are currently no displays.");

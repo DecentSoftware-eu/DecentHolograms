@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttribute {
 
@@ -36,17 +37,27 @@ public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttri
     private final int minValue;
     private final int maxValue;
     private final BiConsumer<D, DisplayAttribute<Byte>> applyValue;
+    private final Function<D, DisplayAttribute<Byte>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public ByteCommandAttribute(String name, BiConsumer<D, DisplayAttribute<Byte>> applyValue, Class<D> applicableDisplayType) {
-        this(name, 0, 255, applyValue, applicableDisplayType);
+    public ByteCommandAttribute(String name,
+                                BiConsumer<D, DisplayAttribute<Byte>> applyValue,
+                                Function<D, DisplayAttribute<Byte>> getAttribute,
+                                Class<D> applicableDisplayType) {
+        this(name, 0, 255, applyValue, getAttribute, applicableDisplayType);
     }
 
-    public ByteCommandAttribute(String name, int minValue, int maxValue, BiConsumer<D, DisplayAttribute<Byte>> applyValue, Class<D> applicableDisplayType) {
+    public ByteCommandAttribute(String name,
+                                int minValue,
+                                int maxValue,
+                                BiConsumer<D, DisplayAttribute<Byte>> applyValue,
+                                Function<D, DisplayAttribute<Byte>> getAttribute,
+                                Class<D> applicableDisplayType) {
         this.name = name;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -82,5 +93,14 @@ public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttri
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<Byte> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().toString();
     }
 }

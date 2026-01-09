@@ -56,6 +56,7 @@ public class DisplaysCommand extends DecentCommand {
         CommandAttributeService attributeService = new CommandAttributeService();
         addSubCommand(new SetAttributeDisplayCommand(displayService, attributeService));
         addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeService));
+        addSubCommand(new GetAttributeDisplayCommand(displayService, attributeService));
         addSubCommand(new CenterDisplayCommand(displayService));
         addSubCommand(new MoveHereDisplayCommand(displayService));
         addSubCommand(new TeleportDisplayCommand(displayService));

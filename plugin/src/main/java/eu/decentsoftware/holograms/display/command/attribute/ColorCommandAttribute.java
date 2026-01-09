@@ -29,17 +29,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class ColorCommandAttribute<D> implements CommandAttribute {
 
     private static final ColorDisplayAttributeParser PARSER = new ColorDisplayAttributeParser();
     private final String name;
     private final BiConsumer<D, DisplayAttribute<DisplayColor>> applyValue;
+    private final Function<D, DisplayAttribute<DisplayColor>> getAttribute;
     private final Class<D> applicableDisplayType;
 
-    public ColorCommandAttribute(String name, BiConsumer<D, DisplayAttribute<DisplayColor>> applyValue, Class<D> applicableDisplayType) {
+    public ColorCommandAttribute(String name,
+                                 BiConsumer<D, DisplayAttribute<DisplayColor>> applyValue,
+                                 Function<D, DisplayAttribute<DisplayColor>> getAttribute,
+                                 Class<D> applicableDisplayType) {
         this.name = name;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
     }
 
@@ -74,5 +80,14 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<DisplayColor> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().asHex();
     }
 }

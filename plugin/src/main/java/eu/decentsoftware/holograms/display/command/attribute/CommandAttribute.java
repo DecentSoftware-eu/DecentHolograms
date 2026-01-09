@@ -62,4 +62,12 @@ public interface CommandAttribute {
      * @param display The display to reset the value on.
      */
     void resetValue(@NotNull DisplayBase display);
+
+    /**
+     * Gets the current value of this attribute on the given display.
+     *
+     * @param display The display to get the value from.
+     * @return The current value of this attribute on the given display.
+     */
+    String getValue(@NotNull DisplayBase display);
 }

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> implements CommandAttribute {
@@ -35,16 +36,19 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
     private final String name;
     private final Class<E> enumClass;
     private final BiConsumer<D, DisplayAttribute<E>> applyValue;
+    private final Function<D, DisplayAttribute<E>> getAttribute;
     private final Class<D> applicableDisplayType;
     private final EnumDisplayAttributeParser<E> parser;
 
     public EnumCommandAttribute(String name,
                                 Class<E> enumClass,
                                 BiConsumer<D, DisplayAttribute<E>> applyValue,
+                                Function<D, DisplayAttribute<E>> getAttribute,
                                 Class<D> applicableDisplayType) {
         this.name = name;
         this.enumClass = enumClass;
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
         this.applicableDisplayType = applicableDisplayType;
         this.parser = new EnumDisplayAttributeParser<>(enumClass);
     }
@@ -87,5 +91,14 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<E> attribute = getAttribute.apply(applicableDisplayType.cast(display));
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        return attribute.getValue().name();
     }
 }

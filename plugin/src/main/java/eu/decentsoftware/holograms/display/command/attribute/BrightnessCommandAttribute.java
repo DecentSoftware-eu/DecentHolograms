@@ -30,14 +30,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class BrightnessCommandAttribute implements CommandAttribute {
 
     private static final BrightnessDisplayAttributeParser PARSER = new BrightnessDisplayAttributeParser();
     private final BiConsumer<DisplayBase, DisplayAttribute<DisplayBrightness>> applyValue;
+    private final Function<DisplayBase, DisplayAttribute<DisplayBrightness>> getAttribute;
 
-    public BrightnessCommandAttribute(BiConsumer<DisplayBase, DisplayAttribute<DisplayBrightness>> applyValue) {
+    public BrightnessCommandAttribute(BiConsumer<DisplayBase, DisplayAttribute<DisplayBrightness>> applyValue,
+                                      Function<DisplayBase, DisplayAttribute<DisplayBrightness>> getAttribute) {
         this.applyValue = applyValue;
+        this.getAttribute = getAttribute;
     }
 
     @NotNull
@@ -75,5 +79,15 @@ public class BrightnessCommandAttribute implements CommandAttribute {
     @Override
     public void resetValue(@NotNull DisplayBase display) {
         applyValue.accept(display, new StaticDisplayAttribute<>(null));
+    }
+
+    @Override
+    public String getValue(@NotNull DisplayBase display) {
+        DisplayAttribute<DisplayBrightness> attribute = getAttribute.apply(display);
+        if (attribute == null || attribute.getValue() == null) {
+            return null;
+        }
+        DisplayBrightness value = attribute.getValue();
+        return value.getBlockLight() + "," + value.getSkyLight();
     }
 }
