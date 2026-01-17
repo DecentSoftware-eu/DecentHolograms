@@ -7,7 +7,7 @@ item-nbt-api = "2.15.2-SNAPSHOT"
 xseries = "13.3.3"
 lombok = "1.18.38"
 annotations = "26.0.2"
-ds-action = "0.0.1"
+ds-action = "0.0.2"
 # Test
 junit = "5.13.1"
 junit-platform-launcher = "1.13.1"
