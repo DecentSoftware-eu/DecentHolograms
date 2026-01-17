@@ -36,7 +36,8 @@ import java.util.stream.Collectors;
 @CommandInfo(
         usage = "/dh d set-attribute <name> <attribute>=<value>",
         description = "Set a display attribute.",
-        aliases = {"setattribute", "attribute", "attr"}
+        aliases = {"setattribute", "attribute", "attr"},
+        permissions = {"dh.command.displays.setattribute"}
 )
 class SetAttributeDisplayCommand extends DecentCommand {
 

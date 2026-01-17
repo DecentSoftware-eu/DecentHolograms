@@ -34,7 +34,8 @@ import java.util.Map;
 @CommandInfo(
         usage = "/dh d reset-attribute <name> <attribute>",
         description = "Reset a display attribute to the default value.",
-        aliases = {"resetattribute", "unset-attribute", "unsetattribute"}
+        aliases = {"resetattribute", "unset-attribute", "unsetattribute"},
+        permissions = {"dh.command.displays.resetattribute"}
 )
 class ResetAttributeDisplayCommand extends DecentCommand {
 

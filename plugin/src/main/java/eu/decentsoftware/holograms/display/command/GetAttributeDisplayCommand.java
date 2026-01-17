@@ -36,7 +36,8 @@ import java.util.Set;
 @CommandInfo(
         usage = "/dh d get-attribute <name> <attribute>",
         description = "Get a display attribute value.",
-        aliases = {"getattribute", "getattr"}
+        aliases = {"getattribute", "getattr"},
+        permissions = {"dh.command.displays.getattribute"}
 )
 class GetAttributeDisplayCommand extends DecentCommand {
 
