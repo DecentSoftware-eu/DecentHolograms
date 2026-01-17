@@ -7,6 +7,7 @@ item-nbt-api = "2.15.2-SNAPSHOT"
 xseries = "13.3.3"
 lombok = "1.18.38"
 annotations = "26.0.2"
+ds-action = "0.0.1"
 # Test
 junit = "5.13.1"
 junit-platform-launcher = "1.13.1"
@@ -23,6 +24,7 @@ item-nbt-api = { module = "de.tr7zw:item-nbt-api", version.ref = "item-nbt-api" 
 xseries = { module = "com.github.cryptomorin:XSeries", version.ref = "xseries" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+ds-action = { module = "eu.decentsoftware.library:action", version.ref = "ds-action" }
 # Test
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }

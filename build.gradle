@@ -8,6 +8,13 @@ subprojects {
         mavenCentral()
         maven { url = "https://repo.codemc.io/repository/nms/" }
         maven { url = "https://repo.codemc.io/repository/maven-public/" }
+        maven {
+            url = "https://maven.pkg.github.com/DecentSoftware-eu/DecentLibrary"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 
     dependencies {

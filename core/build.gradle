@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.bstats.bukkit)
     implementation(libs.item.nbt.api)
     implementation(libs.xseries)
+    implementation(libs.ds.action)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
