@@ -2,11 +2,11 @@ package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
-import eu.decentsoftware.holograms.api.context.DefaultAppContextFactory;
+import eu.decentsoftware.holograms.api.expansion.context.app.DefaultAppContextFactory;
 import eu.decentsoftware.holograms.api.expansion.*;
 import eu.decentsoftware.holograms.api.expansion.config.DefaultExpansionConfigSource;
 import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfigSource;
-import eu.decentsoftware.holograms.api.expansion.context.DefaultExpansionContextFactory;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.DefaultExpansionContextFactory;
 import eu.decentsoftware.holograms.api.expansion.listener.ExpansionWatchingListener;
 import eu.decentsoftware.holograms.api.expansion.DefaultExpansionRegistry;
 import eu.decentsoftware.holograms.api.expansion.ExpansionRegistry;

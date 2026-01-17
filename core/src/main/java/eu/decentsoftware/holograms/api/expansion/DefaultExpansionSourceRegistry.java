@@ -20,20 +20,20 @@ public class DefaultExpansionSourceRegistry implements ExpansionSourceRegistry {
 
     @Override
     public void registerSource(ExpansionSource source) {
-        List<String> ids = new ArrayList<>();
-        if (expansionIdsBySource.put(source.getId(), ids) != null) {
+        if (expansionIdsBySource.containsKey(source.getId())) {
             throw new IllegalStateException("Expansion source '" + source.getId() + "' is already registered.");
         }
 
+        sources.put(source.getId(), source);
         Log.info("Registered expansion source: " + source.getId() + ", loading expansions...");
 
+        List<String> ids = new ArrayList<>();
         source.loadExpansions().forEach(expansion -> {
             ids.add(expansion.getId());
 
             registry.registerExpansion(expansion);
         });
-
-        sources.put(source.getId(), source);
+        expansionIdsBySource.put(source.getId(), ids);
     }
 
     @Override

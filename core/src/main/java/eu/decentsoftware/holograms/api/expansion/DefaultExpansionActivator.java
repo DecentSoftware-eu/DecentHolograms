@@ -1,11 +1,11 @@
 package eu.decentsoftware.holograms.api.expansion;
 
-import eu.decentsoftware.holograms.api.context.AppContext;
-import eu.decentsoftware.holograms.api.context.AppContextFactory;
+import eu.decentsoftware.holograms.api.expansion.context.app.AppContext;
+import eu.decentsoftware.holograms.api.expansion.context.app.AppContextFactory;
 import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfigSource;
-import eu.decentsoftware.holograms.api.expansion.context.ExpansionContext;
-import eu.decentsoftware.holograms.api.expansion.context.ExpansionContextEventHandler;
-import eu.decentsoftware.holograms.api.expansion.context.ExpansionContextFactory;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.ExpansionContext;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.ExpansionContextEventHandler;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.ExpansionContextFactory;
 import eu.decentsoftware.holograms.api.expansion.requirement.CheckResult;
 import eu.decentsoftware.holograms.api.expansion.requirement.EnabledByConfigRequirement;
 import eu.decentsoftware.holograms.api.expansion.requirement.ExpansionRequirement;

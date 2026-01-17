@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.expansion;
 
-import eu.decentsoftware.holograms.api.context.AppContext;
-import eu.decentsoftware.holograms.api.expansion.context.ExpansionContext;
+import eu.decentsoftware.holograms.api.expansion.context.app.AppContext;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.ExpansionContext;
 import eu.decentsoftware.holograms.api.expansion.requirement.ExpansionRequirement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;

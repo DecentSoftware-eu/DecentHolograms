@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.context;
+package eu.decentsoftware.holograms.api.expansion.context.app;
 
 public interface AppContextFactory {
 

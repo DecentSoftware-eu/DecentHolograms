@@ -1,8 +1,8 @@
 package eu.decentsoftware.holograms.api.expansion.requirement;
 
-import eu.decentsoftware.holograms.api.context.AppContext;
+import eu.decentsoftware.holograms.api.expansion.context.app.AppContext;
 import eu.decentsoftware.holograms.api.expansion.Expansion;
-import eu.decentsoftware.holograms.api.expansion.context.ExpansionContext;
+import eu.decentsoftware.holograms.api.expansion.context.expansion.ExpansionContext;
 
 public interface ExpansionRequirement {
 

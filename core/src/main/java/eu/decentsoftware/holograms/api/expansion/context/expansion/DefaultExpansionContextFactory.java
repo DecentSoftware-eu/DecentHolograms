@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.expansion.context;
+package eu.decentsoftware.holograms.api.expansion.context.expansion;
 
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.expansion.Expansion;

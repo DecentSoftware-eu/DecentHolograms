@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.expansion.context;
+package eu.decentsoftware.holograms.api.expansion.context.expansion;
 
 import eu.decentsoftware.holograms.api.expansion.config.ExpansionConfig;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;

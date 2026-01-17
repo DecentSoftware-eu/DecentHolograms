@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.expansion.context;
+package eu.decentsoftware.holograms.api.expansion.context.expansion;
 
 /**
  * Interface for handling events related to the lifecycle of an ExpansionContext.

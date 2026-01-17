@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.context;
+package eu.decentsoftware.holograms.api.expansion.context.app;
 
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import org.bukkit.plugin.java.JavaPlugin;
