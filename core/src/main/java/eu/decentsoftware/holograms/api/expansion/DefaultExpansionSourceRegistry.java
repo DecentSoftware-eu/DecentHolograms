@@ -5,6 +5,8 @@ import eu.decentsoftware.holograms.api.utils.Log;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class DefaultExpansionSourceRegistry implements ExpansionSourceRegistry {
     private final ExpansionRegistry registry;
@@ -27,13 +29,13 @@ public class DefaultExpansionSourceRegistry implements ExpansionSourceRegistry {
         sources.put(source.getId(), source);
         Log.info("Registered expansion source: " + source.getId() + ", loading expansions...");
 
-        List<String> ids = new ArrayList<>();
-        source.loadExpansions().forEach(expansion -> {
-            ids.add(expansion.getId());
-
-            registry.registerExpansion(expansion);
-        });
-        expansionIdsBySource.put(source.getId(), ids);
+        Iterable<? extends Expansion> expansions = source.loadExpansions();
+        expansions.forEach(registry::registerExpansion);
+        expansionIdsBySource.put(
+                source.getId(),
+                StreamSupport.stream(expansions.spliterator(), false)
+                        .map(Expansion::getId)
+                        .collect(Collectors.toList()));
     }
 
     @Override
