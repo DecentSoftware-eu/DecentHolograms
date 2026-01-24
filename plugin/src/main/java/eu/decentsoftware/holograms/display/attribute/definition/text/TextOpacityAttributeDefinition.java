@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinit
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.IntegerDisplayAttributeParser;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
 
@@ -50,7 +49,7 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     }
 
     @Override
-    public @Nullable DisplayType[] getAllowedDisplayTypes() {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
     }
 }

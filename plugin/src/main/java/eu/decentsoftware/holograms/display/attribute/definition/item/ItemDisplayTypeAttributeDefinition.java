@@ -24,7 +24,6 @@ import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributePars
 import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<ItemDisplayType> {
 
@@ -51,7 +50,7 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
     }
 
     @Override
-    public @Nullable DisplayType[] getAllowedDisplayTypes() {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.ITEM};
     }
 }

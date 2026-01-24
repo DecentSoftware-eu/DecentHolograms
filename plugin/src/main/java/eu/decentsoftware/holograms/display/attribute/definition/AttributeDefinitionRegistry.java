@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition;
 
+import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.definition.general.BillboardAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.general.BrightnessAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.general.GlowColorAttributeDefinition;
@@ -32,15 +33,41 @@ import eu.decentsoftware.holograms.display.attribute.definition.text.TextLineWid
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextOpacityAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextSeeThroughAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextShadowAttributeDefinition;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * A registry for managing attribute definitions used in displays.
+ *
+ * <p>There should only ever be one instance of this class.</p>
+ *
+ * @author d0by
+ * @see AttributeDefinition
+ * @since 2.10.0
+ */
 public class AttributeDefinitionRegistry {
 
     private final Map<String, AttributeDefinition<?>> definitionsByName = new HashMap<>();
+    private final Map<DisplayType, List<AttributeDefinition<?>>> definitionsByDisplayType = new EnumMap<>(DisplayType.class);
 
+    /**
+     * Create a new registry and register all built-in attribute definitions.
+     */
     public AttributeDefinitionRegistry() {
+        registerAllAttributeDefinitions();
+        populateDefinitionsByDisplayType();
+    }
+
+    private void registerAllAttributeDefinitions() {
+        // General
         registerDefinition(new TranslationAttributeDefinition());
         registerDefinition(new ScaleAttributeDefinition());
         registerDefinition(new BillboardAttributeDefinition());
@@ -49,6 +76,7 @@ public class AttributeDefinitionRegistry {
         registerDefinition(new ShadowStrengthAttributeDefinition());
         registerDefinition(new GlowColorAttributeDefinition());
 
+        // Text
         registerDefinition(new TextLineWidthAttributeDefinition());
         registerDefinition(new TextBackgroundColorAttributeDefinition());
         registerDefinition(new TextOpacityAttributeDefinition());
@@ -56,14 +84,48 @@ public class AttributeDefinitionRegistry {
         registerDefinition(new TextSeeThroughAttributeDefinition());
         registerDefinition(new TextAlignmentAttributeDefinition());
 
+        // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
     }
 
-    public void registerDefinition(AttributeDefinition<?> definition) {
+    private void populateDefinitionsByDisplayType() {
+        for (AttributeDefinition<?> definition : definitionsByName.values()) {
+            for (DisplayType displayType : definition.getApplicableDisplayTypes()) {
+                definitionsByDisplayType
+                        .computeIfAbsent(displayType, key -> new ArrayList<>())
+                        .add(definition);
+            }
+        }
+    }
+
+    private void registerDefinition(@NotNull AttributeDefinition<?> definition) {
         this.definitionsByName.put(definition.getName(), definition);
     }
 
-    public AttributeDefinition<?> getDefinition(String name) {
+    /**
+     * Get an attribute definition by its name.
+     *
+     * @param name The name of the definition.
+     * @return The definition or null if it wasn't found.
+     * @see AttributeDefinition#getName()
+     * @since 2.10.0
+     */
+    @Nullable
+    public AttributeDefinition<?> getDefinition(@NotNull String name) {
         return this.definitionsByName.get(name);
+    }
+
+    /**
+     * Get the definitions of all attributes applicable for a specific display type.
+     *
+     * @param displayType The display type.
+     * @return List of applicable definitions.
+     * @see AttributeDefinition#getApplicableDisplayTypes()
+     * @since 2.10.0
+     */
+    @NotNull
+    @Unmodifiable
+    public List<AttributeDefinition<?>> getDefinitionsByDisplayType(@NotNull DisplayType displayType) {
+        return Collections.unmodifiableList(this.definitionsByDisplayType.get(displayType));
     }
 }

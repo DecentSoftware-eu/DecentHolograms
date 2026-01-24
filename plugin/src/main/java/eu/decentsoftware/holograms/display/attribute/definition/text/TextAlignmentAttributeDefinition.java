@@ -24,7 +24,6 @@ import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributePars
 import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
 
@@ -51,7 +50,7 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public @Nullable DisplayType[] getAllowedDisplayTypes() {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
     }
 }

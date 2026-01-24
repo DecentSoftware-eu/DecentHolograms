@@ -24,7 +24,6 @@ import eu.decentsoftware.holograms.display.attribute.parser.ColorDisplayAttribut
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class GlowColorAttributeDefinition implements AttributeDefinition<DisplayColor> {
 
@@ -51,7 +50,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public @Nullable DisplayType[] getAllowedDisplayTypes() {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.ITEM, DisplayType.BLOCK};
     }
 }

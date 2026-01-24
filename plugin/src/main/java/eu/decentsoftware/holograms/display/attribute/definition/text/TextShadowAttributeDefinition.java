@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinit
 import eu.decentsoftware.holograms.display.attribute.parser.BooleanDisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class TextShadowAttributeDefinition implements AttributeDefinition<Boolean> {
 
@@ -50,7 +49,7 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     }
 
     @Override
-    public @Nullable DisplayType[] getAllowedDisplayTypes() {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
     }
 }
