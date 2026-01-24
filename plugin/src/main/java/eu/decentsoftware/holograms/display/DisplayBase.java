@@ -23,6 +23,8 @@ import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstrai
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 
+import java.util.Collection;
+
 public abstract class DisplayBase {
 
     protected final String name;
@@ -42,6 +44,8 @@ public abstract class DisplayBase {
     }
 
     public abstract DisplayType getType();
+
+    public abstract Collection<DisplayAttribute<?>> getAttributes();
 
     public String getName() {
         return name;

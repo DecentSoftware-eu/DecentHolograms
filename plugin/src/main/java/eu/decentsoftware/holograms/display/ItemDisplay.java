@@ -23,6 +23,10 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class ItemDisplay extends DisplayBase {
 
     private HologramItem displayedItem;
@@ -36,6 +40,21 @@ public class ItemDisplay extends DisplayBase {
     @Override
     public DisplayType getType() {
         return DisplayType.ITEM;
+    }
+
+    @Override
+    public Collection<DisplayAttribute<?>> getAttributes() {
+        return Collections.unmodifiableList(Arrays.asList(
+                translationAttribute,
+                scaleAttribute,
+                billboardAttribute,
+                brightnessAttribute,
+                shadowRadiusAttribute,
+                shadowStrengthAttribute,
+
+                displayTypeAttribute,
+                glowColorAttribute
+        ));
     }
 
     public HologramItem getDisplayedItem() {

@@ -23,6 +23,9 @@ import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class TextDisplay extends DisplayBase {
@@ -43,6 +46,25 @@ public class TextDisplay extends DisplayBase {
     @Override
     public DisplayType getType() {
         return DisplayType.TEXT;
+    }
+
+    @Override
+    public Collection<DisplayAttribute<?>> getAttributes() {
+        return Collections.unmodifiableList(Arrays.asList(
+                translationAttribute,
+                scaleAttribute,
+                billboardAttribute,
+                brightnessAttribute,
+                shadowRadiusAttribute,
+                shadowStrengthAttribute,
+
+                lineWidthAttribute,
+                backgroundColorAttribute,
+                textOpacityAttribute,
+                textShadowAttribute,
+                seeThroughAttribute,
+                alignmentAttribute
+        ));
     }
 
     public TextDisplayPage getPage(int index) {

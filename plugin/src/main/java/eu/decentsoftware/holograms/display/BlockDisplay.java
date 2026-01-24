@@ -22,6 +22,10 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.Material;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class BlockDisplay extends DisplayBase {
 
     private Material material;
@@ -34,6 +38,20 @@ public class BlockDisplay extends DisplayBase {
     @Override
     public DisplayType getType() {
         return DisplayType.BLOCK;
+    }
+
+    @Override
+    public Collection<DisplayAttribute<?>> getAttributes() {
+        return Collections.unmodifiableList(Arrays.asList(
+                translationAttribute,
+                scaleAttribute,
+                billboardAttribute,
+                brightnessAttribute,
+                shadowRadiusAttribute,
+                shadowStrengthAttribute,
+
+                glowColorAttribute
+        ));
     }
 
     public Material getMaterial() {
