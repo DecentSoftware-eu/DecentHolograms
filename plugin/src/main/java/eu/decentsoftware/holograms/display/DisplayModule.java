@@ -21,7 +21,9 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.config.DisplayDao;
+import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
+import eu.decentsoftware.holograms.display.config.DisplayConfigService;
+import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.rendering.DisplayDataMapper;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
@@ -55,8 +57,10 @@ public class DisplayModule {
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
         DisplayRenderingService renderingService = new DisplayRenderingService(visibilityService, renderingAdapterFactory);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
-        DisplayDao displayDao = new DisplayDao(plugin, attributeDefinitionRegistry);
-        this.displayService = new DisplayService(displayDao, renderingService, textDisplayViewService);
+        DisplayConfigService configService = new DisplayConfigService(plugin);
+        DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeDefinitionRegistry);
+        DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
+        this.displayService = new DisplayService(persistenceService, renderingService, textDisplayViewService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);
     }

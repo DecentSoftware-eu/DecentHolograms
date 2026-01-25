@@ -82,7 +82,7 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
             throw new CommandAttributeValidationException("Attribute " + name + " is not applicable to this display type.");
         }
 
-        this.applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(enumValue));
+        this.applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), enumValue));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EnumCommandAttribute<E extends Enum<?>, D extends DisplayBase> impl
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

@@ -67,6 +67,34 @@ public class TextDisplay extends DisplayBase {
         ));
     }
 
+    @Override
+    public void setAttributes(List<DisplayAttribute<?>> attributes) {
+        super.setAttributes(attributes);
+
+        for (DisplayAttribute<?> attribute : attributes) {
+            switch (attribute.getName()) {
+                case "line-width":
+                    this.lineWidthAttribute = (DisplayAttribute<Integer>) attribute;
+                    break;
+                case "background-color":
+                    this.backgroundColorAttribute = (DisplayAttribute<DisplayColor>) attribute;
+                    break;
+                case "text-opacity":
+                    this.textOpacityAttribute = (DisplayAttribute<Byte>) attribute;
+                    break;
+                case "text-shadow":
+                    this.textShadowAttribute = (DisplayAttribute<Boolean>) attribute;
+                    break;
+                case "see-through":
+                    this.seeThroughAttribute = (DisplayAttribute<Boolean>) attribute;
+                    break;
+                case "alignment":
+                    this.alignmentAttribute = (DisplayAttribute<TextDisplayAlignment>) attribute;
+                    break;
+            }
+        }
+    }
+
     public TextDisplayPage getPage(int index) {
         return this.pages.get(index);
     }

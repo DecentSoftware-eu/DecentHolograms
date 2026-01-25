@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
-import eu.decentsoftware.holograms.display.config.DisplayDao;
+import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
 import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 import org.bukkit.entity.Player;
@@ -34,13 +34,15 @@ import java.util.stream.Collectors;
 
 public class DisplayService {
 
-    private final DisplayDao dao;
+    private final DisplayPersistenceService persistenceService;
     private final DisplayRenderingService renderingService;
     private final TextDisplayViewService viewService;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
-    public DisplayService(DisplayDao dao, DisplayRenderingService renderingService, TextDisplayViewService viewService) {
-        this.dao = dao;
+    public DisplayService(DisplayPersistenceService persistenceService,
+                          DisplayRenderingService renderingService,
+                          TextDisplayViewService viewService) {
+        this.persistenceService = persistenceService;
         this.renderingService = renderingService;
         this.viewService = viewService;
     }
@@ -54,12 +56,13 @@ public class DisplayService {
         shutdown();
 
         try {
-            List<DisplayBase> loadedDisplays = dao.loadAllDisplays();
+            Log.info("Loading displays...");
+            List<DisplayBase> loadedDisplays = persistenceService.loadAllDisplays();
             for (DisplayBase display : loadedDisplays) {
                 registerDisplay(display);
                 renderingService.updateVisibility(display);
             }
-            Log.info("Loaded %d displays", loadedDisplays.size());
+            Log.info("Loaded %d displays!", loadedDisplays.size());
         } catch (DisplayConfigException e) {
             Log.error("Failed to load displays", e);
         }
@@ -75,7 +78,7 @@ public class DisplayService {
 
     public void saveDisplay(DisplayBase display) {
         registerDisplay(display);
-        dao.saveDisplay(display);
+        persistenceService.saveDisplay(display);
     }
 
     public boolean deleteDisplay(String name) {
@@ -84,7 +87,7 @@ public class DisplayService {
             return false;
         }
         renderingService.hideForEveryone(removedDisplay);
-        dao.deleteDisplay(removedDisplay);
+        persistenceService.deleteDisplay(removedDisplay);
         return true;
     }
 

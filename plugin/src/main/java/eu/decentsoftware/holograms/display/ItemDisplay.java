@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class ItemDisplay extends DisplayBase {
 
@@ -55,6 +56,22 @@ public class ItemDisplay extends DisplayBase {
                 displayTypeAttribute,
                 glowColorAttribute
         ));
+    }
+
+    @Override
+    public void setAttributes(List<DisplayAttribute<?>> attributes) {
+        super.setAttributes(attributes);
+
+        for (DisplayAttribute<?> attribute : attributes) {
+            switch (attribute.getName()) {
+                case "display-type":
+                    this.displayTypeAttribute = (DisplayAttribute<ItemDisplayType>) attribute;
+                    break;
+                case "glow-color":
+                    this.glowColorAttribute = (DisplayAttribute<DisplayColor>) attribute;
+                    break;
+            }
+        }
     }
 
     public HologramItem getDisplayedItem() {

@@ -84,7 +84,7 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
         if (floatValue < minValue || floatValue > maxValue) {
             throw new CommandAttributeValidationException("Value out of range: " + value + ". (expected: " + minValue + " - " + maxValue + ")");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(floatValue));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), floatValue));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class FloatCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

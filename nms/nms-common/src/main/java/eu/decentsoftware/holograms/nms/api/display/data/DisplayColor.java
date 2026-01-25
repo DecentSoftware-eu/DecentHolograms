@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.nms.api.display.data;
 
+import com.google.common.base.Preconditions;
+
 public class DisplayColor {
 
     private final int alpha;
@@ -26,6 +28,11 @@ public class DisplayColor {
     private final int blue;
 
     public DisplayColor(int alpha, int red, int green, int blue) {
+        Preconditions.checkArgument(alpha >= 0 && alpha <= 255, "Alpha must be between 0 and 255");
+        Preconditions.checkArgument(red >= 0 && red <= 255, "Red must be between 0 and 255");
+        Preconditions.checkArgument(green >= 0 && green <= 255, "Green must be between 0 and 255");
+        Preconditions.checkArgument(blue >= 0 && blue <= 255, "Blue must be between 0 and 255");
+
         this.alpha = alpha;
         this.red = red;
         this.green = green;

@@ -71,7 +71,7 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
         if (color == null) {
             throw new CommandAttributeValidationException("Expected a HEX color (e.g. 9000FF or FF00FF00) or an ARGB/RGB value (e.g. 255,0,255 or 128,255,0,255).");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(color));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), color));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ColorCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

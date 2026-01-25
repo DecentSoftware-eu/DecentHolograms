@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.bstats.bukkit)
     implementation(libs.item.nbt.api)
     implementation(libs.xseries)
+    implementation(libs.configurate.yaml)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

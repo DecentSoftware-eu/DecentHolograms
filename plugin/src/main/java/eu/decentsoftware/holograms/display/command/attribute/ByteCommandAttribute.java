@@ -84,7 +84,7 @@ public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttri
         if (parsedValue < minValue || parsedValue > maxValue) {
             throw new CommandAttributeValidationException("Value out of range: " + parsedValue + ". (expected: " + minValue + " - " + maxValue + ")");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(parsedValue.byteValue()));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), parsedValue.byteValue()));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ByteCommandAttribute<D extends DisplayBase> implements CommandAttri
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

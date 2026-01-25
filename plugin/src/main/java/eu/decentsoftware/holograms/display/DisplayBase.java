@@ -22,8 +22,10 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 import java.util.Collection;
+import java.util.List;
 
 public abstract class DisplayBase {
 
@@ -46,6 +48,33 @@ public abstract class DisplayBase {
     public abstract DisplayType getType();
 
     public abstract Collection<DisplayAttribute<?>> getAttributes();
+
+    // TODO: rework this
+    @MustBeInvokedByOverriders
+    public void setAttributes(List<DisplayAttribute<?>> attributes) {
+        for (DisplayAttribute<?> attribute : attributes) {
+            switch (attribute.getName()) {
+                case "translation":
+                    this.translationAttribute = (DisplayAttribute<DisplayVector3f>) attribute;
+                    break;
+                case "scale":
+                    this.scaleAttribute = (DisplayAttribute<DisplayVector3f>) attribute;
+                    break;
+                case "billboard":
+                    this.billboardAttribute = (DisplayAttribute<DisplayBillboardConstraints>) attribute;
+                    break;
+                case "brightness":
+                    this.brightnessAttribute = (DisplayAttribute<DisplayBrightness>) attribute;
+                    break;
+                case "shadow-radius":
+                    this.shadowRadiusAttribute = (DisplayAttribute<Float>) attribute;
+                    break;
+                case "shadow-strength":
+                    this.shadowStrengthAttribute = (DisplayAttribute<Float>) attribute;
+                    break;
+            }
+        }
+    }
 
     public String getName() {
         return name;

@@ -20,6 +20,10 @@ package eu.decentsoftware.holograms.display.attribute;
 
 public interface DisplayAttribute<T> {
 
+    DisplayAttributeValueType getValueType();
+
+    String getName();
+
     T getValue();
 
 }

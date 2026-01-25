@@ -20,10 +20,22 @@ package eu.decentsoftware.holograms.display.attribute;
 
 public class StaticDisplayAttribute<T> implements DisplayAttribute<T> {
 
+    private final String name;
     private final T value;
 
-    public StaticDisplayAttribute(T value) {
+    public StaticDisplayAttribute(String name, T value) {
+        this.name = name;
         this.value = value;
+    }
+
+    @Override
+    public DisplayAttributeValueType getValueType() {
+        return DisplayAttributeValueType.STATIC;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

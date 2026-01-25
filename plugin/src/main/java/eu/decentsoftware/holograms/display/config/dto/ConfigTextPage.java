@@ -16,14 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.config;
+package eu.decentsoftware.holograms.display.config.dto;
 
-public class DisplayConfigException extends RuntimeException {
-    public DisplayConfigException(String message) {
-        super(message);
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@ConfigSerializable
+public class ConfigTextPage {
+    @Setting
+    private List<String> lines = new ArrayList<>();
+
+    public List<String> getLines() {
+        return lines;
     }
 
-    public DisplayConfigException(String message, Throwable cause) {
-        super(message, cause);
+    public void setLines(List<String> lines) {
+        this.lines = lines;
     }
 }

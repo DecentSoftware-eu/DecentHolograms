@@ -70,7 +70,7 @@ public class BrightnessCommandAttribute implements CommandAttribute {
     public void applyValue(@NotNull DisplayBase display, @NotNull String value) {
         try {
             DisplayBrightness brightness = PARSER.parseValue(value);
-            applyValue.accept(display, new StaticDisplayAttribute<>(brightness));
+            applyValue.accept(display, new StaticDisplayAttribute<>(getName(), brightness));
         } catch (DisplayAttributeParseException e) {
             throw new CommandAttributeValidationException(e.getMessage());
         }
@@ -78,7 +78,7 @@ public class BrightnessCommandAttribute implements CommandAttribute {
 
     @Override
     public void resetValue(@NotNull DisplayBase display) {
-        applyValue.accept(display, new StaticDisplayAttribute<>(null));
+        applyValue.accept(display, new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

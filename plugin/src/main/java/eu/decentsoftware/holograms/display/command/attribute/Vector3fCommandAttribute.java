@@ -91,7 +91,7 @@ public class Vector3fCommandAttribute<D> implements CommandAttribute {
         if (vector.getZ() < minValue || vector.getZ() > maxValue) {
             throw new CommandAttributeValidationException("Value out of range: " + vector.getZ() + ". (expected: " + minValue + " - " + maxValue + ")");
         }
-        this.applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(vector));
+        this.applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), vector));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Vector3fCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(getName(), null));
     }
 
     @Override

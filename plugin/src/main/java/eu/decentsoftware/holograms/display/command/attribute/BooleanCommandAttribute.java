@@ -69,7 +69,7 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
         Boolean parsedValue = PARSER.parseValue(value);
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(parsedValue));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(name, parsedValue));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BooleanCommandAttribute<D> implements CommandAttribute {
         if (!applicableDisplayType.isAssignableFrom(display.getClass())) {
             throw new CommandAttributeValidationException("Attribute is not applicable to this display type.");
         }
-        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(null));
+        applyValue.accept(applicableDisplayType.cast(display), new StaticDisplayAttribute<>(name, null));
     }
 
     @Override
