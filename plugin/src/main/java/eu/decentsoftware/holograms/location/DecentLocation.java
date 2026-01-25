@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display;
+package eu.decentsoftware.holograms.location;
 
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.Location;

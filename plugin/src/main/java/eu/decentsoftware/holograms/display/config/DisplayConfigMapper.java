@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.display.BlockDisplay;
-import eu.decentsoftware.holograms.display.DecentLocation;
+import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;

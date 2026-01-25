@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
 import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
+import eu.decentsoftware.holograms.location.DecentLocation;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

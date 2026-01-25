@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import eu.decentsoftware.holograms.display.DecentLocation;
+import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;

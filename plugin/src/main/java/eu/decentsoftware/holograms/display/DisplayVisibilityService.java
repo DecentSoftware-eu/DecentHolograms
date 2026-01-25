@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.location.DecentLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
