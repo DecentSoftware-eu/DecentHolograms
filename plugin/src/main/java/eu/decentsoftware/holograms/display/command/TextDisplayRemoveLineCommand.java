@@ -54,7 +54,7 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Line index out of bounds.");
+            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
             TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
             int index = Validator.getInteger(args[2], 1, page.getLines().size(), "Line index out of bounds.");
             page.removeLine(index - 1);
