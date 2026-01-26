@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.command.attribute;
+package eu.decentsoftware.holograms.display.attribute;
 
-public class CommandAttributeValidationException extends RuntimeException {
-    public CommandAttributeValidationException(String message) {
+public class AttributeValidationException extends RuntimeException {
+    public AttributeValidationException(String message) {
         super(message);
     }
 }

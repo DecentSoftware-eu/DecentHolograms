@@ -21,9 +21,8 @@ package eu.decentsoftware.holograms.nms.api.display.data;
 public class TextDisplayData extends DisplayData {
 
     private String text;
-    private NmsDisplayAttribute<Integer> lineWidthAttribute;
     private NmsDisplayAttribute<DisplayColor> backgroundColorAttribute;
-    private NmsDisplayAttribute<Byte> textOpacityAttribute;
+    private NmsDisplayAttribute<Integer> textOpacityAttribute;
     private NmsDisplayAttribute<Boolean> textShadowAttribute;
     private NmsDisplayAttribute<Boolean> seeThroughAttribute;
     private NmsDisplayAttribute<TextDisplayAlignment> alignmentAttribute;
@@ -36,14 +35,6 @@ public class TextDisplayData extends DisplayData {
         this.text = text;
     }
 
-    public NmsDisplayAttribute<Integer> getLineWidthAttribute() {
-        return lineWidthAttribute;
-    }
-
-    public void setLineWidthAttribute(NmsDisplayAttribute<Integer> lineWidthAttribute) {
-        this.lineWidthAttribute = lineWidthAttribute;
-    }
-
     public NmsDisplayAttribute<DisplayColor> getBackgroundColorAttribute() {
         return backgroundColorAttribute;
     }
@@ -52,11 +43,11 @@ public class TextDisplayData extends DisplayData {
         this.backgroundColorAttribute = backgroundColorAttribute;
     }
 
-    public NmsDisplayAttribute<Byte> getTextOpacityAttribute() {
+    public NmsDisplayAttribute<Integer> getTextOpacityAttribute() {
         return textOpacityAttribute;
     }
 
-    public void setTextOpacityAttribute(NmsDisplayAttribute<Byte> textOpacityAttribute) {
+    public void setTextOpacityAttribute(NmsDisplayAttribute<Integer> textOpacityAttribute) {
         this.textOpacityAttribute = textOpacityAttribute;
     }
 

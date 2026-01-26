@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.general.BillboardAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.general.BrightnessAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.general.GlowColorAttributeDefinition;
@@ -29,7 +30,6 @@ import eu.decentsoftware.holograms.display.attribute.definition.general.Translat
 import eu.decentsoftware.holograms.display.attribute.definition.item.ItemDisplayTypeAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextAlignmentAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextBackgroundColorAttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.definition.text.TextLineWidthAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextOpacityAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextSeeThroughAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.text.TextShadowAttributeDefinition;
@@ -57,12 +57,16 @@ public class AttributeDefinitionRegistry {
 
     private final Map<String, AttributeDefinition<?>> definitionsByName = new HashMap<>();
     private final Map<DisplayType, List<AttributeDefinition<?>>> definitionsByDisplayType = new EnumMap<>(DisplayType.class);
+    private final Map<AttributeKey<?>, AttributeDefinition<?>> definitionsByKey = new HashMap<>();
+    private final Map<String, AttributeKey<?>> keysByName = new HashMap<>();
 
     /**
      * Create a new registry and register all built-in attribute definitions.
      */
     public AttributeDefinitionRegistry() {
         registerAllAttributeDefinitions();
+        populateKeysByName();
+        populateDefinitionsByKey();
         populateDefinitionsByDisplayType();
     }
 
@@ -77,7 +81,6 @@ public class AttributeDefinitionRegistry {
         registerDefinition(new GlowColorAttributeDefinition());
 
         // Text
-        registerDefinition(new TextLineWidthAttributeDefinition());
         registerDefinition(new TextBackgroundColorAttributeDefinition());
         registerDefinition(new TextOpacityAttributeDefinition());
         registerDefinition(new TextShadowAttributeDefinition());
@@ -86,6 +89,19 @@ public class AttributeDefinitionRegistry {
 
         // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
+    }
+
+    private void populateKeysByName() {
+        for (AttributeDefinition<?> definition : definitionsByName.values()) {
+            AttributeKey<?> key = definition.getKey();
+            this.keysByName.put(key.getName(), key);
+        }
+    }
+
+    private void populateDefinitionsByKey() {
+        for (AttributeDefinition<?> definition : definitionsByName.values()) {
+            this.definitionsByKey.put(definition.getKey(), definition);
+        }
     }
 
     private void populateDefinitionsByDisplayType() {
@@ -103,6 +119,25 @@ public class AttributeDefinitionRegistry {
     }
 
     /**
+     * Get an attribute definition by its key.
+     *
+     * @param key The key of the definition.
+     * @return The definition or null if it wasn't found.
+     * @see AttributeDefinition#getKey()
+     * @since 2.10.0
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T> AttributeDefinition<T> getDefinitionByKey(@NotNull AttributeKey<T> key) {
+        return (AttributeDefinition<T>) this.definitionsByKey.get(key);
+    }
+
+    @Nullable
+    public AttributeKey<?> getKeyByName(@NotNull String name) {
+        return this.keysByName.get(name);
+    }
+
+    /**
      * Get an attribute definition by its name.
      *
      * @param name The name of the definition.
@@ -111,7 +146,7 @@ public class AttributeDefinitionRegistry {
      * @since 2.10.0
      */
     @Nullable
-    public AttributeDefinition<?> getDefinition(@NotNull String name) {
+    public AttributeDefinition<?> getDefinitionByName(@NotNull String name) {
         return this.definitionsByName.get(name);
     }
 

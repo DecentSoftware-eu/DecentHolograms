@@ -18,26 +18,14 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.location.DecentLocation;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
-import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class TextDisplay extends DisplayBase {
 
     private final List<TextDisplayPage> pages;
-    private DisplayAttribute<Integer> lineWidthAttribute;
-    private DisplayAttribute<DisplayColor> backgroundColorAttribute;
-    private DisplayAttribute<Byte> textOpacityAttribute;
-    private DisplayAttribute<Boolean> textShadowAttribute;
-    private DisplayAttribute<Boolean> seeThroughAttribute;
-    private DisplayAttribute<TextDisplayAlignment> alignmentAttribute;
 
     public TextDisplay(String name, DecentLocation location, DisplaySettings settings) {
         super(name, location, settings);
@@ -47,53 +35,6 @@ public class TextDisplay extends DisplayBase {
     @Override
     public DisplayType getType() {
         return DisplayType.TEXT;
-    }
-
-    @Override
-    public Collection<DisplayAttribute<?>> getAttributes() {
-        return Collections.unmodifiableList(Arrays.asList(
-                translationAttribute,
-                scaleAttribute,
-                billboardAttribute,
-                brightnessAttribute,
-                shadowRadiusAttribute,
-                shadowStrengthAttribute,
-
-                lineWidthAttribute,
-                backgroundColorAttribute,
-                textOpacityAttribute,
-                textShadowAttribute,
-                seeThroughAttribute,
-                alignmentAttribute
-        ));
-    }
-
-    @Override
-    public void setAttributes(List<DisplayAttribute<?>> attributes) {
-        super.setAttributes(attributes);
-
-        for (DisplayAttribute<?> attribute : attributes) {
-            switch (attribute.getName()) {
-                case "line-width":
-                    this.lineWidthAttribute = (DisplayAttribute<Integer>) attribute;
-                    break;
-                case "background-color":
-                    this.backgroundColorAttribute = (DisplayAttribute<DisplayColor>) attribute;
-                    break;
-                case "text-opacity":
-                    this.textOpacityAttribute = (DisplayAttribute<Byte>) attribute;
-                    break;
-                case "text-shadow":
-                    this.textShadowAttribute = (DisplayAttribute<Boolean>) attribute;
-                    break;
-                case "see-through":
-                    this.seeThroughAttribute = (DisplayAttribute<Boolean>) attribute;
-                    break;
-                case "alignment":
-                    this.alignmentAttribute = (DisplayAttribute<TextDisplayAlignment>) attribute;
-                    break;
-            }
-        }
     }
 
     public TextDisplayPage getPage(int index) {
@@ -119,53 +60,5 @@ public class TextDisplay extends DisplayBase {
 
     public List<TextDisplayPage> getPages() {
         return pages;
-    }
-
-    public DisplayAttribute<Integer> getLineWidthAttribute() {
-        return lineWidthAttribute;
-    }
-
-    public void setLineWidthAttribute(DisplayAttribute<Integer> lineWidthAttribute) {
-        this.lineWidthAttribute = lineWidthAttribute;
-    }
-
-    public DisplayAttribute<DisplayColor> getBackgroundColorAttribute() {
-        return backgroundColorAttribute;
-    }
-
-    public void setBackgroundColorAttribute(DisplayAttribute<DisplayColor> backgroundColorAttribute) {
-        this.backgroundColorAttribute = backgroundColorAttribute;
-    }
-
-    public DisplayAttribute<Byte> getTextOpacityAttribute() {
-        return textOpacityAttribute;
-    }
-
-    public void setTextOpacityAttribute(DisplayAttribute<Byte> textOpacityAttribute) {
-        this.textOpacityAttribute = textOpacityAttribute;
-    }
-
-    public DisplayAttribute<Boolean> getTextShadowAttribute() {
-        return textShadowAttribute;
-    }
-
-    public void setTextShadowAttribute(DisplayAttribute<Boolean> textShadowAttribute) {
-        this.textShadowAttribute = textShadowAttribute;
-    }
-
-    public DisplayAttribute<Boolean> getSeeThroughAttribute() {
-        return seeThroughAttribute;
-    }
-
-    public void setSeeThroughAttribute(DisplayAttribute<Boolean> seeThroughAttribute) {
-        this.seeThroughAttribute = seeThroughAttribute;
-    }
-
-    public DisplayAttribute<TextDisplayAlignment> getAlignmentAttribute() {
-        return alignmentAttribute;
-    }
-
-    public void setAlignmentAttribute(DisplayAttribute<TextDisplayAlignment> alignmentAttribute) {
-        this.alignmentAttribute = alignmentAttribute;
     }
 }

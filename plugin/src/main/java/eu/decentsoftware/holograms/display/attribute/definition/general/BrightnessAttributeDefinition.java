@@ -18,24 +18,25 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.parser.BrightnessDisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BrightnessAttributeDefinition implements AttributeDefinition<DisplayBrightness> {
 
+    public static final AttributeKey<DisplayBrightness> KEY = AttributeKey.of("brightness", DisplayBrightness.class);
     private final BrightnessDisplayAttributeParser parser = new BrightnessDisplayAttributeParser();
 
     @Override
-    public @NotNull String getName() {
-        return "brightness";
-    }
-
-    @Override
-    public @NotNull Class<DisplayBrightness> getValueType() {
-        return DisplayBrightness.class;
+    public @NotNull AttributeKey<DisplayBrightness> getKey() {
+        return KEY;
     }
 
     @Override
@@ -46,5 +47,29 @@ public class BrightnessAttributeDefinition implements AttributeDefinition<Displa
     @Override
     public DisplayBrightness getDefaultValue() {
         return null;
+    }
+
+    @Override
+    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
+        return Arrays.asList(
+                "0,0",
+                "5,5",
+                "10,10",
+                "15,15",
+                "5,0",
+                "10,0",
+                "15,0",
+                "0,5",
+                "0,10",
+                "0,15"
+        );
+    }
+
+    @Override
+    public String format(DisplayBrightness value) {
+        if (value == null) {
+            return null;
+        }
+        return value.getBlockLight() + "," + value.getSkyLight();
     }
 }

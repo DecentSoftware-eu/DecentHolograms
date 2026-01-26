@@ -19,23 +19,24 @@
 package eu.decentsoftware.holograms.display.attribute.definition.text;
 
 import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.parser.BooleanDisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Boolean> {
 
+    public static final AttributeKey<Boolean> KEY = AttributeKey.of("see-through", Boolean.class);
     private final BooleanDisplayAttributeParser parser = new BooleanDisplayAttributeParser();
 
     @Override
-    public @NotNull String getName() {
-        return "see-through";
-    }
-
-    @Override
-    public @NotNull Class<Boolean> getValueType() {
-        return Boolean.class;
+    public @NotNull AttributeKey<Boolean> getKey() {
+        return KEY;
     }
 
     @Override
@@ -51,5 +52,10 @@ public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Bo
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
+    }
+
+    @Override
+    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
+        return Arrays.asList("true", "false");
     }
 }

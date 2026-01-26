@@ -25,12 +25,11 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttribute;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeValidationException;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
+import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @CommandInfo(
@@ -42,12 +41,12 @@ import java.util.stream.Collectors;
 class SetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
-    private final CommandAttributeService attributeService;
+    private final AttributeCommandHandler attributeCommandHandler;
 
-    SetAttributeDisplayCommand(DisplayService displayService, CommandAttributeService attributeService) {
+    SetAttributeDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
         super("set-attribute");
         this.displayService = displayService;
-        this.attributeService = attributeService;
+        this.attributeCommandHandler = attributeCommandHandler;
     }
 
     @Override
@@ -62,21 +61,20 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            Map<String, CommandAttribute> attributes = attributeService.getAvailableAttributes(display);
-            CommandAttribute attribute = attributes.get(split[0]);
-            if (attribute == null) {
+            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(split[0]);
+            if (attributeDefinition == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, split[0]);
                 return true;
             }
 
             try {
-                attribute.applyValue(display, split[1]);
+                attributeCommandHandler.setAttribute(display, attributeDefinition, split[1]);
                 displayService.updateDisplayProperties(display);
                 displayService.saveDisplay(display);
-                Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attribute.getName(), split[1]);
+                Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attributeDefinition.getName(), split[1]);
                 return true;
-            } catch (CommandAttributeValidationException e) {
-                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attribute.getName(), e.getMessage());
+            } catch (AttributeValidationException e) {
+                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, split[1], attributeDefinition.getName(), e.getMessage());
                 return true;
             }
         };
@@ -99,17 +97,17 @@ class SetAttributeDisplayCommand extends DecentCommand {
                     split = args[1].split("=");
                 }
                 if (split.length == 2) {
-                    CommandAttribute attribute = attributeService.getAvailableAttributes(display).get(split[0]);
+                    AttributeDefinition<?> attribute = attributeCommandHandler.getAttributeDefinition(split[0]);
                     if (attribute == null) {
                         return null;
                     }
-                    return attribute.getValueHints(sender, split[1]).stream()
+                    return attribute.valueHints(sender, split[1]).stream()
                             .filter(s -> s.startsWith(split[1]))
                             .map(s -> split[0] + "=" + s)
                             .collect(Collectors.toList());
                 }
                 return TabCompleteHandler.getPartialMatches(args[1],
-                        attributeService.getAvailableAttributes(display).keySet().stream()
+                        attributeCommandHandler.getApplicableAttributeNames(display).stream()
                                 .map(hint -> hint + "=")
                                 .collect(Collectors.toList())
                 );

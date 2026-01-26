@@ -18,23 +18,25 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.FloatDisplayAttributeParser;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Float> {
 
+    public static final AttributeKey<Float> KEY = AttributeKey.of("shadow-radius", Float.class);
     private final FloatDisplayAttributeParser parser = new FloatDisplayAttributeParser();
 
     @Override
-    public @NotNull String getName() {
-        return "shadow-radius";
-    }
-
-    @Override
-    public @NotNull Class<Float> getValueType() {
-        return Float.class;
+    public @NotNull AttributeKey<Float> getKey() {
+        return KEY;
     }
 
     @Override
@@ -45,5 +47,28 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
     @Override
     public Float getDefaultValue() {
         return 0.0f;
+    }
+
+    @Override
+    public void validate(Float value) throws AttributeValidationException {
+        if (value < 0.0f) {
+            throw new AttributeValidationException("Shadow radius cannot be negative.");
+        }
+        if (value > 32.0f) {
+            throw new AttributeValidationException("Shadow radius cannot be greater than 32.");
+        }
+    }
+
+    @Override
+    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
+        return Arrays.asList("0.0", "1.0", "2.0", "4.0", "8.0", "16.0", "32.0");
+    }
+
+    @Override
+    public String format(Float value) {
+        if (value == null) {
+            return null;
+        }
+        return String.format("%.2f", value);
     }
 }

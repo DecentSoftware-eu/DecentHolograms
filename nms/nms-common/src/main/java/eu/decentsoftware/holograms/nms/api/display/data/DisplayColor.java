@@ -71,6 +71,10 @@ public class DisplayColor {
         return blue;
     }
 
+    public String asRGBString() {
+        return String.format("#%02X%02X%02X", red, green, blue);
+    }
+
     public String asHex() {
         return String.format("%02X%02X%02X%02X", alpha, red, green, blue);
     }

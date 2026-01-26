@@ -19,24 +19,29 @@
 package eu.decentsoftware.holograms.display.attribute.definition.text;
 
 import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
 
+    public static final AttributeKey<TextDisplayAlignment> KEY = AttributeKey.of("alignment", TextDisplayAlignment.class);
+    private static final List<String> VALUE_HINTS = Arrays.stream(TextDisplayAlignment.values())
+            .map(Enum::name)
+            .collect(Collectors.toList());
     private final EnumDisplayAttributeParser<TextDisplayAlignment> parser = new EnumDisplayAttributeParser<>(TextDisplayAlignment.class);
 
     @Override
-    public @NotNull String getName() {
-        return "alignment";
-    }
-
-    @Override
-    public @NotNull Class<TextDisplayAlignment> getValueType() {
-        return TextDisplayAlignment.class;
+    public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
+        return KEY;
     }
 
     @Override
@@ -52,5 +57,10 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
+    }
+
+    @Override
+    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
+        return VALUE_HINTS;
     }
 }

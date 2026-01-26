@@ -18,6 +18,11 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
+
+import java.util.Map;
 import java.util.Objects;
 
 public class DisplayCloneService {
@@ -27,28 +32,29 @@ public class DisplayCloneService {
         Objects.requireNonNull(newName, "newName cannot be null");
 
         DisplayType type = display.getType();
+        DisplayBase clone;
         switch (type) {
             case TEXT:
-                return cloneTextDisplay((TextDisplay) display, newName);
+                clone = cloneTextDisplay((TextDisplay) display, newName);
+                break;
             case BLOCK:
-                return cloneBlockDisplay((BlockDisplay) display, newName);
+                clone = cloneBlockDisplay((BlockDisplay) display, newName);
+                break;
             case ITEM:
-                return cloneItemDisplay((ItemDisplay) display, newName);
+                clone = cloneItemDisplay((ItemDisplay) display, newName);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown display type: " + type.name());
         }
-        throw new IllegalArgumentException("Unknown display type: " + type.name());
+        Map<AttributeKey<?>, DisplayAttribute<?>> clonedAttributes = cloneAttributes(display.getAttributesMap());
+        clone.setAttributes(clonedAttributes);
+        return clone;
     }
 
     private TextDisplay cloneTextDisplay(TextDisplay display, String newName) {
         DisplaySettings settings = cloneSettings(display);
         TextDisplay clone = new TextDisplay(newName, display.getLocation(), settings);
         clone.setPages(display.getPages());
-        setCommonAttributes(display, clone);
-        clone.setLineWidthAttribute(display.getLineWidthAttribute());
-        clone.setBackgroundColorAttribute(display.getBackgroundColorAttribute());
-        clone.setTextOpacityAttribute(display.getTextOpacityAttribute());
-        clone.setTextShadowAttribute(display.getTextShadowAttribute());
-        clone.setSeeThroughAttribute(display.getSeeThroughAttribute());
-        clone.setAlignmentAttribute(display.getAlignmentAttribute());
         return clone;
     }
 
@@ -56,8 +62,6 @@ public class DisplayCloneService {
         DisplaySettings settings = cloneSettings(display);
         BlockDisplay clone = new BlockDisplay(newName, display.getLocation(), settings);
         clone.setMaterial(display.getMaterial());
-        setCommonAttributes(display, clone);
-        clone.setGlowColorAttribute(display.getGlowColorAttribute());
         return clone;
     }
 
@@ -65,19 +69,7 @@ public class DisplayCloneService {
         DisplaySettings settings = cloneSettings(display);
         ItemDisplay clone = new ItemDisplay(newName, display.getLocation(), settings);
         clone.setDisplayedItem(display.getDisplayedItem());
-        setCommonAttributes(display, clone);
-        clone.setDisplayTypeAttribute(display.getDisplayTypeAttribute());
-        clone.setGlowColorAttribute(display.getGlowColorAttribute());
         return clone;
-    }
-
-    private void setCommonAttributes(DisplayBase source, DisplayBase target) {
-        target.setTranslationAttribute(source.getTranslationAttribute());
-        target.setScaleAttribute(source.getScaleAttribute());
-        target.setBillboardAttribute(source.getBillboardAttribute());
-        target.setBrightnessAttribute(source.getBrightnessAttribute());
-        target.setShadowRadiusAttribute(source.getShadowRadiusAttribute());
-        target.setShadowStrengthAttribute(source.getShadowStrengthAttribute());
     }
 
     private DisplaySettings cloneSettings(DisplayBase source) {
@@ -87,5 +79,23 @@ public class DisplayCloneService {
         settings.setDisplayRange(sourceSettings.getDisplayRange());
         settings.setUpdateInterval(sourceSettings.getUpdateInterval());
         return settings;
+    }
+
+    private Map<AttributeKey<?>, DisplayAttribute<?>> cloneAttributes(Map<AttributeKey<?>, DisplayAttribute<?>> attributes) {
+        return attributes.entrySet().stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> cloneAttribute(entry.getValue())
+                ));
+    }
+
+    private <T> DisplayAttribute<T> cloneAttribute(DisplayAttribute<T> attribute) {
+        if (attribute instanceof StaticDisplayAttribute) {
+            StaticDisplayAttribute<T> staticAttribute = (StaticDisplayAttribute<T>) attribute;
+            T valueClone = staticAttribute.getValue();
+            return new StaticDisplayAttribute<>(staticAttribute.getName(), valueClone);
+        } else {
+            throw new IllegalArgumentException("Unsupported attribute type: " + attribute.getClass().getName());
+        }
     }
 }

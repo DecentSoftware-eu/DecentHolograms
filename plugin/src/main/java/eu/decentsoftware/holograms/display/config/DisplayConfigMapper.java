@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.display.BlockDisplay;
-import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
@@ -35,10 +34,10 @@ import eu.decentsoftware.holograms.display.config.dto.ConfigDecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplaySettings;
 import eu.decentsoftware.holograms.display.config.dto.ConfigTextPage;
+import eu.decentsoftware.holograms.location.DecentLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,6 @@ public class DisplayConfigMapper {
     public DisplayBase toDomain(ConfigDisplay dto) {
         DecentLocation location = locationToDomain(dto.getLocation());
         DisplaySettings settings = settingsToDomain(dto.getSettings());
-        List<DisplayAttribute<?>> attributes = attributesToDomain(dto.getAttributes());
         DisplayBase display;
         switch (dto.getType()) {
             case TEXT:
@@ -71,7 +69,7 @@ public class DisplayConfigMapper {
             default:
                 throw new DisplayConfigException("Unknown display type: " + dto.getType());
         }
-        display.setAttributes(attributes);
+        attributesToDomain(display, dto.getAttributes());
         return display;
     }
 
@@ -133,25 +131,22 @@ public class DisplayConfigMapper {
         return settings;
     }
 
-    private List<DisplayAttribute<?>> attributesToDomain(Map<String, ConfigAttribute> dto) {
-        List<DisplayAttribute<?>> attributes = new ArrayList<>();
-        dto.forEach((name, attribute) -> {
-            DisplayAttribute<?> displayAttribute = attributeToDomain(name, attribute);
-            attributes.add(displayAttribute);
-        });
-        return attributes;
+    private void attributesToDomain(DisplayBase display, Map<String, ConfigAttribute> dto) {
+        dto.forEach((name, attribute) -> attributeToDomain(display, name, attribute));
     }
 
-    private DisplayAttribute<?> attributeToDomain(String name, ConfigAttribute attribute) {
-        AttributeDefinition<?> definition = attributeDefinitionRegistry.getDefinition(name);
+    @SuppressWarnings("unchecked")
+    private <T> void attributeToDomain(DisplayBase display, String name, ConfigAttribute attribute) {
+        AttributeDefinition<T> definition = (AttributeDefinition<T>) attributeDefinitionRegistry.getDefinitionByName(name);
         if (definition == null) {
             throw new DisplayConfigException("Unknown attribute: " + name);
         }
         try {
             ConfigurationNode valueNode = (ConfigurationNode) attribute.getValue();
-            Object value = valueNode.get(definition.getValueType());
+            T value = valueNode.get(definition.getValueType());
             if (attribute.getValueType() == DisplayAttributeValueType.STATIC) {
-                return new StaticDisplayAttribute<>(name, value);
+                StaticDisplayAttribute<T> attributeInstance = new StaticDisplayAttribute<>(name, value);
+                display.setAttribute(definition.getKey(), attributeInstance);
             } else {
                 throw new DisplayConfigException("Unsupported attribute value type: " + attribute.getValueType());
             }

@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
 import eu.decentsoftware.holograms.display.config.DisplayConfigService;
@@ -46,6 +47,7 @@ public class DisplayModule {
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
     private final TextDisplayViewService textDisplayViewService;
+    private final AttributeCommandHandler attributeCommandHandler;
 
     public DisplayModule(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory, AnimationManager animationManager) {
         this.plugin = plugin;
@@ -63,6 +65,7 @@ public class DisplayModule {
         this.displayService = new DisplayService(persistenceService, renderingService, textDisplayViewService);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService);
+        this.attributeCommandHandler = new AttributeCommandHandler(attributeDefinitionRegistry);
     }
 
     public void initialize() {
@@ -97,5 +100,9 @@ public class DisplayModule {
 
     public TextDisplayViewService getTextDisplayViewService() {
         return textDisplayViewService;
+    }
+
+    public AttributeCommandHandler getAttributeCommandHandler() {
+        return attributeCommandHandler;
     }
 }

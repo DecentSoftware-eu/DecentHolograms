@@ -25,11 +25,9 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttribute;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
-
-import java.util.Map;
 
 @CommandInfo(
         usage = "/dh d reset-attribute <name> <attribute>",
@@ -40,12 +38,12 @@ import java.util.Map;
 class ResetAttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
-    private final CommandAttributeService attributeService;
+    private final AttributeCommandHandler attributeCommandHandler;
 
-    ResetAttributeDisplayCommand(DisplayService displayService, CommandAttributeService attributeService) {
+    ResetAttributeDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
         super("reset-attribute");
         this.displayService = displayService;
-        this.attributeService = attributeService;
+        this.attributeCommandHandler = attributeCommandHandler;
     }
 
     @Override
@@ -54,17 +52,16 @@ class ResetAttributeDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            Map<String, CommandAttribute> attributes = attributeService.getAvailableAttributes(display);
-            CommandAttribute attribute = attributes.get(args[1]);
-            if (attribute == null) {
+            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(args[1]);
+            if (attributeDefinition == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, args[1]);
                 return true;
             }
 
-            attribute.resetValue(display);
+            attributeCommandHandler.resetAttribute(display, attributeDefinition);
             displayService.updateDisplayProperties(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attribute.getName());
+            Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attributeDefinition.getName());
             return true;
         };
     }
@@ -77,7 +74,7 @@ class ResetAttributeDisplayCommand extends DecentCommand {
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
                 if (display != null) {
-                    return TabCompleteHandler.getPartialMatches(args[1], attributeService.getAvailableAttributes(display).keySet());
+                    return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
                 }
             }
             return null;

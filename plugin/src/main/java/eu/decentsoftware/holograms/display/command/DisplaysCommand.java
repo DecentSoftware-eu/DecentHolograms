@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayCloneService;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.command.attribute.CommandAttributeService;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 
 @CommandInfo(
@@ -42,7 +42,9 @@ public class DisplaysCommand extends DecentCommand {
         return instance;
     }
 
-    public DisplaysCommand(DisplayService displayService, TextDisplayViewService textDisplayViewService) {
+    public DisplaysCommand(DisplayService displayService,
+                           TextDisplayViewService textDisplayViewService,
+                           AttributeCommandHandler attributeCommandHandler) {
         super("displays");
         instance = this;
 
@@ -57,10 +59,9 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new DisableDisplayCommand(displayService));
         addSubCommand(new DisplayRangeDisplayCommand(displayService));
         addSubCommand(new UpdateIntervalDisplayCommand(displayService));
-        CommandAttributeService attributeService = new CommandAttributeService();
-        addSubCommand(new SetAttributeDisplayCommand(displayService, attributeService));
-        addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeService));
-        addSubCommand(new GetAttributeDisplayCommand(displayService, attributeService));
+        addSubCommand(new SetAttributeDisplayCommand(displayService, attributeCommandHandler));
+        addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeCommandHandler));
+        addSubCommand(new GetAttributeDisplayCommand(displayService, attributeCommandHandler));
         addSubCommand(new CenterDisplayCommand(displayService));
         addSubCommand(new MoveHereDisplayCommand(displayService));
         addSubCommand(new TeleportDisplayCommand(displayService));

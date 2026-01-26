@@ -19,23 +19,25 @@
 package eu.decentsoftware.holograms.display.attribute.definition.text;
 
 import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.display.attribute.parser.IntegerDisplayAttributeParser;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
 
+    public static final AttributeKey<Integer> KEY = AttributeKey.of("text-opacity", Integer.class);
     private final IntegerDisplayAttributeParser parser = new IntegerDisplayAttributeParser();
 
     @Override
-    public @NotNull String getName() {
-        return "text-opacity";
-    }
-
-    @Override
-    public @NotNull Class<Integer> getValueType() {
-        return Integer.class;
+    public @NotNull AttributeKey<Integer> getKey() {
+        return KEY;
     }
 
     @Override
@@ -51,5 +53,17 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
+    }
+
+    @Override
+    public void validate(Integer value) throws AttributeValidationException {
+        if (value < 0 || value > 255) {
+            throw new AttributeValidationException("Text opacity must be between 0 and 255.");
+        }
+    }
+
+    @Override
+    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
+        return Arrays.asList("0", "128", "255");
     }
 }

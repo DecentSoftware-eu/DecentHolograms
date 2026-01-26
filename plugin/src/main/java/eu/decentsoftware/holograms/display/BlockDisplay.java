@@ -18,20 +18,12 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.location.DecentLocation;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.Material;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class BlockDisplay extends DisplayBase {
 
     private Material material;
-    private DisplayAttribute<DisplayColor> glowColorAttribute;
 
     public BlockDisplay(String name, DecentLocation location, DisplaySettings settings) {
         super(name, location, settings);
@@ -42,46 +34,11 @@ public class BlockDisplay extends DisplayBase {
         return DisplayType.BLOCK;
     }
 
-    @Override
-    public Collection<DisplayAttribute<?>> getAttributes() {
-        return Collections.unmodifiableList(Arrays.asList(
-                translationAttribute,
-                scaleAttribute,
-                billboardAttribute,
-                brightnessAttribute,
-                shadowRadiusAttribute,
-                shadowStrengthAttribute,
-
-                glowColorAttribute
-        ));
-    }
-
-    @Override
-    public void setAttributes(List<DisplayAttribute<?>> attributes) {
-        super.setAttributes(attributes);
-
-        for (DisplayAttribute<?> attribute : attributes) {
-            switch (attribute.getName()) {
-                case "glow-color":
-                    this.glowColorAttribute = (DisplayAttribute<DisplayColor>) attribute;
-                    break;
-            }
-        }
-    }
-
     public Material getMaterial() {
         return material;
     }
 
     public void setMaterial(Material material) {
         this.material = material;
-    }
-
-    public DisplayAttribute<DisplayColor> getGlowColorAttribute() {
-        return glowColorAttribute;
-    }
-
-    public void setGlowColorAttribute(DisplayAttribute<DisplayColor> glowColorAttribute) {
-        this.glowColorAttribute = glowColorAttribute;
     }
 }

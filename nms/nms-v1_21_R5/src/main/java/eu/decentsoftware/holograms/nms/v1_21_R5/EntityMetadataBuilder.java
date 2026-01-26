@@ -246,14 +246,18 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayTextOpacity(NmsDisplayAttribute<Byte> textOpacity) {
+    EntityMetadataBuilder withTextDisplayTextOpacity(NmsDisplayAttribute<Integer> textOpacity) {
         if (textOpacity == null) {
             return this;
         }
-        byte textOpacityByte = textOpacity.getValue() == null ? -1 : textOpacity.getValue();
+        byte textOpacityByte = textOpacity.getValue() == null ? -1 : intToByte(textOpacity.getValue());
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacityByte));
         return this;
+    }
+
+    private byte intToByte(int i) {
+        return (byte) (i & 0xFF);
     }
 
     EntityMetadataBuilder withTextDisplayProperties(NmsDisplayAttribute<Boolean> hasShadowAttribute,
