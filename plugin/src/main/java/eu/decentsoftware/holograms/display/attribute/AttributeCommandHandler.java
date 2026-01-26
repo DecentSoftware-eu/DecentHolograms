@@ -53,7 +53,7 @@ public class AttributeCommandHandler {
 
     public <T> String getAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
         DisplayAttribute<T> attribute = display.getAttribute(attributeDefinition.getKey());
-        if (attribute == null || attribute.getValue() == null) {
+        if (attribute == null) {
             return null;
         }
         return attributeDefinition.format(attribute.getValue());
