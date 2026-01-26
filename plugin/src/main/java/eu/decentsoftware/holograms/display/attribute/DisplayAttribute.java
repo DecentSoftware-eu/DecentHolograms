@@ -26,4 +26,6 @@ public interface DisplayAttribute<T> {
 
     T getValue();
 
+    DisplayAttribute<T> copy();
+
 }

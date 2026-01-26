@@ -42,4 +42,9 @@ public class StaticDisplayAttribute<T> implements DisplayAttribute<T> {
     public T getValue() {
         return this.value;
     }
+
+    @Override
+    public DisplayAttribute<T> copy() {
+        return new StaticDisplayAttribute<>(this.name, this.value);
+    }
 }

@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 
 import java.util.Map;
 import java.util.Objects;
@@ -85,17 +84,7 @@ public class DisplayCloneService {
         return attributes.entrySet().stream()
                 .collect(java.util.stream.Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> cloneAttribute(entry.getValue())
+                        entry -> entry.getValue().copy()
                 ));
-    }
-
-    private <T> DisplayAttribute<T> cloneAttribute(DisplayAttribute<T> attribute) {
-        if (attribute instanceof StaticDisplayAttribute) {
-            StaticDisplayAttribute<T> staticAttribute = (StaticDisplayAttribute<T>) attribute;
-            T valueClone = staticAttribute.getValue();
-            return new StaticDisplayAttribute<>(staticAttribute.getName(), valueClone);
-        } else {
-            throw new IllegalArgumentException("Unsupported attribute type: " + attribute.getClass().getName());
-        }
     }
 }
