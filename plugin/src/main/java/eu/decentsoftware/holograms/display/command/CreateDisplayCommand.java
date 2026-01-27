@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.display.command;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.CommandTabCompleteHelper;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -34,16 +35,13 @@ import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
-import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -132,24 +130,15 @@ class CreateDisplayCommand extends DecentCommand {
             } else if (args.length == 3) {
                 DisplayType type = DisplayType.fromString(args[0]);
                 if (type == DisplayType.ITEM) {
-                    List<String> itemMaterialCompletions = new ArrayList<>();
-                    itemMaterialCompletions.add("<HAND>"); // Sets the item to the player's current held item in the main hand
-                    itemMaterialCompletions.addAll(getItemMaterialNames());
-                    return TabCompleteHandler.getPartialMatches(args[2], itemMaterialCompletions);
+                    return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getItemMaterialNames(sender));
                 } else if (type == DisplayType.BLOCK) {
-                    List<String> blockMaterialNames = getBlockMaterialNames();
-                    return TabCompleteHandler.getPartialMatches(args[2], blockMaterialNames);
+                    return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getBlockMaterialNames());
                 }
             } else if (args.length >= 4) {
                 DisplayType type = DisplayType.fromString(args[0]);
                 if (type == DisplayType.ITEM) {
-                    List<String> itemAdditionalCompletions = new ArrayList<>();
-                    itemAdditionalCompletions.add("!ENCHANTED");
-                    String materialName = args[2].toUpperCase();
-                    if (isSkull(materialName)) {
-                        itemAdditionalCompletions.addAll(getSkullAndHeadCompletions());
-                    }
-                    return TabCompleteHandler.getPartialMatches(args[args.length - 1], itemAdditionalCompletions);
+                    return TabCompleteHandler.getPartialMatches(args[args.length - 1],
+                            CommandTabCompleteHelper.getItemAdditionalCompletions(args[2]));
                 }
             }
             return null;
@@ -160,42 +149,5 @@ class CreateDisplayCommand extends DecentCommand {
         return Stream.of(DisplayType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
-    }
-
-    private List<String> getBlockMaterialNames() {
-        return Arrays.stream(Material.values())
-                .filter(Material::isBlock)
-                .map(Material::name)
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getItemMaterialNames() {
-        return Arrays.stream(Material.values())
-                .filter(DecentMaterial::isItem)
-                .map(Material::name)
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getSkullAndHeadCompletions() {
-        List<String> skullTextureCompletions = getOnlinePlayerSkullTextureCompletions();
-        skullTextureCompletions.add("({player})");
-        if (Integration.PLACEHOLDER_API.isAvailable()) {
-            skullTextureCompletions.add("(%player_name%)");
-        }
-        if (Integration.HEAD_DATABASE.isAvailable()) {
-            skullTextureCompletions.add("(HEADDATABASE_<id>)");
-        }
-        return skullTextureCompletions;
-    }
-
-    private List<String> getOnlinePlayerSkullTextureCompletions() {
-        return Bukkit.getOnlinePlayers().stream()
-                .map(player -> "(" + player.getName() + ")")
-                .collect(Collectors.toList());
-    }
-
-    private boolean isSkull(String materialName) {
-        Material material = DecentMaterial.parseMaterial(materialName);
-        return material != null && DecentMaterial.isSkull(material);
     }
 }

@@ -21,19 +21,17 @@ package eu.decentsoftware.holograms.display.command;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.CommandTabCompleteHelper;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.Material;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandInfo(
         usage = "/dh d set-item <name> <item>",
@@ -57,7 +55,7 @@ class ItemDisplaySetItemCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
 
-            String itemDefinition = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+            String itemDefinition = getItemDefinition(sender, args);
             HologramItem hologramItem = new HologramItem(itemDefinition);
 
             ItemDisplay itemDisplay = (ItemDisplay) display;
@@ -69,16 +67,25 @@ class ItemDisplaySetItemCommand extends DecentCommand {
         };
     }
 
+    private String getItemDefinition(CommandSender sender, String[] args) {
+        String itemDefinition;
+        if (sender instanceof Player) {
+            itemDefinition = Validator.getLineContent((Player) sender, args, 1);
+        } else {
+            itemDefinition = Validator.getLineContent(args, 1);
+        }
+        return itemDefinition;
+    }
+
     @Override
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(Material.values())
-                        .filter(DecentMaterial::isItem)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                return TabCompleteHandler.getPartialMatches(args[1], CommandTabCompleteHelper.getItemMaterialNames(sender));
+            } else if (args.length >= 3) {
+                return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getItemAdditionalCompletions(args[1]));
             }
             return null;
         };
