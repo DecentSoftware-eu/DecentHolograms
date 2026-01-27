@@ -40,7 +40,8 @@ import java.util.function.Function;
         description = "List nearby displays.",
         permissions = "dh.command.displays.nearby",
         playerOnly = true,
-        aliases = {"near"}
+        aliases = {"near"},
+        minArgs = 1
 )
 class NearbyDisplaysCommand extends DecentCommand {
 

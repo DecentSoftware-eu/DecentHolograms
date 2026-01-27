@@ -35,7 +35,8 @@ import java.util.Arrays;
 @CommandInfo(
         usage = "/dh d insertline <name> <page> <index> <text>",
         description = "Insert a line of text in a Text Display.",
-        permissions = {"dh.command.displays.text.insertline"}
+        permissions = {"dh.command.displays.text.insertline"},
+        minArgs = 4
 )
 class TextDisplayInsertLineCommand extends DecentCommand {
 

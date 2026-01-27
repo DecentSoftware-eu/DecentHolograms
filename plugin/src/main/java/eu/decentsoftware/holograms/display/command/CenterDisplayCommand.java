@@ -31,7 +31,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d center <name>",
         description = "Center a display to the block.",
-        permissions = {"dh.command.displays.center"}
+        permissions = {"dh.command.displays.center"},
+        minArgs = 1
 )
 class CenterDisplayCommand extends DecentCommand {
 

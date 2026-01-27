@@ -35,7 +35,8 @@ import org.bukkit.entity.Player;
         usage = "/dh d switchpage <name> <page>",
         description = "Switch to another page of a Text Display.",
         permissions = {"dh.command.displays.text.switchpage"},
-        playerOnly = true
+        playerOnly = true,
+        minArgs = 2
 )
 class TextDisplaySwitchPageCommand extends DecentCommand {
 

@@ -35,7 +35,8 @@ import org.bukkit.entity.Player;
         description = "Move a display to your current location.",
         permissions = {"dh.command.displays.movehere"},
         aliases = {"mvhr"},
-        playerOnly = true
+        playerOnly = true,
+        minArgs = 1
 )
 class MoveHereDisplayCommand extends DecentCommand {
 

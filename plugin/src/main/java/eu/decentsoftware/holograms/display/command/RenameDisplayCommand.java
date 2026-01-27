@@ -32,7 +32,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d rename <name> <new_name>",
         description = "Rename an existing display.",
-        permissions = "dh.command.displays.rename"
+        permissions = "dh.command.displays.rename",
+        minArgs = 2
 )
 class RenameDisplayCommand extends DecentCommand {
 

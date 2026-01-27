@@ -37,7 +37,8 @@ import java.util.function.ToDoubleFunction;
         usage = "/dh d move <name> <x> <y> <z>",
         description = "Move an existing display",
         permissions = {"dh.command.displays.move"},
-        aliases = {"mv"}
+        aliases = {"mv"},
+        minArgs = 4
 )
 class MoveDisplayCommand extends DecentCommand {
 

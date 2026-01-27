@@ -37,7 +37,8 @@ import org.bukkit.entity.Player;
         description = "Teleport to the given display.",
         permissions = {"dh.command.displays.teleport"},
         aliases = {"tp", "tele"},
-        playerOnly = true
+        playerOnly = true,
+        minArgs = 1
 )
 class TeleportDisplayCommand extends DecentCommand {
 

@@ -30,7 +30,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d delete <name>",
         description = "Delete an existing display",
         permissions = {"dh.command.displays.delete"},
-        aliases = {"del"}
+        aliases = {"del"},
+        minArgs = 1
 )
 class DeleteDisplayCommand extends DecentCommand {
 

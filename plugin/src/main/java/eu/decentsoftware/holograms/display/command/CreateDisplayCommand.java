@@ -49,7 +49,8 @@ import java.util.stream.Stream;
         description = "Create a new display",
         permissions = {"dh.command.displays.create"},
         aliases = {"new", "c"},
-        playerOnly = true
+        playerOnly = true,
+        minArgs = 2
 )
 class CreateDisplayCommand extends DecentCommand {
 

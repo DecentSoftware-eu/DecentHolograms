@@ -34,7 +34,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d removeline <name> <page> <index>",
         description = "Remove a line of text from a Text Display.",
         permissions = {"dh.command.displays.text.removeline"},
-        aliases = {"remline"}
+        aliases = {"remline"},
+        minArgs = 3
 )
 class TextDisplayRemoveLineCommand extends DecentCommand {
 

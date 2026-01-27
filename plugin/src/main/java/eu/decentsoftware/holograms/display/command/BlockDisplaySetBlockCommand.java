@@ -38,7 +38,8 @@ import java.util.stream.Collectors;
         usage = "/dh d set-block <name> <block_type>",
         description = "Set the displayed block in a Block Display.",
         permissions = {"dh.command.displays.setblock"},
-        aliases = {"setblock", "block"}
+        aliases = {"setblock", "block"},
+        minArgs = 2
 )
 class BlockDisplaySetBlockCommand extends DecentCommand {
 

@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
         usage = "/dh d set-item <name> <item>",
         description = "Set the displayed item in an Item Display.",
         permissions = {"dh.command.displays.setitem"},
-        aliases = {"setitem", "item"}
+        aliases = {"setitem", "item"},
+        minArgs = 2
 )
 class ItemDisplaySetItemCommand extends DecentCommand {
 

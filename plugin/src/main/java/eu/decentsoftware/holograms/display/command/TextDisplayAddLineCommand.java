@@ -36,7 +36,8 @@ import java.util.Arrays;
         usage = "/dh d addline <name> <page> <text>",
         description = "Add a line of text to a Text Display.",
         permissions = {"dh.command.displays.text.addline"},
-        aliases = {"appendline"}
+        aliases = {"appendline"},
+        minArgs = 3
 )
 class TextDisplayAddLineCommand extends DecentCommand {
 

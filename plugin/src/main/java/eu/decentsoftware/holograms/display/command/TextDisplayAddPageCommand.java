@@ -35,7 +35,8 @@ import java.util.Arrays;
 @CommandInfo(
         usage = "/dh d addpage <name> [text]",
         description = "Add a page of text to a Text Display.",
-        permissions = {"dh.command.displays.text.addpage"}
+        permissions = {"dh.command.displays.text.addpage"},
+        minArgs = 1
 )
 class TextDisplayAddPageCommand extends DecentCommand {
 

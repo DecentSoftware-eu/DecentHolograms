@@ -35,7 +35,8 @@ import java.util.Arrays;
 @CommandInfo(
         usage = "/dh d setline <name> <page> <index> <text>",
         description = "Set a line of text in a Text Display.",
-        permissions = {"dh.command.displays.text.setline"}
+        permissions = {"dh.command.displays.text.setline"},
+        minArgs = 4
 )
 class TextDisplaySetLineCommand extends DecentCommand {
 

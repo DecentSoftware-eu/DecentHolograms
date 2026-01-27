@@ -34,7 +34,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d attribute <name> <attribute> [value]",
         description = "Get or set a display attribute.",
         aliases = {"attr"},
-        permissions = {"dh.command.displays.attribute"}
+        permissions = {"dh.command.displays.attribute"},
+        minArgs = 2
 )
 class AttributeDisplayCommand extends DecentCommand {
 

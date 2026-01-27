@@ -33,7 +33,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d removepage <name> <index>",
         description = "Remove a page of text from a Text Display.",
         permissions = {"dh.command.displays.text.removepage"},
-        aliases = {"rempage"}
+        aliases = {"rempage"},
+        minArgs = 2
 )
 class TextDisplayRemovePageCommand extends DecentCommand {
 

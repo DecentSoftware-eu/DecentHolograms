@@ -32,7 +32,8 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d display-range <name> <range>",
         description = "Set the display range of a display.",
-        permissions = "dh.command.displays.displayrange"
+        permissions = "dh.command.displays.displayrange",
+        minArgs = 2
 )
 class DisplayRangeDisplayCommand extends DecentCommand {
 
