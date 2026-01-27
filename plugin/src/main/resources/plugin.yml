@@ -345,7 +345,7 @@ permissions:
     description: "Allows player to use the command '/dh displays help'"
     default: op
   dh.command.displays.create:
-    description: "Allows player to use the command '/dh displays create <name> <type> [content]'"
+    description: "Allows player to use the command '/dh displays create <type> <name> [content]'"
     default: op
   dh.command.displays.delete:
     description: "Allows player to use the command '/dh displays delete <display>'"

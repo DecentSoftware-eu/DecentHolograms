@@ -27,7 +27,6 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.BlockDisplay;
-import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplaySettings;
@@ -35,6 +34,7 @@ import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CommandInfo(
-        usage = "/dh d create <name> <type> [content]",
+        usage = "/dh d create <type> <name> [content]",
         description = "Create a new display",
         permissions = {"dh.command.displays.create"},
         aliases = {"new", "c"},
@@ -66,18 +66,18 @@ class CreateDisplayCommand extends DecentCommand {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
 
-            String name = args[0];
+            DisplayType type = DisplayType.fromString(args[0]);
+            if (type == null) {
+                Lang.DISPLAY_INVALID_TYPE.send(sender, args[0], String.join(", ", getAvailableDisplayTypes()));
+                return true;
+            }
+            String name = args[1];
             if (!name.matches(Common.NAME_REGEX)) {
                 Lang.DISPLAY_INVALID_NAME.send(sender, name);
                 return true;
             }
             if (displayService.getDisplay(name) != null) {
                 Lang.DISPLAY_ALREADY_EXISTS.send(sender, name);
-                return true;
-            }
-            DisplayType type = DisplayType.fromString(args[1]);
-            if (type == null) {
-                Lang.DISPLAY_INVALID_TYPE.send(sender, args[1], String.join(", ", Stream.of(DisplayType.values()).map(Enum::name).toArray(String[]::new)));
                 return true;
             }
 
@@ -88,6 +88,10 @@ class CreateDisplayCommand extends DecentCommand {
             Lang.DISPLAY_CREATED.send(sender, name);
             return true;
         };
+    }
+
+    private String[] getAvailableDisplayTypes() {
+        return Stream.of(DisplayType.values()).map(Enum::name).toArray(String[]::new);
     }
 
     private DisplayBase createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
@@ -118,10 +122,10 @@ class CreateDisplayCommand extends DecentCommand {
     @Override
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
-            if (args.length == 2) {
+            if (args.length == 1) {
                 return Stream.of(DisplayType.values())
                         .map(Enum::name)
-                        .filter(s -> s.toUpperCase().startsWith(args[1].toUpperCase()))
+                        .filter(s -> s.toUpperCase().startsWith(args[0].toUpperCase()))
                         .collect(Collectors.toList());
             }
             return null;
