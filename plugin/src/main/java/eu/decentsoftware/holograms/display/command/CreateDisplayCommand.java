@@ -34,13 +34,18 @@ import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.plugin.Validator;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,7 +73,7 @@ class CreateDisplayCommand extends DecentCommand {
 
             DisplayType type = DisplayType.fromString(args[0]);
             if (type == null) {
-                Lang.DISPLAY_INVALID_TYPE.send(sender, args[0], String.join(", ", getAvailableDisplayTypes()));
+                Lang.DISPLAY_INVALID_TYPE.send(sender, args[0], String.join(", ", getDisplayTypeNames()));
                 return true;
             }
             String name = args[1];
@@ -82,7 +87,7 @@ class CreateDisplayCommand extends DecentCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            DisplayBase display = createDisplay(type, name, args, DecentLocation.fromBukkitLocation(location));
+            DisplayBase display = createDisplay(sender, type, name, args, DecentLocation.fromBukkitLocation(location));
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);
@@ -90,11 +95,7 @@ class CreateDisplayCommand extends DecentCommand {
         };
     }
 
-    private String[] getAvailableDisplayTypes() {
-        return Stream.of(DisplayType.values()).map(Enum::name).toArray(String[]::new);
-    }
-
-    private DisplayBase createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
+    private DisplayBase createDisplay(CommandSender sender, DisplayType type, String name, String[] args, DecentLocation location) {
         switch (type) {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
@@ -104,13 +105,16 @@ class CreateDisplayCommand extends DecentCommand {
                 textDisplay.addPage(page);
                 return textDisplay;
             case ITEM:
-                String itemContent = Validator.getLineContent(args, 2);
+                String itemContent = Validator.getLineContent((Player) sender, args, 2);
                 HologramItem item = new HologramItem(itemContent);
                 ItemDisplay itemDisplay = new ItemDisplay(name, location, new DisplaySettings());
                 itemDisplay.setDisplayedItem(item);
                 return itemDisplay;
             case BLOCK:
-                Material material = DecentMaterial.parseMaterial(args.length > 2 ? args[2] : "STONE");
+                Material material = args.length > 2 ? DecentMaterial.parseMaterial(args[2]) : Material.STONE;
+                if (material == null || !material.isBlock()) {
+                    material = Material.STONE;
+                }
                 BlockDisplay blockDisplay = new BlockDisplay(name, location, new DisplaySettings());
                 blockDisplay.setMaterial(material);
                 return blockDisplay;
@@ -123,12 +127,75 @@ class CreateDisplayCommand extends DecentCommand {
     public TabCompleteHandler getTabCompleteHandler() {
         return (sender, args) -> {
             if (args.length == 1) {
-                return Stream.of(DisplayType.values())
-                        .map(Enum::name)
-                        .filter(s -> s.toUpperCase().startsWith(args[0].toUpperCase()))
-                        .collect(Collectors.toList());
+                List<String> displayTypeNames = getDisplayTypeNames();
+                return TabCompleteHandler.getPartialMatches(args[0], displayTypeNames);
+            } else if (args.length == 3) {
+                DisplayType type = DisplayType.fromString(args[0]);
+                if (type == DisplayType.ITEM) {
+                    List<String> itemMaterialCompletions = new ArrayList<>();
+                    itemMaterialCompletions.add("<HAND>"); // Sets the item to the player's current held item in the main hand
+                    itemMaterialCompletions.addAll(getItemMaterialNames());
+                    return TabCompleteHandler.getPartialMatches(args[2], itemMaterialCompletions);
+                } else if (type == DisplayType.BLOCK) {
+                    List<String> blockMaterialNames = getBlockMaterialNames();
+                    return TabCompleteHandler.getPartialMatches(args[2], blockMaterialNames);
+                }
+            } else if (args.length >= 4) {
+                DisplayType type = DisplayType.fromString(args[0]);
+                if (type == DisplayType.ITEM) {
+                    List<String> itemAdditionalCompletions = new ArrayList<>();
+                    itemAdditionalCompletions.add("!ENCHANTED");
+                    String materialName = args[2].toUpperCase();
+                    if (isSkull(materialName)) {
+                        itemAdditionalCompletions.addAll(getSkullAndHeadCompletions());
+                    }
+                    return TabCompleteHandler.getPartialMatches(args[args.length - 1], itemAdditionalCompletions);
+                }
             }
             return null;
         };
+    }
+
+    private List<String> getDisplayTypeNames() {
+        return Stream.of(DisplayType.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getBlockMaterialNames() {
+        return Arrays.stream(Material.values())
+                .filter(Material::isBlock)
+                .map(Material::name)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getItemMaterialNames() {
+        return Arrays.stream(Material.values())
+                .filter(DecentMaterial::isItem)
+                .map(Material::name)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getSkullAndHeadCompletions() {
+        List<String> skullTextureCompletions = getOnlinePlayerSkullTextureCompletions();
+        skullTextureCompletions.add("({player})");
+        if (Integration.PLACEHOLDER_API.isAvailable()) {
+            skullTextureCompletions.add("(%player_name%)");
+        }
+        if (Integration.HEAD_DATABASE.isAvailable()) {
+            skullTextureCompletions.add("(HEADDATABASE_<id>)");
+        }
+        return skullTextureCompletions;
+    }
+
+    private List<String> getOnlinePlayerSkullTextureCompletions() {
+        return Bukkit.getOnlinePlayers().stream()
+                .map(player -> "(" + player.getName() + ")")
+                .collect(Collectors.toList());
+    }
+
+    private boolean isSkull(String materialName) {
+        Material material = DecentMaterial.parseMaterial(materialName);
+        return material != null && DecentMaterial.isSkull(material);
     }
 }

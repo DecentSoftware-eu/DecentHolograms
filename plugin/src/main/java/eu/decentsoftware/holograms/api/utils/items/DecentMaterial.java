@@ -49,4 +49,9 @@ public final class DecentMaterial {
         }
     }
 
+    public static boolean isSkull(Material material) {
+        XMaterial xMaterial = XMaterial.matchXMaterial(material);
+        // XMaterial also handles legacy skull materials: SKULL, SKULL_ITEM
+        return xMaterial == XMaterial.PLAYER_HEAD || xMaterial == XMaterial.PLAYER_WALL_HEAD;
+    }
 }
