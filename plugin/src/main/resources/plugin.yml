@@ -327,9 +327,8 @@ permissions:
       dh.command.displays.disable: true
       dh.command.displays.displayrange: true
       dh.command.displays.updateinterval: true
-      dh.command.displays.setattribute: true
+      dh.command.displays.attribute: true
       dh.command.displays.resetattribute: true
-      dh.command.displays.getattribute: true
       dh.command.displays.center: true
       dh.command.displays.movehere: true
       dh.command.displays.teleport: true
@@ -372,14 +371,11 @@ permissions:
   dh.command.displays.updateinterval:
     description: "Allows player to use the command '/dh displays update-interval <display> <interval>'"
     default: op
-  dh.command.displays.setattribute:
-    description: "Allows player to use the command '/dh displays set-attribute <display> <attribute>=<value>'"
+  dh.command.displays.attribute:
+    description: "Allows player to use the command '/dh displays attribute <display> <attribute> [value]'"
     default: op
   dh.command.displays.resetattribute:
     description: "Allows player to use the command '/dh displays reset-attribute <display> <attribute>'"
-    default: op
-  dh.command.displays.getattribute:
-    description: "Allows player to use the command '/dh displays get-attribute <display> <attribute>'"
     default: op
   dh.command.displays.center:
     description: "Allows player to use the command '/dh displays center <display>'"

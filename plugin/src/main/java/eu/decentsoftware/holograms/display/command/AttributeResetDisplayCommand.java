@@ -29,21 +29,19 @@ import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
 
-import java.util.List;
-
 @CommandInfo(
-        usage = "/dh d get-attribute <name> <attribute>",
-        description = "Get a display attribute value.",
-        aliases = {"getattribute", "getattr"},
-        permissions = {"dh.command.displays.getattribute"}
+        usage = "/dh d reset-attribute <name> <attribute>",
+        description = "Reset a display attribute to the default value.",
+        aliases = {"resetattribute", "unset-attribute", "unsetattribute"},
+        permissions = {"dh.command.displays.resetattribute"}
 )
-class GetAttributeDisplayCommand extends DecentCommand {
+class AttributeResetDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final AttributeCommandHandler attributeCommandHandler;
 
-    GetAttributeDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
-        super("get-attribute");
+    AttributeResetDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
+        super("reset-attribute");
         this.displayService = displayService;
         this.attributeCommandHandler = attributeCommandHandler;
     }
@@ -60,12 +58,10 @@ class GetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            String attributeValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
-            if (attributeValue == null) {
-                Lang.DISPLAY_ATTRIBUTE_GET_NOT_SET.send(sender, attributeDefinition.getName());
-            } else {
-                Lang.DISPLAY_ATTRIBUTE_GET.send(sender, attributeDefinition.getName(), attributeValue);
-            }
+            attributeCommandHandler.resetAttribute(display, attributeDefinition);
+            displayService.updateDisplayProperties(display);
+            displayService.saveDisplay(display);
+            Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attributeDefinition.getName());
             return true;
         };
     }
@@ -77,11 +73,9 @@ class GetAttributeDisplayCommand extends DecentCommand {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
-                if (display == null) {
-                    return null;
+                if (display != null) {
+                    return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
                 }
-                List<String> applicableAttributeNames = attributeCommandHandler.getApplicableAttributeNames(display);
-                return TabCompleteHandler.getPartialMatches(args[1], applicableAttributeNames);
             }
             return null;
         };

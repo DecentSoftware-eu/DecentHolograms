@@ -59,9 +59,8 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new DisableDisplayCommand(displayService));
         addSubCommand(new DisplayRangeDisplayCommand(displayService));
         addSubCommand(new UpdateIntervalDisplayCommand(displayService));
-        addSubCommand(new SetAttributeDisplayCommand(displayService, attributeCommandHandler));
-        addSubCommand(new ResetAttributeDisplayCommand(displayService, attributeCommandHandler));
-        addSubCommand(new GetAttributeDisplayCommand(displayService, attributeCommandHandler));
+        addSubCommand(new AttributeDisplayCommand(displayService, attributeCommandHandler));
+        addSubCommand(new AttributeResetDisplayCommand(displayService, attributeCommandHandler));
         addSubCommand(new CenterDisplayCommand(displayService));
         addSubCommand(new MoveHereDisplayCommand(displayService));
         addSubCommand(new TeleportDisplayCommand(displayService));

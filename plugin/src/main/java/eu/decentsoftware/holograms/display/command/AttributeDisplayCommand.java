@@ -26,22 +26,23 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 @CommandInfo(
-        usage = "/dh d reset-attribute <name> <attribute>",
-        description = "Reset a display attribute to the default value.",
-        aliases = {"resetattribute", "unset-attribute", "unsetattribute"},
-        permissions = {"dh.command.displays.resetattribute"}
+        usage = "/dh d attribute <name> <attribute> [value]",
+        description = "Get or set a display attribute.",
+        aliases = {"attr"},
+        permissions = {"dh.command.displays.attribute"}
 )
-class ResetAttributeDisplayCommand extends DecentCommand {
+class AttributeDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final AttributeCommandHandler attributeCommandHandler;
 
-    ResetAttributeDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
-        super("reset-attribute");
+    AttributeDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
+        super("attribute");
         this.displayService = displayService;
         this.attributeCommandHandler = attributeCommandHandler;
     }
@@ -58,11 +59,27 @@ class ResetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            attributeCommandHandler.resetAttribute(display, attributeDefinition);
-            displayService.updateDisplayProperties(display);
-            displayService.saveDisplay(display);
-            Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attributeDefinition.getName());
-            return true;
+            if (args.length == 2) {
+                String attributeValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
+                if (attributeValue == null) {
+                    Lang.DISPLAY_ATTRIBUTE_GET_NOT_SET.send(sender, attributeDefinition.getName());
+                } else {
+                    Lang.DISPLAY_ATTRIBUTE_GET.send(sender, attributeDefinition.getName(), attributeValue);
+                }
+                return true;
+            }
+
+            try {
+                attributeCommandHandler.setAttribute(display, attributeDefinition, args[2]);
+                displayService.updateDisplayProperties(display);
+                displayService.saveDisplay(display);
+                String formattedValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
+                Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attributeDefinition.getName(), formattedValue);
+                return true;
+            } catch (AttributeValidationException e) {
+                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, args[2], attributeDefinition.getName(), e.getMessage());
+                return true;
+            }
         };
     }
 
@@ -73,9 +90,20 @@ class ResetAttributeDisplayCommand extends DecentCommand {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
-                if (display != null) {
-                    return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
+                if (display == null) {
+                    return null;
                 }
+                return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
+            } else if (args.length == 3) {
+                DisplayBase display = displayService.getDisplay(args[0]);
+                if (display == null) {
+                    return null;
+                }
+                AttributeDefinition<?> attribute = attributeCommandHandler.getAttributeDefinition(args[1], display);
+                if (attribute == null) {
+                    return null;
+                }
+                return TabCompleteHandler.getPartialMatches(args[2], attribute.valueHints(sender, args[2]));
             }
             return null;
         };
