@@ -27,7 +27,7 @@ public class FloatDisplayAttributeParser implements DisplayAttributeParser<Float
         try {
             return Float.parseFloat(stringValue);
         } catch (NumberFormatException e) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid float value: " + stringValue);
         }
     }
 }

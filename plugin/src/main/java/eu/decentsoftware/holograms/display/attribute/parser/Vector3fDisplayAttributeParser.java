@@ -27,15 +27,19 @@ public class Vector3fDisplayAttributeParser implements DisplayAttributeParser<Di
     public DisplayVector3f parseValue(@NotNull String valueString) {
         String[] parts = valueString.split(",");
         if (parts.length != 3) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid vector format: " + valueString);
         }
+        float x = parseFloat(parts[0].trim());
+        float y = parseFloat(parts[1].trim());
+        float z = parseFloat(parts[2].trim());
+        return new DisplayVector3f(x, y, z);
+    }
+
+    private float parseFloat(String string) {
         try {
-            float x = Float.parseFloat(parts[0].trim());
-            float y = Float.parseFloat(parts[1].trim());
-            float z = Float.parseFloat(parts[2].trim());
-            return new DisplayVector3f(x, y, z);
+            return Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid float value: " + string);
         }
     }
 }

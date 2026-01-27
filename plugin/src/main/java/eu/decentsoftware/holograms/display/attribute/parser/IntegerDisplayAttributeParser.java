@@ -27,7 +27,7 @@ public class IntegerDisplayAttributeParser implements DisplayAttributeParser<Int
         try {
             return Integer.parseInt(stringValue);
         } catch (NumberFormatException e) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid integer value: " + stringValue);
         }
     }
 }

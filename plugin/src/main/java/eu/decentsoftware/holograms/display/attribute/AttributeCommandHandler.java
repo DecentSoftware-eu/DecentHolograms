@@ -18,10 +18,12 @@
 
 package eu.decentsoftware.holograms.display.attribute;
 
+import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.DecentCommandException;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
+import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParseException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -36,15 +38,20 @@ public class AttributeCommandHandler {
     }
 
     public <T> void setAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition, String rawValue) {
-        if (!attributeDefinition.applicableTo(display)) {
-            throw new DecentCommandException("Attribute is not applicable to this display type.");
-        }
-
-        T parsed = attributeDefinition.getParser().parseValue(rawValue);
-        attributeDefinition.validate(parsed);
+        T parsed = parseAttributeValue(attributeDefinition, rawValue);
 
         AttributeKey<T> attributeKey = attributeDefinition.getKey();
         display.setAttribute(attributeKey, new StaticDisplayAttribute<>(attributeDefinition.getName(), parsed));
+    }
+
+    private <T> T parseAttributeValue(AttributeDefinition<T> attributeDefinition, String rawValue) {
+        try {
+            T parsed = attributeDefinition.getParser().parseValue(rawValue);
+            attributeDefinition.validate(parsed);
+            return parsed;
+        } catch (DisplayAttributeParseException | AttributeValidationException e) {
+            throw new DecentCommandException(Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.getValue(), rawValue, attributeDefinition.getName(), e.getMessage());
+        }
     }
 
     public void resetAttribute(DisplayBase display, AttributeDefinition<?> attributeDefinition) {
@@ -70,7 +77,11 @@ public class AttributeCommandHandler {
     }
 
     @Nullable
-    public AttributeDefinition<?> getAttributeDefinition(String name) {
-        return attributeDefinitionRegistry.getDefinitionByName(name);
+    public AttributeDefinition<?> getAttributeDefinition(String name, DisplayBase display) {
+        AttributeDefinition<?> definition = attributeDefinitionRegistry.getDefinitionByName(name);
+        if (definition == null || !definition.applicableTo(display)) {
+            return null;
+        }
+        return definition;
     }
 }

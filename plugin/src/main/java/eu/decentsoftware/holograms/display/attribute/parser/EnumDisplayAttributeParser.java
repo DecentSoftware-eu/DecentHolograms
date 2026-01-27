@@ -35,6 +35,6 @@ public class EnumDisplayAttributeParser<E extends Enum<?>> implements DisplayAtt
                 return constant;
             }
         }
-        return null;
+        throw new DisplayAttributeParseException("Unknown enum constant: " + valueString);
     }
 }

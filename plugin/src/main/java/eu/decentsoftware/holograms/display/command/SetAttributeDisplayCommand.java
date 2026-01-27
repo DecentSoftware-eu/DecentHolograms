@@ -61,7 +61,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(split[0]);
+            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(split[0], display);
             if (attributeDefinition == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, split[0]);
                 return true;
@@ -98,7 +98,7 @@ class SetAttributeDisplayCommand extends DecentCommand {
                     split = args[1].split("=");
                 }
                 if (split.length == 2) {
-                    AttributeDefinition<?> attribute = attributeCommandHandler.getAttributeDefinition(split[0]);
+                    AttributeDefinition<?> attribute = attributeCommandHandler.getAttributeDefinition(split[0], display);
                     if (attribute == null) {
                         return null;
                     }

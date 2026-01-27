@@ -54,7 +54,7 @@ class GetAttributeDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(args[1]);
+            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(args[1], display);
             if (attributeDefinition == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, args[1]);
                 return true;

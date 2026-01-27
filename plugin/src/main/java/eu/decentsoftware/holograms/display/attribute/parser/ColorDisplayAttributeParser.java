@@ -42,23 +42,28 @@ public class ColorDisplayAttributeParser implements DisplayAttributeParser<Displ
         if (matcher.matches()) {
             return parseFromArgb10(matcher);
         }
-        return null;
+        throw new DisplayAttributeParseException("Invalid color format: " + valueString);
     }
 
     private DisplayColor parseFromArgb10(Matcher matcher) {
         int a;
         if (matcher.group("a") != null) {
-            a = Integer.parseInt(matcher.group("a"));
+            a = parseRgbColorInt(matcher.group("a"));
         } else {
             a = 255;
         }
-        int r = Integer.parseInt(matcher.group("r"));
-        int g = Integer.parseInt(matcher.group("g"));
-        int b = Integer.parseInt(matcher.group("b"));
-        if (a < 0 || a > 255 || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-            return null;
-        }
+        int r = parseRgbColorInt(matcher.group("r"));
+        int g = parseRgbColorInt(matcher.group("g"));
+        int b = parseRgbColorInt(matcher.group("b"));
         return new DisplayColor(a, r, g, b);
+    }
+
+    private int parseRgbColorInt(String colorString) {
+        int colorInt = Integer.parseInt(colorString);
+        if (colorInt < 0 || colorInt > 255) {
+            throw new DisplayAttributeParseException("(A)RGB color value out of bounds: " + colorString);
+        }
+        return colorInt;
     }
 
     private DisplayColor parseFromArgbHex(String hex) {
@@ -66,7 +71,7 @@ public class ColorDisplayAttributeParser implements DisplayAttributeParser<Displ
             int color = Integer.parseUnsignedInt(hex, 16);
             return DisplayColor.fromARGB(color);
         } catch (NumberFormatException e) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid hex color: " + hex);
         }
     }
 
@@ -75,7 +80,7 @@ public class ColorDisplayAttributeParser implements DisplayAttributeParser<Displ
             int color = Integer.parseUnsignedInt(hex, 16);
             return DisplayColor.fromRGB(color);
         } catch (NumberFormatException e) {
-            return null;
+            throw new DisplayAttributeParseException("Invalid hex color: " + hex);
         }
     }
 }

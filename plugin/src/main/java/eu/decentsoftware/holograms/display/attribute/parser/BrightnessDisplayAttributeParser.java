@@ -29,15 +29,19 @@ public class BrightnessDisplayAttributeParser implements DisplayAttributeParser<
         if (parts.length != 2) {
             throw new DisplayAttributeParseException("Invalid brightness value: " + stringValue);
         }
+        int blockLight = parseInt(parts[0].trim());
+        int skyLight = parseInt(parts[1].trim());
+        if (blockLight < 0 || blockLight > 15 || skyLight < 0 || skyLight > 15) {
+            throw new DisplayAttributeParseException("Brightness values must be between 0 and 15.");
+        }
+        return DisplayBrightness.of(blockLight, skyLight);
+    }
+
+    private int parseInt(String string) {
         try {
-            int blockLight = Integer.parseInt(parts[0].trim());
-            int skyLight = Integer.parseInt(parts[1].trim());
-            if (blockLight < 0 || blockLight > 15 || skyLight < 0 || skyLight > 15) {
-                throw new DisplayAttributeParseException("Brightness values must be between 0 and 15.");
-            }
-            return DisplayBrightness.of(blockLight, skyLight);
+            return Integer.parseInt(string);
         } catch (NumberFormatException e) {
-            throw new DisplayAttributeParseException("Invalid brightness value: " + stringValue);
+            throw new DisplayAttributeParseException("Invalid integer value: " + string);
         }
     }
 }
