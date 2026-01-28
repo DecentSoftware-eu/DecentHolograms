@@ -16,18 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.parser;
+package eu.decentsoftware.holograms.display.attribute;
 
-import org.jetbrains.annotations.NotNull;
-
-public class IntegerDisplayAttributeParser implements DisplayAttributeParser<Integer> {
-
-    @Override
-    public Integer parseValue(@NotNull String stringValue) {
-        try {
-            return Integer.parseInt(stringValue);
-        } catch (NumberFormatException e) {
-            throw new DisplayAttributeParseException("Invalid integer value: " + stringValue);
-        }
+public class AttributeParseException extends RuntimeException {
+    public AttributeParseException(String message) {
+        super(message);
     }
 }

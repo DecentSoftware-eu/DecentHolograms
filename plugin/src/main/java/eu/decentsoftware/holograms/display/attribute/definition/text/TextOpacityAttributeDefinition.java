@@ -20,29 +20,22 @@ package eu.decentsoftware.holograms.display.attribute.definition.text;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.IntegerDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
 
     public static final AttributeKey<Integer> KEY = AttributeKey.of("text-opacity", Integer.class);
-    private final IntegerDisplayAttributeParser parser = new IntegerDisplayAttributeParser();
 
     @Override
     public @NotNull AttributeKey<Integer> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<Integer> getParser() {
-        return parser;
     }
 
     @Override
@@ -56,14 +49,19 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     }
 
     @Override
-    public void validate(Integer value) throws AttributeValidationException {
-        if (value < 0 || value > 255) {
-            throw new AttributeValidationException("Text opacity must be between 0 and 255.");
+    public @NotNull Integer parse(String[] args) {
+        try {
+            return Integer.valueOf(args[0]);
+        } catch (NumberFormatException e) {
+            throw new AttributeParseException("Opacity must be an integer between 0 and 255.");
         }
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList("0", "128", "255");
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("0", "64", "128", "192", "255");
+        }
+        return Collections.emptyList();
     }
 }

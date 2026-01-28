@@ -20,14 +20,14 @@ package eu.decentsoftware.holograms.display.attribute.definition.text;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,16 +37,10 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     private static final List<String> VALUE_HINTS = Arrays.stream(TextDisplayAlignment.values())
             .map(Enum::name)
             .collect(Collectors.toList());
-    private final EnumDisplayAttributeParser<TextDisplayAlignment> parser = new EnumDisplayAttributeParser<>(TextDisplayAlignment.class);
 
     @Override
     public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<TextDisplayAlignment> getParser() {
-        return parser;
     }
 
     @Override
@@ -60,7 +54,19 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return VALUE_HINTS;
+    public @NotNull TextDisplayAlignment parse(String[] args) {
+        try {
+            return TextDisplayAlignment.valueOf(args[0]);
+        } catch (IllegalArgumentException e) {
+            throw new AttributeParseException("Text alignment options are: " + String.join(", ", VALUE_HINTS));
+        }
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return VALUE_HINTS;
+        }
+        return Collections.emptyList();
     }
 }

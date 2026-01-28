@@ -19,15 +19,14 @@
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.Vector3fDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TranslationAttributeDefinition implements AttributeDefinition<DisplayVector3f> {
@@ -35,7 +34,6 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Displ
     public static final AttributeKey<DisplayVector3f> KEY = AttributeKey.of("translation", DisplayVector3f.class);
     private static final int MIN_VALUE = -8;
     private static final int MAX_VALUE = 8;
-    private final Vector3fDisplayAttributeParser parser = new Vector3fDisplayAttributeParser();
     private final DisplayVector3f defaultValue = new DisplayVector3f(0, 0, 0);
 
     @Override
@@ -44,36 +42,50 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Displ
     }
 
     @Override
-    public @NotNull DisplayAttributeParser<DisplayVector3f> getParser() {
-        return parser;
-    }
-
-    @Override
     public DisplayVector3f getDefaultValue() {
         return defaultValue;
-    }
-
-    @Override
-    public void validate(DisplayVector3f value) throws AttributeValidationException {
-        if (value.getX() <= MIN_VALUE || value.getY() <= MIN_VALUE || value.getZ() <= MIN_VALUE) {
-            throw new AttributeValidationException("Scale values must be greater than " + MIN_VALUE + ".");
-        }
-        if (value.getX() > MAX_VALUE || value.getY() > MAX_VALUE || value.getZ() > MAX_VALUE) {
-            throw new AttributeValidationException("Scale values must not exceed " + MAX_VALUE + ".");
-        }
-    }
-
-    @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList("0,0,0", "0.5,0.5,0.5", "1,1,1", "2,2,2");
     }
 
     @Override
     public String format(DisplayVector3f value) {
         if (value == null) {
             return null;
-        } else {
-            return value.getX() + "," + value.getY() + "," + value.getZ();
         }
+        return "X: " + value.getX() + ", Y: " + value.getY() + ", Z: " + value.getZ();
+    }
+
+    @Override
+    public @NotNull DisplayVector3f parse(String[] args) {
+        if (args.length == 3) {
+            float x = parseSingleValue(args[0], "X");
+            float y = parseSingleValue(args[1], "Y");
+            float z = parseSingleValue(args[2], "Z");
+            return new DisplayVector3f(x, y, z);
+        } else {
+            throw new AttributeParseException("Translation must be specified as three separate values for X, Y, and Z.");
+        }
+    }
+
+    private float parseSingleValue(String value, String name) {
+        try {
+            float parsed = Float.parseFloat(value);
+            if (parsed <= MIN_VALUE || parsed > MAX_VALUE) {
+                throw new AttributeParseException(name + " must be between " + MIN_VALUE + " and " + MAX_VALUE + ".");
+            }
+            return parsed;
+        } catch (NumberFormatException e) {
+            throw new AttributeParseException(name + " must be a number.");
+        }
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length >= 1 && args.length <= 3) {
+            return Arrays.asList(
+                    "-0.25", "-0.5", "-0.75", "-1", "-1.5", "-2", "-3", "-4", "-8",
+                    "0.25", "0.5", "0.75", "1", "1.5", "2", "3", "4", "8"
+            );
+        }
+        return Collections.emptyList();
     }
 }

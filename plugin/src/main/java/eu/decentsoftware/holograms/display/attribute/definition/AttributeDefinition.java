@@ -21,8 +21,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,16 +74,6 @@ public interface AttributeDefinition<T> {
     }
 
     /**
-     * Get the parser used to parse the attribute's value from a string.
-     *
-     * @return The parser.
-     * @see DisplayAttributeParser
-     * @since 2.10.0
-     */
-    @NotNull
-    DisplayAttributeParser<T> getParser();
-
-    /**
      * Get the default value of the attribute.
      *
      * @return The default value.
@@ -106,27 +95,19 @@ public interface AttributeDefinition<T> {
     }
 
     /**
-     * Validate a value for this attribute.
+     * Check if this attribute is applicable to a specific display.
      *
-     * @param value The value to validate.
-     * @throws AttributeValidationException If the value is invalid.
+     * @param display The display to check.
+     * @return True if applicable, false otherwise.
      * @since 2.10.0
      */
-    default void validate(T value) throws AttributeValidationException {
-        // No validation by default
-    }
-
-    /**
-     * Provide hints for possible values for this attribute.
-     *
-     * @param sender       The command sender requesting the hints.
-     * @param currentInput The current input string.
-     * @return A list of possible value hints.
-     * @since 2.10.0
-     */
-    @NotNull
-    default List<String> valueHints(CommandSender sender, String currentInput) {
-        return Collections.emptyList();
+    default boolean applicableTo(DisplayBase display) {
+        for (DisplayType applicableDisplayType : getApplicableDisplayTypes()) {
+            if (applicableDisplayType == display.getType()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -141,18 +122,26 @@ public interface AttributeDefinition<T> {
     }
 
     /**
-     * Check if this attribute is applicable to a specific display.
+     * Parse the attribute value from command arguments and validate it.
      *
-     * @param display The display to check.
-     * @return True if applicable, false otherwise.
+     * @param args The command arguments.
+     * @return The validated, parsed value.
+     * @throws AttributeParseException If the value cannot be parsed.
      * @since 2.10.0
      */
-    default boolean applicableTo(DisplayBase display) {
-        for (DisplayType applicableDisplayType : getApplicableDisplayTypes()) {
-            if (applicableDisplayType == display.getType()) {
-                return true;
-            }
-        }
-        return false;
+    @NotNull
+    T parse(String[] args);
+
+    /**
+     * Get command hints for this attribute based on the current input.
+     *
+     * @param sender The command sender.
+     * @param args   The current input.
+     * @return The hints.
+     * @since 2.10.0
+     */
+    @NotNull
+    default List<String> getHints(CommandSender sender, String[] args) {
+        return Collections.emptyList();
     }
 }

@@ -19,29 +19,24 @@
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.BrightnessDisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BrightnessAttributeDefinition implements AttributeDefinition<DisplayBrightness> {
 
     public static final AttributeKey<DisplayBrightness> KEY = AttributeKey.of("brightness", DisplayBrightness.class);
-    private final BrightnessDisplayAttributeParser parser = new BrightnessDisplayAttributeParser();
 
     @Override
     public @NotNull AttributeKey<DisplayBrightness> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<DisplayBrightness> getParser() {
-        return parser;
     }
 
     @Override
@@ -50,26 +45,41 @@ public class BrightnessAttributeDefinition implements AttributeDefinition<Displa
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList(
-                "0,0",
-                "5,5",
-                "10,10",
-                "15,15",
-                "5,0",
-                "10,0",
-                "15,0",
-                "0,5",
-                "0,10",
-                "0,15"
-        );
-    }
-
-    @Override
     public String format(DisplayBrightness value) {
         if (value == null) {
             return null;
         }
-        return value.getBlockLight() + "," + value.getSkyLight();
+        return "Block Light: " + value.getBlockLight() + ", Sky Light: " + value.getSkyLight();
+    }
+
+    @Override
+    public @NotNull DisplayBrightness parse(String[] args) {
+        if (args.length == 2) {
+            int blockLight = parseSingleValue(args[0], "Block Light");
+            int skyLight = parseSingleValue(args[1], "Sky Light");
+            return DisplayBrightness.of(blockLight, skyLight);
+        } else {
+            throw new AttributeParseException("Brightness must be specified as two separate values for block light and sky light.");
+        }
+    }
+
+    private int parseSingleValue(String value, String name) {
+        try {
+            int parsed = Integer.parseInt(value);
+            if (parsed < 0 || parsed > 15) {
+                throw new AttributeParseException(name + " must be between 0 and 15.");
+            }
+            return parsed;
+        } catch (NumberFormatException e) {
+            throw new AttributeParseException(name + " must be an integer.");
+        }
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1 || args.length == 2) {
+            return IntStream.range(0, 16).boxed().map(String::valueOf).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }

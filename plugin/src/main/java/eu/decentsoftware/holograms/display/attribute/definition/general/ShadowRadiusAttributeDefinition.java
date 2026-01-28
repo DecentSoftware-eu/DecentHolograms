@@ -19,29 +19,22 @@
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.FloatDisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Float> {
 
     public static final AttributeKey<Float> KEY = AttributeKey.of("shadow-radius", Float.class);
-    private final FloatDisplayAttributeParser parser = new FloatDisplayAttributeParser();
 
     @Override
     public @NotNull AttributeKey<Float> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<Float> getParser() {
-        return parser;
     }
 
     @Override
@@ -50,25 +43,23 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
     }
 
     @Override
-    public void validate(Float value) throws AttributeValidationException {
-        if (value < 0.0f) {
-            throw new AttributeValidationException("Shadow radius cannot be negative.");
-        }
-        if (value > 32.0f) {
-            throw new AttributeValidationException("Shadow radius cannot be greater than 32.");
+    public @NotNull Float parse(String[] args) {
+        try {
+            float parsed = Float.parseFloat(args[0]);
+            if (parsed < 0.0f || parsed > 32.0f) {
+                throw new AttributeParseException("Shadow radius must be between 0.0 and 32.0.");
+            }
+            return parsed;
+        } catch (NumberFormatException e) {
+            throw new AttributeParseException("Shadow radius must be a number.");
         }
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList("0.0", "1.0", "2.0", "4.0", "8.0", "16.0", "32.0");
-    }
-
-    @Override
-    public String format(Float value) {
-        if (value == null) {
-            return null;
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("0.0", "1.0", "2.0", "4.0", "8.0", "16.0", "32.0");
         }
-        return String.format("%.2f", value);
+        return Collections.emptyList();
     }
 }

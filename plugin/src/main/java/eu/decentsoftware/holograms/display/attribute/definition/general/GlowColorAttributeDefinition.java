@@ -21,28 +21,21 @@ package eu.decentsoftware.holograms.display.attribute.definition.general;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.ColorDisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
+import eu.decentsoftware.holograms.display.attribute.definition.DisplayColorAttributeCommandHandler;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class GlowColorAttributeDefinition implements AttributeDefinition<DisplayColor> {
 
     public static final AttributeKey<DisplayColor> KEY = AttributeKey.of("glow-color", DisplayColor.class);
-    private final ColorDisplayAttributeParser parser = new ColorDisplayAttributeParser();
+    private final DisplayColorAttributeCommandHandler commandHandler = new DisplayColorAttributeCommandHandler();
 
     @Override
     public @NotNull AttributeKey<DisplayColor> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<DisplayColor> getParser() {
-        return parser;
     }
 
     @Override
@@ -56,17 +49,21 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList("9000FF", "00FF00", "0000FF", "FFFF00", "FF0000", "00AAFF", "000000", "FFFFFF", "FF00FF00", "005500FF",
-                "0000FFFF", "FFFF00FF", "FF0000FF", "00FF66FF", "00000000", "FF00FF00", "255,0,255", "0,255,0", "0,0,255", "255,255,0",
-                "255,0,0", "0,255,255", "0,0,0", "255,255,255", "128,255,0,255", "255,0,255,255");
-    }
-
-    @Override
     public String format(DisplayColor value) {
         if (value == null) {
             return null;
         }
-        return value.asRGBString() + value.asHex();
+        String rgbString = String.format("R: %s, G: %s, B: %s", value.getRed(), value.getGreen(), value.getBlue());
+        return value.asRGBString() + rgbString;
+    }
+
+    @Override
+    public @NotNull DisplayColor parse(String[] args) {
+        return commandHandler.parseColor(args);
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        return commandHandler.getHints(args);
     }
 }

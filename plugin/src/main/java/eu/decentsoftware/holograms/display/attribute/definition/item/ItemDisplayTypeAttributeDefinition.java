@@ -20,14 +20,14 @@ package eu.decentsoftware.holograms.display.attribute.definition.item;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,16 +37,10 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
     private static final List<String> VALUE_HINTS = Arrays.stream(ItemDisplayType.values())
             .map(Enum::name)
             .collect(Collectors.toList());
-    private final EnumDisplayAttributeParser<ItemDisplayType> parser = new EnumDisplayAttributeParser<>(ItemDisplayType.class);
 
     @Override
     public @NotNull AttributeKey<ItemDisplayType> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<ItemDisplayType> getParser() {
-        return parser;
     }
 
     @Override
@@ -60,8 +54,20 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return VALUE_HINTS;
+    public @NotNull ItemDisplayType parse(String[] args) {
+        try {
+            return ItemDisplayType.valueOf(args[0]);
+        } catch (IllegalArgumentException e) {
+            throw new AttributeParseException("Item display type options are: " + String.join(", ", VALUE_HINTS));
+        }
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return VALUE_HINTS;
+        }
+        return Collections.emptyList();
     }
 }
 

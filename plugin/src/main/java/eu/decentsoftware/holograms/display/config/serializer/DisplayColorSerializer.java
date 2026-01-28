@@ -30,11 +30,11 @@ public final class DisplayColorSerializer implements TypeSerializer<DisplayColor
 
     @Override
     public DisplayColor deserialize(Type type, ConfigurationNode node) {
-        int alpha = node.node("alpha").getInt(255);
         int red = node.node("red").getInt();
         int green = node.node("green").getInt();
         int blue = node.node("blue").getInt();
-        return new DisplayColor(alpha, red, green, blue);
+        int alpha = node.node("alpha").getInt(255);
+        return DisplayColor.fromRGBA(red, green, blue, alpha);
     }
 
     @Override
@@ -44,9 +44,9 @@ public final class DisplayColorSerializer implements TypeSerializer<DisplayColor
             return;
         }
 
-        node.node("alpha").set(obj.getAlpha());
         node.node("red").set(obj.getRed());
         node.node("green").set(obj.getGreen());
         node.node("blue").set(obj.getBlue());
+        node.node("alpha").set(obj.getAlpha());
     }
 }

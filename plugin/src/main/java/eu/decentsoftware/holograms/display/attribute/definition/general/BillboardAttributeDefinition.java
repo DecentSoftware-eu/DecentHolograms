@@ -19,14 +19,14 @@
 package eu.decentsoftware.holograms.display.attribute.definition.general;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.EnumDisplayAttributeParser;
 import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,16 +36,10 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     private static final List<String> VALUE_HINTS = Arrays.stream(DisplayBillboardConstraints.values())
             .map(Enum::name)
             .collect(Collectors.toList());
-    private final EnumDisplayAttributeParser<DisplayBillboardConstraints> parser = new EnumDisplayAttributeParser<>(DisplayBillboardConstraints.class);
 
     @Override
     public @NotNull AttributeKey<DisplayBillboardConstraints> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<DisplayBillboardConstraints> getParser() {
-        return parser;
     }
 
     @Override
@@ -54,7 +48,19 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return VALUE_HINTS;
+    public @NotNull DisplayBillboardConstraints parse(String[] args) {
+        try {
+            return DisplayBillboardConstraints.valueOf(args[0]);
+        } catch (IllegalArgumentException e) {
+            throw new AttributeParseException("Billboard options are: " + String.join(", ", VALUE_HINTS));
+        }
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return VALUE_HINTS;
+        }
+        return Collections.emptyList();
     }
 }

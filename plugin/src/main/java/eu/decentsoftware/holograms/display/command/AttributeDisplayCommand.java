@@ -26,9 +26,10 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
-import eu.decentsoftware.holograms.display.attribute.AttributeValidationException;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
+
+import java.util.Arrays;
 
 @CommandInfo(
         usage = "/dh d attribute <name> <attribute> [value]",
@@ -70,17 +71,13 @@ class AttributeDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            try {
-                attributeCommandHandler.setAttribute(display, attributeDefinition, args[2]);
-                displayService.updateDisplayProperties(display);
-                displayService.saveDisplay(display);
-                String formattedValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
-                Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attributeDefinition.getName(), formattedValue);
-                return true;
-            } catch (AttributeValidationException e) {
-                Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.send(sender, args[2], attributeDefinition.getName(), e.getMessage());
-                return true;
-            }
+            String[] valueArguments = Arrays.copyOfRange(args, 2, args.length);
+            attributeCommandHandler.setAttribute(display, attributeDefinition, valueArguments);
+            displayService.updateDisplayProperties(display);
+            displayService.saveDisplay(display);
+            String formattedValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
+            Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attributeDefinition.getName(), formattedValue);
+            return true;
         };
     }
 
@@ -95,7 +92,7 @@ class AttributeDisplayCommand extends DecentCommand {
                     return null;
                 }
                 return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
-            } else if (args.length == 3) {
+            } else if (args.length >= 3) {
                 DisplayBase display = displayService.getDisplay(args[0]);
                 if (display == null) {
                     return null;
@@ -104,7 +101,8 @@ class AttributeDisplayCommand extends DecentCommand {
                 if (attribute == null) {
                     return null;
                 }
-                return TabCompleteHandler.getPartialMatches(args[2], attribute.valueHints(sender, args[2]));
+                String[] valueArguments = Arrays.copyOfRange(args, 2, args.length);
+                return TabCompleteHandler.getPartialMatches(args[args.length - 1], attribute.getHints(sender, valueArguments));
             }
             return null;
         };

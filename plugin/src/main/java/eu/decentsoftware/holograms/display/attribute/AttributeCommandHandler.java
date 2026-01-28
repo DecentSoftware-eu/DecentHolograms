@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.api.commands.DecentCommandException;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParseException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -37,20 +36,18 @@ public class AttributeCommandHandler {
         this.attributeDefinitionRegistry = attributeDefinitionRegistry;
     }
 
-    public <T> void setAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition, String rawValue) {
-        T parsed = parseAttributeValue(attributeDefinition, rawValue);
+    public <T> void setAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition, String[] rawValueArgs) {
+        T parsed = parseAttributeValue(attributeDefinition, rawValueArgs);
 
         AttributeKey<T> attributeKey = attributeDefinition.getKey();
         display.setAttribute(attributeKey, new StaticDisplayAttribute<>(attributeDefinition.getName(), parsed));
     }
 
-    private <T> T parseAttributeValue(AttributeDefinition<T> attributeDefinition, String rawValue) {
+    private <T> T parseAttributeValue(AttributeDefinition<T> attributeDefinition, String[] rawValueArgs) {
         try {
-            T parsed = attributeDefinition.getParser().parseValue(rawValue);
-            attributeDefinition.validate(parsed);
-            return parsed;
-        } catch (DisplayAttributeParseException | AttributeValidationException e) {
-            throw new DecentCommandException(Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.getValue(), rawValue, attributeDefinition.getName(), e.getMessage());
+            return attributeDefinition.parse(rawValueArgs);
+        } catch (AttributeParseException e) {
+            throw new DecentCommandException(Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.getValue(), attributeDefinition.getName(), e.getMessage());
         }
     }
 

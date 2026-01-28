@@ -21,27 +21,20 @@ package eu.decentsoftware.holograms.display.attribute.definition.text;
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.parser.BooleanDisplayAttributeParser;
-import eu.decentsoftware.holograms.display.attribute.parser.DisplayAttributeParser;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TextShadowAttributeDefinition implements AttributeDefinition<Boolean> {
 
     public static final AttributeKey<Boolean> KEY = AttributeKey.of("text-shadow", Boolean.class);
-    private final BooleanDisplayAttributeParser parser = new BooleanDisplayAttributeParser();
 
     @Override
     public @NotNull AttributeKey<Boolean> getKey() {
         return KEY;
-    }
-
-    @Override
-    public @NotNull DisplayAttributeParser<Boolean> getParser() {
-        return parser;
     }
 
     @Override
@@ -55,7 +48,15 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     }
 
     @Override
-    public @NotNull List<String> valueHints(CommandSender sender, String currentInput) {
-        return Arrays.asList("true", "false");
+    public @NotNull Boolean parse(String[] args) {
+        return Boolean.parseBoolean(args[0]);
+    }
+
+    @Override
+    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("true", "false");
+        }
+        return Collections.emptyList();
     }
 }
