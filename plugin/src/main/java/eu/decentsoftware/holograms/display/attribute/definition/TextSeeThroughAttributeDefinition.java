@@ -16,36 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.text;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
+public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Boolean> {
 
-    public static final AttributeKey<TextDisplayAlignment> KEY = AttributeKey.of("alignment", TextDisplayAlignment.class);
-    private static final List<String> VALUE_HINTS = Arrays.stream(TextDisplayAlignment.values())
-            .map(Enum::name)
-            .collect(Collectors.toList());
+    public static final AttributeKey<Boolean> KEY = AttributeKey.of("see-through", Boolean.class);
 
     @Override
-    public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
+    public @NotNull AttributeKey<Boolean> getKey() {
         return KEY;
     }
 
     @Override
-    public TextDisplayAlignment getDefaultValue() {
-        return TextDisplayAlignment.CENTER;
+    public Boolean getDefaultValue() {
+        return false;
     }
 
     @Override
@@ -54,18 +47,14 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public @NotNull TextDisplayAlignment parse(String[] args) {
-        try {
-            return TextDisplayAlignment.valueOf(args[0]);
-        } catch (IllegalArgumentException e) {
-            throw new AttributeParseException("Text alignment options are: " + String.join(", ", VALUE_HINTS));
-        }
+    public @NotNull Boolean parse(String[] args) {
+        return Boolean.parseBoolean(args[0]);
     }
 
     @Override
     public @NotNull List<String> getHints(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return VALUE_HINTS;
+            return Arrays.asList("true", "false");
         }
         return Collections.emptyList();
     }

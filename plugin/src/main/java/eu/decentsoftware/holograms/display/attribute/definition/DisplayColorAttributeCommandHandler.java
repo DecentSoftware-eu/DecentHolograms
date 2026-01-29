@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayColorAttributeCommandHandler {
+final class DisplayColorAttributeCommandHandler {
 
     private static final Map<String, DisplayColor> NAMED_COLORS = new HashMap<>();
     private static final List<String> BYTE_HINTS =

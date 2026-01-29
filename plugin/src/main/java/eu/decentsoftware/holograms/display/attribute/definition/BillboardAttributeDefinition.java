@@ -16,13 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.item;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
-import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
+import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,34 +29,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<ItemDisplayType> {
+public class BillboardAttributeDefinition implements AttributeDefinition<DisplayBillboardConstraints> {
 
-    public static final AttributeKey<ItemDisplayType> KEY = AttributeKey.of("display-type", ItemDisplayType.class);
-    private static final List<String> VALUE_HINTS = Arrays.stream(ItemDisplayType.values())
+    public static final AttributeKey<DisplayBillboardConstraints> KEY = AttributeKey.of("billboard", DisplayBillboardConstraints.class);
+    private static final List<String> VALUE_HINTS = Arrays.stream(DisplayBillboardConstraints.values())
             .map(Enum::name)
             .collect(Collectors.toList());
 
     @Override
-    public @NotNull AttributeKey<ItemDisplayType> getKey() {
+    public @NotNull AttributeKey<DisplayBillboardConstraints> getKey() {
         return KEY;
     }
 
     @Override
-    public ItemDisplayType getDefaultValue() {
-        return ItemDisplayType.NONE;
+    public DisplayBillboardConstraints getDefaultValue() {
+        return DisplayBillboardConstraints.FIXED;
     }
 
     @Override
-    public @NotNull DisplayType[] getApplicableDisplayTypes() {
-        return new DisplayType[]{DisplayType.ITEM};
-    }
-
-    @Override
-    public @NotNull ItemDisplayType parse(String[] args) {
+    public @NotNull DisplayBillboardConstraints parse(String[] args) {
         try {
-            return ItemDisplayType.valueOf(args[0]);
+            return DisplayBillboardConstraints.valueOf(args[0]);
         } catch (IllegalArgumentException e) {
-            throw new AttributeParseException("Item display type options are: " + String.join(", ", VALUE_HINTS));
+            throw new AttributeParseException("Billboard options are: " + String.join(", ", VALUE_HINTS));
         }
     }
 
@@ -70,4 +63,3 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
         return Collections.emptyList();
     }
 }
-

@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.text;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,18 +28,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Boolean> {
+public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
 
-    public static final AttributeKey<Boolean> KEY = AttributeKey.of("see-through", Boolean.class);
+    public static final AttributeKey<Integer> KEY = AttributeKey.of("text-opacity", Integer.class);
 
     @Override
-    public @NotNull AttributeKey<Boolean> getKey() {
+    public @NotNull AttributeKey<Integer> getKey() {
         return KEY;
     }
 
     @Override
-    public Boolean getDefaultValue() {
-        return false;
+    public Integer getDefaultValue() {
+        return 255;
     }
 
     @Override
@@ -48,14 +48,18 @@ public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Bo
     }
 
     @Override
-    public @NotNull Boolean parse(String[] args) {
-        return Boolean.parseBoolean(args[0]);
+    public @NotNull Integer parse(String[] args) {
+        try {
+            return Integer.valueOf(args[0]);
+        } catch (NumberFormatException e) {
+            throw new AttributeParseException("Opacity must be an integer between 0 and 255.");
+        }
     }
 
     @Override
     public @NotNull List<String> getHints(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("true", "false");
+            return Arrays.asList("0", "64", "128", "192", "255");
         }
         return Collections.emptyList();
     }

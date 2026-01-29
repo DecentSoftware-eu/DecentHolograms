@@ -16,31 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.text;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.definition.DisplayColorAttributeCommandHandler;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class TextBackgroundColorAttributeDefinition implements AttributeDefinition<DisplayColor> {
+public class TextShadowAttributeDefinition implements AttributeDefinition<Boolean> {
 
-    public static final AttributeKey<DisplayColor> KEY = AttributeKey.of("background-color", DisplayColor.class);
-    private final DisplayColorAttributeCommandHandler commandHandler = new DisplayColorAttributeCommandHandler();
+    public static final AttributeKey<Boolean> KEY = AttributeKey.of("text-shadow", Boolean.class);
 
     @Override
-    public @NotNull AttributeKey<DisplayColor> getKey() {
+    public @NotNull AttributeKey<Boolean> getKey() {
         return KEY;
     }
 
     @Override
-    public DisplayColor getDefaultValue() {
-        return DisplayColor.DEFAULT_BACKGROUND;
+    public Boolean getDefaultValue() {
+        return false;
     }
 
     @Override
@@ -49,21 +47,15 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
     }
 
     @Override
-    public String format(DisplayColor value) {
-        if (value == null) {
-            return null;
-        }
-        String rgbString = String.format("R: %s, G: %s, B: %s, A: %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
-        return value.asRGBString() + rgbString;
-    }
-
-    @Override
-    public @NotNull DisplayColor parse(String[] args) {
-        return commandHandler.parseColor(args);
+    public @NotNull Boolean parse(String[] args) {
+        return Boolean.parseBoolean(args[0]);
     }
 
     @Override
     public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        return commandHandler.getHints(args);
+        if (args.length == 1) {
+            return Arrays.asList("true", "false");
+        }
+        return Collections.emptyList();
     }
 }

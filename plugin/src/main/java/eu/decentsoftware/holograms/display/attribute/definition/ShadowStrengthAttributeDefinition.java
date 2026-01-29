@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.general;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,9 +27,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Float> {
+public class ShadowStrengthAttributeDefinition implements AttributeDefinition<Float> {
 
-    public static final AttributeKey<Float> KEY = AttributeKey.of("shadow-radius", Float.class);
+    public static final AttributeKey<Float> KEY = AttributeKey.of("shadow-strength", Float.class);
 
     @Override
     public @NotNull AttributeKey<Float> getKey() {
@@ -39,7 +38,7 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
 
     @Override
     public Float getDefaultValue() {
-        return 0.0f;
+        return 1.0f;
     }
 
     @Override
@@ -47,11 +46,11 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
         try {
             float parsed = Float.parseFloat(args[0]);
             if (parsed < 0.0f || parsed > 32.0f) {
-                throw new AttributeParseException("Shadow radius must be between 0.0 and 32.0.");
+                throw new AttributeParseException("Shadow strength must be between 0.0 and 32.0.");
             }
             return parsed;
         } catch (NumberFormatException e) {
-            throw new AttributeParseException("Shadow radius must be a number.");
+            throw new AttributeParseException("Shadow strength must be a number.");
         }
     }
 

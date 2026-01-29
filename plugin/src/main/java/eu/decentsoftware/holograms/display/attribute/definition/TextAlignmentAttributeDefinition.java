@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition.general;
+package eu.decentsoftware.holograms.display.attribute.definition;
 
+import eu.decentsoftware.holograms.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,29 +30,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BillboardAttributeDefinition implements AttributeDefinition<DisplayBillboardConstraints> {
+public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
 
-    public static final AttributeKey<DisplayBillboardConstraints> KEY = AttributeKey.of("billboard", DisplayBillboardConstraints.class);
-    private static final List<String> VALUE_HINTS = Arrays.stream(DisplayBillboardConstraints.values())
+    public static final AttributeKey<TextDisplayAlignment> KEY = AttributeKey.of("alignment", TextDisplayAlignment.class);
+    private static final List<String> VALUE_HINTS = Arrays.stream(TextDisplayAlignment.values())
             .map(Enum::name)
             .collect(Collectors.toList());
 
     @Override
-    public @NotNull AttributeKey<DisplayBillboardConstraints> getKey() {
+    public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
         return KEY;
     }
 
     @Override
-    public DisplayBillboardConstraints getDefaultValue() {
-        return DisplayBillboardConstraints.FIXED;
+    public TextDisplayAlignment getDefaultValue() {
+        return TextDisplayAlignment.CENTER;
     }
 
     @Override
-    public @NotNull DisplayBillboardConstraints parse(String[] args) {
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
+        return new DisplayType[]{DisplayType.TEXT};
+    }
+
+    @Override
+    public @NotNull TextDisplayAlignment parse(String[] args) {
         try {
-            return DisplayBillboardConstraints.valueOf(args[0]);
+            return TextDisplayAlignment.valueOf(args[0]);
         } catch (IllegalArgumentException e) {
-            throw new AttributeParseException("Billboard options are: " + String.join(", ", VALUE_HINTS));
+            throw new AttributeParseException("Text alignment options are: " + String.join(", ", VALUE_HINTS));
         }
     }
 
