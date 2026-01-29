@@ -51,8 +51,9 @@ public class AttributeCommandHandler {
         }
     }
 
-    public void resetAttribute(DisplayBase display, AttributeDefinition<?> attributeDefinition) {
-        display.removeAttribute(attributeDefinition.getKey());
+    public <T> void resetAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
+        AttributeKey<T> attributeKey = attributeDefinition.getKey();
+        display.setAttribute(attributeKey, new StaticDisplayAttribute<>(attributeDefinition.getName(), null));
     }
 
     public <T> String getAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
