@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.config.dto;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Required;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 @ConfigSerializable
 public class ConfigTextPage {
     @Setting
+    @Required
     private List<String> lines = new ArrayList<>();
 
     public List<String> getLines() {
