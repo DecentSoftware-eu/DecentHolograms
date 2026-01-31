@@ -68,9 +68,6 @@ final class DisplayColorAttributeCommandHandler {
         if (args.length == 0) {
             throw error("No color specified.");
         }
-        if (args.length == 1) {
-            return parseFallback(args[0]);
-        }
 
         ColorFormat format = parseFormat(args[0]);
         if (format == null) {
