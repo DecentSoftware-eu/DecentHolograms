@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config;
 
+import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
@@ -140,6 +141,10 @@ public class DisplayConfigMapper {
         AttributeDefinition<T> definition = (AttributeDefinition<T>) attributeDefinitionRegistry.getDefinitionByName(name);
         if (definition == null) {
             throw new DisplayConfigException("Unknown attribute: " + name);
+        }
+        if (!definition.applicableTo(display)) {
+            Log.warn("Found incompatible attribute " + name + " for display " + display.getName() + ". Skipping.");
+            return;
         }
         try {
             ConfigurationNode valueNode = (ConfigurationNode) attribute.getValue();
