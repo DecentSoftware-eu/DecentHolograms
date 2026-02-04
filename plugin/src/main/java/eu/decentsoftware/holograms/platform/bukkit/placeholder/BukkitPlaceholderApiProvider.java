@@ -18,19 +18,18 @@
 
 package eu.decentsoftware.holograms.platform.bukkit.placeholder;
 
+import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderContext;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class BukkitPlaceholderApiProvider implements PlaceholderProvider {
 
     @Override
     public String replace(String input, PlaceholderContext ctx) {
-        // TODO: dependency availability handling
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (Integration.PLACEHOLDER_API.isAvailable()) {
             Player player = ((BukkitPlayer) ctx.getPlayer()).getBukkitPlayer();
             return PlaceholderAPI.setPlaceholders(player, input);
         }
