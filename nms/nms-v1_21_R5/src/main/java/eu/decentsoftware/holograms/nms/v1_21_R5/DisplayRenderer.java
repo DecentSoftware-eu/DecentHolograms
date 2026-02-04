@@ -20,10 +20,16 @@ package eu.decentsoftware.holograms.nms.v1_21_R5;
 
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsDisplayRenderer;
+import eu.decentsoftware.holograms.platform.api.data.DecentColor;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.data.ItemDescriptor;
 import eu.decentsoftware.holograms.platform.api.data.display.BlockDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
@@ -31,6 +37,9 @@ import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.metadata.DisplayMetadataType;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.syncher.DataWatcher;
 import org.bukkit.Material;
@@ -58,7 +67,9 @@ class DisplayRenderer implements NmsDisplayRenderer {
         boolean despawn = false;
         for (RenderIntent intent : intents) {
             if (intent instanceof UpdateMetadataRenderIntent<?> updateMetadataIntent) {
-                // TODO: handle metadata updates
+                MetadataKey<?> metadataKey = updateMetadataIntent.getKey();
+                MetadataValue<?> metadataValue = updateMetadataIntent.getValue();
+                applyMetadata(metadataValue, metadataKey, metadataBuilder);
             } else if (intent instanceof UpdateDisplayContentRenderIntent updateContentIntent) {
                 applyContent(updateContentIntent, metadataBuilder);
             } else if (intent instanceof MoveRenderIntent moveIntent) {
@@ -66,6 +77,10 @@ class DisplayRenderer implements NmsDisplayRenderer {
                 packetsBuilder.withTeleportEntity(entityId, position);
             } else if (intent instanceof SpawnDisplayRenderIntent spawnIntent) {
                 DecentPosition position = spawnIntent.getLocation().toDecentPosition();
+                for (MetadataKey<?> metadataKey : spawnIntent.getMetadataValues().keySet()) {
+                    MetadataValue<?> metadataValue = spawnIntent.getMetadataValues().get(metadataKey);
+                    applyMetadata(metadataValue, metadataKey, metadataBuilder);
+                }
                 packetsBuilder.withSpawnEntity(entityId, getEntityType(), position);
             } else if (intent instanceof DespawnDisplayRenderIntent) {
                 despawn = true;
@@ -83,6 +98,46 @@ class DisplayRenderer implements NmsDisplayRenderer {
         }
 
         packetsBuilder.sendTo(player);
+    }
+
+    private void applyMetadata(MetadataValue<?> metadataValue, MetadataKey<?> metadataKey, EntityMetadataBuilder metadataBuilder) {
+        switch (metadataKey.getType()) {
+            case DisplayMetadataType.TRANSLATION -> metadataBuilder.withDisplayTranslation((DecentVector3f) metadataValue.getValue());
+            case DisplayMetadataType.SCALE -> metadataBuilder.withDisplayScale((DecentVector3f) metadataValue.getValue());
+            case DisplayMetadataType.BILLBOARD_CONSTRAINTS ->
+                    metadataBuilder.withDisplayBillboardConstraints((DisplayBillboardConstraints) metadataValue.getValue());
+            case DisplayMetadataType.BRIGHTNESS -> metadataBuilder.withDisplayBrightness((DisplayBrightness) metadataValue.getValue());
+            case DisplayMetadataType.SHADOW_RADIUS -> metadataBuilder.withDisplayShadowRadius((Float) metadataValue.getValue());
+            case DisplayMetadataType.SHADOW_STRENGTH -> metadataBuilder.withDisplayShadowStrength((Float) metadataValue.getValue());
+            case DisplayMetadataType.GLOWING -> {
+                boolean glowing = (Boolean) metadataValue.getValue();
+                metadataBuilder.withGlowing(glowing);
+            }
+            case DisplayMetadataType.GLOW_COLOR_OVERRIDE -> {
+                DecentColor colorOverride = (DecentColor) metadataValue.getValue();
+                metadataBuilder.withDisplayGlowColorOverride(colorOverride);
+            }
+            case DisplayMetadataType.TEXT_DISPLAY_BACKGROUND ->
+                    metadataBuilder.withTextDisplayBackground((DecentColor) metadataValue.getValue());
+            case DisplayMetadataType.TEXT_DISPLAY_OPACITY -> metadataBuilder.withTextDisplayTextOpacity((Integer) metadataValue.getValue());
+            case DisplayMetadataType.TEXT_DISPLAY_HAS_SHADOW -> {
+                boolean hasShadow = (Boolean) metadataValue.getValue();
+                metadataBuilder.withTextDisplayProperties(hasShadow, false, TextDisplayAlignment.CENTER);
+            }
+            case DisplayMetadataType.TEXT_DISPLAY_SEE_THROUGH -> {
+                Boolean isSeeThrough = (Boolean) metadataValue.getValue();
+                metadataBuilder.withTextDisplayProperties(false, isSeeThrough, TextDisplayAlignment.CENTER);
+            }
+            case DisplayMetadataType.TEXT_DISPLAY_ALIGNMENT -> {
+                TextDisplayAlignment alignment = (TextDisplayAlignment) metadataValue.getValue();
+                metadataBuilder.withTextDisplayProperties(false, false, alignment);
+            }
+            case DisplayMetadataType.ITEM_DISPLAY_TYPE -> {
+                ItemDisplayType itemDisplayType = (ItemDisplayType) metadataValue.getValue();
+                metadataBuilder.withItemDisplayData(itemDisplayType);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + metadataKey.getType());
+        }
     }
 
     private void applyContent(UpdateDisplayContentRenderIntent updateContentIntent, EntityMetadataBuilder metadataBuilder) {
