@@ -47,8 +47,7 @@ public class DisplayUpdater extends Ticked {
             if (currentTick % displayUpdateInterval == 0) {
                 renderingService.update(display);
             }
-            // TODO: call post-procesing for animations
-//            renderingService.updateContentAnimations(display);
+            renderingService.postProcess(display);
         }
     }
 }

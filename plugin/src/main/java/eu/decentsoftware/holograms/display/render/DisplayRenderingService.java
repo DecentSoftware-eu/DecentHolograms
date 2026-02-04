@@ -80,6 +80,14 @@ public class DisplayRenderingService {
         });
     }
 
+    public void postProcess(DisplayBase display) {
+        playerService.getOnlinePlayers().forEach(player -> {
+            if (visibilityService.isShownToPlayer(display, player)) {
+                postProcess(display, player);
+            }
+        });
+    }
+
     public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
         render(display, player, false);
         visibilityService.removeViewer(display, player);
@@ -92,9 +100,8 @@ public class DisplayRenderingService {
 
     private void render(DisplayBase display, PlatformPlayer player, boolean visible) {
         try {
-            RenderObjectHandle handle = new RenderObjectHandle(display.getName(), display.getType());
-            Integer page = pageManager.getPage(display.getName(), player.getUniqueId());
-            DisplayRenderContext context = new DisplayRenderContext(player, page);
+            RenderObjectHandle handle = getRenderObjectHandle(display);
+            DisplayRenderContext context = getDisplayRenderContext(display, player);
             DisplayRenderState state = stateService.buildRenderState(display, context);
             state.setVisible(visible);
 
@@ -102,5 +109,25 @@ public class DisplayRenderingService {
         } catch (Exception e) {
             Log.warn("Failed to render display '%s' for player '%s'.", e, display.getName(), player.getName());
         }
+    }
+
+    private void postProcess(DisplayBase display, PlatformPlayer player) {
+        try {
+            RenderObjectHandle handle = getRenderObjectHandle(display);
+            DisplayRenderContext context = getDisplayRenderContext(display, player);
+
+            renderService.postProcess(handle, context);
+        } catch (Exception e) {
+            Log.warn("Failed to post-process display '%s' for player '%s'.", e, display.getName(), player.getName());
+        }
+    }
+
+    private RenderObjectHandle getRenderObjectHandle(DisplayBase display) {
+        return new RenderObjectHandle(display.getName(), display.getType());
+    }
+
+    private DisplayRenderContext getDisplayRenderContext(DisplayBase display, PlatformPlayer player) {
+        Integer page = pageManager.getPage(display.getName(), player.getUniqueId());
+        return new DisplayRenderContext(player, page);
     }
 }
