@@ -25,10 +25,11 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.utils.message.Message;
-import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.plugin.Validator;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ class NearbyDisplaysCommand extends DecentCommand {
         return (sender, args) -> {
             Validator.validateArgsCount(1, args);
             Player player = (Player) sender;
-            DecentLocation location = DecentLocation.fromBukkitLocation(player.getLocation());
+            DecentLocation location = fromBukkitLocation(player.getLocation());
             double range = Validator.getDouble(args[0], "Range must be a valid number.");
             List<DisplayBase> displays = new ArrayList<>(displayService.getRegisteredDisplaysInRadius(location, range));
             if (displays.isEmpty()) {
@@ -74,6 +75,17 @@ class NearbyDisplaysCommand extends DecentCommand {
             Message.sendPaginatedMessage((Player) sender, currentPage, "/dh d nearby " + range + " %d", 15, header, null, displays, parseItem);
             return true;
         };
+    }
+
+    private DecentLocation fromBukkitLocation(Location location) {
+        return new DecentLocation(
+                location.getWorld().getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getYaw(),
+                location.getPitch()
+        );
     }
 
     @Override

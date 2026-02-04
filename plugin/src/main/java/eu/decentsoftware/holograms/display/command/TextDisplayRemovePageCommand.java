@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.plugin.Validator;
 
@@ -56,7 +56,7 @@ class TextDisplayRemovePageCommand extends DecentCommand {
             TextDisplay textDisplay = (TextDisplay) display;
             int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
             textDisplay.removePage(pageIndex - 1);
-            displayService.updateDisplayContent(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_PAGE_REMOVED.send(sender, display.getName(), pageIndex);
             return true;

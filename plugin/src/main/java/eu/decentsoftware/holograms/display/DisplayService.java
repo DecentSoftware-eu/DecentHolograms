@@ -21,10 +21,9 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
-import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
-import eu.decentsoftware.holograms.location.DecentLocation;
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,15 +36,15 @@ public class DisplayService {
 
     private final DisplayPersistenceService persistenceService;
     private final DisplayRenderingService renderingService;
-    private final TextDisplayViewService viewService;
+    private final TextDisplayPlayerPageManager playerPageManager;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
     public DisplayService(DisplayPersistenceService persistenceService,
                           DisplayRenderingService renderingService,
-                          TextDisplayViewService viewService) {
+                          TextDisplayPlayerPageManager playerPageManager) {
         this.persistenceService = persistenceService;
         this.renderingService = renderingService;
-        this.viewService = viewService;
+        this.playerPageManager = playerPageManager;
     }
 
     public void shutdown() {
@@ -96,26 +95,18 @@ public class DisplayService {
         renderingService.updateVisibility(display);
     }
 
-    public void updateDisplayContent(DisplayBase displayBase) {
-        renderingService.updateContent(displayBase);
+    public void updateDisplay(DisplayBase displayBase) {
+        renderingService.update(displayBase);
     }
 
-    public void updateDisplayProperties(DisplayBase displayBase) {
-        renderingService.updateProperties(displayBase);
-    }
-
-    public void updateDisplayLocation(DisplayBase displayBase) {
-        renderingService.updateDisplayLocation(displayBase);
-    }
-
-    public void hideDisplaysForPlayer(Player player) {
+    public void hideDisplaysForPlayer(PlatformPlayer player) {
         displays.values().forEach(display -> {
             renderingService.hideDisplayForPlayer(display, player);
-            viewService.clearView(display.getName(), player.getUniqueId());
+            playerPageManager.clearPage(display.getName(), player.getUniqueId());
         });
     }
 
-    public void updateVisibilityForPlayer(Player player) {
+    public void updateVisibilityForPlayer(PlatformPlayer player) {
         displays.values().forEach(display -> renderingService.updateVisibility(display, player));
     }
 

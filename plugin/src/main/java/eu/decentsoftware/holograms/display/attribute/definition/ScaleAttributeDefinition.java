@@ -20,7 +20,11 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
+import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -29,24 +33,34 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ScaleAttributeDefinition implements AttributeDefinition<DisplayVector3f> {
+public class ScaleAttributeDefinition implements AttributeDefinition<DecentVector3f> {
 
-    public static final AttributeKey<DisplayVector3f> KEY = AttributeKey.of("scale", DisplayVector3f.class);
+    public static final AttributeKey<DecentVector3f> KEY = AttributeKey.of("scale", DecentVector3f.class);
     private static final int MAX_VALUE = 100;
-    private final DisplayVector3f defaultValue = new DisplayVector3f(1, 1, 1);
+    private final DecentVector3f defaultValue = new DecentVector3f(1, 1, 1);
 
     @Override
-    public @NotNull AttributeKey<DisplayVector3f> getKey() {
+    public @NotNull AttributeKey<DecentVector3f> getKey() {
         return KEY;
     }
 
     @Override
-    public DisplayVector3f getDefaultValue() {
+    public DecentVector3f getDefaultValue() {
         return defaultValue;
     }
 
     @Override
-    public String format(DisplayVector3f value) {
+    public void apply(DisplayAttribute<DecentVector3f> attribute, DisplayRenderState state, DisplayRenderContext context) {
+        DecentVector3f value = attribute.getValue();
+        if (value != null) {
+            state.addMetadata(BuiltInMetadataKeys.SCALE.createValue(value));
+        } else {
+            state.addMetadata(BuiltInMetadataKeys.SCALE.createValue(getDefaultValue()));
+        }
+    }
+
+    @Override
+    public String format(DecentVector3f value) {
         if (value == null) {
             return null;
         }
@@ -57,15 +71,15 @@ public class ScaleAttributeDefinition implements AttributeDefinition<DisplayVect
     }
 
     @Override
-    public @NonNull DisplayVector3f parse(String[] args) {
+    public @NonNull DecentVector3f parse(String[] args) {
         if (args.length == 1) {
             float uniformScale = parseSingleValue(args[0], "Scale");
-            return new DisplayVector3f(uniformScale, uniformScale, uniformScale);
+            return new DecentVector3f(uniformScale, uniformScale, uniformScale);
         } else if (args.length == 3) {
             float x = parseSingleValue(args[0], "X");
             float y = parseSingleValue(args[1], "Y");
             float z = parseSingleValue(args[2], "Z");
-            return new DisplayVector3f(x, y, z);
+            return new DecentVector3f(x, y, z);
         } else {
             throw new AttributeParseException("Scale must be specified as either a single uniform value or three separate values for X, Y, and Z.");
         }

@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.Map;
 import java.util.Objects;
@@ -67,7 +68,7 @@ public class DisplayCloneService {
     private ItemDisplay cloneItemDisplay(ItemDisplay display, String newName) {
         DisplaySettings settings = cloneSettings(display);
         ItemDisplay clone = new ItemDisplay(newName, display.getLocation(), settings);
-        clone.setDisplayedItem(display.getDisplayedItem());
+        clone.setMaterial(display.getMaterial());
         return clone;
     }
 

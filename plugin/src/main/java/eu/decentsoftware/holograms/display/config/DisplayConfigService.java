@@ -19,8 +19,6 @@
 package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import eu.decentsoftware.holograms.location.DecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
@@ -28,10 +26,10 @@ import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSeria
 import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
-import eu.decentsoftware.holograms.display.config.serializer.HologramItemSerializer;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
+import eu.decentsoftware.holograms.platform.api.data.DecentColor;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
@@ -134,10 +132,9 @@ public class DisplayConfigService {
     private static TypeSerializerCollection createSerializers() {
         return TypeSerializerCollection.builder()
                 .register(DecentLocation.class, new DecentLocationSerializer())
-                .register(DisplayVector3f.class, new DisplayVector3fSerializer())
-                .register(DisplayColor.class, new DisplayColorSerializer())
+                .register(DecentVector3f.class, new DisplayVector3fSerializer())
+                .register(DecentColor.class, new DisplayColorSerializer())
                 .register(DisplayBrightness.class, new DisplayBrightnessSerializer())
-                .register(HologramItem.class, new HologramItemSerializer())
                 .register(ConfigAttribute.class, new ConfigAttributeSerializer())
                 .build();
     }

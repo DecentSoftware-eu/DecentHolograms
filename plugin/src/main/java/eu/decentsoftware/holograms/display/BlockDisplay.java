@@ -18,12 +18,12 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.location.DecentLocation;
-import org.bukkit.Material;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 public class BlockDisplay extends DisplayBase {
 
-    private Material material;
+    private String material;
 
     public BlockDisplay(String name, DecentLocation location, DisplaySettings settings) {
         super(name, location, settings);
@@ -34,11 +34,11 @@ public class BlockDisplay extends DisplayBase {
         return DisplayType.BLOCK;
     }
 
-    public Material getMaterial() {
+    public String getMaterial() {
         return material;
     }
 
-    public void setMaterial(Material material) {
+    public void setMaterial(String material) {
         this.material = material;
     }
 }

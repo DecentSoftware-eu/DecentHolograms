@@ -60,7 +60,7 @@ class AttributeResetDisplayCommand extends DecentCommand {
             }
 
             attributeCommandHandler.resetAttribute(display, attributeDefinition);
-            displayService.updateDisplayProperties(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attributeDefinition.getName());
             return true;

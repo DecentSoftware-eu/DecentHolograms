@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayCloneService;
 import eu.decentsoftware.holograms.display.DisplayService;
@@ -77,7 +77,7 @@ class CloneDisplayCommand extends DecentCommand {
                     displayLocation.getYaw(),
                     displayLocation.getPitch()
             ));
-            displayService.updateDisplayLocation(clonedDisplay);
+            displayService.updateDisplay(clonedDisplay);
             displayService.saveDisplay(clonedDisplay);
 
             Lang.DISPLAY_CLONED.send(sender, display.getName());

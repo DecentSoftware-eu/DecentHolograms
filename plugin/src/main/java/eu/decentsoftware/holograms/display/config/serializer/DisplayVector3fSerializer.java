@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -26,18 +26,18 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public final class DisplayVector3fSerializer implements TypeSerializer<DisplayVector3f> {
+public final class DisplayVector3fSerializer implements TypeSerializer<DecentVector3f> {
 
     @Override
-    public DisplayVector3f deserialize(Type type, ConfigurationNode node) {
+    public DecentVector3f deserialize(Type type, ConfigurationNode node) {
         float x = node.node("x").getFloat();
         float y = node.node("y").getFloat();
         float z = node.node("z").getFloat();
-        return new DisplayVector3f(x, y, z);
+        return new DecentVector3f(x, y, z);
     }
 
     @Override
-    public void serialize(Type type, @Nullable DisplayVector3f obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type type, @Nullable DecentVector3f obj, ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

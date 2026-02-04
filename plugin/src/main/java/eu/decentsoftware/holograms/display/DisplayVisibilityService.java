@@ -18,34 +18,31 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.location.DecentLocation;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class DisplayVisibilityService {
 
     private final Map<String, Set<UUID>> viewersMap = new ConcurrentHashMap<>();
 
-    public boolean isShownToPlayer(DisplayBase display, Player player) {
+    public boolean isShownToPlayer(DisplayBase display, PlatformPlayer player) {
         return getViewers(display).contains(player.getUniqueId());
     }
 
-    public void addViewer(DisplayBase display, Player player) {
+    public void addViewer(DisplayBase display, PlatformPlayer player) {
         getViewers(display).add(player.getUniqueId());
     }
 
-    public void removeViewer(DisplayBase display, Player player) {
+    public void removeViewer(DisplayBase display, PlatformPlayer player) {
         getViewers(display).remove(player.getUniqueId());
     }
 
-    public boolean shouldBeShownToPlayer(DisplayBase display, Player player) {
+    public boolean shouldBeShownToPlayer(DisplayBase display, PlatformPlayer player) {
         return isDisplayEnabled(display) && isPlayerWithinDisplayRange(display, player);
     }
 
@@ -53,21 +50,15 @@ public class DisplayVisibilityService {
         return display.getSettings().isEnabled();
     }
 
-    private boolean isPlayerWithinDisplayRange(DisplayBase display, Player player) {
+    private boolean isPlayerWithinDisplayRange(DisplayBase display, PlatformPlayer player) {
         double displayRange = display.getSettings().getDisplayRange();
         DecentLocation displayLocation = display.getLocation();
-        Location playerLocation = player.getLocation();
+        DecentLocation playerLocation = player.getLocation();
         return displayLocation.isSameWorld(playerLocation)
                 && displayLocation.distanceSquared(playerLocation) <= displayRange * displayRange;
     }
 
-    private Set<UUID> getViewers(DisplayBase display) {
+    public Set<UUID> getViewers(DisplayBase display) {
         return viewersMap.computeIfAbsent(display.getName(), k -> ConcurrentHashMap.newKeySet());
-    }
-
-    public Set<Player> getViewersAsPlayers(DisplayBase display) {
-        return getViewers(display).stream()
-                .map(Bukkit::getPlayer)
-                .collect(Collectors.toSet());
     }
 }

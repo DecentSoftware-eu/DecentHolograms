@@ -19,13 +19,16 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,6 +112,16 @@ public interface AttributeDefinition<T> {
         }
         return false;
     }
+
+    /**
+     * Apply the attribute to a {@link DisplayRenderState}.
+     *
+     * @param attribute The attribute to apply.
+     * @param state     The render state.
+     * @param context   The render context.
+     * @since 2.10.0
+     */
+    void apply(DisplayAttribute<T> attribute, DisplayRenderState state, DisplayRenderContext context);
 
     /**
      * Format the attribute value as a string for display purposes.

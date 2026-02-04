@@ -20,7 +20,11 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +48,16 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     @Override
     public DisplayBillboardConstraints getDefaultValue() {
         return DisplayBillboardConstraints.FIXED;
+    }
+
+    @Override
+    public void apply(DisplayAttribute<DisplayBillboardConstraints> attribute, DisplayRenderState state, DisplayRenderContext context) {
+        DisplayBillboardConstraints value = attribute.getValue();
+        if (value != null) {
+            state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(value));
+        } else {
+            state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(getDefaultValue()));
+        }
     }
 
     @Override

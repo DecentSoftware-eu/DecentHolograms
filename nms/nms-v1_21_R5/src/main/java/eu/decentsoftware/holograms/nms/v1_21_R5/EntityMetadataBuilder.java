@@ -1,13 +1,12 @@
 package eu.decentsoftware.holograms.nms.v1_21_R5;
 
 import com.google.common.base.Strings;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBillboardConstraints;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayVector3f;
-import eu.decentsoftware.holograms.nms.api.display.data.ItemDisplayType;
-import eu.decentsoftware.holograms.nms.api.display.data.NmsDisplayAttribute;
-import eu.decentsoftware.holograms.nms.api.display.data.TextDisplayAlignment;
+import eu.decentsoftware.holograms.platform.api.data.DecentColor;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
+import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.syncher.DataWatcher;
@@ -104,41 +103,29 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withDisplayTranslation(NmsDisplayAttribute<DisplayVector3f> translationAttribute) {
-        if (translationAttribute == null) {
+    EntityMetadataBuilder withDisplayTranslation(DecentVector3f translation) {
+        if (translation == null) {
             return this;
         }
 
-        DisplayVector3f translation = translationAttribute.getValue();
-        Vector3f translationVector;
-        if (translation == null) {
-            translationVector = new Vector3f(0.0f, 0.0f, 0.0f);
-        } else {
-            translationVector = new Vector3f(translation.getX(), translation.getY(), translation.getZ());
-        }
+        Vector3f translationVector = new Vector3f(translation.getX(), translation.getY(), translation.getZ());
 
         watchableObjects.add(EntityMetadataType.DISPLAY_TRANSLATION.construct(translationVector));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayScale(NmsDisplayAttribute<DisplayVector3f> scaleAttribute) {
-        if (scaleAttribute == null) {
+    EntityMetadataBuilder withDisplayScale(DecentVector3f scale) {
+        if (scale == null) {
             return this;
         }
 
-        DisplayVector3f scale = scaleAttribute.getValue();
-        Vector3f scaleVector;
-        if (scale == null) {
-            scaleVector = new Vector3f(1.0f, 1.0f, 1.0f);
-        } else {
-            scaleVector = new Vector3f(scale.getX(), scale.getY(), scale.getZ());
-        }
+        Vector3f scaleVector = new Vector3f(scale.getX(), scale.getY(), scale.getZ());
 
         watchableObjects.add(EntityMetadataType.DISPLAY_SCALE.construct(scaleVector));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayBillboardConstraints(NmsDisplayAttribute<DisplayBillboardConstraints> billboardAttribute) {
+    EntityMetadataBuilder withDisplayBillboardConstraints(DisplayBillboardConstraints billboard) {
         /*
          * Billboard Constraints:
          * - 0x00 - fixed
@@ -146,15 +133,11 @@ class EntityMetadataBuilder {
          * - 0x02 - horizontal
          * - 0x03 - center
          */
-        if (billboardAttribute == null) {
+        if (billboard == null) {
             return this;
         }
 
-        DisplayBillboardConstraints constraints = billboardAttribute.getValue();
-        if (constraints == null) {
-            constraints = DisplayBillboardConstraints.FIXED;
-        }
-        byte data = switch (constraints) {
+        byte data = switch (billboard) {
             case VERTICAL -> 0x01;
             case HORIZONTAL -> 0x02;
             case CENTER -> 0x03;
@@ -165,51 +148,33 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withDisplayBrightness(NmsDisplayAttribute<DisplayBrightness> brightnessAttribute) {
-        if (brightnessAttribute == null) {
+    EntityMetadataBuilder withDisplayBrightness(DisplayBrightness brightness) {
+        if (brightness == null) {
             return this;
         }
 
-        DisplayBrightness brightness = brightnessAttribute.getValue();
-        int brightnessInt;
-        if (brightness == null) {
-            brightnessInt = -1;
-        } else {
-            brightnessInt = brightness.getBlockLight() << 4 | brightness.getSkyLight() << 20;
-        }
+        int brightnessInt = brightness.getBlockLight() << 4 | brightness.getSkyLight() << 20;
 
         watchableObjects.add(EntityMetadataType.DISPLAY_BRIGHTNESS.construct(brightnessInt));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayShadowRadius(NmsDisplayAttribute<Float> shadowRadius) {
-        if (shadowRadius == null) {
-            return this;
-        }
-        float shadowRadiusFloat = shadowRadius.getValue() == null ? 0.0f : shadowRadius.getValue();
-
-        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_RADIUS.construct(shadowRadiusFloat));
+    EntityMetadataBuilder withDisplayShadowRadius(float shadowRadius) {
+        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_RADIUS.construct(shadowRadius));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayShadowStrength(NmsDisplayAttribute<Float> shadowStrength) {
-        if (shadowStrength == null) {
-            return this;
-        }
-        float shadowStrengthFloat = shadowStrength.getValue() == null ? 1.0f : shadowStrength.getValue();
-
-        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_STRENGTH.construct(shadowStrengthFloat));
+    EntityMetadataBuilder withDisplayShadowStrength(float shadowStrength) {
+        watchableObjects.add(EntityMetadataType.DISPLAY_SHADOW_STRENGTH.construct(shadowStrength));
         return this;
     }
 
-    EntityMetadataBuilder withDisplayGlowColorOverride(NmsDisplayAttribute<DisplayColor> glowColorOverrideAttribute) {
-        if (glowColorOverrideAttribute == null) {
+    EntityMetadataBuilder withDisplayGlowColorOverride(DecentColor glowColorOverride) {
+        if (glowColorOverride == null) {
             return this;
         }
-        DisplayColor glowColorOverride = glowColorOverrideAttribute.getValue();
-        int glowColorRgb = glowColorOverride == null ? -1 : glowColorOverride.asRGB();
 
-        watchableObjects.add(EntityMetadataType.DISPLAY_GLOW_COLOR_OVERRIDE.construct(glowColorRgb));
+        watchableObjects.add(EntityMetadataType.DISPLAY_GLOW_COLOR_OVERRIDE.construct(glowColorOverride.asRGB()));
         return this;
     }
 
@@ -225,34 +190,22 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayLineWidth(NmsDisplayAttribute<Integer> lineWidth) {
-        if (lineWidth == null) {
-            return this;
-        }
-        int lineWidthInt = lineWidth.getValue() == null ? 200 : lineWidth.getValue();
-
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_LINE_WIDTH.construct(lineWidthInt));
+    EntityMetadataBuilder withTextDisplayLineWidth(int lineWidth) {
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_LINE_WIDTH.construct(lineWidth));
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayBackground(NmsDisplayAttribute<DisplayColor> backgroundColorAttribute) {
-        if (backgroundColorAttribute == null) {
+    EntityMetadataBuilder withTextDisplayBackground(DecentColor backgroundColor) {
+        if (backgroundColor == null) {
             return this;
         }
-        DisplayColor backgroundColor = backgroundColorAttribute.getValue();
-        int backgroundColorRgb = backgroundColor == null ? 0x40000000 : backgroundColor.asARGB();
 
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_BACKGROUND.construct(backgroundColorRgb));
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_BACKGROUND.construct(backgroundColor.asARGB()));
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayTextOpacity(NmsDisplayAttribute<Integer> textOpacity) {
-        if (textOpacity == null) {
-            return this;
-        }
-        byte textOpacityByte = textOpacity.getValue() == null ? -1 : intToByte(textOpacity.getValue());
-
-        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(textOpacityByte));
+    EntityMetadataBuilder withTextDisplayTextOpacity(int textOpacity) {
+        watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT_OPACITY.construct(intToByte(textOpacity)));
         return this;
     }
 
@@ -260,9 +213,9 @@ class EntityMetadataBuilder {
         return (byte) (i & 0xFF);
     }
 
-    EntityMetadataBuilder withTextDisplayProperties(NmsDisplayAttribute<Boolean> hasShadowAttribute,
-                                                    NmsDisplayAttribute<Boolean> isSeeThroughAttribute,
-                                                    NmsDisplayAttribute<TextDisplayAlignment> alignAttribute) {
+    EntityMetadataBuilder withTextDisplayProperties(boolean hasShadow,
+                                                    boolean isSeeThrough,
+                                                    TextDisplayAlignment alignment) {
         /*
          * Text Display Data:
          * 0x01 - Has shadow
@@ -273,16 +226,16 @@ class EntityMetadataBuilder {
          */
 
         byte data = 0x00;
-        if (hasShadowAttribute != null && hasShadowAttribute.getValue()) {
+        if (hasShadow) {
             data |= 0x01;
         }
-        if (isSeeThroughAttribute != null && isSeeThroughAttribute.getValue()) {
+        if (isSeeThrough) {
             data |= 0x02;
         }
-        if (alignAttribute != null) {
-            if (alignAttribute.getValue() == TextDisplayAlignment.LEFT) {
+        if (alignment != null) {
+            if (alignment == TextDisplayAlignment.LEFT) {
                 data |= 0x08;
-            } else if (alignAttribute.getValue() == TextDisplayAlignment.RIGHT) {
+            } else if (alignment == TextDisplayAlignment.RIGHT) {
                 data |= 0x10;
             }
         }
@@ -296,7 +249,7 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withItemDisplayData(NmsDisplayAttribute<ItemDisplayType> displayTypeAttribute) {
+    EntityMetadataBuilder withItemDisplayData(ItemDisplayType displayType) {
         /*
          * Display type:
          * 0x00 - NONE
@@ -309,14 +262,10 @@ class EntityMetadataBuilder {
          * 0x07 - GROUND
          * 0x08 - FIXED
          */
-        if (displayTypeAttribute == null) {
+        if (displayType == null) {
             return this;
         }
 
-        ItemDisplayType displayType = displayTypeAttribute.getValue();
-        if (displayType == null) {
-            displayType = ItemDisplayType.NONE;
-        }
         byte data = switch (displayType) {
             case THIRD_PERSON_LEFT_HAND -> 0x01;
             case THIRD_PERSON_RIGHT_HAND -> 0x02;

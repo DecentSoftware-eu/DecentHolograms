@@ -18,9 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.dto;
 
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import eu.decentsoftware.holograms.display.DisplayType;
-import org.bukkit.Material;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -45,9 +43,9 @@ public class ConfigDisplay {
     @Setting
     private List<ConfigTextPage> pages;
     @Setting
-    private HologramItem item;
+    private String item;
     @Setting
-    private Material material;
+    private String block;
 
     public String getName() {
         return name;
@@ -97,19 +95,19 @@ public class ConfigDisplay {
         this.pages = pages;
     }
 
-    public HologramItem getItem() {
+    public String getItem() {
         return item;
     }
 
-    public void setItem(HologramItem item) {
+    public void setItem(String item) {
         this.item = item;
     }
 
-    public Material getMaterial() {
-        return material;
+    public String getBlock() {
+        return block;
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public void setBlock(String block) {
+        this.block = block;
     }
 }

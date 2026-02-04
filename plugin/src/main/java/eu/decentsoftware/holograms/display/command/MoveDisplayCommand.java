@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.plugin.Validator;
@@ -60,7 +60,7 @@ class MoveDisplayCommand extends DecentCommand {
             double y = Validator.getLocationValue(args[2], location.getY());
             double z = Validator.getLocationValue(args[3], location.getZ());
             display.setLocation(new DecentLocation(location.getWorldName(), x, y, z, location.getYaw(), location.getPitch()));
-            displayService.updateDisplayLocation(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_MOVED.send(sender, display.getName());

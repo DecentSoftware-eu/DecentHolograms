@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.plugin.Validator;
@@ -61,7 +61,7 @@ class TextDisplayAddLineCommand extends DecentCommand {
             int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
             TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
             page.addLine(text);
-            displayService.updateDisplayContent(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_LINE_ADDED.send(sender, display.getName());
             return true;

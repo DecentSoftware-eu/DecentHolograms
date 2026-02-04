@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.nms.api;
 
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
+import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import org.bukkit.entity.Player;
 

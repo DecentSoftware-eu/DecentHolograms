@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayColor;
+import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -26,19 +26,19 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public final class DisplayColorSerializer implements TypeSerializer<DisplayColor> {
+public final class DisplayColorSerializer implements TypeSerializer<DecentColor> {
 
     @Override
-    public DisplayColor deserialize(Type type, ConfigurationNode node) {
+    public DecentColor deserialize(Type type, ConfigurationNode node) {
         int red = node.node("red").getInt();
         int green = node.node("green").getInt();
         int blue = node.node("blue").getInt();
         int alpha = node.node("alpha").getInt(255);
-        return DisplayColor.fromRGBA(red, green, blue, alpha);
+        return DecentColor.fromRGBA(red, green, blue, alpha);
     }
 
     @Override
-    public void serialize(Type type, @Nullable DisplayColor obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type type, @Nullable DecentColor obj, ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

@@ -73,7 +73,7 @@ class AttributeDisplayCommand extends DecentCommand {
 
             String[] valueArguments = Arrays.copyOfRange(args, 2, args.length);
             attributeCommandHandler.setAttribute(display, attributeDefinition, valueArguments);
-            displayService.updateDisplayProperties(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             String formattedValue = attributeCommandHandler.getAttribute(display, attributeDefinition);
             Lang.DISPLAY_ATTRIBUTE_SET.send(sender, attributeDefinition.getName(), formattedValue);

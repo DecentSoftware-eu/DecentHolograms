@@ -22,6 +22,8 @@ import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
+import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformAdapter;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -77,7 +79,8 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        this.displayModule = new DisplayModule(plugin, nmsAdapter.getDisplayRendererFactory(), animationManager);
+        PlatformAdapter platformAdapter = new BukkitPlatformAdapter(nmsAdapter.getDisplayRendererFactory());
+        this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
         this.displayModule.initialize();
 
         pluginManager.registerEvents(new PlayerListener(this), this.plugin);

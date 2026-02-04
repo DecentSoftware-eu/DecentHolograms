@@ -26,20 +26,18 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplaySettings;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -85,7 +83,7 @@ class CreateDisplayCommand extends DecentCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            DisplayBase display = createDisplay(sender, type, name, args, DecentLocation.fromBukkitLocation(location));
+            DisplayBase display = createDisplay(type, name, args, fromBukkitLocation(location));
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);
@@ -93,7 +91,18 @@ class CreateDisplayCommand extends DecentCommand {
         };
     }
 
-    private DisplayBase createDisplay(CommandSender sender, DisplayType type, String name, String[] args, DecentLocation location) {
+    private DecentLocation fromBukkitLocation(Location location) {
+        return new DecentLocation(
+                location.getWorld().getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getYaw(),
+                location.getPitch()
+        );
+    }
+
+    private DisplayBase createDisplay(DisplayType type, String name, String[] args, DecentLocation location) {
         switch (type) {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
@@ -103,10 +112,14 @@ class CreateDisplayCommand extends DecentCommand {
                 textDisplay.addPage(page);
                 return textDisplay;
             case ITEM:
-                String itemContent = Validator.getLineContent((Player) sender, args, 2);
-                HologramItem item = new HologramItem(itemContent);
+                String materialString = args[2];
+                Material materialEnum = DecentMaterial.parseMaterial(materialString);
+                if (materialEnum == null || !DecentMaterial.isItem(materialEnum)) {
+                    materialEnum = Material.STONE;
+                }
+
                 ItemDisplay itemDisplay = new ItemDisplay(name, location, new DisplaySettings());
-                itemDisplay.setDisplayedItem(item);
+                itemDisplay.setMaterial(materialEnum.name());
                 return itemDisplay;
             case BLOCK:
                 Material material = args.length > 2 ? DecentMaterial.parseMaterial(args[2]) : Material.STONE;
@@ -114,7 +127,7 @@ class CreateDisplayCommand extends DecentCommand {
                     material = Material.STONE;
                 }
                 BlockDisplay blockDisplay = new BlockDisplay(name, location, new DisplaySettings());
-                blockDisplay.setMaterial(material);
+                blockDisplay.setMaterial(material.name());
                 return blockDisplay;
             default:
                 throw new IllegalStateException("Unexpected value: " + type);

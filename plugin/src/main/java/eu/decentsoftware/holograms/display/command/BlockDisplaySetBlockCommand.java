@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Material;
 
@@ -64,8 +64,8 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
             }
 
             BlockDisplay blockDisplay = (BlockDisplay) display;
-            blockDisplay.setMaterial(material);
-            displayService.updateDisplayContent(display);
+            blockDisplay.setMaterial(material.name());
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_BLOCK_SET.send(sender, display.getName(), blockType);
             return true;

@@ -3,6 +3,7 @@ subprojects {
         if (!project.path.endsWith(":nms-common")) {
             implementation project(":nms:nms-common")
         }
+        implementation project(":platform-api")
     }
 }
 

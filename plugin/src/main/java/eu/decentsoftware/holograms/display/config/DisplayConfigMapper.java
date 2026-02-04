@@ -35,7 +35,7 @@ import eu.decentsoftware.holograms.display.config.dto.ConfigDecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplaySettings;
 import eu.decentsoftware.holograms.display.config.dto.ConfigTextPage;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -75,11 +75,11 @@ public class DisplayConfigMapper {
     }
 
     private BlockDisplay blockDisplayToDomain(ConfigDisplay dto, DecentLocation location, DisplaySettings settings) {
-        if (dto.getMaterial() == null) {
+        if (dto.getBlock() == null) {
             throw new DisplayConfigException("Block display must have a material");
         }
         BlockDisplay blockDisplay = new BlockDisplay(dto.getName(), location, settings);
-        blockDisplay.setMaterial(dto.getMaterial());
+        blockDisplay.setMaterial(dto.getBlock());
         return blockDisplay;
     }
 
@@ -88,7 +88,7 @@ public class DisplayConfigMapper {
             throw new DisplayConfigException("Item display must have an item");
         }
         ItemDisplay itemDisplay = new ItemDisplay(dto.getName(), location, settings);
-        itemDisplay.setDisplayedItem(dto.getItem());
+        itemDisplay.setMaterial(dto.getItem());
         return itemDisplay;
     }
 
@@ -172,10 +172,10 @@ public class DisplayConfigMapper {
                 dto.setPages(pagesToDto((TextDisplay) domain));
                 break;
             case ITEM:
-                dto.setItem(((ItemDisplay) domain).getDisplayedItem());
+                dto.setItem(((ItemDisplay) domain).getMaterial());
                 break;
             case BLOCK:
-                dto.setMaterial(((BlockDisplay) domain).getMaterial());
+                dto.setBlock(((BlockDisplay) domain).getMaterial());
                 break;
         }
         return dto;

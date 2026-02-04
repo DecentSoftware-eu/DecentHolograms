@@ -1,0 +1,104 @@
+/*
+ * This file is part of DecentHolograms, licensed under the GNU GPL v3.0 License.
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package eu.decentsoftware.holograms.display.render;
+
+import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.DisplayVisibilityService;
+import eu.decentsoftware.holograms.display.TextDisplayPlayerPageManager;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
+import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
+
+public class DisplayRenderingService {
+
+    private final DisplayVisibilityService visibilityService;
+    private final PlatformPlayerService playerService;
+    private final DisplayRenderStateService stateService;
+    private final DisplayRenderService renderService;
+    private final TextDisplayPlayerPageManager pageManager;
+
+    public DisplayRenderingService(DisplayVisibilityService visibilityService,
+                                   PlatformPlayerService playerService,
+                                   DisplayRenderStateService stateService,
+                                   DisplayRenderService renderService,
+                                   TextDisplayPlayerPageManager pageManager) {
+        this.visibilityService = visibilityService;
+        this.playerService = playerService;
+        this.stateService = stateService;
+        this.renderService = renderService;
+        this.pageManager = pageManager;
+    }
+
+    public void hideDisplayForPlayer(DisplayBase display, PlatformPlayer player) {
+        if (visibilityService.isShownToPlayer(display, player)) {
+            hideForPlayer(display, player);
+        }
+    }
+
+    public void hideForEveryone(DisplayBase display) {
+        playerService.getOnlinePlayers().forEach(player -> hideForPlayer(display, player));
+    }
+
+    public void updateVisibility(DisplayBase display) {
+        playerService.getOnlinePlayers().forEach(player -> updateVisibility(display, player));
+    }
+
+    public void updateVisibility(DisplayBase display, PlatformPlayer player) {
+        boolean shouldBeShownToPlayer = visibilityService.shouldBeShownToPlayer(display, player);
+        boolean isShownToPlayer = visibilityService.isShownToPlayer(display, player);
+        if (shouldBeShownToPlayer && !isShownToPlayer) {
+            renderForPlayer(display, player);
+        } else if (!shouldBeShownToPlayer && isShownToPlayer) {
+            hideForPlayer(display, player);
+        }
+    }
+
+    public void update(DisplayBase display) {
+        playerService.getOnlinePlayers().forEach(player -> {
+            if (visibilityService.isShownToPlayer(display, player)) {
+                renderForPlayer(display, player);
+            }
+        });
+    }
+
+    public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
+        render(display, player, false);
+    }
+
+    public void renderForPlayer(DisplayBase display, PlatformPlayer player) {
+        render(display, player, true);
+    }
+
+    private void render(DisplayBase display, PlatformPlayer player, boolean visible) {
+        try {
+            RenderObjectHandle handle = new RenderObjectHandle(display.getName(), display.getType());
+            Integer page = pageManager.getPage(display.getName(), player.getUniqueId());
+            DisplayRenderContext context = new DisplayRenderContext(player, page);
+            DisplayRenderState state = stateService.buildRenderState(display, context);
+            state.setVisible(visible);
+
+            renderService.render(handle, state, context);
+        } catch (Exception e) {
+            Log.warn("Failed to render display '%s' for player '%s'.", e, display.getName(), player.getName());
+        }
+    }
+}

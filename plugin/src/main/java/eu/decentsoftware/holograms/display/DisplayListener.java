@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,18 +28,22 @@ import org.bukkit.event.player.PlayerQuitEvent;
 class DisplayListener implements Listener {
 
     private final DisplayService service;
+    private final PlatformPlayerService playerService;
 
-    DisplayListener(DisplayService service) {
+    DisplayListener(DisplayService service, PlatformPlayerService playerService) {
         this.service = service;
+        this.playerService = playerService;
     }
 
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        service.updateVisibilityForPlayer(event.getPlayer());
+        PlatformPlayer platformPlayer = playerService.getDecentPlayer(event.getPlayer());
+        service.updateVisibilityForPlayer(platformPlayer);
     }
 
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        service.hideDisplaysForPlayer(event.getPlayer());
+        PlatformPlayer platformPlayer = playerService.getDecentPlayer(event.getPlayer());
+        service.hideDisplaysForPlayer(platformPlayer);
     }
 }

@@ -18,12 +18,12 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 public class ItemDisplay extends DisplayBase {
 
-    private HologramItem displayedItem;
+    private String material;
 
     public ItemDisplay(String name, DecentLocation location, DisplaySettings settings) {
         super(name, location, settings);
@@ -34,11 +34,11 @@ public class ItemDisplay extends DisplayBase {
         return DisplayType.ITEM;
     }
 
-    public HologramItem getDisplayedItem() {
-        return displayedItem;
+    public String getMaterial() {
+        return material;
     }
 
-    public void setDisplayedItem(HologramItem displayedItem) {
-        this.displayedItem = displayedItem;
+    public void setMaterial(String material) {
+        this.material = material;
     }
 }

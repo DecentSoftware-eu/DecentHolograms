@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
-import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -45,9 +45,10 @@ public class DisplayUpdater extends Ticked {
             }
             long displayUpdateInterval = display.getSettings().getUpdateInterval();
             if (currentTick % displayUpdateInterval == 0) {
-                renderingService.updateContent(display);
+                renderingService.update(display);
             }
-            renderingService.updateContentAnimations(display);
+            // TODO: call post-procesing for animations
+//            renderingService.updateContentAnimations(display);
         }
     }
 }

@@ -26,8 +26,7 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.text.TextDisplayView;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
+import eu.decentsoftware.holograms.display.TextDisplayPlayerPageManager;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.entity.Player;
 
@@ -42,15 +41,15 @@ class TextDisplaySwitchPageCommand extends DecentCommand {
 
     private final DisplayService displayService;
     private final DisplayTabCompleteHelper tabCompleteHelper;
-    private final TextDisplayViewService textDisplayViewService;
+    private final TextDisplayPlayerPageManager playerPageManager;
 
     TextDisplaySwitchPageCommand(DisplayService displayService,
                                  DisplayTabCompleteHelper tabCompleteHelper,
-                                 TextDisplayViewService textDisplayViewService) {
+                                 TextDisplayPlayerPageManager playerPageManager) {
         super("switchpage");
         this.displayService = displayService;
         this.tabCompleteHelper = tabCompleteHelper;
-        this.textDisplayViewService = textDisplayViewService;
+        this.playerPageManager = playerPageManager;
     }
 
     @Override
@@ -63,9 +62,8 @@ class TextDisplaySwitchPageCommand extends DecentCommand {
             int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
             Player player = (Player) sender;
 
-            TextDisplayView view = textDisplayViewService.getView(textDisplay.getName(), player.getUniqueId());
-            view.setCurrentPage(pageIndex - 1);
-            displayService.updateDisplayContent(display);
+            playerPageManager.setPage(textDisplay.getName(), player.getUniqueId(), pageIndex);
+            displayService.updateDisplay(display);
             Lang.DISPLAY_TEXT_PAGE_SWITCHED.send(sender, display.getName(), pageIndex);
             return true;
         };

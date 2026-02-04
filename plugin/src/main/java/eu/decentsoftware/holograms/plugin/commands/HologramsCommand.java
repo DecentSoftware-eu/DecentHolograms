@@ -11,12 +11,8 @@ import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
-import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
@@ -39,17 +35,15 @@ import java.util.stream.Collectors;
 )
 public class HologramsCommand extends DecentCommand {
 
-	public HologramsCommand(DisplayService displayService,
-                            TextDisplayViewService textDisplayViewService,
-                            AttributeCommandHandler attributeCommandHandler) {
+	public HologramsCommand(DisplaysCommand displaysCommand) {
 		super("decentholograms");
 
 		addSubCommand(new HelpSubCommand());
 		addSubCommand(new ReloadSubCommand());
 		addSubCommand(new ListSubCommand());
 		addSubCommand(new HologramSubCommand());
-        if (Version.afterOrEqual(Version.v1_19_R3)) {
-            addSubCommand(new DisplaysCommand(displayService, textDisplayViewService, attributeCommandHandler));
+        if (displaysCommand != null) {
+            addSubCommand(displaysCommand);
         }
 		addSubCommand(new LineSubCommand());
 		addSubCommand(new FeatureSubCommand());

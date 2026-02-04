@@ -52,4 +52,12 @@ public class DisplaySettings {
         this.displayRange = 256;
         this.updateInterval = 20;
     }
+
+    public DisplaySettings copy() {
+        DisplaySettings copy = new DisplaySettings();
+        copy.setEnabled(this.isEnabled());
+        copy.setDisplayRange(this.getDisplayRange());
+        copy.setUpdateInterval(this.getUpdateInterval());
+        return copy;
+    }
 }

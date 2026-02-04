@@ -18,9 +18,13 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition;
 
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +49,16 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.TEXT};
+    }
+
+    @Override
+    public void apply(DisplayAttribute<Integer> attribute, DisplayRenderState state, DisplayRenderContext context) {
+        Integer value = attribute.getValue();
+        if (value != null) {
+            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(value));
+        } else {
+            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(getDefaultValue()));
+        }
     }
 
     @Override

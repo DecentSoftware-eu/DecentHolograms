@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.plugin.Validator;
@@ -59,7 +59,7 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
             TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
             int index = Validator.getInteger(args[2], 1, page.getLines().size(), "Line index out of bounds.");
             page.removeLine(index - 1);
-            displayService.updateDisplayContent(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_LINE_REMOVED.send(sender, display.getName(), index);
             return true;

@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.plugin.Validator;
@@ -61,7 +61,7 @@ class TextDisplayInsertPageCommand extends DecentCommand {
             TextDisplayPage page = new TextDisplayPage();
             page.setLines(Arrays.asList(text.split("\\\\n")));
             textDisplay.addPage(pageIndex, page);
-            displayService.updateDisplayContent(display);
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_PAGE_INSERTED.send(sender, display.getName());
             return true;

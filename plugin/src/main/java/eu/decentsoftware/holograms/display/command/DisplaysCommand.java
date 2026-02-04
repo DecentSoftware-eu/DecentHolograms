@@ -26,7 +26,6 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayCloneService;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
 
 @CommandInfo(
         usage = "/dh displays help",
@@ -43,7 +42,7 @@ public class DisplaysCommand extends DecentCommand {
     }
 
     public DisplaysCommand(DisplayService displayService,
-                           TextDisplayViewService textDisplayViewService,
+                           DisplayCloneService displayCloneService,
                            AttributeCommandHandler attributeCommandHandler) {
         super("displays");
         instance = this;
@@ -52,7 +51,6 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new CreateDisplayCommand(displayService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));
-        DisplayCloneService displayCloneService = new DisplayCloneService();
         addSubCommand(new RenameDisplayCommand(displayService, displayCloneService));
         addSubCommand(new CloneDisplayCommand(displayService, displayCloneService));
         addSubCommand(new EnableDisplayCommand(displayService));
@@ -78,7 +76,7 @@ public class DisplaysCommand extends DecentCommand {
 //        addSubCommand(new TextDisplayAddPageCommand(displayService, tabCompleteHelper));
 //        addSubCommand(new TextDisplayInsertPageCommand(displayService, tabCompleteHelper));
 //        addSubCommand(new TextDisplayRemovePageCommand(displayService, tabCompleteHelper));
-//        addSubCommand(new TextDisplaySwitchPageCommand(displayService, tabCompleteHelper, textDisplayViewService));
+//        addSubCommand(new TextDisplaySwitchPageCommand(displayService, tabCompleteHelper, textDisplayPlayerPageManager));
     }
 
     @Override

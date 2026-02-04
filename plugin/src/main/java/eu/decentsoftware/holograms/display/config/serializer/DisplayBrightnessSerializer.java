@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.nms.api.display.data.DisplayBrightness;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;

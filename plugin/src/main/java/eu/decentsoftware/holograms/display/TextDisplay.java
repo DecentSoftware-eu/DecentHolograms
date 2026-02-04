@@ -18,7 +18,8 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.ArrayList;
 import java.util.List;

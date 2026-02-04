@@ -22,15 +22,20 @@ import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
+import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
 import eu.decentsoftware.holograms.display.config.DisplayConfigService;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
-import eu.decentsoftware.holograms.display.rendering.DisplayDataMapper;
-import eu.decentsoftware.holograms.display.rendering.DisplayRenderingAdapterFactory;
-import eu.decentsoftware.holograms.display.rendering.DisplayRenderingService;
-import eu.decentsoftware.holograms.display.text.TextDisplayViewService;
-import eu.decentsoftware.holograms.display.text.TextProcessingService;
-import eu.decentsoftware.holograms.nms.api.display.renderer.NmsDisplayRendererFactory;
+import eu.decentsoftware.holograms.display.render.DisplayRenderDiffService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.render.intent.materializer.IntentMaterializerService;
+import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
+import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
+import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,26 +51,34 @@ public class DisplayModule {
     private final DisplayService displayService;
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
-    private final TextDisplayViewService textDisplayViewService;
-    private final AttributeCommandHandler attributeCommandHandler;
+    private final TextDisplayPlayerPageManager playerPageManager;
+    private final DisplaysCommand displaysCommand;
 
-    public DisplayModule(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory, AnimationManager animationManager) {
+    public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
-        DisplayDataMapper dataMapper = new DisplayDataMapper();
-        textDisplayViewService = new TextDisplayViewService();
-        TextProcessingService textProcessingService = new TextProcessingService(textDisplayViewService, animationManager);
-        DisplayRenderingAdapterFactory renderingAdapterFactory = new DisplayRenderingAdapterFactory(
-                dataMapper, rendererFactory, textProcessingService);
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
-        DisplayRenderingService renderingService = new DisplayRenderingService(visibilityService, renderingAdapterFactory);
+        DisplayRenderDiffService renderDiffService = new DisplayRenderDiffService();
+        DisplayRenderStateManager renderStateManager = new DisplayRenderStateManager();
+        DisplayContentPostProcessingService postProcessingService = new DisplayContentPostProcessingService();
+        IntentMaterializerService intentMaterializerService = new IntentMaterializerService(postProcessingService);
+        DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter, renderStateManager, intentMaterializerService);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
+        DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
+        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService);
+        DisplayRenderStateService stateService = new DisplayRenderStateService(attributeDefinitionRegistry, displayTypeRegistry);
+        TextDisplayPlayerPageManager playerPageManager = new TextDisplayPlayerPageManager();
+        DisplayRenderingService renderingService = new DisplayRenderingService(
+                visibilityService, platformAdapter.getPlayerService(), stateService, renderService, playerPageManager);
         DisplayConfigService configService = new DisplayConfigService(plugin);
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeDefinitionRegistry);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
-        this.displayService = new DisplayService(persistenceService, renderingService, textDisplayViewService);
+        DisplayCloneService displayCloneService = new DisplayCloneService();
+        this.playerPageManager = new TextDisplayPlayerPageManager();
+        this.displayService = new DisplayService(persistenceService, renderingService, playerPageManager);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
-        this.displayListener = new DisplayListener(displayService);
-        this.attributeCommandHandler = new AttributeCommandHandler(attributeDefinitionRegistry);
+        this.displayListener = new DisplayListener(displayService, platformAdapter.getPlayerService());
+        AttributeCommandHandler attributeCommandHandler = new AttributeCommandHandler(attributeDefinitionRegistry);
+        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandHandler);
     }
 
     public void initialize() {
@@ -90,7 +103,7 @@ public class DisplayModule {
         }
         HandlerList.unregisterAll(displayListener);
         this.displayUpdater.unregister();
-        this.textDisplayViewService.shutdown();
+        this.playerPageManager.shutdown();
         this.displayService.shutdown();
     }
 
@@ -98,11 +111,7 @@ public class DisplayModule {
         return displayService;
     }
 
-    public TextDisplayViewService getTextDisplayViewService() {
-        return textDisplayViewService;
-    }
-
-    public AttributeCommandHandler getAttributeCommandHandler() {
-        return attributeCommandHandler;
+    public DisplaysCommand getDisplaysCommand() {
+        return displaysCommand;
     }
 }

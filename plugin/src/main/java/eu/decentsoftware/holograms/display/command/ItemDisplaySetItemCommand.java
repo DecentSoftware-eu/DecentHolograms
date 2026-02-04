@@ -24,14 +24,13 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.CommandTabCompleteHelper;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
 
 @CommandInfo(
         usage = "/dh d set-item <name> <item>",
@@ -55,26 +54,19 @@ class ItemDisplaySetItemCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
 
-            String itemDefinition = getItemDefinition(sender, args);
-            HologramItem hologramItem = new HologramItem(itemDefinition);
+            String material = args[1];
+            Material materialEnum = DecentMaterial.parseMaterial(material);
+            if (materialEnum == null || !DecentMaterial.isItem(materialEnum)) {
+                materialEnum = Material.STONE;
+            }
 
             ItemDisplay itemDisplay = (ItemDisplay) display;
-            itemDisplay.setDisplayedItem(hologramItem);
-            displayService.updateDisplayContent(display);
+            itemDisplay.setMaterial(materialEnum.name());
+            displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_ITEM_SET.send(sender, display.getName());
             return true;
         };
-    }
-
-    private String getItemDefinition(CommandSender sender, String[] args) {
-        String itemDefinition;
-        if (sender instanceof Player) {
-            itemDefinition = Validator.getLineContent((Player) sender, args, 1);
-        } else {
-            itemDefinition = Validator.getLineContent(args, 1);
-        }
-        return itemDefinition;
     }
 
     @Override
@@ -84,8 +76,6 @@ class ItemDisplaySetItemCommand extends DecentCommand {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
                 return TabCompleteHandler.getPartialMatches(args[1], CommandTabCompleteHelper.getItemMaterialNames(sender));
-            } else if (args.length >= 3) {
-                return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getItemAdditionalCompletions(args[1]));
             }
             return null;
         };

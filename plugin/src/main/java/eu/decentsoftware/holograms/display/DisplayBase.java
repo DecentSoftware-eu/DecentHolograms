@@ -20,7 +20,8 @@ package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.location.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -69,10 +70,6 @@ public abstract class DisplayBase {
     @SuppressWarnings("unchecked")
     public <T> DisplayAttribute<T> getAttribute(AttributeKey<T> key) {
         return (DisplayAttribute<T>) attributes.get(key);
-    }
-
-    public void removeAttribute(AttributeKey<?> key) {
-        attributes.remove(key);
     }
 
     public void setAttributes(Map<AttributeKey<?>, DisplayAttribute<?>> attributes) {

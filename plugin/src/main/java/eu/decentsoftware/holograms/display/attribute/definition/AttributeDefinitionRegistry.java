@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition;
 
-import eu.decentsoftware.holograms.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,20 +45,20 @@ public class AttributeDefinitionRegistry {
     private final Map<String, AttributeDefinition<?>> definitionsByName = new HashMap<>();
     private final Map<DisplayType, List<AttributeDefinition<?>>> definitionsByDisplayType = new EnumMap<>(DisplayType.class);
     private final Map<AttributeKey<?>, AttributeDefinition<?>> definitionsByKey = new HashMap<>();
-    private final Map<String, AttributeKey<?>> keysByName = new HashMap<>();
 
     /**
      * Create a new registry and register all built-in attribute definitions.
      */
     public AttributeDefinitionRegistry() {
         registerAllAttributeDefinitions();
-        populateKeysByName();
         populateDefinitionsByKey();
         populateDefinitionsByDisplayType();
     }
 
     private void registerAllAttributeDefinitions() {
         // General
+        registerDefinition(new YawAttributeDefinition());
+        registerDefinition(new PitchAttributeDefinition());
         registerDefinition(new TranslationAttributeDefinition());
         registerDefinition(new ScaleAttributeDefinition());
         registerDefinition(new BillboardAttributeDefinition());
@@ -76,13 +76,6 @@ public class AttributeDefinitionRegistry {
 
         // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
-    }
-
-    private void populateKeysByName() {
-        for (AttributeDefinition<?> definition : definitionsByName.values()) {
-            AttributeKey<?> key = definition.getKey();
-            this.keysByName.put(key.getName(), key);
-        }
     }
 
     private void populateDefinitionsByKey() {
@@ -117,11 +110,6 @@ public class AttributeDefinitionRegistry {
     @SuppressWarnings("unchecked")
     public <T> AttributeDefinition<T> getDefinitionByKey(@NotNull AttributeKey<T> key) {
         return (AttributeDefinition<T>) this.definitionsByKey.get(key);
-    }
-
-    @Nullable
-    public AttributeKey<?> getKeyByName(@NotNull String name) {
-        return this.keysByName.get(name);
     }
 
     /**
