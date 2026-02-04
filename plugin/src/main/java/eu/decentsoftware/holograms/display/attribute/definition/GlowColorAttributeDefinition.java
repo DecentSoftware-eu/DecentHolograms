@@ -49,9 +49,10 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     public void apply(DisplayAttribute<DecentColor> attribute, DisplayRenderState state, DisplayRenderContext context) {
         DecentColor value = attribute.getValue();
         if (value != null) {
+            state.addMetadata(BuiltInMetadataKeys.GLOWING.createValue(true));
             state.addMetadata(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(value));
         } else {
-            state.addMetadata(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(getDefaultValue()));
+            state.addMetadata(BuiltInMetadataKeys.GLOWING.createValue(false));
         }
     }
 

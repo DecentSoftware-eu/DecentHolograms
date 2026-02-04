@@ -25,6 +25,7 @@ public enum DisplayMetadataType implements MetadataType {
     BRIGHTNESS,
     SHADOW_RADIUS,
     SHADOW_STRENGTH,
+    GLOWING,
     GLOW_COLOR_OVERRIDE,
 
     TEXT_DISPLAY_BACKGROUND,

@@ -39,6 +39,8 @@ public final class BuiltInMetadataKeys {
             = new MetadataKey<>(DisplayMetadataType.SHADOW_RADIUS, Float.class);
     public static final MetadataKey<Float> SHADOW_STRENGTH
             = new MetadataKey<>(DisplayMetadataType.SHADOW_STRENGTH, Float.class);
+    public static final MetadataKey<Boolean> GLOWING
+            = new MetadataKey<>(DisplayMetadataType.GLOWING, Boolean.class);
     public static final MetadataKey<DecentColor> GLOW_COLOR_OVERRIDE
             = new MetadataKey<>(DisplayMetadataType.GLOW_COLOR_OVERRIDE, DecentColor.class);
 
