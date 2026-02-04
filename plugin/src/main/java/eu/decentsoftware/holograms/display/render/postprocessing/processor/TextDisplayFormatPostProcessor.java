@@ -16,24 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.type;
+package eu.decentsoftware.holograms.display.render.postprocessing.processor;
 
-import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 
-import java.util.Collections;
-import java.util.List;
+public class TextDisplayFormatPostProcessor implements DisplayContentPostProcessor<String, DisplayContent<String>> {
 
-public interface DisplayTypeDefinition<C> {
-
-    DisplayType getType();
-
-    DisplayContent<C> resolveContent(DisplayBase display, DisplayRenderContext context);
-
-    default List<DisplayContentPostProcessor<C, DisplayContent<C>>> getContentPostProcessors() {
-        return Collections.emptyList();
+    @Override
+    public DisplayContent<String> process(DisplayContent<String> content) {
+        String processedText = Common.colorize(content.getContent());
+        return new TextDisplayContent(processedText);
     }
 }

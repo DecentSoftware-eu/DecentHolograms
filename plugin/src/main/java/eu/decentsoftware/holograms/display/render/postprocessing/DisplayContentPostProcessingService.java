@@ -18,13 +18,30 @@
 
 package eu.decentsoftware.holograms.display.render.postprocessing;
 
+import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
+import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
+import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+
+import java.util.List;
 
 public class DisplayContentPostProcessingService {
 
-    public <T> DisplayContent<T> postProcessContent(DisplayContent<T> content) {
-        // TODO: animations, etc..
+    private final DisplayTypeRegistry displayTypeRegistry;
 
+    public DisplayContentPostProcessingService(DisplayTypeRegistry displayTypeRegistry) {
+        this.displayTypeRegistry = displayTypeRegistry;
+    }
+
+    // TODO: try to make this type-safe
+    @SuppressWarnings("unchecked")
+    public <T> DisplayContent<T> postProcessContent(DisplayType displayType, DisplayContent<T> content) {
+        DisplayTypeDefinition<T> displayTypeDefinition = (DisplayTypeDefinition<T>) displayTypeRegistry.getDefinition(displayType);
+        List<DisplayContentPostProcessor<T, DisplayContent<T>>> postProcessors = displayTypeDefinition.getContentPostProcessors();
+        for (DisplayContentPostProcessor<T, DisplayContent<T>> postProcessor : postProcessors) {
+            content = postProcessor.process(content);
+        }
         return content;
     }
 }

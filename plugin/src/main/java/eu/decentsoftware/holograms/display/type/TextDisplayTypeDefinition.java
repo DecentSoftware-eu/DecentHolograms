@@ -23,17 +23,23 @@ import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
+import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+
 public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> {
 
     private final DisplayPlaceholderService displayPlaceholderService;
+    private final List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors;
 
-    public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService) {
+    public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService,
+                                     List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors) {
         this.displayPlaceholderService = displayPlaceholderService;
+        this.postProcessors = postProcessors;
     }
 
     @Override
@@ -49,6 +55,11 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> 
         String contentString = String.join(ChatColor.RESET + "\n", page.getLines());
         String resolvedContent = displayPlaceholderService.replacePlaceholders(contentString, context);
         return new TextDisplayContent(resolvedContent);
+    }
+
+    @Override
+    public List<DisplayContentPostProcessor<String, DisplayContent<String>>> getContentPostProcessors() {
+        return postProcessors;
     }
 
     private TextDisplay getTextDisplay(DisplayBase displayBase) {

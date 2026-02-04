@@ -37,7 +37,7 @@ public class UpdateDisplayContentIntentMaterializer implements IntentMaterialize
     @Override
     public RenderIntent materialize(IntentDescriptor.UpdateDisplayContent intentDescriptor, DisplayRenderContext context) {
         DisplayRenderState state = intentDescriptor.getRenderState();
-        DisplayContent<?> finalContent = postProcessingService.postProcessContent(state.getContent());
+        DisplayContent<?> finalContent = postProcessingService.postProcessContent(state.getDisplayType(), state.getContent());
         return new UpdateDisplayContentRenderIntent(finalContent);
     }
 }

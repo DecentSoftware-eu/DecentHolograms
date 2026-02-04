@@ -37,7 +37,7 @@ public class SpawnDisplayIntentMaterializer implements IntentMaterializer<Intent
     @Override
     public RenderIntent materialize(IntentDescriptor.SpawnDisplay intentDescriptor, DisplayRenderContext context) {
         DisplayRenderState state = intentDescriptor.getRenderState();
-        DisplayContent<?> finalContent = postProcessingService.postProcessContent(state.getContent());
+        DisplayContent<?> finalContent = postProcessingService.postProcessContent(state.getDisplayType(), state.getContent());
         return new SpawnDisplayRenderIntent(
                 state.getLocation(),
                 state.getMetadataValues(),
