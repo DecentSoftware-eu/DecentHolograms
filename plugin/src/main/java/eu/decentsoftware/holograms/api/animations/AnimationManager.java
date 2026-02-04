@@ -28,6 +28,7 @@ public class AnimationManager extends Ticked {
     private final DecentHolograms decentHolograms;
     private final Map<String, TextAnimation> animationMap = new HashMap<>();
     private final AtomicLong step;
+    private final ThreadLocal<Matcher> matcherCache = ThreadLocal.withInitial(() -> ANIMATION_PATTERN.matcher(""));
 
     public AnimationManager(DecentHolograms decentHolograms) {
         super(1L);
@@ -66,7 +67,8 @@ public class AnimationManager extends Ticked {
 
     @NonNull
     public String parseTextAnimations(@NonNull String string) {
-        Matcher matcher = ANIMATION_PATTERN.matcher(string);
+        Matcher matcher = matcherCache.get().reset(string);
+
         while (matcher.find()) {
             String animationName = matcher.group(1);
             String args = matcher.group(2);
@@ -89,8 +91,7 @@ public class AnimationManager extends Ticked {
     }
 
     public boolean containsAnimations(@NonNull String string) {
-        Matcher matcher = ANIMATION_PATTERN.matcher(string);
-        return matcher.find() || string.contains("&u");
+        return string.contains("&u") || matcherCache.get().reset(string).find();
     }
 
     public TextAnimation registerAnimation(@NonNull String name, @NonNull TextAnimation animation) {

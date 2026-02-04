@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.holograms.objects;
 
-import com.google.common.collect.ImmutableSet;
 import eu.decentsoftware.holograms.api.holograms.DisableCause;
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,11 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -151,7 +147,7 @@ public abstract class HologramObject extends FlagHolder {
      */
     @NonNull
     public Set<UUID> getViewers() {
-        return ImmutableSet.copyOf(viewers);
+        return Collections.unmodifiableSet(viewers);
     }
 
     /**
@@ -161,10 +157,14 @@ public abstract class HologramObject extends FlagHolder {
      */
     @NonNull
     public List<Player> getViewerPlayers() {
-        return getViewers().stream()
-                .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.isOnline())
-                .collect(Collectors.toList());
+        final List<Player> playerList = new ArrayList<>(viewers.size());
+        for (final UUID uuid : viewers) {
+            final Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                playerList.add(player);
+            }
+        }
+        return playerList;
     }
 
     /**
