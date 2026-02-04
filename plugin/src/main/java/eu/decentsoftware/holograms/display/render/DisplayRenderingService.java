@@ -82,10 +82,12 @@ public class DisplayRenderingService {
 
     public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
         render(display, player, false);
+        visibilityService.removeViewer(display, player);
     }
 
     public void renderForPlayer(DisplayBase display, PlatformPlayer player) {
         render(display, player, true);
+        visibilityService.addViewer(display, player);
     }
 
     private void render(DisplayBase display, PlatformPlayer player, boolean visible) {
