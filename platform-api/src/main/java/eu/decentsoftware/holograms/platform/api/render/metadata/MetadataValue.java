@@ -35,4 +35,8 @@ public class MetadataValue<T> {
     public T getValue() {
         return value;
     }
+
+    public boolean isAnimated() {
+        return false;
+    }
 }

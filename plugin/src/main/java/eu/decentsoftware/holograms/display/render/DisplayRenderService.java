@@ -25,8 +25,9 @@ import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateManage
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,10 +59,15 @@ public class DisplayRenderService {
 
     public void postProcess(RenderObjectHandle handle, DisplayRenderContext context) {
         DisplayRenderState state = getPreviousState(handle, context);
-        // TODO: find a way to only post-process things that actually need it, and not just content
-        List<IntentDescriptor> intentDescriptors = Arrays.asList(
-                new IntentDescriptor.UpdateDisplayContent(state)
-        );
+        List<IntentDescriptor> intentDescriptors = new ArrayList<>();
+        if (state.getContent().isAnimated()) {
+            intentDescriptors.add(new IntentDescriptor.UpdateDisplayContent(state));
+        }
+        for (MetadataValue<?> metadataValue : state.getMetadataValues().values()) {
+            if (metadataValue.isAnimated()) {
+                intentDescriptors.add(new IntentDescriptor.UpdateMetadata<>(state, metadataValue.getKey()));
+            }
+        }
         List<RenderIntent> intents = intentMaterializerService.materializeIntents(intentDescriptors, context);
 
         platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);

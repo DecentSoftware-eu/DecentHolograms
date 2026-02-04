@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.type;
 
+import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
@@ -35,11 +36,14 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> 
 
     private final DisplayPlaceholderService displayPlaceholderService;
     private final List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors;
+    private final AnimationManager animationManager;
 
     public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService,
-                                     List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors) {
+                                     List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors,
+                                     AnimationManager animationManager) {
         this.displayPlaceholderService = displayPlaceholderService;
         this.postProcessors = postProcessors;
+        this.animationManager = animationManager;
     }
 
     @Override
@@ -54,7 +58,8 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> 
         TextDisplayPage page = textDisplay.getPage(context.getPage());
         String contentString = String.join(ChatColor.RESET + "\n", page.getLines());
         String resolvedContent = displayPlaceholderService.replacePlaceholders(contentString, context);
-        return new TextDisplayContent(resolvedContent);
+        boolean isContentAnimated = animationManager.containsAnimations(resolvedContent);
+        return new TextDisplayContent(resolvedContent, isContentAnimated);
     }
 
     @Override

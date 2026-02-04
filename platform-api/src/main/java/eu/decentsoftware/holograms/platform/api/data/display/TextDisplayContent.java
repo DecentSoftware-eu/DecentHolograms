@@ -21,13 +21,24 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 public final class TextDisplayContent implements DisplayContent<String> {
 
     private final String text;
+    private final boolean animated;
 
     public TextDisplayContent(String text) {
+        this(text, false);
+    }
+
+    public TextDisplayContent(String text, boolean animated) {
         this.text = text;
+        this.animated = animated;
     }
 
     @Override
     public String getContent() {
         return text;
+    }
+
+    @Override
+    public boolean isAnimated() {
+        return animated;
     }
 }

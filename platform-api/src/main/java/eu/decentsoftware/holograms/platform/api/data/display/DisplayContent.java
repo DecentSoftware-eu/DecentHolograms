@@ -21,4 +21,8 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 public interface DisplayContent<T> {
 
     T getContent();
+
+    default boolean isAnimated() {
+        return false;
+    }
 }

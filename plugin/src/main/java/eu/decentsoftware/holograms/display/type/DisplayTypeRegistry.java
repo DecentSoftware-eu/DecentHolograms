@@ -53,7 +53,7 @@ public final class DisplayTypeRegistry {
                 new TextDisplayAnimationPostProcessor(animationManager),
                 new TextDisplayFormatPostProcessor()
         ));
-        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors);
+        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationManager);
     }
 
     private <T extends DisplayTypeDefinition<?>> void registerDisplayType(DisplayType type, T definition) {
