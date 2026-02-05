@@ -64,7 +64,11 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     @Override
     public @NotNull Integer parse(String[] args) {
         try {
-            return Integer.valueOf(args[0]);
+            int opacityValue = Integer.parseInt(args[0]);
+            if (opacityValue < 0 || opacityValue > 255) {
+                throw new AttributeParseException("Opacity must be between 0 and 255.");
+            }
+            return opacityValue;
         } catch (NumberFormatException e) {
             throw new AttributeParseException("Opacity must be an integer between 0 and 255.");
         }
