@@ -66,8 +66,8 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     public @NotNull Float parse(String[] args) {
         try {
             float parsed = Float.parseFloat(args[0]);
-            if (parsed < 0.0f || parsed > 360.0f) {
-                throw new AttributeParseException("Pitch must be between 0.0 and 360.0.");
+            if (parsed < -90.0f || parsed > 90.0f) {
+                throw new AttributeParseException("Pitch must be between -90 and 90.");
             }
             return parsed;
         } catch (NumberFormatException e) {
@@ -78,7 +78,7 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     @Override
     public @NotNull List<String> getHints(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("0", "45", "90", "135", "180", "225", "270", "315", "360");
+            return Arrays.asList("-90", "-45", "0", "45", "90");
         }
         return Collections.emptyList();
     }
