@@ -18,9 +18,9 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 
@@ -79,6 +79,10 @@ public final class DisplayRenderState {
     @SuppressWarnings("unchecked")
     public <T> MetadataValue<T> getMetadataValue(MetadataKey<T> key) {
         return (MetadataValue<T>) metadataValues.get(key);
+    }
+
+    public boolean hasMetadataValue(MetadataKey<?> key) {
+        return metadataValues.containsKey(key);
     }
 
     public DisplayContent<?> getContent() {

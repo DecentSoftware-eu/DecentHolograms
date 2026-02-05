@@ -29,8 +29,8 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
@@ -120,17 +120,13 @@ class DisplayRenderer implements NmsDisplayRenderer {
             case DisplayMetadataType.TEXT_DISPLAY_BACKGROUND ->
                     metadataBuilder.withTextDisplayBackground((DecentColor) metadataValue.getValue());
             case DisplayMetadataType.TEXT_DISPLAY_OPACITY -> metadataBuilder.withTextDisplayTextOpacity((Integer) metadataValue.getValue());
-            case DisplayMetadataType.TEXT_DISPLAY_HAS_SHADOW -> {
-                boolean hasShadow = (Boolean) metadataValue.getValue();
-                metadataBuilder.withTextDisplayProperties(hasShadow, false, TextDisplayAlignment.CENTER);
-            }
-            case DisplayMetadataType.TEXT_DISPLAY_SEE_THROUGH -> {
-                Boolean isSeeThrough = (Boolean) metadataValue.getValue();
-                metadataBuilder.withTextDisplayProperties(false, isSeeThrough, TextDisplayAlignment.CENTER);
-            }
-            case DisplayMetadataType.TEXT_DISPLAY_ALIGNMENT -> {
-                TextDisplayAlignment alignment = (TextDisplayAlignment) metadataValue.getValue();
-                metadataBuilder.withTextDisplayProperties(false, false, alignment);
+            case DisplayMetadataType.TEXT_DISPLAY_PROPERTIES -> {
+                TextDisplayProperties properties = (TextDisplayProperties) metadataValue.getValue();
+                metadataBuilder.withTextDisplayProperties(
+                        properties.hasShadow(),
+                        properties.isSeeThrough(),
+                        properties.getAlignment()
+                );
             }
             case DisplayMetadataType.ITEM_DISPLAY_TYPE -> {
                 ItemDisplayType itemDisplayType = (ItemDisplayType) metadataValue.getValue();

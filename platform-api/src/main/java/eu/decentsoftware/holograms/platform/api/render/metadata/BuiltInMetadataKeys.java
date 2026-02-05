@@ -23,7 +23,7 @@ import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 
 public final class BuiltInMetadataKeys {
 
@@ -48,12 +48,8 @@ public final class BuiltInMetadataKeys {
             = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_BACKGROUND, DecentColor.class);
     public static final MetadataKey<Integer> TEXT_DISPLAY_OPACITY
             = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_OPACITY, Integer.class);
-    public static final MetadataKey<Boolean> TEXT_DISPLAY_HAS_SHADOW
-            = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_HAS_SHADOW, Boolean.class);
-    public static final MetadataKey<Boolean> TEXT_DISPLAY_SEE_THROUGH
-            = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_SEE_THROUGH, Boolean.class);
-    public static final MetadataKey<TextDisplayAlignment> TEXT_DISPLAY_ALIGNMENT
-            = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_ALIGNMENT, TextDisplayAlignment.class);
+    public static final MetadataKey<TextDisplayProperties> TEXT_DISPLAY_PROPERTIES
+            = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_PROPERTIES, TextDisplayProperties.class);
 
     public static final MetadataKey<ItemDisplayType> ITEM_DISPLAY_TYPE
             = new MetadataKey<>(DisplayMetadataType.ITEM_DISPLAY_TYPE, ItemDisplayType.class);

@@ -18,12 +18,14 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition;
 
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,11 +55,20 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     @Override
     public void apply(DisplayAttribute<Boolean> attribute, DisplayRenderState state, DisplayRenderContext context) {
         Boolean value = attribute.getValue();
-        if (value != null) {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_HAS_SHADOW.createValue(value));
+
+        MetadataValue<TextDisplayProperties> metadataValue = getTextDisplayPropertiesMetadataValue(state);
+        metadataValue.getValue().setHasShadow(value);
+    }
+
+    private MetadataValue<TextDisplayProperties> getTextDisplayPropertiesMetadataValue(DisplayRenderState state) {
+        MetadataValue<TextDisplayProperties> metadataValue;
+        if (state.hasMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES)) {
+            metadataValue = state.getMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES);
         } else {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_HAS_SHADOW.createValue(getDefaultValue()));
+            metadataValue = BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(new TextDisplayProperties());
+            state.addMetadata(metadataValue);
         }
+        return metadataValue;
     }
 
     @Override
