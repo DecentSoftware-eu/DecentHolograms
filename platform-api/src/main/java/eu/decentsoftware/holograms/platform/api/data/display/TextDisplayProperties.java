@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 
 import java.util.Objects;
 
-public class TextDisplayProperties {
+public final class TextDisplayProperties {
 
     private boolean hasShadow;
     private boolean seeThrough;

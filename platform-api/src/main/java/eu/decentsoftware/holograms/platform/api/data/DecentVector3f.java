@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.api.data;
 
-public class DecentVector3f {
+public final class DecentVector3f {
 
     private final float x;
     private final float y;

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.api.data;
 
-public class BlockDescriptor {
+public final class BlockDescriptor {
 
     private String type;
 

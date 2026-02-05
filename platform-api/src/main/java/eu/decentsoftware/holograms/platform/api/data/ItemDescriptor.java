@@ -20,25 +20,34 @@ package eu.decentsoftware.holograms.platform.api.data;
 
 import java.util.Objects;
 
-public class ItemDescriptor {
+/**
+ * Represents a platform-agnostic item descriptor.
+ *
+ * <p>This class holds relevant data about an item
+ * and can be used by platform adapters to construct platform-specific items.</p>
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
+public final class ItemDescriptor {
 
-    private String type;
+    private String material;
     private boolean enchanted;
     private Integer damage;
     private Integer customModelData;
     private String skullTexture;
     private DecentColor leatherColor;
 
-    public ItemDescriptor(String type) {
-        this.type = type;
+    public ItemDescriptor(String material) {
+        this.material = material;
     }
 
-    public String getType() {
-        return type;
+    public String getMaterial() {
+        return material;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMaterial(String material) {
+        this.material = material;
     }
 
     public boolean isEnchanted() {
@@ -84,7 +93,7 @@ public class ItemDescriptor {
     @Override
     public String toString() {
         return "ItemDescriptor{" +
-                "type='" + type + '\'' +
+                "type='" + material + '\'' +
                 ", enchanted=" + enchanted +
                 ", damage=" + damage +
                 ", customModelData=" + customModelData +
@@ -102,13 +111,13 @@ public class ItemDescriptor {
         return isEnchanted() == that.isEnchanted()
                 && Objects.equals(getDamage(), that.getDamage())
                 && Objects.equals(getCustomModelData(), that.getCustomModelData())
-                && Objects.equals(getType(), that.getType())
+                && Objects.equals(getMaterial(), that.getMaterial())
                 && Objects.equals(getSkullTexture(), that.getSkullTexture())
                 && Objects.equals(getLeatherColor(), that.getLeatherColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getType(), isEnchanted(), getDamage(), getCustomModelData(), getSkullTexture(), getLeatherColor());
+        return Objects.hash(getMaterial(), isEnchanted(), getDamage(), getCustomModelData(), getSkullTexture(), getLeatherColor());
     }
 }

@@ -149,7 +149,7 @@ class DisplayRenderer implements NmsDisplayRenderer {
                 throw unsupportedContentException(updateContentIntent, "ItemDisplayContent");
             }
             ItemDescriptor itemDescriptor = itemContent.getContent();
-            String type = itemDescriptor.getType();
+            String type = itemDescriptor.getMaterial();
             Material material = Material.matchMaterial(type);
             if (material == null) {
                 throw new DecentHologramsNmsException("Invalid item type: " + type);

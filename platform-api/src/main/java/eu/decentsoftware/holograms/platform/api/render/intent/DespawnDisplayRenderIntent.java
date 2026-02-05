@@ -31,5 +31,5 @@ package eu.decentsoftware.holograms.platform.api.render.intent;
  * @see RenderIntent
  * @since 2.10.0
  */
-public class DespawnDisplayRenderIntent implements RenderIntent {
+public final class DespawnDisplayRenderIntent implements RenderIntent {
 }

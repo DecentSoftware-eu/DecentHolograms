@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.platform.api.data;
 
 import java.awt.*;
 
-public class DecentColor {
+public final class DecentColor {
 
     public static final DecentColor TRANSPARENT = DecentColor.fromRGBA(0, 0, 0, 0);
     public static final DecentColor DEFAULT_BACKGROUND = DecentColor.fromRGBA(0, 0, 0, 64);
