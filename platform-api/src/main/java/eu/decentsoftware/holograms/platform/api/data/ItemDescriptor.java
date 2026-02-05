@@ -18,14 +18,16 @@
 
 package eu.decentsoftware.holograms.platform.api.data;
 
+import java.util.Objects;
+
 public class ItemDescriptor {
 
     private String type;
     private boolean enchanted;
-    private int damage;
-    private int customModelData;
+    private Integer damage;
+    private Integer customModelData;
     private String skullTexture;
-    private String nbt;
+    private DecentColor leatherColor;
 
     public ItemDescriptor(String type) {
         this.type = type;
@@ -47,19 +49,19 @@ public class ItemDescriptor {
         this.enchanted = enchanted;
     }
 
-    public int getDamage() {
+    public Integer getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(Integer damage) {
         this.damage = damage;
     }
 
-    public int getCustomModelData() {
+    public Integer getCustomModelData() {
         return customModelData;
     }
 
-    public void setCustomModelData(int customModelData) {
+    public void setCustomModelData(Integer customModelData) {
         this.customModelData = customModelData;
     }
 
@@ -71,11 +73,42 @@ public class ItemDescriptor {
         this.skullTexture = skullTexture;
     }
 
-    public String getNbt() {
-        return nbt;
+    public DecentColor getLeatherColor() {
+        return leatherColor;
     }
 
-    public void setNbt(String nbt) {
-        this.nbt = nbt;
+    public void setLeatherColor(DecentColor leatherColor) {
+        this.leatherColor = leatherColor;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemDescriptor{" +
+                "type='" + type + '\'' +
+                ", enchanted=" + enchanted +
+                ", damage=" + damage +
+                ", customModelData=" + customModelData +
+                ", skullTexture='" + skullTexture + '\'' +
+                ", leatherColor=" + leatherColor +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ItemDescriptor)) {
+            return false;
+        }
+        ItemDescriptor that = (ItemDescriptor) o;
+        return isEnchanted() == that.isEnchanted()
+                && Objects.equals(getDamage(), that.getDamage())
+                && Objects.equals(getCustomModelData(), that.getCustomModelData())
+                && Objects.equals(getType(), that.getType())
+                && Objects.equals(getSkullTexture(), that.getSkullTexture())
+                && Objects.equals(getLeatherColor(), that.getLeatherColor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), isEnchanted(), getDamage(), getCustomModelData(), getSkullTexture(), getLeatherColor());
     }
 }

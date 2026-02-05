@@ -43,6 +43,7 @@ import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.syncher.DataWatcher;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -153,6 +154,9 @@ class DisplayRenderer implements NmsDisplayRenderer {
                 throw new DecentHologramsNmsException("Invalid item type: " + type);
             }
             ItemStack itemStack = new ItemStack(material);
+            if (itemDescriptor.isEnchanted()) {
+                itemStack.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
+            }
             metadataBuilder.withItemDisplayItemStack(itemStack);
         } else if (displayType == DisplayType.BLOCK) {
             if (!(updateContentIntent.getContent() instanceof BlockDisplayContent blockContent)) {

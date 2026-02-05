@@ -76,6 +76,7 @@ public class AttributeDefinitionRegistry {
 
         // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
+        registerDefinition(new ItemEnchantedAttributeDefinition());
     }
 
     private void populateDefinitionsByKey() {
