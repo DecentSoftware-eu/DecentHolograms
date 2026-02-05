@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
@@ -36,6 +35,7 @@ import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateManage
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,6 +48,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DisplayModule {
 
     private final JavaPlugin plugin;
+    private final PlatformAdapter platformAdapter;
     private final DisplayService displayService;
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
@@ -56,6 +57,7 @@ public class DisplayModule {
 
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
+        this.platformAdapter = platformAdapter;
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
         DisplayRenderDiffService renderDiffService = new DisplayRenderDiffService();
         DisplayRenderStateManager renderStateManager = new DisplayRenderStateManager();
@@ -82,7 +84,7 @@ public class DisplayModule {
     }
 
     public void initialize() {
-        if (Version.before(Version.v1_19_R3)) {
+        if (displaysUnsupported()) {
             return;
         }
         this.displayService.reload();
@@ -91,20 +93,24 @@ public class DisplayModule {
     }
 
     public void reload() {
-        if (Version.before(Version.v1_19_R3)) {
+        if (displaysUnsupported()) {
             return;
         }
         this.displayService.reload();
     }
 
     public void shutdown() {
-        if (Version.before(Version.v1_19_R3)) {
+        if (displaysUnsupported()) {
             return;
         }
         HandlerList.unregisterAll(displayListener);
         this.displayUpdater.unregister();
         this.playerPageManager.shutdown();
         this.displayService.shutdown();
+    }
+
+    private boolean displaysUnsupported() {
+        return !platformAdapter.getCapabilities().supports(PlatformCapability.DISPLAY_ENTITIES);
     }
 
     public DisplayService getDisplayService() {

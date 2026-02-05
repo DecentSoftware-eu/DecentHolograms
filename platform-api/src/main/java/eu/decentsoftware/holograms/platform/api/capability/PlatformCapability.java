@@ -16,22 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api;
+package eu.decentsoftware.holograms.platform.api.capability;
 
-import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
-import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
-import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
-import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
-
-import java.util.List;
-
-public interface PlatformAdapter {
-
-    PlatformCapabilities getCapabilities();
-
-    PlatformPlayerService getPlayerService();
-
-    PlatformRenderService getRenderService();
-
-    List<PlaceholderProvider> getPlaceholderProviders();
+/**
+ * Enum representing specific platform capabilities that can be queried for feature support.
+ *
+ * <p>This enum is used in conjunction with {@link PlatformCapabilities} to determine whether
+ * a particular feature is supported by the platform. Each constant defines a distinct capability
+ * and serves as a key when performing platform capability checks.</p>
+ *
+ * @author d0by
+ * @see PlatformCapabilities
+ * @since 2.10.0
+ */
+public enum PlatformCapability {
+    /**
+     * This capability represents the ability to use Minecraft's Display Entities,
+     * introduced in Minecraft 1.19.4.
+     */
+    DISPLAY_ENTITIES,
 }

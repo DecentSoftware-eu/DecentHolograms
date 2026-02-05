@@ -16,22 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api;
+package eu.decentsoftware.holograms.platform.bukkit;
 
+import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
-import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
-import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
-import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+public class BukkitPlatformCapabilities implements PlatformCapabilities {
 
-public interface PlatformAdapter {
-
-    PlatformCapabilities getCapabilities();
-
-    PlatformPlayerService getPlayerService();
-
-    PlatformRenderService getRenderService();
-
-    List<PlaceholderProvider> getPlaceholderProviders();
+    @Override
+    public boolean supports(@NotNull PlatformCapability capability) {
+        switch (capability) {
+            case DISPLAY_ENTITIES:
+                return Version.afterOrEqual(Version.v1_19_R3);
+        }
+        return false;
+    }
 }

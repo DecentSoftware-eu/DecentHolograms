@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.platform.bukkit;
 
 import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
@@ -32,16 +33,23 @@ import java.util.List;
 
 public class BukkitPlatformAdapter implements PlatformAdapter {
 
+    private final PlatformCapabilities capabilities;
     private final BukkitPlayerService playerService;
     private final BukkitRenderService renderService;
     private final List<PlaceholderProvider> placeholderProviders;
 
     public BukkitPlatformAdapter(NmsDisplayRendererFactory rendererFactory) {
+        capabilities = new BukkitPlatformCapabilities();
         playerService = new BukkitPlayerService();
         renderService = new BukkitRenderService(rendererFactory);
         placeholderProviders = Collections.singletonList(
                 new BukkitPlaceholderApiProvider()
         );
+    }
+
+    @Override
+    public PlatformCapabilities getCapabilities() {
+        return capabilities;
     }
 
     @Override
