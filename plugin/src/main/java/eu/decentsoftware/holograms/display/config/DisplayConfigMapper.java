@@ -140,7 +140,8 @@ public class DisplayConfigMapper {
     private <T> void attributeToDomain(DisplayBase display, String name, ConfigAttribute attribute) {
         AttributeDefinition<T> definition = (AttributeDefinition<T>) attributeDefinitionRegistry.getDefinitionByName(name);
         if (definition == null) {
-            throw new DisplayConfigException("Unknown attribute: " + name);
+            Log.warn("Found unknown attribute " + name + " for display " + display.getName() + ". Skipping.");
+            return;
         }
         if (!definition.applicableTo(display)) {
             Log.warn("Found incompatible attribute " + name + " for display " + display.getName() + ". Skipping.");
