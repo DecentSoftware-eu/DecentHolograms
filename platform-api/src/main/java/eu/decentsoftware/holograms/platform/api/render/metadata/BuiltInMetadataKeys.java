@@ -25,6 +25,14 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 
+/**
+ * Contains the built-in metadata keys for rendering.
+ *
+ * @author d0by
+ * @see MetadataKey
+ * @see MetadataType
+ * @since 2.10.0
+ */
 public final class BuiltInMetadataKeys {
 
     public static final MetadataKey<DecentVector3f> TRANSLATION
@@ -56,5 +64,4 @@ public final class BuiltInMetadataKeys {
 
     private BuiltInMetadataKeys() {
     }
-
 }

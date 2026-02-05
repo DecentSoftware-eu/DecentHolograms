@@ -18,24 +18,56 @@
 
 package eu.decentsoftware.holograms.platform.api.render.metadata;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Represents a metadata value associated with a specific {@link MetadataKey}.
+ *
+ * @param <T> The type of the metadata value.
+ * @author d0by
+ * @see MetadataKey
+ * @since 2.10.0
+ */
 public class MetadataValue<T> {
 
     private final MetadataKey<T> key;
     private final T value;
 
-    MetadataValue(MetadataKey<T> key, T value) {
+    MetadataValue(@NotNull MetadataKey<T> key, T value) {
         this.key = key;
         this.value = value;
     }
 
+    /**
+     * Get the metadata key associated with this value.
+     *
+     * @return The metadata key.
+     * @see MetadataKey
+     * @since 2.10.0
+     */
+    @NotNull
     public MetadataKey<T> getKey() {
         return key;
     }
 
+    /**
+     * Get the value of this metadata value.
+     *
+     * @return The value.
+     * @since 2.10.0
+     */
     public T getValue() {
         return value;
     }
 
+    /**
+     * Is this metadata value animated?
+     *
+     * <p>The core updates animated metadata values every tick via post-processing.</p>
+     *
+     * @return True if this metadata value is animated, false otherwise.
+     * @since 2.10.0
+     */
     public boolean isAnimated() {
         return false;
     }

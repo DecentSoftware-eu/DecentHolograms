@@ -18,14 +18,15 @@
 
 package eu.decentsoftware.holograms.platform.bukkit.render;
 
-import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsDisplayRenderer;
+import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +42,11 @@ public class BukkitRenderService implements PlatformRenderService {
     }
 
     @Override
-    public void render(PlatformPlayer player, RenderObjectHandle handle, List<RenderIntent> intents) {
+    public void render(@NotNull PlatformPlayer player, @NotNull RenderObjectHandle handle, @NotNull List<RenderIntent> intents) {
         Player bukkitPlayer = ((BukkitPlayer) player).getBukkitPlayer();
         NmsDisplayRenderer renderer = renderers.computeIfAbsent(handle.getId(),
                 k -> rendererFactory.createDisplayRenderer(handle.getDisplayType()));
+        // TODO: mapping layer between platform and NMS to simplify NMS renderer
         renderer.accept(bukkitPlayer, intents);
     }
 }

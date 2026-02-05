@@ -47,6 +47,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -157,6 +158,11 @@ class DisplayRenderer implements NmsDisplayRenderer {
             if (itemDescriptor.isEnchanted()) {
                 itemStack.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
             }
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (itemMeta != null) {
+                itemMeta.setCustomModelData(itemDescriptor.getCustomModelData());
+            }
+            itemStack.setItemMeta(itemMeta);
             metadataBuilder.withItemDisplayItemStack(itemStack);
         } else if (displayType == DisplayType.BLOCK) {
             if (!(updateContentIntent.getContent() instanceof BlockDisplayContent blockContent)) {

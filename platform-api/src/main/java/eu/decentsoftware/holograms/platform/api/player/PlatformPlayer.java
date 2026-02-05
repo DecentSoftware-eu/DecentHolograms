@@ -19,14 +19,46 @@
 package eu.decentsoftware.holograms.platform.api.player;
 
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Represents a platform-agnostic player.
+ *
+ * <p>This interface is designed to provide access to basic player data or actions.
+ * Implementations are responsible for interacting with the platform-specific player implementation.</p>
+ *
+ * @author d0by
+ * @see PlatformPlayerService
+ * @since 2.10.0
+ */
 public interface PlatformPlayer {
 
+    /**
+     * Get the name of the player.
+     *
+     * @return The name.
+     * @since 2.10.0
+     */
+    @NotNull
     String getName();
 
+    /**
+     * Get the unique identifier of the player.
+     *
+     * @return The unique identifier.
+     * @since 2.10.0
+     */
+    @NotNull
     UUID getUniqueId();
 
+    /**
+     * Get the location of the player.
+     *
+     * @return The location.
+     * @see DecentLocation
+     * @since 2.10.0
+     */
     DecentLocation getLocation();
 }

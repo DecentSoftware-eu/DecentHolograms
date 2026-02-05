@@ -20,7 +20,26 @@ package eu.decentsoftware.holograms.platform.api.placeholder;
 
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
+/**
+ * Represents the context in which placeholders are resolved.
+ *
+ * <p>This interface provides the necessary data and methods to support placeholder
+ * replacement operations. It serves as a data container, supplying information such
+ * as the player for which placeholders are being resolved.</p>
+ *
+ * @author d0by
+ * @see PlatformPlayer
+ * @see PlaceholderProvider
+ * @since 2.10.0
+ */
 public interface PlaceholderContext {
 
+    /**
+     * Get the player for which placeholders are being resolved.
+     *
+     * @return The player.
+     * @see PlatformPlayer
+     * @since 2.10.0
+     */
     PlatformPlayer getPlayer();
 }

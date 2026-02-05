@@ -19,15 +19,33 @@
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class MoveRenderIntent implements RenderIntent {
+/**
+ * Represents a rendering operation to move an existing object to a new location.
+ *
+ * <p>This render intent encapsulates the new location that should be applied to the object.</p>
+ *
+ * <p>Instances of this class are immutable and carry the necessary data for the "move" rendering intent.</p>
+ *
+ * @author d0by
+ * @see RenderIntent
+ * @since 2.10.0
+ */
+public final class MoveRenderIntent implements RenderIntent {
 
     private final DecentLocation location;
 
-    public MoveRenderIntent(DecentLocation location) {
+    public MoveRenderIntent(@NotNull DecentLocation location) {
         this.location = location;
     }
 
+    /**
+     * Get the new location that should be applied to the object.
+     *
+     * @return The new location.
+     */
+    @NotNull
     public DecentLocation getLocation() {
         return location;
     }

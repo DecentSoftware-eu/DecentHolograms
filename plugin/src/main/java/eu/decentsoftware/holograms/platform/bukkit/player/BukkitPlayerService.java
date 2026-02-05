@@ -22,6 +22,9 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,10 +34,7 @@ import java.util.stream.Collectors;
 public class BukkitPlayerService implements PlatformPlayerService {
 
     @Override
-    public PlatformPlayer getDecentPlayer(Object platformPlayer) {
-        if (platformPlayer == null) {
-            return null;
-        }
+    public @NotNull PlatformPlayer getDecentPlayer(@NotNull Object platformPlayer) {
         if (!(platformPlayer instanceof Player)) {
             throw new IllegalArgumentException("Player object must be of type Player");
         }
@@ -42,13 +42,13 @@ public class BukkitPlayerService implements PlatformPlayerService {
     }
 
     @Override
-    public PlatformPlayer getDecentPlayer(UUID uniqueId) {
+    public @Nullable PlatformPlayer getDecentPlayer(@NotNull UUID uniqueId) {
         Player player = Bukkit.getPlayer(uniqueId);
         return getDecentPlayer(player);
     }
 
     @Override
-    public Collection<PlatformPlayer> getOnlinePlayers() {
+    public @NotNull @Unmodifiable Collection<PlatformPlayer> getOnlinePlayers() {
         return Collections.unmodifiableCollection(
                 Bukkit.getOnlinePlayers().stream()
                         .map(this::getDecentPlayer)

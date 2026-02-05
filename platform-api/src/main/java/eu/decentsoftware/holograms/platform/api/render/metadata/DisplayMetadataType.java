@@ -18,6 +18,12 @@
 
 package eu.decentsoftware.holograms.platform.api.render.metadata;
 
+/**
+ * Represents metadata types related to display entities.
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
 public enum DisplayMetadataType implements MetadataType {
     TRANSLATION,
     SCALE,

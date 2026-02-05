@@ -27,6 +27,7 @@ import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,21 +48,25 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         );
     }
 
+    @NotNull
     @Override
     public PlatformCapabilities getCapabilities() {
         return capabilities;
     }
 
+    @NotNull
     @Override
     public PlatformPlayerService getPlayerService() {
         return playerService;
     }
 
+    @NotNull
     @Override
     public PlatformRenderService getRenderService() {
         return renderService;
     }
 
+    @NotNull
     @Override
     public List<PlaceholderProvider> getPlaceholderProviders() {
         return placeholderProviders;

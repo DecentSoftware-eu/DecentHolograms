@@ -18,5 +18,18 @@
 
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
+/**
+ * Represents a rendering operation to despawn or remove an existing display object.
+ *
+ * <p>This render intent encapsulates the action of removing a display from the rendering system,
+ * typically when it should no longer be visible.</p>
+ *
+ * <p>Instances of this class provide no additional data as the action of despawning
+ * does not require any additional parameters.</p>
+ *
+ * @author d0by
+ * @see RenderIntent
+ * @since 2.10.0
+ */
 public class DespawnDisplayRenderIntent implements RenderIntent {
 }

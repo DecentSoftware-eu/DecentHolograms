@@ -18,7 +18,35 @@
 
 package eu.decentsoftware.holograms.platform.api.placeholder;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Provides a mechanism to replace placeholders within a given input string.
+ *
+ * <p>A placeholder provider is used to process input strings containing placeholders
+ * and replace them with corresponding values based on the provided context. The specific
+ * implementation of the provider determines how placeholders are identified and replaced.</p>
+ *
+ * <p>Typical usage involves integrating this interface with platform-specific placeholder
+ * processing systems, such as PlaceholderAPI on Bukkit-based servers.</p>
+ *
+ * <p>Implementations of this interface may use the {@link PlaceholderContext} to
+ * retrieve relevant contextual data, such as player information, to resolve placeholders.</p>
+ *
+ * @author d0by
+ * @see PlaceholderContext
+ * @since 2.10.0
+ */
 public interface PlaceholderProvider {
 
-    String replace(String input, PlaceholderContext ctx);
+    /**
+     * Replaces placeholders in the given input string using the provided context.
+     *
+     * @param input The input string.
+     * @param ctx   Contextual information for placeholder resolution.
+     * @return The input string with placeholders replaced.
+     * @since 2.10.0
+     */
+    @NotNull
+    String replace(@NotNull String input, @NotNull PlaceholderContext ctx);
 }

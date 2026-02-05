@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -38,12 +39,12 @@ public class BukkitPlayer implements PlatformPlayer {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return platformPlayer.getName();
     }
 
     @Override
-    public UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         return platformPlayer.getUniqueId();
     }
 

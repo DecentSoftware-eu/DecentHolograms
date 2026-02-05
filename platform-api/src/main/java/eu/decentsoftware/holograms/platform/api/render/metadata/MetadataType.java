@@ -18,5 +18,11 @@
 
 package eu.decentsoftware.holograms.platform.api.render.metadata;
 
+/**
+ * Marker interface for metadata types.
+ *
+ * @author d0by
+ * @since 2.10.0
+ */
 public interface MetadataType {
 }

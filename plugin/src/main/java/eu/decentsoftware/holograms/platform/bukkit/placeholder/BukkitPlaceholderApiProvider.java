@@ -23,11 +23,12 @@ import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderContext;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class BukkitPlaceholderApiProvider implements PlaceholderProvider {
 
     @Override
-    public String replace(String input, PlaceholderContext ctx) {
+    public @NotNull String replace(@NotNull String input, @NotNull PlaceholderContext ctx) {
         Player player = ((BukkitPlayer) ctx.getPlayer()).getBukkitPlayer();
         return PAPI.setPlaceholders(player, input);
     }

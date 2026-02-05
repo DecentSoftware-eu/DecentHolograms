@@ -21,29 +21,62 @@ package eu.decentsoftware.holograms.platform.api.render.intent;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class SpawnDisplayRenderIntent implements RenderIntent {
+/**
+ * Represents a rendering operation for spawning a display at a specific location with associated metadata and content.
+ *
+ * <p>This class encapsulates the details required for the rendering system to create and render a Display object,
+ * including its location in the world, metadata, and content.</p>
+ *
+ * <p>Instances of this class are immutable and encapsulate all necessary data for the "spawn display" rendering intent.</p>
+ *
+ * @author d0by
+ * @see RenderIntent
+ * @since 2.10.0
+ */
+public final class SpawnDisplayRenderIntent implements RenderIntent {
 
     private final DecentLocation location;
     private final Map<MetadataKey<?>, MetadataValue<?>> metadataValues;
     private final Object content;
 
-    public SpawnDisplayRenderIntent(DecentLocation location, Map<MetadataKey<?>, MetadataValue<?>> metadataValues, Object content) {
+    public SpawnDisplayRenderIntent(@NotNull DecentLocation location,
+                                    @NotNull Map<MetadataKey<?>, MetadataValue<?>> metadataValues,
+                                    @NotNull Object content) {
         this.location = location;
         this.metadataValues = metadataValues;
         this.content = content;
     }
 
+    /**
+     * Get the location at which the display should be spawned.
+     *
+     * @return The location.
+     */
+    @NotNull
     public DecentLocation getLocation() {
         return location;
     }
 
+    /**
+     * Get the metadata values associated with the display.
+     *
+     * @return The metadata values.
+     */
+    @NotNull
     public Map<MetadataKey<?>, MetadataValue<?>> getMetadataValues() {
         return metadataValues;
     }
 
+    /**
+     * Get the content of the display.
+     *
+     * @return The content.
+     */
+    @NotNull
     public Object getContent() {
         return content;
     }

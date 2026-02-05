@@ -18,7 +18,22 @@
 
 package eu.decentsoftware.holograms.platform.api.render.metadata;
 
+/**
+ * This interface defines a strategy for checking the equality of two objects of a specified type.
+ *
+ * @param <T> The type of object to be compared for equality.
+ * @author d0by
+ * @since 2.10.0
+ */
 public interface MetadataKeyEqualityHandler<T> {
 
+    /**
+     * Checks whether the two specified objects are equal.
+     *
+     * @param first  The first object.
+     * @param second The second object.
+     * @return True if the objects are equal, false otherwise.
+     * @since 2.10.0
+     */
     boolean areEqual(T first, T second);
 }

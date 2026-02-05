@@ -18,14 +18,49 @@
 
 package eu.decentsoftware.holograms.platform.api.player;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * This service is responsible for interacting with platform-specific players.
+ *
+ * @author d0by
+ * @see PlatformPlayer
+ * @since 2.10.0
+ */
 public interface PlatformPlayerService {
 
-    PlatformPlayer getDecentPlayer(Object platformPlayer);
+    /**
+     * Get a platform-agnostic wrapper for the specified platform-specific player.
+     *
+     * @param platformPlayer The platform-specific player.
+     * @return The platform-agnostic wrapper.
+     * @see PlatformPlayer
+     */
+    @NotNull
+    PlatformPlayer getDecentPlayer(@NotNull Object platformPlayer);
 
-    PlatformPlayer getDecentPlayer(UUID uniqueId);
+    /**
+     * Get a platform-agnostic wrapper for the player with the specified UUID.
+     *
+     * @param uniqueId The player UUID.
+     * @return The platform-agnostic wrapper or null if no player with the specified UUID is online.
+     * @see PlatformPlayer
+     */
+    @Nullable
+    PlatformPlayer getDecentPlayer(@NotNull UUID uniqueId);
 
+    /**
+     * Get all online players.
+     *
+     * @return Platform-agnostic wrappers of all online players.
+     * @see PlatformPlayer
+     */
+    @NotNull
+    @Unmodifiable
     Collection<PlatformPlayer> getOnlinePlayers();
 }

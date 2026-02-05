@@ -18,5 +18,22 @@
 
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
+import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
+
+/**
+ * Represents a specific rendering operation that can be performed.
+ *
+ * <p>Classes implementing this interface define specific actions such as
+ * spawning, moving, despawning, or updating display elements and their
+ * associated metadata or content.</p>
+ *
+ * <p>Render intents are used to encapsulate rendering logic in a modular
+ * and extensible way, allowing the rendering system to process and
+ * execute these actions accordingly.</p>
+ *
+ * @author d0by
+ * @see PlatformRenderService
+ * @since 2.10.0
+ */
 public interface RenderIntent {
 }

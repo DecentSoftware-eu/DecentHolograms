@@ -18,14 +18,35 @@
 
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
-public class UpdateDisplayContentRenderIntent implements RenderIntent {
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Represents a rendering operation for updating the content of an existing display element.
+ *
+ * <p>This render intent encapsulates the new content that should be applied to the display.
+ * It is used by the rendering system to process and execute content updates on displays.</p>
+ *
+ * <p>Instances of this class are immutable and carry the necessary data for the "update display content"
+ * rendering intent.</p>
+ *
+ * @author d0by
+ * @see RenderIntent
+ * @since 2.10.0
+ */
+public final class UpdateDisplayContentRenderIntent implements RenderIntent {
 
     private final Object content;
 
-    public UpdateDisplayContentRenderIntent(Object content) {
+    public UpdateDisplayContentRenderIntent(@NotNull Object content) {
         this.content = content;
     }
 
+    /**
+     * Get the new content that should be applied to the display.
+     *
+     * @return The new content.
+     */
+    @NotNull
     public Object getContent() {
         return content;
     }
