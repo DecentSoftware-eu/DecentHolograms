@@ -66,7 +66,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
         if (value == null) {
             return null;
         }
-        String rgbString = String.format("R: %s, G: %s, B: %s", value.getRed(), value.getGreen(), value.getBlue());
+        String rgbString = String.format("RGBA: %s, %s, %s, %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
         return value.asRGBString() + rgbString;
     }
 

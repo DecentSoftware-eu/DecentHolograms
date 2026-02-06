@@ -65,7 +65,7 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
         if (value == null) {
             return null;
         }
-        String rgbString = String.format("R: %s, G: %s, B: %s, A: %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
+        String rgbString = String.format("RGBA: %s, %s, %s, %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
         return value.asRGBString() + rgbString;
     }
 
