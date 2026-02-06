@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.platform.api.data;
 
+import java.util.Objects;
+
 public final class BlockDescriptor {
 
     private String type;
@@ -32,5 +34,26 @@ public final class BlockDescriptor {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockDescriptor{" +
+                "type='" + type + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BlockDescriptor)) {
+            return false;
+        }
+        BlockDescriptor that = (BlockDescriptor) o;
+        return Objects.equals(getType(), that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getType());
     }
 }

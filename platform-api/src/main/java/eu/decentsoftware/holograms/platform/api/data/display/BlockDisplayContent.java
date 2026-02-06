@@ -20,6 +20,8 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 
 import eu.decentsoftware.holograms.platform.api.data.BlockDescriptor;
 
+import java.util.Objects;
+
 public final class BlockDisplayContent implements DisplayContent<BlockDescriptor> {
 
     private final BlockDescriptor descriptor;
@@ -31,5 +33,19 @@ public final class BlockDisplayContent implements DisplayContent<BlockDescriptor
     @Override
     public BlockDescriptor getContent() {
         return descriptor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BlockDisplayContent)) {
+            return false;
+        }
+        BlockDisplayContent that = (BlockDisplayContent) o;
+        return Objects.equals(descriptor, that.descriptor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(descriptor);
     }
 }

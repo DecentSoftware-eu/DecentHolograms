@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.platform.api.data.display;
 
+import java.util.Objects;
+
 public final class TextDisplayContent implements DisplayContent<String> {
 
     private final String text;
@@ -40,5 +42,19 @@ public final class TextDisplayContent implements DisplayContent<String> {
     @Override
     public boolean isAnimated() {
         return animated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TextDisplayContent)) {
+            return false;
+        }
+        TextDisplayContent that = (TextDisplayContent) o;
+        return Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(text);
     }
 }
