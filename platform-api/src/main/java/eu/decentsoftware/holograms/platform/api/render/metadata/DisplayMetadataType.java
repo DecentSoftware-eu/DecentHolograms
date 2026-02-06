@@ -37,6 +37,7 @@ public enum DisplayMetadataType implements MetadataType {
     TEXT_DISPLAY_BACKGROUND,
     TEXT_DISPLAY_OPACITY,
     TEXT_DISPLAY_PROPERTIES,
+    TEXT_LINE_WIDTH,
 
     ITEM_DISPLAY_TYPE,
 }

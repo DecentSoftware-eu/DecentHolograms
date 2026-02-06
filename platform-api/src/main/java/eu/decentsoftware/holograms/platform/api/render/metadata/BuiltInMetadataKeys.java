@@ -58,6 +58,8 @@ public final class BuiltInMetadataKeys {
             = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_OPACITY, Integer.class);
     public static final MetadataKey<TextDisplayProperties> TEXT_DISPLAY_PROPERTIES
             = new MetadataKey<>(DisplayMetadataType.TEXT_DISPLAY_PROPERTIES, TextDisplayProperties.class);
+    public static final MetadataKey<Integer> TEXT_LINE_WIDTH
+            = new MetadataKey<>(DisplayMetadataType.TEXT_LINE_WIDTH, Integer.class);
 
     public static final MetadataKey<ItemDisplayType> ITEM_DISPLAY_TYPE
             = new MetadataKey<>(DisplayMetadataType.ITEM_DISPLAY_TYPE, ItemDisplayType.class);

@@ -19,12 +19,12 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,6 +131,9 @@ public interface AttributeDefinition<T> {
      * @since 2.10.0
      */
     default String format(T value) {
+        if (value == null) {
+            return null;
+        }
         return String.valueOf(value);
     }
 

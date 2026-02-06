@@ -18,9 +18,9 @@
 
 package eu.decentsoftware.holograms.nms.v1_21_R5;
 
-import eu.decentsoftware.holograms.nms.api.display.NmsMoveDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayMetadata;
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRenderer;
+import eu.decentsoftware.holograms.nms.api.display.NmsMoveDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
@@ -108,6 +108,7 @@ abstract class AbstractDisplayRenderer<C> implements NmsDisplayRenderer<C> {
                         properties.getAlignment()
                 );
             }
+            case DisplayMetadataType.TEXT_LINE_WIDTH -> metadataBuilder.withTextDisplayLineWidth((Integer) metadatum.getValue());
             case DisplayMetadataType.ITEM_DISPLAY_TYPE -> {
                 ItemDisplayType itemDisplayType = (ItemDisplayType) metadatum.getValue();
                 metadataBuilder.withItemDisplayData(itemDisplayType);

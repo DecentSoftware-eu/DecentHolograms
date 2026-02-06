@@ -74,6 +74,7 @@ public class AttributeDefinitionRegistry {
         registerDefinition(new TextShadowAttributeDefinition());
         registerDefinition(new TextSeeThroughAttributeDefinition());
         registerDefinition(new TextAlignmentAttributeDefinition());
+        registerDefinition(new TextLineWidthAttributeDefinition());
 
         // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
