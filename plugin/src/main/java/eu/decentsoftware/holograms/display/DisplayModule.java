@@ -66,7 +66,7 @@ public class DisplayModule {
         DisplayContentPostProcessingService postProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
         IntentMaterializerService intentMaterializerService = new IntentMaterializerService(postProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter, renderStateManager, intentMaterializerService);
-        AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
+        AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry(displayPlaceholderService);
         DisplayRenderStateService stateService = new DisplayRenderStateService(attributeDefinitionRegistry, displayTypeRegistry);
         TextDisplayPlayerPageManager playerPageManager = new TextDisplayPlayerPageManager();
         DisplayRenderingService renderingService = new DisplayRenderingService(
