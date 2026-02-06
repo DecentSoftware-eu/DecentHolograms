@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.platform.bukkit.render;
 
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.items.ItemBuilder;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.ItemDescriptor;
 import org.bukkit.Color;
@@ -30,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BukkitItemFactory {
 
-    public ItemStack createItemStack(ItemDescriptor descriptor, DisplayRenderContext context) {
+    public ItemStack createItemStack(ItemDescriptor descriptor) {
         Material material = resolveMaterial(descriptor.getMaterial());
         ItemBuilder itemBuilder = new ItemBuilder(material);
         applyEnchantGlint(descriptor, itemBuilder);

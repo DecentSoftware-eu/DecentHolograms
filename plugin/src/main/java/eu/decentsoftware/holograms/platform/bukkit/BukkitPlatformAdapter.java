@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.bukkit;
 
-import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
+import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
+import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     public BukkitPlatformAdapter(NmsDisplayRendererFactory rendererFactory) {
         capabilities = new BukkitPlatformCapabilities();
         playerService = new BukkitPlayerService();
-        renderService = new BukkitRenderService(rendererFactory);
+        renderService = new BukkitRenderService(rendererFactory, new BukkitItemFactory());
         placeholderProviders = Collections.singletonList(
                 new BukkitPlaceholderApiProvider()
         );

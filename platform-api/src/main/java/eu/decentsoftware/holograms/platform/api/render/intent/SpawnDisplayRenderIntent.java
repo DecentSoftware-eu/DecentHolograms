@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -41,11 +42,11 @@ public final class SpawnDisplayRenderIntent implements RenderIntent {
 
     private final DecentLocation location;
     private final Map<MetadataKey<?>, MetadataValue<?>> metadataValues;
-    private final Object content;
+    private final DisplayContent<?> content;
 
     public SpawnDisplayRenderIntent(@NotNull DecentLocation location,
                                     @NotNull Map<MetadataKey<?>, MetadataValue<?>> metadataValues,
-                                    @NotNull Object content) {
+                                    @NotNull DisplayContent<?> content) {
         this.location = location;
         this.metadataValues = metadataValues;
         this.content = content;
@@ -77,7 +78,7 @@ public final class SpawnDisplayRenderIntent implements RenderIntent {
      * @return The content.
      */
     @NotNull
-    public Object getContent() {
+    public DisplayContent<?> getContent() {
         return content;
     }
 }

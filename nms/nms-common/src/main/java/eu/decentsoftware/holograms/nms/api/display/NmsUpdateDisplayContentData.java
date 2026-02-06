@@ -16,12 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.nms.api.renderer.display;
+package eu.decentsoftware.holograms.nms.api.display;
 
-import eu.decentsoftware.holograms.nms.api.renderer.NmsDisplayRenderer;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+public final class NmsUpdateDisplayContentData<C> {
 
-public interface NmsDisplayRendererFactory {
+    private final C content;
 
-    NmsDisplayRenderer createDisplayRenderer(DisplayType displayType);
+    public NmsUpdateDisplayContentData(C content) {
+        this.content = content;
+    }
+
+    public C getContent() {
+        return content;
+    }
 }

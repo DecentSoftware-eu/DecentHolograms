@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.nms.v1_21_R5;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
-import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
+import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import eu.decentsoftware.holograms.shared.reflect.ReflectField;
 import io.netty.channel.ChannelPipeline;

@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.api.render.intent;
 
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,9 +36,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class UpdateDisplayContentRenderIntent implements RenderIntent {
 
-    private final Object content;
+    private final DisplayContent<?> content;
 
-    public UpdateDisplayContentRenderIntent(@NotNull Object content) {
+    public UpdateDisplayContentRenderIntent(@NotNull DisplayContent<?> content) {
         this.content = content;
     }
 
@@ -47,7 +48,7 @@ public final class UpdateDisplayContentRenderIntent implements RenderIntent {
      * @return The new content.
      */
     @NotNull
-    public Object getContent() {
+    public DisplayContent<?> getContent() {
         return content;
     }
 }

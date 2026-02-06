@@ -18,9 +18,10 @@
 
 package eu.decentsoftware.holograms.nms.v1_21_R5;
 
-import eu.decentsoftware.holograms.nms.api.renderer.display.NmsDisplayRendererFactory;
-import eu.decentsoftware.holograms.nms.api.renderer.NmsDisplayRenderer;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.nms.api.display.NmsBlockDisplayRenderer;
+import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
+import eu.decentsoftware.holograms.nms.api.display.NmsItemDisplayRenderer;
+import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
 
 class DisplayRendererFactory implements NmsDisplayRendererFactory {
 
@@ -31,7 +32,17 @@ class DisplayRendererFactory implements NmsDisplayRendererFactory {
     }
 
     @Override
-    public NmsDisplayRenderer createDisplayRenderer(DisplayType displayType) {
-        return new DisplayRenderer(entityIdGenerator, displayType);
+    public NmsTextDisplayRenderer createTextDisplayRenderer() {
+        return new TextDisplayRenderer(entityIdGenerator.getFreeEntityId());
+    }
+
+    @Override
+    public NmsItemDisplayRenderer createItemDisplayRenderer() {
+        return new ItemDisplayRenderer(entityIdGenerator.getFreeEntityId());
+    }
+
+    @Override
+    public NmsBlockDisplayRenderer createBlockDisplayRenderer() {
+        return new BlockDisplayRenderer(entityIdGenerator.getFreeEntityId());
     }
 }
