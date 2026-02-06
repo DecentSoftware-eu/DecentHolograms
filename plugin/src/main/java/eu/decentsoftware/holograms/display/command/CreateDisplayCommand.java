@@ -140,6 +140,8 @@ class CreateDisplayCommand extends DecentCommand {
             if (args.length == 1) {
                 List<String> displayTypeNames = getDisplayTypeNames();
                 return TabCompleteHandler.getPartialMatches(args[0], displayTypeNames);
+            } else if (args.length == 2) {
+                return TabCompleteHandler.getPartialMatches(args[1], "<name>");
             } else if (args.length == 3) {
                 DisplayType type = DisplayType.fromString(args[0]);
                 if (type == DisplayType.ITEM) {
