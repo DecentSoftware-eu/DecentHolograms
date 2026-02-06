@@ -30,11 +30,11 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplaySettings;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -148,6 +148,8 @@ class CreateDisplayCommand extends DecentCommand {
                     return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getItemMaterialNames(sender));
                 } else if (type == DisplayType.BLOCK) {
                     return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getBlockMaterialNames());
+                } else if (type == DisplayType.TEXT) {
+                    return TabCompleteHandler.getPartialMatches(args[2], "Hello World!");
                 }
             }
             return null;
