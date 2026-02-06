@@ -44,7 +44,10 @@ public class BukkitPlayerService implements PlatformPlayerService {
     @Override
     public @Nullable PlatformPlayer getDecentPlayer(@NotNull UUID uniqueId) {
         Player player = Bukkit.getPlayer(uniqueId);
-        return getDecentPlayer(player);
+        if (player == null) {
+            return null;
+        }
+        return new BukkitPlayer(player);
     }
 
     @Override
