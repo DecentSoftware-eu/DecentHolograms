@@ -42,7 +42,7 @@ public interface PlatformPlayerService {
      * @see PlatformPlayer
      */
     @NotNull
-    PlatformPlayer getDecentPlayer(@NotNull Object platformPlayer);
+    PlatformPlayer getPlayer(@NotNull Object platformPlayer);
 
     /**
      * Get a platform-agnostic wrapper for the player with the specified UUID.
@@ -52,7 +52,7 @@ public interface PlatformPlayerService {
      * @see PlatformPlayer
      */
     @Nullable
-    PlatformPlayer getDecentPlayer(@NotNull UUID uniqueId);
+    PlatformPlayer getPlayer(@NotNull UUID uniqueId);
 
     /**
      * Get all online players.

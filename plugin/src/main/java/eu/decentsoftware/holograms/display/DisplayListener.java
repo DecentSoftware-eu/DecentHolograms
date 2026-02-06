@@ -37,13 +37,13 @@ class DisplayListener implements Listener {
 
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        PlatformPlayer platformPlayer = playerService.getDecentPlayer(event.getPlayer());
+        PlatformPlayer platformPlayer = playerService.getPlayer(event.getPlayer());
         service.updateVisibilityForPlayer(platformPlayer);
     }
 
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        PlatformPlayer platformPlayer = playerService.getDecentPlayer(event.getPlayer());
+        PlatformPlayer platformPlayer = playerService.getPlayer(event.getPlayer());
         service.hideDisplaysForPlayer(platformPlayer);
     }
 }

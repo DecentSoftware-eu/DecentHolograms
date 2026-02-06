@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class BukkitPlayerService implements PlatformPlayerService {
 
     @Override
-    public @NotNull PlatformPlayer getDecentPlayer(@NotNull Object platformPlayer) {
+    public @NotNull PlatformPlayer getPlayer(@NotNull Object platformPlayer) {
         if (!(platformPlayer instanceof Player)) {
             throw new IllegalArgumentException("Player object must be of type Player");
         }
@@ -42,7 +42,7 @@ public class BukkitPlayerService implements PlatformPlayerService {
     }
 
     @Override
-    public @Nullable PlatformPlayer getDecentPlayer(@NotNull UUID uniqueId) {
+    public @Nullable PlatformPlayer getPlayer(@NotNull UUID uniqueId) {
         Player player = Bukkit.getPlayer(uniqueId);
         if (player == null) {
             return null;
@@ -54,7 +54,7 @@ public class BukkitPlayerService implements PlatformPlayerService {
     public @NotNull @Unmodifiable Collection<PlatformPlayer> getOnlinePlayers() {
         return Collections.unmodifiableCollection(
                 Bukkit.getOnlinePlayers().stream()
-                        .map(this::getDecentPlayer)
+                        .map(this::getPlayer)
                         .collect(Collectors.toList())
         );
     }
