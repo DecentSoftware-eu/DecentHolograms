@@ -13,6 +13,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class WorldListener implements Listener {
@@ -63,11 +64,16 @@ public class WorldListener implements Listener {
 
     private Set<String> getHologramsToLoadByWorld(World world) {
         Set<String> hologramsToLoad = new HashSet<>();
-        if (hologramManager.getToLoad().containsKey(world.getName())) {
-            hologramsToLoad.addAll(hologramManager.getToLoad().get(world.getName()));
+        Map<String, Set<String>> toLoad = hologramManager.getToLoad();
+
+        Set<String> byName = toLoad.get(world.getName());
+        if (byName != null) {
+            hologramsToLoad.addAll(byName);
         }
-        if (hologramManager.getToLoad().containsKey(world.getUID().toString())) {
-            hologramsToLoad.addAll(hologramManager.getToLoad().get(world.getUID().toString()));
+
+        Set<String> byUid = toLoad.get(world.getUID().toString());
+        if (byUid != null) {
+            hologramsToLoad.addAll(byUid);
         }
         return hologramsToLoad;
     }

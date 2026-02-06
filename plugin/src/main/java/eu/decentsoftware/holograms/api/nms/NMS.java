@@ -260,20 +260,14 @@ public abstract class NMS {
 
     public int getEntityTypeId(EntityType type) {
         if (type == null) return -1;
-        String name = type.name();
-        if (mapEntityTypes.containsKey(name)) {
-            return mapEntityTypes.get(name).getKey();
-        }
-        return -1;
+        Pair<Integer, Float> pair = mapEntityTypes.get(type.name());
+        return pair != null ? pair.getKey() : -1;
     }
 
     public float getEntityHeight(EntityType type) {
         if (type == null) return 0.0f;
-        String name = type.name();
-        if (mapEntityTypes.containsKey(name)) {
-            return mapEntityTypes.get(name).getValue();
-        }
-        return 0.0f;
+        Pair<Integer, Float> pair = mapEntityTypes.get(type.name());
+        return pair != null ? pair.getValue() : 0.0f;
     }
 
     public abstract int getFreeEntityId();
