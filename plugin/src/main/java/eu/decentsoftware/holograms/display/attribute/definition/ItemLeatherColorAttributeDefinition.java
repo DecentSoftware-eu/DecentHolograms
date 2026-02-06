@@ -18,21 +18,22 @@
 
 package eu.decentsoftware.holograms.display.attribute.definition;
 
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class TextBackgroundColorAttributeDefinition implements AttributeDefinition<DecentColor> {
+public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
-    public static final AttributeKey<DecentColor> KEY = AttributeKey.of("background-color", DecentColor.class);
+    public static final AttributeKey<DecentColor> KEY = AttributeKey.of("leather-color", DecentColor.class);
     private final DecentColorAttributeCommandHandler commandHandler = new DecentColorAttributeCommandHandler();
 
     @Override
@@ -41,23 +42,22 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
     }
 
     @Override
-    public DecentColor getDefaultValue() {
-        return DecentColor.DEFAULT_BACKGROUND;
-    }
-
-    @Override
-    public @NotNull DisplayType[] getApplicableDisplayTypes() {
-        return new DisplayType[]{DisplayType.TEXT};
+    public @Nullable DecentColor getDefaultValue() {
+        return null;
     }
 
     @Override
     public void apply(DisplayAttribute<DecentColor> attribute, DisplayRenderState state, DisplayRenderContext context) {
-        DecentColor value = attribute.getValue();
-        if (value != null) {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(value));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(getDefaultValue()));
+        if (!(state.getContent() instanceof ItemDisplayContent)) {
+            return;
         }
+        ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
+        itemDisplayContent.getContent().setLeatherColor(attribute.getValue());
+    }
+
+    @Override
+    public @NotNull DisplayType[] getApplicableDisplayTypes() {
+        return new DisplayType[]{DisplayType.ITEM};
     }
 
     @Override

@@ -63,11 +63,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
 
     @Override
     public String format(DecentColor value) {
-        if (value == null) {
-            return null;
-        }
-        String rgbString = String.format("RGBA: %s, %s, %s, %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
-        return value.asRGBString() + rgbString;
+        return commandHandler.format(value);
     }
 
     @Override

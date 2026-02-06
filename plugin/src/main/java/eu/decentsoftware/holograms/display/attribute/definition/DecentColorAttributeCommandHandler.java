@@ -64,6 +64,14 @@ final class DecentColorAttributeCommandHandler {
         NAMED_COLORS.put("WHITE", DecentColor.WHITE);
     }
 
+    public String format(DecentColor value) {
+        if (value == null) {
+            return null;
+        }
+        String rgbString = String.format("RGBA: %s, %s, %s, %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
+        return value.asRGBString() + rgbString;
+    }
+
     public DecentColor parseColor(String[] args) {
         if (args.length == 0) {
             throw error("No color specified.");

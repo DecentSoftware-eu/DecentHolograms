@@ -77,6 +77,7 @@ public class AttributeDefinitionRegistry {
         // Item
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
         registerDefinition(new ItemEnchantedAttributeDefinition());
+        registerDefinition(new ItemLeatherColorAttributeDefinition());
     }
 
     private void populateDefinitionsByKey() {
