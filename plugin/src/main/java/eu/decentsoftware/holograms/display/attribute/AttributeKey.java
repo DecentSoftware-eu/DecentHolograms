@@ -18,8 +18,18 @@
 
 package eu.decentsoftware.holograms.display.attribute;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
+/**
+ * Represents a unique key to identify an attribute.
+ * This class is a generic and immutable structure that ties an attribute name with its corresponding type.
+ *
+ * @param <T> The type of the attribute value associated with this key.
+ * @author d0by
+ * @since 2.10.0
+ */
 public final class AttributeKey<T> {
 
     private final String name;
@@ -30,14 +40,36 @@ public final class AttributeKey<T> {
         this.type = type;
     }
 
-    public static <T> AttributeKey<T> of(String name, Class<T> type) {
+    /**
+     * Creates a new {@link AttributeKey} with the specified name and type.
+     *
+     * @param name The name of the attribute key. Must not be null.
+     * @param type The type of the attribute value associated with the key. Must not be null.
+     * @param <T>  The type parameter that represents the type of the attribute value.
+     * @return An instance of {@link AttributeKey} containing the specified name and type.
+     * @throws NullPointerException if the provided name or type is null.
+     */
+    @NotNull
+    public static <T> AttributeKey<T> of(@NotNull String name, @NotNull Class<T> type) {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(type, "type cannot be null");
         return new AttributeKey<>(name, type);
     }
 
+    /**
+     * Get the name of the attribute key.
+     *
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the type of the attribute value associated with this key.
+     *
+     * @return The type.
+     */
     public Class<T> getType() {
         return type;
     }
