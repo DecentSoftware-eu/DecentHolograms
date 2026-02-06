@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import org.bukkit.Bukkit;
@@ -81,6 +82,12 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
         if (args.length == 1) {
             List<String> hints = new ArrayList<>();
             hints.add("{player}");
+            if (Integration.PLACEHOLDER_API.isAvailable()) {
+                hints.add("%player_name%");
+            }
+            if (Integration.HEAD_DATABASE.isAvailable()) {
+                hints.add("HEADDATABASE_<id>");
+            }
             Bukkit.getOnlinePlayers().forEach(player -> hints.add(player.getName()));
             return hints;
         }
