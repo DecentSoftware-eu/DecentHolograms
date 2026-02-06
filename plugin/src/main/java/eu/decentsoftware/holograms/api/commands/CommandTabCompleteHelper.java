@@ -19,8 +19,6 @@
 package eu.decentsoftware.holograms.api.commands;
 
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
-import eu.decentsoftware.holograms.integration.Integration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,46 +57,6 @@ public final class CommandTabCompleteHelper {
                 .filter(DecentMaterial::isItem)
                 .map(Material::name)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Get completions for additional item properties, like skull textures.
-     *
-     * <p>The additional properties returned by this method are tailored specifically for the given material.</p>
-     *
-     * @param materialName The material for which to get the additional properties.
-     * @return A list of additional item property completions.
-     */
-    public static List<String> getItemAdditionalCompletions(String materialName) {
-        List<String> itemAdditionalCompletions = new ArrayList<>();
-        itemAdditionalCompletions.add("!ENCHANTED");
-        if (isSkull(materialName)) {
-            itemAdditionalCompletions.addAll(getSkullAndHeadCompletions());
-        }
-        return itemAdditionalCompletions;
-    }
-
-    private static List<String> getSkullAndHeadCompletions() {
-        List<String> skullTextureCompletions = getOnlinePlayerSkullTextureCompletions();
-        skullTextureCompletions.add("({player})");
-        if (Integration.PLACEHOLDER_API.isAvailable()) {
-            skullTextureCompletions.add("(%player_name%)");
-        }
-        if (Integration.HEAD_DATABASE.isAvailable()) {
-            skullTextureCompletions.add("(HEADDATABASE_<id>)");
-        }
-        return skullTextureCompletions;
-    }
-
-    private static List<String> getOnlinePlayerSkullTextureCompletions() {
-        return Bukkit.getOnlinePlayers().stream()
-                .map(player -> "(" + player.getName() + ")")
-                .collect(Collectors.toList());
-    }
-
-    private static boolean isSkull(String materialName) {
-        Material material = DecentMaterial.parseMaterial(materialName.toUpperCase());
-        return material != null && DecentMaterial.isSkull(material);
     }
 
     /**

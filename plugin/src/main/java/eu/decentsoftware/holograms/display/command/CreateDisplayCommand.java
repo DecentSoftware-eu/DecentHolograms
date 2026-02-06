@@ -147,12 +147,6 @@ class CreateDisplayCommand extends DecentCommand {
                 } else if (type == DisplayType.BLOCK) {
                     return TabCompleteHandler.getPartialMatches(args[2], CommandTabCompleteHelper.getBlockMaterialNames());
                 }
-            } else if (args.length >= 4) {
-                DisplayType type = DisplayType.fromString(args[0]);
-                if (type == DisplayType.ITEM) {
-                    return TabCompleteHandler.getPartialMatches(args[args.length - 1],
-                            CommandTabCompleteHelper.getItemAdditionalCompletions(args[2]));
-                }
             }
             return null;
         };
