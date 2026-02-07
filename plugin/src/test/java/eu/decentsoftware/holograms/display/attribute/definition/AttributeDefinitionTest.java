@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.bukkit.command.CommandSender;
@@ -102,7 +102,7 @@ class AttributeDefinitionTest {
         }
 
         @Override
-        public void apply(AttributeValue<String> value, FinalDisplayRenderState state) {
+        public void apply(CompiledAttributeValue<String> value, FinalDisplayRenderState state) {
 
         }
 

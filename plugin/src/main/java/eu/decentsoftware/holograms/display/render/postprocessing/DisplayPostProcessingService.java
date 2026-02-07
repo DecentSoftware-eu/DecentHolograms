@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.render.postprocessing;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
 
@@ -49,14 +49,14 @@ public class DisplayPostProcessingService {
     }
 
     private void applyAttributes(LogicalDisplayRenderState logicalState, FinalDisplayRenderState state) {
-        Map<AttributeKey<?>, AttributeValue<?>> attributeMap = logicalState.getAttributeValues();
+        Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
         for (AttributeKey<?> attributeKey : attributeMap.keySet()) {
             applyAttribute(attributeKey, logicalState, state);
         }
     }
 
     private <T> void applyAttribute(AttributeKey<T> key, LogicalDisplayRenderState logicalState, FinalDisplayRenderState state) {
-        AttributeValue<T> attribute = logicalState.getAttributeValue(key);
+        CompiledAttributeValue<T> attribute = logicalState.getAttributeValue(key);
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
             definition.apply(attribute, state);

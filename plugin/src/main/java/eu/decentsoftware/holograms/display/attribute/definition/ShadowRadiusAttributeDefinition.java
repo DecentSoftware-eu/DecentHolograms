@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
@@ -45,7 +45,7 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
     }
 
     @Override
-    public void apply(AttributeValue<Float> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<Float> value, FinalDisplayRenderState state) {
         Float finalValue = value.identity();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.SHADOW_RADIUS.createValue(finalValue));

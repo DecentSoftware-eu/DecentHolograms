@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -84,7 +84,7 @@ class BrightnessAttributeDefinitionTest {
     @ParameterizedTest
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBrightness value, DisplayBrightness expectedValue) {
-        AttributeValue<DisplayBrightness> attribute = new StaticAttributeValue<>(value);
+        CompiledAttributeValue<DisplayBrightness> attribute = new StaticCompiledAttributeValue<>(value);
         FinalDisplayRenderState state = new FinalDisplayRenderState("id");
 
         definition.apply(attribute, state);

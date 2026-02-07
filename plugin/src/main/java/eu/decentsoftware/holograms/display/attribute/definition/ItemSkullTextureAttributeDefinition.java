@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
@@ -62,7 +62,7 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public void apply(AttributeValue<String> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<String> value, FinalDisplayRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }
@@ -71,12 +71,12 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public AttributeValue<String> resolve(DisplayAttribute<String> attribute, DisplayRenderContext context) {
+    public CompiledAttributeValue<String> resolve(DisplayAttribute<String> attribute, DisplayRenderContext context) {
         String rawValue = attribute.getRawValue();
         String[] args = rawValue.split(" ");
         String value = parse(args);
         value = placeholderService.replacePlaceholders(value, context);
-        return new StaticAttributeValue<>(value);
+        return new StaticCompiledAttributeValue<>(value);
     }
 
     @Override

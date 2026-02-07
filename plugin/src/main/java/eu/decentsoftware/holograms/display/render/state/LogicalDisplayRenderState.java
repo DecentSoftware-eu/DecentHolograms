@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display.render.state;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -33,7 +33,7 @@ public class LogicalDisplayRenderState {
     private boolean visible;
     private DisplayType displayType;
     private DecentLocation location;
-    private final Map<AttributeKey<?>, AttributeValue<?>> attributeValues = new LinkedHashMap<>();
+    private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
     private DisplayContent<?> content;
 
     public LogicalDisplayRenderState(String id) {
@@ -68,16 +68,16 @@ public class LogicalDisplayRenderState {
         this.location = location;
     }
 
-    public <T> void addAttribute(AttributeKey<T> key, AttributeValue<T> value) {
+    public <T> void addAttribute(AttributeKey<T> key, CompiledAttributeValue<T> value) {
         attributeValues.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> AttributeValue<T> getAttributeValue(AttributeKey<T> key) {
-        return (AttributeValue<T>) attributeValues.get(key);
+    public <T> CompiledAttributeValue<T> getAttributeValue(AttributeKey<T> key) {
+        return (CompiledAttributeValue<T>) attributeValues.get(key);
     }
 
-    public Map<AttributeKey<?>, AttributeValue<?>> getAttributeValues() {
+    public Map<AttributeKey<?>, CompiledAttributeValue<?>> getAttributeValues() {
         return attributeValues;
     }
 

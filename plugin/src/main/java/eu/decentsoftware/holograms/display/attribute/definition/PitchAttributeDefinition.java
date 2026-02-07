@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import org.bukkit.command.CommandSender;
@@ -46,7 +46,7 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     }
 
     @Override
-    public void apply(AttributeValue<Float> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<Float> value, FinalDisplayRenderState state) {
         Float finalValue = value.identity();
         if (finalValue != null) {
             DecentLocation location = state.getLocation();

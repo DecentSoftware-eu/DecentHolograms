@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -50,7 +50,7 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public void apply(AttributeValue<DisplayBillboardConstraints> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<DisplayBillboardConstraints> value, FinalDisplayRenderState state) {
         DisplayBillboardConstraints finalValue = value.identity();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(finalValue));

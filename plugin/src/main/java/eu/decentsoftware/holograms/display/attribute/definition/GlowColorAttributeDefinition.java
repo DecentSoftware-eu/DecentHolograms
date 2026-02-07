@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -45,7 +45,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     }
 
     @Override
-    public void apply(AttributeValue<DecentColor> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<DecentColor> value, FinalDisplayRenderState state) {
         DecentColor finalValue = value.identity();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.GLOWING.createValue(true));

@@ -16,18 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.value;
+package eu.decentsoftware.holograms.display.attribute.value.compiled;
 
-public class StaticAttributeValue<T> implements AttributeValue<T> {
+public interface CompiledAttributeValue<T> {
 
-    private final T value;
+    T identity();
 
-    public StaticAttributeValue(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public T identity() {
-        return value;
+    default boolean isAnimated() {
+        return false;
     }
 }

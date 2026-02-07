@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -49,7 +49,7 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Decen
     }
 
     @Override
-    public void apply(AttributeValue<DecentVector3f> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<DecentVector3f> value, FinalDisplayRenderState state) {
         DecentVector3f finalValue = value.identity();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.TRANSLATION.createValue(finalValue));

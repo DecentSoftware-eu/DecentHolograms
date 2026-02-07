@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
@@ -52,7 +52,7 @@ public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Bo
     }
 
     @Override
-    public void apply(AttributeValue<Boolean> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<Boolean> value, FinalDisplayRenderState state) {
         MetadataValue<TextDisplayProperties> metadataValue = getTextDisplayPropertiesMetadataValue(state);
         metadataValue.getValue().setSeeThrough(value.identity());
     }

@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -51,7 +51,7 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     }
 
     @Override
-    public void apply(AttributeValue<Integer> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<Integer> value, FinalDisplayRenderState state) {
         Integer finalValue = value.identity();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(finalValue));

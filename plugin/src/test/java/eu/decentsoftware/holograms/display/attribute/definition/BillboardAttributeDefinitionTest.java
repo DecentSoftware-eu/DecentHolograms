@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -83,10 +83,10 @@ class BillboardAttributeDefinitionTest {
     @ParameterizedTest
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBillboardConstraints value, DisplayBillboardConstraints expectedValue) {
-        AttributeValue<DisplayBillboardConstraints> attributeValue = new StaticAttributeValue<>(value);
+        CompiledAttributeValue<DisplayBillboardConstraints> compiledAttributeValue = new StaticCompiledAttributeValue<>(value);
         FinalDisplayRenderState state = new FinalDisplayRenderState("id");
 
-        definition.apply(attributeValue, state);
+        definition.apply(compiledAttributeValue, state);
 
         assertEquals(1, state.getMetadataValues().size());
         MetadataValue<DisplayBillboardConstraints> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS);

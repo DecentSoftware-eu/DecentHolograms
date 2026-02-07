@@ -23,7 +23,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
@@ -60,7 +60,7 @@ public class DisplayRenderStateService {
         DisplayAttribute<T> attribute = display.getAttribute(key);
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
-            AttributeValue<T> value = definition.resolve(attribute, context);
+            CompiledAttributeValue<T> value = definition.resolve(attribute, context);
             state.addAttribute(key, value);
         }
     }

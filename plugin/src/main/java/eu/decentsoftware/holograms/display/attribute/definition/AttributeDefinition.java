@@ -22,8 +22,8 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -124,7 +124,7 @@ public interface AttributeDefinition<T> {
      * @param state The render state.
      * @since 2.10.0
      */
-    void apply(AttributeValue<T> value, FinalDisplayRenderState state);
+    void apply(CompiledAttributeValue<T> value, FinalDisplayRenderState state);
 
     default void validate(String rawContent) throws AttributeParseException {
         // TODO
@@ -132,12 +132,12 @@ public interface AttributeDefinition<T> {
         parse(args); // Throws AttributeParseException
     }
 
-    default AttributeValue<T> resolve(DisplayAttribute<T> attribute, DisplayRenderContext context) {
+    default CompiledAttributeValue<T> resolve(DisplayAttribute<T> attribute, DisplayRenderContext context) {
         // TODO
         String rawValue = attribute.getRawValue();
         String[] args = rawValue.split(" ");
         T value = parse(args);
-        return new StaticAttributeValue<>(value);
+        return new StaticCompiledAttributeValue<>(value);
     }
 
     /**
