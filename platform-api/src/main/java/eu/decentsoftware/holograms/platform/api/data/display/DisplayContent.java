@@ -22,6 +22,8 @@ public interface DisplayContent<T> {
 
     T getContent();
 
+    DisplayContent<T> copy();
+
     default boolean isAnimated() {
         return false;
     }

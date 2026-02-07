@@ -20,9 +20,11 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
@@ -60,16 +62,21 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public void apply(DisplayAttribute<String> attribute, DisplayRenderState state, DisplayRenderContext context) {
+    public void apply(AttributeValue<String> value, FinalDisplayRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }
-        String value = attribute.getValue();
-        if (value != null) {
-            value = placeholderService.replacePlaceholders(value, context);
-        }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setSkullTexture(value);
+        itemDisplayContent.getContent().setSkullTexture(value.identity());
+    }
+
+    @Override
+    public AttributeValue<String> resolve(DisplayAttribute<String> attribute, DisplayRenderContext context) {
+        String rawValue = attribute.getRawValue();
+        String[] args = rawValue.split(" ");
+        String value = parse(args);
+        value = placeholderService.replacePlaceholders(value, context);
+        return new StaticAttributeValue<>(value);
     }
 
     @Override

@@ -22,8 +22,9 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayVisibilityService;
 import eu.decentsoftware.holograms.display.TextDisplayPlayerPageManager;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
@@ -35,17 +36,20 @@ public class DisplayRenderingService {
     private final DisplayRenderStateService stateService;
     private final DisplayRenderService renderService;
     private final TextDisplayPlayerPageManager pageManager;
+    private final LogicalDisplayRenderStateManager logicalDisplayRenderStateManager;
 
     public DisplayRenderingService(DisplayVisibilityService visibilityService,
                                    PlatformPlayerService playerService,
                                    DisplayRenderStateService stateService,
                                    DisplayRenderService renderService,
-                                   TextDisplayPlayerPageManager pageManager) {
+                                   TextDisplayPlayerPageManager pageManager,
+                                   LogicalDisplayRenderStateManager logicalDisplayRenderStateManager) {
         this.visibilityService = visibilityService;
         this.playerService = playerService;
         this.stateService = stateService;
         this.renderService = renderService;
         this.pageManager = pageManager;
+        this.logicalDisplayRenderStateManager = logicalDisplayRenderStateManager;
     }
 
     public void hideDisplayForPlayer(DisplayBase display, PlatformPlayer player) {
@@ -83,42 +87,47 @@ public class DisplayRenderingService {
     public void postProcess(DisplayBase display) {
         playerService.getOnlinePlayers().forEach(player -> {
             if (visibilityService.isShownToPlayer(display, player)) {
-                postProcess(display, player);
+                renderLogicalState(display, player);
             }
         });
     }
 
     public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
-        render(display, player, false);
+        updateLogicalState(display, player, false);
         visibilityService.removeViewer(display, player);
     }
 
     public void renderForPlayer(DisplayBase display, PlatformPlayer player) {
-        render(display, player, true);
+        updateLogicalState(display, player, true);
         visibilityService.addViewer(display, player);
     }
 
-    private void render(DisplayBase display, PlatformPlayer player, boolean visible) {
+    private void updateLogicalState(DisplayBase display, PlatformPlayer player, boolean visible) {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
-            DisplayRenderState state = stateService.buildRenderState(display, context);
+            LogicalDisplayRenderState state = stateService.buildRenderState(display, context);
             state.setVisible(visible);
+
+            logicalDisplayRenderStateManager.updateState(handle, context, state);
+            renderService.render(handle, state, context);
+        } catch (Exception e) {
+            Log.warn("Failed to update logical state of display '%s' for player '%s'.", e, display.getName(), player.getName());
+        }
+    }
+
+    private void renderLogicalState(DisplayBase display, PlatformPlayer player) {
+        try {
+            RenderObjectHandle handle = getRenderObjectHandle(display);
+            DisplayRenderContext context = getDisplayRenderContext(display, player);
+            LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle, context);
+            if (state == null) {
+                return;
+            }
 
             renderService.render(handle, state, context);
         } catch (Exception e) {
             Log.warn("Failed to render display '%s' for player '%s'.", e, display.getName(), player.getName());
-        }
-    }
-
-    private void postProcess(DisplayBase display, PlatformPlayer player) {
-        try {
-            RenderObjectHandle handle = getRenderObjectHandle(display);
-            DisplayRenderContext context = getDisplayRenderContext(display, player);
-
-            renderService.postProcess(handle, context);
-        } catch (Exception e) {
-            Log.warn("Failed to post-process display '%s' for player '%s'.", e, display.getName(), player.getName());
         }
     }
 

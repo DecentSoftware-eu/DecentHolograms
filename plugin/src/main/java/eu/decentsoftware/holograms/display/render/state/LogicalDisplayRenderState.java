@@ -18,25 +18,25 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
+import eu.decentsoftware.holograms.display.attribute.AttributeKey;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class DisplayRenderState {
+public class LogicalDisplayRenderState {
 
     private final String id;
     private boolean visible;
     private DisplayType displayType;
     private DecentLocation location;
-    private final Map<MetadataKey<?>, MetadataValue<?>> metadataValues = new LinkedHashMap<>();
+    private final Map<AttributeKey<?>, AttributeValue<?>> attributeValues = new LinkedHashMap<>();
     private DisplayContent<?> content;
 
-    public DisplayRenderState(String id) {
+    public LogicalDisplayRenderState(String id) {
         this.id = id;
     }
 
@@ -68,21 +68,17 @@ public final class DisplayRenderState {
         this.location = location;
     }
 
-    public void addMetadata(MetadataValue<?> value) {
-        metadataValues.put(value.getKey(), value);
-    }
-
-    public Map<MetadataKey<?>, MetadataValue<?>> getMetadataValues() {
-        return metadataValues;
+    public <T> void addAttribute(AttributeKey<T> key, AttributeValue<T> value) {
+        attributeValues.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> MetadataValue<T> getMetadataValue(MetadataKey<T> key) {
-        return (MetadataValue<T>) metadataValues.get(key);
+    public <T> AttributeValue<T> getAttributeValue(AttributeKey<T> key) {
+        return (AttributeValue<T>) attributeValues.get(key);
     }
 
-    public boolean hasMetadataValue(MetadataKey<?> key) {
-        return metadataValues.containsKey(key);
+    public Map<AttributeKey<?>, AttributeValue<?>> getAttributeValues() {
+        return attributeValues;
     }
 
     public DisplayContent<?> getContent() {

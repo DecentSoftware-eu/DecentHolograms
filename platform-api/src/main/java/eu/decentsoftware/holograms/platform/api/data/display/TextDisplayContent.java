@@ -45,6 +45,11 @@ public final class TextDisplayContent implements DisplayContent<String> {
     }
 
     @Override
+    public DisplayContent<String> copy() {
+        return new TextDisplayContent(text, animated);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof TextDisplayContent)) {
             return false;

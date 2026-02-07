@@ -36,6 +36,11 @@ public final class ItemDisplayContent implements DisplayContent<ItemDescriptor> 
     }
 
     @Override
+    public DisplayContent<ItemDescriptor> copy() {
+        return new ItemDisplayContent(descriptor.copy());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof ItemDisplayContent)) {
             return false;

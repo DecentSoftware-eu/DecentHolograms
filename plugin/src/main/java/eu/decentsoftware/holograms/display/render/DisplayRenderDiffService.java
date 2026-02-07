@@ -18,8 +18,13 @@
 
 package eu.decentsoftware.holograms.display.render;
 
-import eu.decentsoftware.holograms.display.render.intent.IntentDescriptor;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -30,15 +35,19 @@ import java.util.List;
 
 public class DisplayRenderDiffService {
 
-    public List<IntentDescriptor> diff(@NotNull DisplayRenderState currentState, @Nullable DisplayRenderState previousState) {
-        List<IntentDescriptor> intentList = new ArrayList<>();
+    public List<RenderIntent> diff(@NotNull FinalDisplayRenderState currentState, @Nullable FinalDisplayRenderState previousState) {
+        List<RenderIntent> intentList = new ArrayList<>();
         if (previousState == null || !previousState.isVisible()) {
             if (currentState.isVisible()) {
-                intentList.add(new IntentDescriptor.SpawnDisplay(currentState));
+                intentList.add(new SpawnDisplayRenderIntent(
+                        currentState.getLocation(),
+                        currentState.getMetadataValues(),
+                        currentState.getContent()
+                ));
             }
             return intentList;
         } else if (!currentState.isVisible()) {
-            intentList.add(new IntentDescriptor.DespawnDisplay(currentState));
+            intentList.add(new DespawnDisplayRenderIntent());
             return intentList;
         }
 
@@ -48,32 +57,32 @@ public class DisplayRenderDiffService {
         return intentList;
     }
 
-    private void diffLocation(DisplayRenderState currentState, DisplayRenderState previousState, List<IntentDescriptor> intentList) {
+    private void diffLocation(FinalDisplayRenderState currentState, FinalDisplayRenderState previousState, List<RenderIntent> intentList) {
         if (!currentState.getLocation().equals(previousState.getLocation())) {
-            intentList.add(new IntentDescriptor.Move(currentState));
+            intentList.add(new MoveRenderIntent(currentState.getLocation()));
         }
     }
 
-    private void diffContent(DisplayRenderState currentState, DisplayRenderState previousState, List<IntentDescriptor> intentList) {
+    private void diffContent(FinalDisplayRenderState currentState, FinalDisplayRenderState previousState, List<RenderIntent> intentList) {
         if (!currentState.getContent().equals(previousState.getContent())) {
-            intentList.add(new IntentDescriptor.UpdateDisplayContent(currentState));
+            intentList.add(new UpdateDisplayContentRenderIntent(currentState.getContent()));
         }
     }
 
-    private void diffMetadata(DisplayRenderState currentState, DisplayRenderState previousState, List<IntentDescriptor> intentList) {
+    private void diffMetadata(FinalDisplayRenderState currentState, FinalDisplayRenderState previousState, List<RenderIntent> intentList) {
         for (MetadataKey<?> metadataKey : currentState.getMetadataValues().keySet()) {
             diffMetadataValues(metadataKey, currentState, previousState, intentList);
         }
     }
 
     private <T> void diffMetadataValues(MetadataKey<T> key,
-                                        DisplayRenderState currentState,
-                                        DisplayRenderState previousState,
-                                        List<IntentDescriptor> intentList) {
+                                        FinalDisplayRenderState currentState,
+                                        FinalDisplayRenderState previousState,
+                                        List<RenderIntent> intentList) {
         MetadataValue<T> currentValue = currentState.getMetadataValue(key);
         MetadataValue<T> previousValue = previousState.getMetadataValue(key);
         if (previousValue == null || !key.areValuesEqual(currentValue, previousValue)) {
-            intentList.add(new IntentDescriptor.UpdateMetadata<>(currentState, key));
+            intentList.add(new UpdateMetadataRenderIntent<>(key, currentValue));
         }
     }
 }

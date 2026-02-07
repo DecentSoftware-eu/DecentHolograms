@@ -16,17 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.render.intent.materializer;
+package eu.decentsoftware.holograms.display.attribute.value;
 
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.intent.IntentDescriptor;
-import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
+public interface AttributeValue<T> {
 
-public class DespawnDisplayIntentMaterializer implements IntentMaterializer<IntentDescriptor.DespawnDisplay> {
+    T identity();
 
-    @Override
-    public RenderIntent materialize(IntentDescriptor.DespawnDisplay intentDescriptor, DisplayRenderContext context) {
-        return new DespawnDisplayRenderIntent();
+    default boolean isAnimated() {
+        return false;
     }
 }

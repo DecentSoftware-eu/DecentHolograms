@@ -19,9 +19,8 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import org.bukkit.command.CommandSender;
@@ -51,12 +50,12 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
     }
 
     @Override
-    public void apply(DisplayAttribute<Boolean> attribute, DisplayRenderState state, DisplayRenderContext context) {
+    public void apply(AttributeValue<Boolean> value, FinalDisplayRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setEnchanted(attribute.getValue());
+        itemDisplayContent.getContent().setEnchanted(value.identity());
     }
 
     @Override

@@ -18,33 +18,21 @@
 
 package eu.decentsoftware.holograms.display.config.dto;
 
-import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValueType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
 public class ConfigAttribute {
-    @Setting("value-type")
-    @Required
-    private DisplayAttributeValueType valueType;
     @Setting
     @Required
-    private Object value;
+    private String value;
 
-    public DisplayAttributeValueType getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(DisplayAttributeValueType valueType) {
-        this.valueType = valueType;
-    }
-
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }

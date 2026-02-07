@@ -18,25 +18,30 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DisplayRenderStateManager {
+public class LogicalDisplayRenderStateManager {
 
-    private final Map<UUID, Map<String, DisplayRenderState>> states = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<String, LogicalDisplayRenderState>> states = new ConcurrentHashMap<>();
 
-    public DisplayRenderState getState(UUID playerUniqueId, RenderObjectHandle handle) {
+    @Nullable
+    public LogicalDisplayRenderState getCurrentState(RenderObjectHandle handle, DisplayRenderContext context) {
+        UUID playerUniqueId = context.getPlayer().getUniqueId();
         return getPlayerRenderStateMap(playerUniqueId).get(handle.getId());
     }
 
-    public void setState(UUID playerUniqueId, RenderObjectHandle handle, DisplayRenderState state) {
+    public void updateState(RenderObjectHandle handle, DisplayRenderContext context, LogicalDisplayRenderState state) {
+        UUID playerUniqueId = context.getPlayer().getUniqueId();
         getPlayerRenderStateMap(playerUniqueId).put(handle.getId(), state);
     }
 
-    private Map<String, DisplayRenderState> getPlayerRenderStateMap(UUID playerUniqueId) {
+    private Map<String, LogicalDisplayRenderState> getPlayerRenderStateMap(UUID playerUniqueId) {
         return states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
     }
 }

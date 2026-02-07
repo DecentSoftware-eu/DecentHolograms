@@ -18,14 +18,25 @@
 
 package eu.decentsoftware.holograms.display.attribute;
 
-public interface DisplayAttribute<T> {
+public class DisplayAttribute<T> {
 
-    DisplayAttributeValueType getValueType();
+    private final AttributeKey<T> key;
+    private final String rawValue;
 
-    String getName();
+    public DisplayAttribute(AttributeKey<T> key, String rawValue) {
+        this.key = key;
+        this.rawValue = rawValue;
+    }
 
-    T getValue();
+    public AttributeKey<T> getKey() {
+        return key;
+    }
 
-    DisplayAttribute<T> copy();
+    public String getRawValue() {
+        return rawValue;
+    }
 
+    public DisplayAttribute<T> copy() {
+        return new DisplayAttribute<>(key, rawValue);
+    }
 }

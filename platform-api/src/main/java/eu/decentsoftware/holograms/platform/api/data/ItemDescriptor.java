@@ -90,6 +90,16 @@ public final class ItemDescriptor {
         this.leatherColor = leatherColor;
     }
 
+    public ItemDescriptor copy() {
+        ItemDescriptor copy = new ItemDescriptor(material);
+        copy.setEnchanted(enchanted);
+        copy.setDamage(damage);
+        copy.setCustomModelData(customModelData);
+        copy.setSkullTexture(skullTexture);
+        copy.setLeatherColor(leatherColor);
+        return copy;
+    }
+
     @Override
     public String toString() {
         return "ItemDescriptor{" +

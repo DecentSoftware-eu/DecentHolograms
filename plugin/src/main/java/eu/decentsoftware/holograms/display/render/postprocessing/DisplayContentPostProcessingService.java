@@ -42,6 +42,6 @@ public class DisplayContentPostProcessingService {
         for (DisplayContentPostProcessor<T, DisplayContent<T>> postProcessor : postProcessors) {
             content = postProcessor.process(content);
         }
-        return content;
+        return content.copy();
     }
 }

@@ -36,6 +36,11 @@ public final class BlockDisplayContent implements DisplayContent<BlockDescriptor
     }
 
     @Override
+    public DisplayContent<BlockDescriptor> copy() {
+        return new BlockDisplayContent(descriptor.copy());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof BlockDisplayContent)) {
             return false;

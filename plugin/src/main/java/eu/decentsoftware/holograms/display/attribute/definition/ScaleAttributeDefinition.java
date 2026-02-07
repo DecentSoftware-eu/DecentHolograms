@@ -20,9 +20,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
@@ -50,10 +49,10 @@ public class ScaleAttributeDefinition implements AttributeDefinition<DecentVecto
     }
 
     @Override
-    public void apply(DisplayAttribute<DecentVector3f> attribute, DisplayRenderState state, DisplayRenderContext context) {
-        DecentVector3f value = attribute.getValue();
-        if (value != null) {
-            state.addMetadata(BuiltInMetadataKeys.SCALE.createValue(value));
+    public void apply(AttributeValue<DecentVector3f> value, FinalDisplayRenderState state) {
+        DecentVector3f finalValue = value.identity();
+        if (finalValue != null) {
+            state.addMetadata(BuiltInMetadataKeys.SCALE.createValue(finalValue));
         } else {
             state.addMetadata(BuiltInMetadataKeys.SCALE.createValue(getDefaultValue()));
         }

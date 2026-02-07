@@ -26,8 +26,6 @@ import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValueType;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
@@ -36,8 +34,6 @@ import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplaySettings;
 import eu.decentsoftware.holograms.display.config.dto.ConfigTextPage;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collection;
 import java.util.List;
@@ -147,18 +143,8 @@ public class DisplayConfigMapper {
             Log.warn("Found incompatible attribute " + name + " for display " + display.getName() + ". Skipping.");
             return;
         }
-        try {
-            ConfigurationNode valueNode = (ConfigurationNode) attribute.getValue();
-            T value = valueNode.get(definition.getValueType());
-            if (attribute.getValueType() == DisplayAttributeValueType.STATIC) {
-                StaticDisplayAttribute<T> attributeInstance = new StaticDisplayAttribute<>(name, value);
-                display.setAttribute(definition.getKey(), attributeInstance);
-            } else {
-                throw new DisplayConfigException("Unsupported attribute value type: " + attribute.getValueType());
-            }
-        } catch (SerializationException e) {
-            throw new DisplayConfigException("Failed to deserialize attribute: " + name, e);
-        }
+        DisplayAttribute<T> attributeInstance = new DisplayAttribute<>(definition.getKey(), attribute.getValue());
+        display.setAttribute(definition.getKey(), attributeInstance);
     }
 
     public ConfigDisplay toDto(DisplayBase domain) {
@@ -217,15 +203,14 @@ public class DisplayConfigMapper {
         return attributes.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        DisplayAttribute::getName,
+                        attribute -> attribute.getKey().getName(),
                         this::attributeToDto
                 ));
     }
 
     private ConfigAttribute attributeToDto(DisplayAttribute<?> attribute) {
         ConfigAttribute dto = new ConfigAttribute();
-        dto.setValueType(attribute.getValueType());
-        dto.setValue(attribute.getValue());
+        dto.setValue(attribute.getRawValue());
         return dto;
     }
 }

@@ -16,13 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.render.intent.materializer;
+package eu.decentsoftware.holograms.display.attribute.value;
 
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.intent.IntentDescriptor;
-import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
+public class StaticAttributeValue<T> implements AttributeValue<T> {
 
-public interface IntentMaterializer<T extends IntentDescriptor> {
+    private final T value;
 
-    RenderIntent materialize(T intentDescriptor, DisplayRenderContext context);
+    public StaticAttributeValue(T value) {
+        this.value = value;
+    }
+
+    @Override
+    public T identity() {
+        return value;
+    }
 }

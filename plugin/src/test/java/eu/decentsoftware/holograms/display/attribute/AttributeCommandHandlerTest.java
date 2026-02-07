@@ -61,17 +61,16 @@ class AttributeCommandHandlerTest {
 
             when(definition.getKey()).thenReturn(key);
             when(definition.getName()).thenReturn("test");
-            when(definition.parse(new String[]{"value"})).thenReturn("parsed");
 
-            handler.setAttribute(display, definition, new String[]{"value"});
+            handler.setAttribute(display, definition, new String[]{"raw", "value"});
 
-            ArgumentCaptor<StaticDisplayAttribute<String>> captor = ArgumentCaptor.forClass(StaticDisplayAttribute.class);
+            ArgumentCaptor<DisplayAttribute<String>> captor = ArgumentCaptor.forClass(DisplayAttribute.class);
 
             verify(display).setAttribute(eq(key), captor.capture());
-            StaticDisplayAttribute<String> attribute = captor.getValue();
+            DisplayAttribute<String> attribute = captor.getValue();
 
-            assertEquals("test", attribute.getName());
-            assertEquals("parsed", attribute.getValue());
+            assertEquals(key, attribute.getKey());
+            assertEquals("raw value", attribute.getRawValue());
         }
     }
 
@@ -89,13 +88,13 @@ class AttributeCommandHandlerTest {
 
             handler.resetAttribute(display, definition);
 
-            ArgumentCaptor<StaticDisplayAttribute<Integer>> captor = ArgumentCaptor.forClass(StaticDisplayAttribute.class);
+            ArgumentCaptor<DisplayAttribute<Integer>> captor = ArgumentCaptor.forClass(DisplayAttribute.class);
 
             verify(display).setAttribute(eq(key), captor.capture());
-            StaticDisplayAttribute<Integer> attribute = captor.getValue();
+            DisplayAttribute<Integer> attribute = captor.getValue();
 
-            assertEquals("number", attribute.getName());
-            assertNull(attribute.getValue());
+            assertEquals(key, attribute.getKey());
+            assertNull(attribute.getRawValue());
         }
     }
 
@@ -116,7 +115,7 @@ class AttributeCommandHandlerTest {
         }
 
         @Test
-        void getAttribute_existingAttribute_formatsValue() {
+        void getAttribute_existingAttribute_returnsValue() {
             DisplayBase display = mock(DisplayBase.class);
             AttributeDefinition<String> definition = mock(AttributeDefinition.class);
             AttributeKey<String> key = mock(AttributeKey.class);
@@ -124,11 +123,10 @@ class AttributeCommandHandlerTest {
 
             when(definition.getKey()).thenReturn(key);
             when(display.getAttribute(key)).thenReturn(attribute);
-            when(attribute.getValue()).thenReturn("raw");
-            when(definition.format("raw")).thenReturn("formatted");
+            when(attribute.getRawValue()).thenReturn("raw");
 
             String result = handler.getAttribute(display, definition);
-            assertEquals("formatted", result);
+            assertEquals("raw", result);
         }
     }
 

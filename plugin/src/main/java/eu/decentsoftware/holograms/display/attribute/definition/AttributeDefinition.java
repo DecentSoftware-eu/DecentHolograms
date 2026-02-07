@@ -22,8 +22,10 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -114,14 +116,29 @@ public interface AttributeDefinition<T> {
     }
 
     /**
-     * Apply the attribute to a {@link DisplayRenderState}.
+     * Apply the attribute to a {@link FinalDisplayRenderState}.
      *
-     * @param attribute The attribute to apply.
-     * @param state     The render state.
-     * @param context   The render context.
+     * <p>This method may perform post-processing on the value before applying it.</p>
+     *
+     * @param value The attribute value to apply.
+     * @param state The render state.
      * @since 2.10.0
      */
-    void apply(DisplayAttribute<T> attribute, DisplayRenderState state, DisplayRenderContext context);
+    void apply(AttributeValue<T> value, FinalDisplayRenderState state);
+
+    default void validate(String rawContent) throws AttributeParseException {
+        // TODO
+        String[] args = rawContent.split(" ");
+        parse(args); // Throws AttributeParseException
+    }
+
+    default AttributeValue<T> resolve(DisplayAttribute<T> attribute, DisplayRenderContext context) {
+        // TODO
+        String rawValue = attribute.getRawValue();
+        String[] args = rawValue.split(" ");
+        T value = parse(args);
+        return new StaticAttributeValue<>(value);
+    }
 
     /**
      * Format the attribute value as a string for display purposes.

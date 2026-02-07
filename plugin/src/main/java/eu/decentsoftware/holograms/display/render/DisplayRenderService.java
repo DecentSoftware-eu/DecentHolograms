@@ -18,16 +18,14 @@
 
 package eu.decentsoftware.holograms.display.render;
 
-import eu.decentsoftware.holograms.display.render.intent.IntentDescriptor;
-import eu.decentsoftware.holograms.display.render.intent.materializer.IntentMaterializerService;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,51 +33,35 @@ public class DisplayRenderService {
 
     private final DisplayRenderDiffService diffService;
     private final PlatformAdapter platformAdapter;
-    private final DisplayRenderStateManager stateManager;
-    private final IntentMaterializerService intentMaterializerService;
+    private final FinalDisplayRenderStateManager finalStateManager;
+    private final DisplayPostProcessingService postProcessingService;
 
     public DisplayRenderService(DisplayRenderDiffService diffService,
                                 PlatformAdapter platformAdapter,
-                                DisplayRenderStateManager stateManager,
-                                IntentMaterializerService intentMaterializerService) {
+                                FinalDisplayRenderStateManager finalStateManager,
+                                DisplayPostProcessingService postProcessingService) {
         this.diffService = diffService;
         this.platformAdapter = platformAdapter;
-        this.stateManager = stateManager;
-        this.intentMaterializerService = intentMaterializerService;
+        this.finalStateManager = finalStateManager;
+        this.postProcessingService = postProcessingService;
     }
 
-    public void render(RenderObjectHandle handle, DisplayRenderState state, DisplayRenderContext context) {
-        DisplayRenderState previousState = getPreviousState(handle, context);
-        List<IntentDescriptor> intentDescriptors = diffService.diff(state, previousState);
-        List<RenderIntent> intents = intentMaterializerService.materializeIntents(intentDescriptors, context);
+    public void render(RenderObjectHandle handle, LogicalDisplayRenderState state, DisplayRenderContext context) {
+        FinalDisplayRenderState currentState = postProcessingService.postProcess(state);
+        FinalDisplayRenderState previousState = getPreviousState(handle, context);
+        List<RenderIntent> intents = diffService.diff(currentState, previousState);
 
         platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
-        saveCurrentState(handle, state, context);
+        saveCurrentState(handle, currentState, context);
     }
 
-    public void postProcess(RenderObjectHandle handle, DisplayRenderContext context) {
-        DisplayRenderState state = getPreviousState(handle, context);
-        List<IntentDescriptor> intentDescriptors = new ArrayList<>();
-        if (state.getContent().isAnimated()) {
-            intentDescriptors.add(new IntentDescriptor.UpdateDisplayContent(state));
-        }
-        for (MetadataValue<?> metadataValue : state.getMetadataValues().values()) {
-            if (metadataValue.isAnimated()) {
-                intentDescriptors.add(new IntentDescriptor.UpdateMetadata<>(state, metadataValue.getKey()));
-            }
-        }
-        List<RenderIntent> intents = intentMaterializerService.materializeIntents(intentDescriptors, context);
-
-        platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
-    }
-
-    private void saveCurrentState(RenderObjectHandle handle, DisplayRenderState state, DisplayRenderContext context) {
+    private void saveCurrentState(RenderObjectHandle handle, FinalDisplayRenderState state, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
-        stateManager.setState(playerUniqueId, handle, state);
+        finalStateManager.setState(playerUniqueId, handle, state);
     }
 
-    private DisplayRenderState getPreviousState(RenderObjectHandle handle, DisplayRenderContext context) {
+    private FinalDisplayRenderState getPreviousState(RenderObjectHandle handle, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
-        return stateManager.getState(playerUniqueId, handle);
+        return finalStateManager.getState(playerUniqueId, handle);
     }
 }

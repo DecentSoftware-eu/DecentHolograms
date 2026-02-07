@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.platform.api.data;
 
 import java.awt.*;
+import java.util.Objects;
 
 public final class DecentColor {
 
@@ -118,5 +119,32 @@ public final class DecentColor {
 
     public String asRGBString() {
         return String.format("#%02X%02X%02X", red, green, blue);
+    }
+
+    @Override
+    public String toString() {
+        return "DecentColor{" +
+                "alpha=" + alpha +
+                ", red=" + red +
+                ", green=" + green +
+                ", blue=" + blue +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof DecentColor)) {
+            return false;
+        }
+        DecentColor that = (DecentColor) o;
+        return getAlpha() == that.getAlpha()
+                && getRed() == that.getRed()
+                && getGreen() == that.getGreen()
+                && getBlue() == that.getBlue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAlpha(), getRed(), getGreen(), getBlue());
     }
 }

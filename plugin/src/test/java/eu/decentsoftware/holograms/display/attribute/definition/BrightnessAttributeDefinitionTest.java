@@ -20,10 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.StaticDisplayAttribute;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticAttributeValue;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
@@ -85,11 +84,10 @@ class BrightnessAttributeDefinitionTest {
     @ParameterizedTest
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBrightness value, DisplayBrightness expectedValue) {
-        DisplayAttribute<DisplayBrightness> attribute = new StaticDisplayAttribute<>(ATTRIBUTE_NAME, value);
-        DisplayRenderState state = new DisplayRenderState("id");
-        DisplayRenderContext context = mock(DisplayRenderContext.class);
+        AttributeValue<DisplayBrightness> attribute = new StaticAttributeValue<>(value);
+        FinalDisplayRenderState state = new FinalDisplayRenderState("id");
 
-        definition.apply(attribute, state, context);
+        definition.apply(attribute, state);
 
         assertEquals(1, state.getMetadataValues().size());
         MetadataValue<DisplayBrightness> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.BRIGHTNESS);

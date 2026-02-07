@@ -19,9 +19,8 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderState;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
@@ -47,12 +46,12 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public void apply(DisplayAttribute<DecentColor> attribute, DisplayRenderState state, DisplayRenderContext context) {
+    public void apply(AttributeValue<DecentColor> value, FinalDisplayRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setLeatherColor(attribute.getValue());
+        itemDisplayContent.getContent().setLeatherColor(value.identity());
     }
 
     @Override

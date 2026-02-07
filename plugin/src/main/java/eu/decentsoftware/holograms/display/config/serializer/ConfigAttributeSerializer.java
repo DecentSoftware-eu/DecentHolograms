@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.display.attribute.DisplayAttributeValueType;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -31,11 +30,9 @@ public class ConfigAttributeSerializer implements TypeSerializer<ConfigAttribute
 
     @Override
     public ConfigAttribute deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        DisplayAttributeValueType valueType = node.node("value-type").get(DisplayAttributeValueType.class);
         ConfigurationNode valueNode = node.node("value");
         ConfigAttribute configAttribute = new ConfigAttribute();
-        configAttribute.setValueType(valueType);
-        configAttribute.setValue(valueNode);
+        configAttribute.setValue(valueNode.getString());
         return configAttribute;
     }
 
@@ -46,7 +43,6 @@ public class ConfigAttributeSerializer implements TypeSerializer<ConfigAttribute
             return;
         }
 
-        node.node("value-type").set(obj.getValueType());
         node.node("value").set(obj.getValue());
     }
 }

@@ -37,15 +37,16 @@ public class AttributeCommandHandler {
     }
 
     public <T> void setAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition, String[] rawValueArgs) {
-        T parsed = parseAttributeValue(attributeDefinition, rawValueArgs);
+        String rawContent = String.join(" ", rawValueArgs);
+        validateAttributeValue(attributeDefinition, rawContent);
 
         AttributeKey<T> attributeKey = attributeDefinition.getKey();
-        display.setAttribute(attributeKey, new StaticDisplayAttribute<>(attributeDefinition.getName(), parsed));
+        display.setAttribute(attributeKey, new DisplayAttribute<>(attributeKey, rawContent));
     }
 
-    private <T> T parseAttributeValue(AttributeDefinition<T> attributeDefinition, String[] rawValueArgs) {
+    private <T> void validateAttributeValue(AttributeDefinition<T> attributeDefinition, String rawContent) {
         try {
-            return attributeDefinition.parse(rawValueArgs);
+            attributeDefinition.validate(rawContent);
         } catch (AttributeParseException e) {
             throw new DecentCommandException(Lang.DISPLAY_ATTRIBUTE_INVALID_VALUE.getValue(), attributeDefinition.getName(), e.getMessage());
         }
@@ -53,7 +54,7 @@ public class AttributeCommandHandler {
 
     public <T> void resetAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
         AttributeKey<T> attributeKey = attributeDefinition.getKey();
-        display.setAttribute(attributeKey, new StaticDisplayAttribute<>(attributeDefinition.getName(), null));
+        display.setAttribute(attributeKey, new DisplayAttribute<>(attributeKey, null));
     }
 
     public <T> String getAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
@@ -61,7 +62,7 @@ public class AttributeCommandHandler {
         if (attribute == null) {
             return null;
         }
-        return attributeDefinition.format(attribute.getValue());
+        return attribute.getRawValue();
     }
 
     public List<AttributeDefinition<?>> getApplicableAttributes(DisplayBase display) {
