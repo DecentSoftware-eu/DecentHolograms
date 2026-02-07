@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemDisplayRenderer extends AbstractDisplayRenderer<ItemStack> implements NmsItemDisplayRenderer {
+class ItemDisplayRenderer extends AbstractDisplayRenderer<ItemStack> implements NmsItemDisplayRenderer {
 
-    public ItemDisplayRenderer(int entityId) {
+    ItemDisplayRenderer(int entityId) {
         super(entityId);
     }
 

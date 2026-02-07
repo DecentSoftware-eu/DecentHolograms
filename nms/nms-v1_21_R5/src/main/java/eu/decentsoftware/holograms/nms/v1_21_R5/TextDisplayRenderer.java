@@ -18,15 +18,15 @@
 
 package eu.decentsoftware.holograms.nms.v1_21_R5;
 
-import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
+import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class TextDisplayRenderer extends AbstractDisplayRenderer<String> implements NmsTextDisplayRenderer {
+class TextDisplayRenderer extends AbstractDisplayRenderer<String> implements NmsTextDisplayRenderer {
 
-    public TextDisplayRenderer(int entityId) {
+    TextDisplayRenderer(int entityId) {
         super(entityId);
     }
 

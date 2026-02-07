@@ -25,9 +25,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class BlockDisplayRenderer extends AbstractDisplayRenderer<Material> implements NmsBlockDisplayRenderer {
+class BlockDisplayRenderer extends AbstractDisplayRenderer<Material> implements NmsBlockDisplayRenderer {
 
-    public BlockDisplayRenderer(int entityId) {
+    BlockDisplayRenderer(int entityId) {
         super(entityId);
     }
 
