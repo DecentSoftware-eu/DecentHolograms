@@ -19,7 +19,9 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
@@ -40,8 +42,8 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
     }
 
     @Override
-    public Boolean getDefaultValue() {
-        return false;
+    public AttributeValue<Boolean> getDefaultValue() {
+        return new BooleanValue(false);
     }
 
     @Override
@@ -55,12 +57,13 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
             return;
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setEnchanted(value.identity());
+        itemDisplayContent.getContent().setEnchanted(value.evaluate());
     }
 
     @Override
-    public @NotNull Boolean parse(String[] args) {
-        return Boolean.parseBoolean(args[0]);
+    public @NotNull AttributeValue<Boolean> parse(String[] args) {
+        boolean bool = Boolean.parseBoolean(args[0]);
+        return new BooleanValue(bool);
     }
 
     @Override

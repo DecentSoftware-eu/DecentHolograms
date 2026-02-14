@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;

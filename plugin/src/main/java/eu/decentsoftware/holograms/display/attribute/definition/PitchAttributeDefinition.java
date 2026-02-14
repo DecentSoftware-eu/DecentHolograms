@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import org.bukkit.command.CommandSender;
@@ -41,13 +43,13 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     }
 
     @Override
-    public @Nullable Float getDefaultValue() {
-        return 0f;
+    public @Nullable AttributeValue<Float> getDefaultValue() {
+        return new FloatValue(0f);
     }
 
     @Override
     public void apply(CompiledAttributeValue<Float> value, FinalDisplayRenderState state) {
-        Float finalValue = value.identity();
+        Float finalValue = value.evaluate();
         if (finalValue != null) {
             DecentLocation location = state.getLocation();
             state.setLocation(new DecentLocation(
@@ -62,13 +64,13 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     }
 
     @Override
-    public @NotNull Float parse(String[] args) {
+    public @NotNull AttributeValue<Float> parse(String[] args) {
         try {
             float parsed = Float.parseFloat(args[0]);
             if (parsed < -90.0f || parsed > 90.0f) {
                 throw new AttributeParseException("Pitch must be between -90 and 90.");
             }
-            return parsed;
+            return new FloatValue(parsed);
         } catch (NumberFormatException e) {
             throw new AttributeParseException("Pitch must be a number.");
         }

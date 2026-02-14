@@ -16,18 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.value.compiled;
+package eu.decentsoftware.holograms.display.attribute.value.primitives;
 
-public class StaticCompiledAttributeValue<T> implements CompiledAttributeValue<T> {
+import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 
-    private final T value;
+public final class StringValueFactory {
 
-    public StaticCompiledAttributeValue(T value) {
-        this.value = value;
+    private final DisplayPlaceholderService placeholderService;
+
+    public StringValueFactory(DisplayPlaceholderService placeholderService) {
+        this.placeholderService = placeholderService;
     }
 
-    @Override
-    public T identity() {
-        return value;
+    public StringValue create(String value) {
+        return new StringValue(value, placeholderService);
     }
 }
+

@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.TextAlignmentValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
@@ -48,8 +50,8 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public TextDisplayAlignment getDefaultValue() {
-        return TextDisplayAlignment.CENTER;
+    public AttributeValue<TextDisplayAlignment> getDefaultValue() {
+        return new TextAlignmentValue(TextDisplayAlignment.CENTER);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     @Override
     public void apply(CompiledAttributeValue<TextDisplayAlignment> value, FinalDisplayRenderState state) {
         MetadataValue<TextDisplayProperties> metadataValue = getTextDisplayPropertiesMetadataValue(state);
-        metadataValue.getValue().setAlignment(value.identity());
+        metadataValue.getValue().setAlignment(value.evaluate());
     }
 
     private MetadataValue<TextDisplayProperties> getTextDisplayPropertiesMetadataValue(FinalDisplayRenderState state) {
@@ -75,9 +77,10 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public @NotNull TextDisplayAlignment parse(String[] args) {
+    public @NotNull AttributeValue<TextDisplayAlignment> parse(String[] args) {
         try {
-            return TextDisplayAlignment.valueOf(args[0]);
+            TextDisplayAlignment alignment = TextDisplayAlignment.valueOf(args[0]);
+            return new TextAlignmentValue(alignment);
         } catch (IllegalArgumentException e) {
             throw new AttributeParseException("Text alignment options are: " + String.join(", ", VALUE_HINTS));
         }

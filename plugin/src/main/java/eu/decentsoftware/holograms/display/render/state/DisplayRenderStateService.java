@@ -23,7 +23,8 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
@@ -31,13 +32,13 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 
 public class DisplayRenderStateService {
 
-    private final AttributeDefinitionRegistry attributeDefinitionRegistry;
     private final DisplayTypeRegistry displayTypeRegistry;
+    private final AttributeDefinitionRegistry attributeDefinitionRegistry;
 
-    public DisplayRenderStateService(AttributeDefinitionRegistry attributeDefinitionRegistry,
-                                     DisplayTypeRegistry displayTypeRegistry) {
-        this.attributeDefinitionRegistry = attributeDefinitionRegistry;
+    public DisplayRenderStateService(DisplayTypeRegistry displayTypeRegistry,
+                                     AttributeDefinitionRegistry attributeDefinitionRegistry) {
         this.displayTypeRegistry = displayTypeRegistry;
+        this.attributeDefinitionRegistry = attributeDefinitionRegistry;
     }
 
     public LogicalDisplayRenderState buildRenderState(DisplayBase display, DisplayRenderContext context) {
@@ -58,11 +59,27 @@ public class DisplayRenderStateService {
 
     private <T> void applyAttribute(AttributeKey<T> key, DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {
         DisplayAttribute<T> attribute = display.getAttribute(key);
-        AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
-        if (definition != null) {
-            CompiledAttributeValue<T> value = definition.resolve(attribute, context);
-            state.addAttribute(key, value);
+        CompiledAttributeValue<T> value = compileAttribute(key, attribute, context);
+        state.addAttribute(key, value);
+    }
+
+    private <T> CompiledAttributeValue<T> compileAttribute(AttributeKey<T> key, DisplayAttribute<T> attribute, DisplayRenderContext context) {
+        AttributeValue<T> value = getValueOrDefault(key, attribute);
+        if (value == null) {
+            return null;
         }
+        return value.compile(context);
+    }
+
+    private <T> AttributeValue<T> getValueOrDefault(AttributeKey<T> key, DisplayAttribute<T> attribute) {
+        AttributeValue<T> value = attribute.getValue();
+        if (value == null) {
+            AttributeDefinition<T> attributeDefinition = attributeDefinitionRegistry.getDefinitionByKey(key);
+            if (attributeDefinition != null) {
+                return attributeDefinition.getDefaultValue();
+            }
+        }
+        return value;
     }
 
     private void applyContent(DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {

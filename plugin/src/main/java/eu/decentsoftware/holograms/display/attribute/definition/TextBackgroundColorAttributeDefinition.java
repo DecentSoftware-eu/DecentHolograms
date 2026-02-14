@@ -19,7 +19,10 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DecentColorAttributeCommandHelper;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -32,7 +35,7 @@ import java.util.List;
 public class TextBackgroundColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("background-color", DecentColor.class);
-    private final DecentColorAttributeCommandHandler commandHandler = new DecentColorAttributeCommandHandler();
+    private final DecentColorAttributeCommandHelper commandHandler = new DecentColorAttributeCommandHelper();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -40,8 +43,9 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
     }
 
     @Override
-    public DecentColor getDefaultValue() {
-        return DecentColor.DEFAULT_BACKGROUND;
+    public AttributeValue<DecentColor> getDefaultValue() {
+        DecentColor color = DecentColor.DEFAULT_BACKGROUND;
+        return new RgbaValue(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
     @Override
@@ -51,22 +55,12 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
 
     @Override
     public void apply(CompiledAttributeValue<DecentColor> value, FinalDisplayRenderState state) {
-        DecentColor finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(value.evaluate()));
     }
 
     @Override
-    public String format(DecentColor value) {
-        return commandHandler.format(value);
-    }
-
-    @Override
-    public @NotNull DecentColor parse(String[] args) {
-        return commandHandler.parseColor(args);
+    public @NotNull AttributeValue<DecentColor> parse(String[] args) {
+        return commandHandler.parseAttributeColorValue(args);
     }
 
     @Override

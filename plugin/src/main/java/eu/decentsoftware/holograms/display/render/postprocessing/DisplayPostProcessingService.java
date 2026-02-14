@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.render.postprocessing;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
 

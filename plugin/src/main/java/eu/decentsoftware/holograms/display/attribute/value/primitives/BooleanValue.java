@@ -16,29 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute;
+package eu.decentsoftware.holograms.display.attribute.value.primitives;
 
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 
-public class DisplayAttribute<T> {
+public final class BooleanValue implements AttributeValue<Boolean> {
 
-    private final AttributeKey<T> key;
-    private final AttributeValue<T> value;
+    private final boolean value;
 
-    public DisplayAttribute(AttributeKey<T> key, AttributeValue<T> value) {
-        this.key = key;
+    public BooleanValue(boolean value) {
         this.value = value;
     }
 
-    public DisplayAttribute<T> copy() {
-        return new DisplayAttribute<>(key, value);
+    @Override
+    public String getTypeKey() {
+        return BooleanValueType.TYPE_ID;
     }
 
-    public AttributeKey<T> getKey() {
-        return key;
+    @Override
+    public CompiledAttributeValue<Boolean> compile(DisplayRenderContext context) {
+        return new StaticCompiledAttributeValue<>(value);
     }
 
-    public AttributeValue<T> getValue() {
+    @Override
+    public String toHumanReadableString() {
+        return Boolean.toString(value);
+    }
+
+    public boolean getValue() {
         return value;
     }
 }

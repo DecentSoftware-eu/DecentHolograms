@@ -21,10 +21,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.bukkit.command.CommandSender;
@@ -85,7 +83,7 @@ public interface AttributeDefinition<T> {
      * @since 2.10.0
      */
     @Nullable
-    T getDefaultValue();
+    AttributeValue<T> getDefaultValue();
 
     /**
      * Get the display types that this attribute can be applied to.
@@ -126,20 +124,6 @@ public interface AttributeDefinition<T> {
      */
     void apply(CompiledAttributeValue<T> value, FinalDisplayRenderState state);
 
-    default void validate(String rawContent) throws AttributeParseException {
-        // TODO
-        String[] args = rawContent.split(" ");
-        parse(args); // Throws AttributeParseException
-    }
-
-    default CompiledAttributeValue<T> resolve(DisplayAttribute<T> attribute, DisplayRenderContext context) {
-        // TODO
-        String rawValue = attribute.getRawValue();
-        String[] args = rawValue.split(" ");
-        T value = parse(args);
-        return new StaticCompiledAttributeValue<>(value);
-    }
-
     /**
      * Format the attribute value as a string for display purposes.
      *
@@ -147,11 +131,11 @@ public interface AttributeDefinition<T> {
      * @return The formatted string.
      * @since 2.10.0
      */
-    default String format(T value) {
+    default String format(AttributeValue<T> value) {
         if (value == null) {
             return null;
         }
-        return String.valueOf(value);
+        return value.toHumanReadableString();
     }
 
     /**
@@ -163,7 +147,9 @@ public interface AttributeDefinition<T> {
      * @since 2.10.0
      */
     @NotNull
-    T parse(String[] args);
+    default AttributeValue<T> parse(String[] args) {
+        return null;
+    }
 
     /**
      * Get command hints for this attribute based on the current input.

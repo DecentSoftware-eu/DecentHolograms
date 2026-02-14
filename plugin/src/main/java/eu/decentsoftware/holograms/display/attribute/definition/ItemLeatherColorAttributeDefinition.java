@@ -19,7 +19,9 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DecentColorAttributeCommandHelper;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -33,7 +35,7 @@ import java.util.List;
 public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("leather-color", DecentColor.class);
-    private final DecentColorAttributeCommandHandler commandHandler = new DecentColorAttributeCommandHandler();
+    private final DecentColorAttributeCommandHelper commandHandler = new DecentColorAttributeCommandHelper();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -41,7 +43,7 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public @Nullable DecentColor getDefaultValue() {
+    public @Nullable AttributeValue<DecentColor> getDefaultValue() {
         return null;
     }
 
@@ -51,7 +53,7 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
             return;
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setLeatherColor(value.identity());
+        itemDisplayContent.getContent().setLeatherColor(value.evaluate());
     }
 
     @Override
@@ -60,13 +62,8 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public String format(DecentColor value) {
-        return commandHandler.format(value);
-    }
-
-    @Override
-    public @NotNull DecentColor parse(String[] args) {
-        return commandHandler.parseColor(args);
+    public @NotNull AttributeValue<DecentColor> parse(String[] args) {
+        return commandHandler.parseAttributeColorValue(args);
     }
 
     @Override

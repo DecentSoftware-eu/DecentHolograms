@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition;
+package eu.decentsoftware.holograms.display.attribute.command.handler;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class DecentColorAttributeCommandHandler {
+final class DecentColorAttributeCommandHelper {
 
     private static final Map<String, DecentColor> NAMED_COLORS = new HashMap<>();
     private static final List<String> BYTE_HINTS =
@@ -62,14 +62,6 @@ final class DecentColorAttributeCommandHandler {
         NAMED_COLORS.put("LIGHT_PURPLE", DecentColor.LIGHT_PURPLE);
         NAMED_COLORS.put("YELLOW", DecentColor.YELLOW);
         NAMED_COLORS.put("WHITE", DecentColor.WHITE);
-    }
-
-    public String format(DecentColor value) {
-        if (value == null) {
-            return null;
-        }
-        String rgbString = String.format("RGBA: %s, %s, %s, %s", value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha());
-        return value.asRGBString() + rgbString;
     }
 
     public DecentColor parseColor(String[] args) {

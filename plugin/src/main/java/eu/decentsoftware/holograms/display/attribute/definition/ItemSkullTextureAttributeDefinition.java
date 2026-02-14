@@ -19,31 +19,23 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
+import eu.decentsoftware.holograms.display.attribute.command.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.SkullTextureHandler;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
-import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<String> {
 
     public static final AttributeKey<String> KEY = AttributeKey.of("skull-texture", String.class);
-    private final DisplayPlaceholderService placeholderService;
+    private final SkullTextureHandler commandHandler;
 
-    public ItemSkullTextureAttributeDefinition(DisplayPlaceholderService placeholderService) {
-        this.placeholderService = placeholderService;
+    public ItemSkullTextureAttributeDefinition(SkullTextureHandler commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     @Override
@@ -52,7 +44,7 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public @Nullable String getDefaultValue() {
+    public @Nullable AttributeValue<String> getDefaultValue() {
         return null;
     }
 
@@ -67,37 +59,11 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
             return;
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
-        itemDisplayContent.getContent().setSkullTexture(value.identity());
+        itemDisplayContent.getContent().setSkullTexture(value.evaluate());
     }
 
     @Override
-    public CompiledAttributeValue<String> resolve(DisplayAttribute<String> attribute, DisplayRenderContext context) {
-        String rawValue = attribute.getRawValue();
-        String[] args = rawValue.split(" ");
-        String value = parse(args);
-        value = placeholderService.replacePlaceholders(value, context);
-        return new StaticCompiledAttributeValue<>(value);
-    }
-
-    @Override
-    public @NotNull String parse(String[] args) {
-        return args[0];
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            List<String> hints = new ArrayList<>();
-            hints.add("{player}");
-            if (Integration.PLACEHOLDER_API.isAvailable()) {
-                hints.add("%player_name%");
-            }
-            if (Integration.HEAD_DATABASE.isAvailable()) {
-                hints.add("HEADDATABASE_<id>");
-            }
-            Bukkit.getOnlinePlayers().forEach(player -> hints.add(player.getName()));
-            return hints;
-        }
-        return Collections.emptyList();
+    public AttributeCommandHandler<String> getDefaultCommandHandler() {
+        return commandHandler;
     }
 }

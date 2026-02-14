@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -36,7 +38,7 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Decen
     public static final AttributeKey<DecentVector3f> KEY = AttributeKey.of("translation", DecentVector3f.class);
     private static final int MIN_VALUE = -8;
     private static final int MAX_VALUE = 8;
-    private final DecentVector3f defaultValue = new DecentVector3f(0, 0, 0);
+    private final Vector3fValue defaultValue = new Vector3fValue(0, 0, 0);
 
     @Override
     public @NotNull AttributeKey<DecentVector3f> getKey() {
@@ -44,35 +46,22 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Decen
     }
 
     @Override
-    public DecentVector3f getDefaultValue() {
+    public AttributeValue<DecentVector3f> getDefaultValue() {
         return defaultValue;
     }
 
     @Override
     public void apply(CompiledAttributeValue<DecentVector3f> value, FinalDisplayRenderState state) {
-        DecentVector3f finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.TRANSLATION.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.TRANSLATION.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.TRANSLATION.createValue(value.evaluate()));
     }
 
     @Override
-    public String format(DecentVector3f value) {
-        if (value == null) {
-            return null;
-        }
-        return "X: " + value.getX() + ", Y: " + value.getY() + ", Z: " + value.getZ();
-    }
-
-    @Override
-    public @NotNull DecentVector3f parse(String[] args) {
+    public @NotNull AttributeValue<DecentVector3f> parse(String[] args) {
         if (args.length == 3) {
             float x = parseSingleValue(args[0], "X");
             float y = parseSingleValue(args[1], "Y");
             float z = parseSingleValue(args[2], "Z");
-            return new DecentVector3f(x, y, z);
+            return new Vector3fValue(x, y, z);
         } else {
             throw new AttributeParseException("Translation must be specified as three separate values for X, Y, and Z.");
         }

@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.IntegerValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -42,8 +44,8 @@ public class TextLineWidthAttributeDefinition implements AttributeDefinition<Int
     }
 
     @Override
-    public @Nullable Integer getDefaultValue() {
-        return 300;
+    public @Nullable AttributeValue<Integer> getDefaultValue() {
+        return new IntegerValue(300);
     }
 
     @Override
@@ -53,22 +55,17 @@ public class TextLineWidthAttributeDefinition implements AttributeDefinition<Int
 
     @Override
     public void apply(CompiledAttributeValue<Integer> value, FinalDisplayRenderState state) {
-        Integer finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(value.evaluate()));
     }
 
     @Override
-    public @NotNull Integer parse(String[] args) {
+    public @NotNull AttributeValue<Integer> parse(String[] args) {
         try {
             int lineWidth = Integer.parseInt(args[0]);
             if (lineWidth < 1) {
                 throw new AttributeParseException("Line width must be higher than 0.");
             }
-            return lineWidth;
+            return new IntegerValue(lineWidth);
         } catch (NumberFormatException e) {
             throw new AttributeParseException("Line width must be a positive integer.");
         }

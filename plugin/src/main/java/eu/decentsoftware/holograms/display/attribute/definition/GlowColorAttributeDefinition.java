@@ -19,20 +19,20 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.command.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.StaticColorHandler;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class GlowColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("glow-color", DecentColor.class);
-    private final DecentColorAttributeCommandHandler commandHandler = new DecentColorAttributeCommandHandler();
+    private final StaticColorHandler commandHandler = new StaticColorHandler();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -40,13 +40,13 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     }
 
     @Override
-    public DecentColor getDefaultValue() {
+    public AttributeValue<DecentColor> getDefaultValue() {
         return null;
     }
 
     @Override
     public void apply(CompiledAttributeValue<DecentColor> value, FinalDisplayRenderState state) {
-        DecentColor finalValue = value.identity();
+        DecentColor finalValue = value.evaluate();
         if (finalValue != null) {
             state.addMetadata(BuiltInMetadataKeys.GLOWING.createValue(true));
             state.addMetadata(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(finalValue));
@@ -61,17 +61,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     }
 
     @Override
-    public String format(DecentColor value) {
-        return commandHandler.format(value);
-    }
-
-    @Override
-    public @NotNull DecentColor parse(String[] args) {
-        return commandHandler.parseColor(args);
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        return commandHandler.getHints(args);
+    public AttributeCommandHandler<DecentColor> getDefaultCommandHandler() {
+        return commandHandler;
     }
 }

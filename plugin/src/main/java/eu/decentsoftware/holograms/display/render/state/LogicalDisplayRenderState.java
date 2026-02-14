@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display.render.state;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;

@@ -16,35 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.config.dto;
+package eu.decentsoftware.holograms.display.attribute.value.primitives;
 
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 
-@ConfigSerializable
-public class ConfigAttribute {
-    @Setting("value-type")
-    @Required
-    private String valueType;
-    @Setting
-    @Required
-    private AttributeValue<?> value;
+public final class IntegerValue implements AttributeValue<Integer> {
 
-    public String getValueType() {
-        return valueType;
-    }
+    private final int value;
 
-    public void setValueType(String valueType) {
-        this.valueType = valueType;
-    }
-
-    public AttributeValue<?> getValue() {
-        return value;
-    }
-
-    public void setValue(AttributeValue<?> value) {
+    public IntegerValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public String getTypeKey() {
+        return IntegerValueType.TYPE_ID;
+    }
+
+    @Override
+    public CompiledAttributeValue<Integer> compile(DisplayRenderContext context) {
+        return new StaticCompiledAttributeValue<>(value);
+    }
+
+    @Override
+    public String toHumanReadableString() {
+        return Integer.toString(value);
+    }
+
+    public int getValue() {
+        return value;
     }
 }

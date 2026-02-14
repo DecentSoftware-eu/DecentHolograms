@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.bukkit.command.CommandSender;
@@ -87,7 +89,7 @@ class AttributeDefinitionTest {
     @Test
     void testFormat() {
         AttributeDefinition<String> definition = new TestAttributeDefinition();
-        assertEquals("test", definition.format("test"));
+        assertEquals("test", definition.format(new StringValue("test", null)));
     }
 
     private static class TestAttributeDefinition implements AttributeDefinition<String> {
@@ -97,8 +99,8 @@ class AttributeDefinitionTest {
         }
 
         @Override
-        public @Nullable String getDefaultValue() {
-            return "default";
+        public @Nullable AttributeValue<String> getDefaultValue() {
+            return new StringValue("default", null);
         }
 
         @Override
@@ -107,8 +109,8 @@ class AttributeDefinitionTest {
         }
 
         @Override
-        public @NonNull String parse(String[] args) {
-            return "parsed";
+        public @NonNull AttributeValue<String> parse(String[] args) {
+            return new StringValue("parsed", null);
         }
     }
 

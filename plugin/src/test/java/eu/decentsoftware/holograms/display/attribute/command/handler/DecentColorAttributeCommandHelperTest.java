@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.attribute.definition;
+package eu.decentsoftware.holograms.display.attribute.command.handler;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
@@ -34,12 +34,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DecentColorAttributeCommandHandlerTest {
+class DecentColorAttributeCommandHelperTest {
 
     private static final Map<String, DecentColor> NAMED_COLORS = new HashMap<>();
 
@@ -65,33 +64,11 @@ class DecentColorAttributeCommandHandlerTest {
         NAMED_COLORS.put("WHITE", DecentColor.WHITE);
     }
 
-    private DecentColorAttributeCommandHandler handler;
+    private DecentColorAttributeCommandHelper handler;
 
     @BeforeEach
     void setUp() {
-        handler = new DecentColorAttributeCommandHandler();
-    }
-
-    @Nested
-    class FormatTests {
-
-        @Test
-        void format_nullValue_returnsNull() {
-            assertNull(handler.format(null));
-        }
-
-        @Test
-        void format_validColor_containsRgbAndRgbaData() {
-            DecentColor color = DecentColor.fromRGBA(10, 20, 30, 40);
-            String formatted = handler.format(color);
-
-            assertNotNull(formatted);
-            assertTrue(formatted.contains("RGBA"));
-            assertTrue(formatted.contains("10"));
-            assertTrue(formatted.contains("20"));
-            assertTrue(formatted.contains("30"));
-            assertTrue(formatted.contains("40"));
-        }
+        handler = new DecentColorAttributeCommandHelper();
     }
 
     @Nested

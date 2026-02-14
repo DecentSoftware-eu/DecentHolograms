@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.BrightnessValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -42,34 +44,21 @@ public class BrightnessAttributeDefinition implements AttributeDefinition<Displa
     }
 
     @Override
-    public DisplayBrightness getDefaultValue() {
+    public AttributeValue<DisplayBrightness> getDefaultValue() {
         return null;
     }
 
     @Override
     public void apply(CompiledAttributeValue<DisplayBrightness> value, FinalDisplayRenderState state) {
-        DisplayBrightness finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.BRIGHTNESS.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.BRIGHTNESS.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.BRIGHTNESS.createValue(value.evaluate()));
     }
 
     @Override
-    public String format(DisplayBrightness value) {
-        if (value == null) {
-            return null;
-        }
-        return "Block Light: " + value.getBlockLight() + ", Sky Light: " + value.getSkyLight();
-    }
-
-    @Override
-    public @NotNull DisplayBrightness parse(String[] args) {
+    public @NotNull AttributeValue<DisplayBrightness> parse(String[] args) {
         if (args.length == 2) {
             int blockLight = parseSingleValue(args[0], "Block Light");
             int skyLight = parseSingleValue(args[1], "Sky Light");
-            return DisplayBrightness.of(blockLight, skyLight);
+            return new BrightnessValue(blockLight, skyLight);
         } else {
             throw new AttributeParseException("Brightness must be specified as two separate values for block light and sky light.");
         }

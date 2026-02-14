@@ -16,35 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.config.dto;
+package eu.decentsoftware.holograms.display.attribute.value.primitives;
 
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 
-@ConfigSerializable
-public class ConfigAttribute {
-    @Setting("value-type")
-    @Required
-    private String valueType;
-    @Setting
-    @Required
-    private AttributeValue<?> value;
+public final class FloatValue implements AttributeValue<Float> {
 
-    public String getValueType() {
-        return valueType;
-    }
+    private final float value;
 
-    public void setValueType(String valueType) {
-        this.valueType = valueType;
-    }
-
-    public AttributeValue<?> getValue() {
-        return value;
-    }
-
-    public void setValue(AttributeValue<?> value) {
+    public FloatValue(float value) {
         this.value = value;
+    }
+
+    @Override
+    public String getTypeKey() {
+        return FloatValueType.TYPE_ID;
+    }
+
+    @Override
+    public CompiledAttributeValue<Float> compile(DisplayRenderContext context) {
+        return new StaticCompiledAttributeValue<>(value);
+    }
+
+    @Override
+    public String toHumanReadableString() {
+        return Float.toString(value);
+    }
+
+    public float getValue() {
+        return value;
     }
 }

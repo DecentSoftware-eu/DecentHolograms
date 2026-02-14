@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 public class BillboardAttributeDefinition implements AttributeDefinition<DisplayBillboardConstraints> {
 
     public static final AttributeKey<DisplayBillboardConstraints> KEY = AttributeKey.of("billboard", DisplayBillboardConstraints.class);
+
+    private static final BillboardConstraintsValue DEFAULT_VALUE = new BillboardConstraintsValue(DisplayBillboardConstraints.FIXED);
     private static final List<String> VALUE_HINTS = Arrays.stream(DisplayBillboardConstraints.values())
             .map(Enum::name)
             .collect(Collectors.toList());
@@ -45,24 +49,20 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public DisplayBillboardConstraints getDefaultValue() {
-        return DisplayBillboardConstraints.FIXED;
+    public AttributeValue<DisplayBillboardConstraints> getDefaultValue() {
+        return DEFAULT_VALUE;
     }
 
     @Override
     public void apply(CompiledAttributeValue<DisplayBillboardConstraints> value, FinalDisplayRenderState state) {
-        DisplayBillboardConstraints finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(value.evaluate()));
     }
 
     @Override
-    public @NotNull DisplayBillboardConstraints parse(String[] args) {
+    public @NotNull AttributeValue<DisplayBillboardConstraints> parse(String[] args) {
         try {
-            return DisplayBillboardConstraints.valueOf(args[0]);
+            DisplayBillboardConstraints billboardConstraints = DisplayBillboardConstraints.valueOf(args[0]);
+            return new BillboardConstraintsValue(billboardConstraints);
         } catch (IllegalArgumentException e) {
             throw new AttributeParseException("Billboard options are: " + String.join(", ", VALUE_HINTS));
         }

@@ -19,7 +19,9 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
@@ -42,8 +44,8 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     }
 
     @Override
-    public Boolean getDefaultValue() {
-        return false;
+    public AttributeValue<Boolean> getDefaultValue() {
+        return new BooleanValue(false);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     @Override
     public void apply(CompiledAttributeValue<Boolean> value, FinalDisplayRenderState state) {
         MetadataValue<TextDisplayProperties> metadataValue = getTextDisplayPropertiesMetadataValue(state);
-        metadataValue.getValue().setHasShadow(value.identity());
+        metadataValue.getValue().setHasShadow(value.evaluate());
     }
 
     private MetadataValue<TextDisplayProperties> getTextDisplayPropertiesMetadataValue(FinalDisplayRenderState state) {
@@ -69,8 +71,9 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     }
 
     @Override
-    public @NotNull Boolean parse(String[] args) {
-        return Boolean.parseBoolean(args[0]);
+    public @NotNull AttributeValue<Boolean> parse(String[] args) {
+        boolean bool = Boolean.parseBoolean(args[0]);
+        return new BooleanValue(bool);
     }
 
     @Override

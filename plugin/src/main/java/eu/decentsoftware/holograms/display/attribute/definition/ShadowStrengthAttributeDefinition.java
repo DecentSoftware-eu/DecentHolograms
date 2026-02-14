@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.bukkit.command.CommandSender;
@@ -40,28 +42,23 @@ public class ShadowStrengthAttributeDefinition implements AttributeDefinition<Fl
     }
 
     @Override
-    public Float getDefaultValue() {
-        return 1.0f;
+    public AttributeValue<Float> getDefaultValue() {
+        return new FloatValue(1.0f);
     }
 
     @Override
     public void apply(CompiledAttributeValue<Float> value, FinalDisplayRenderState state) {
-        Float finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(value.evaluate()));
     }
 
     @Override
-    public @NotNull Float parse(String[] args) {
+    public @NotNull AttributeValue<Float> parse(String[] args) {
         try {
             float parsed = Float.parseFloat(args[0]);
             if (parsed < 0.0f || parsed > 32.0f) {
                 throw new AttributeParseException("Shadow strength must be between 0.0 and 32.0.");
             }
-            return parsed;
+            return new FloatValue(parsed);
         } catch (NumberFormatException e) {
             throw new AttributeParseException("Shadow strength must be a number.");
         }

@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.ItemDisplayTypeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
@@ -46,8 +48,8 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
     }
 
     @Override
-    public ItemDisplayType getDefaultValue() {
-        return ItemDisplayType.NONE;
+    public AttributeValue<ItemDisplayType> getDefaultValue() {
+        return new ItemDisplayTypeValue(ItemDisplayType.NONE);
     }
 
     @Override
@@ -57,18 +59,14 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
 
     @Override
     public void apply(CompiledAttributeValue<ItemDisplayType> value, FinalDisplayRenderState state) {
-        ItemDisplayType finalValue = value.identity();
-        if (finalValue != null) {
-            state.addMetadata(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(finalValue));
-        } else {
-            state.addMetadata(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(getDefaultValue()));
-        }
+        state.addMetadata(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(value.evaluate()));
     }
 
     @Override
-    public @NotNull ItemDisplayType parse(String[] args) {
+    public @NotNull AttributeValue<ItemDisplayType> parse(String[] args) {
         try {
-            return ItemDisplayType.valueOf(args[0]);
+            ItemDisplayType itemDisplayType = ItemDisplayType.valueOf(args[0]);
+            return new ItemDisplayTypeValue(itemDisplayType);
         } catch (IllegalArgumentException e) {
             throw new AttributeParseException("Item display type options are: " + String.join(", ", VALUE_HINTS));
         }

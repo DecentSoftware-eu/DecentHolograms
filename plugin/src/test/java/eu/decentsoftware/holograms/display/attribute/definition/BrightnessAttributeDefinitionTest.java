@@ -20,8 +20,10 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.compiled.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.BrightnessValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
@@ -39,6 +41,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -103,7 +106,8 @@ class BrightnessAttributeDefinitionTest {
 
     @Test
     void testFormat() {
-        assertEquals("Block Light: 7, Sky Light: 12", definition.format(DisplayBrightness.of(7, 12)));
+        BrightnessValue brightnessValue = new BrightnessValue(7, 12);
+        assertEquals("Block Light: 7, Sky Light: 12", definition.format(brightnessValue));
     }
 
     private void assertDisplayBrightness(DisplayBrightness expected, DisplayBrightness actual) {
@@ -126,9 +130,11 @@ class BrightnessAttributeDefinitionTest {
     @ParameterizedTest
     @MethodSource("provideValidInputsForParse")
     void testParse_validInputs(String[] args, DisplayBrightness expectedValue) {
-        DisplayBrightness result = definition.parse(args);
-        assertEquals(expectedValue.getBlockLight(), result.getBlockLight());
-        assertEquals(expectedValue.getSkyLight(), result.getSkyLight());
+        AttributeValue<DisplayBrightness> result = definition.parse(args);
+
+        assertInstanceOf(BrightnessValue.class, result);
+        assertEquals(expectedValue.getBlockLight(), ((BrightnessValue) result).getBlockLight());
+        assertEquals(expectedValue.getSkyLight(), ((BrightnessValue) result).getSkyLight());
     }
 
     private static Object[][] provideInvalidInputsForParse() {
