@@ -35,19 +35,12 @@ import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
 )
 public class DisplaysCommand extends DecentCommand {
 
-    private static DisplaysCommand instance;
-
-    public static DisplaysCommand getInstance() {
-        return instance;
-    }
-
     public DisplaysCommand(DisplayService displayService,
                            DisplayCloneService displayCloneService,
                            AttributeCommandService attributeCommandService) {
         super("displays");
-        instance = this;
 
-        addSubCommand(new DisplaysHelpCommand());
+        addSubCommand(new DisplaysHelpCommand(this));
         addSubCommand(new CreateDisplayCommand(displayService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));

@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.display.command;
 
-import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -33,8 +32,11 @@ import eu.decentsoftware.holograms.api.utils.Common;
 )
 class DisplaysHelpCommand extends DecentCommand {
 
-    DisplaysHelpCommand() {
+    private final DisplaysCommand rootCommand;
+
+    DisplaysHelpCommand(DisplaysCommand rootCommand) {
         super("help");
+        this.rootCommand = rootCommand;
     }
 
     @Override
@@ -44,8 +46,7 @@ class DisplaysHelpCommand extends DecentCommand {
             Common.tell(sender, " &3&lDECENT DISPLAYS HELP");
             Common.tell(sender, " All general commands.");
             sender.sendMessage("");
-            CommandBase command = DisplaysCommand.getInstance();
-            printHelpSubCommandsAndAliases(sender, command);
+            printHelpSubCommandsAndAliases(sender, rootCommand);
             return true;
         };
     }
