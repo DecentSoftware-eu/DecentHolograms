@@ -22,7 +22,6 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 class DisplayListener implements Listener {
@@ -33,12 +32,6 @@ class DisplayListener implements Listener {
     DisplayListener(DisplayService service, PlatformPlayerService playerService) {
         this.service = service;
         this.playerService = playerService;
-    }
-
-    @EventHandler
-    void onPlayerJoin(PlayerJoinEvent event) {
-        PlatformPlayer platformPlayer = playerService.getPlayer(event.getPlayer());
-        service.updateVisibilityForPlayer(platformPlayer);
     }
 
     @EventHandler
