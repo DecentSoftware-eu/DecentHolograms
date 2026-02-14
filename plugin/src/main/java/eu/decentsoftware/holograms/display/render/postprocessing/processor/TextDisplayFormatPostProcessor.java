@@ -28,12 +28,14 @@ import java.util.List;
 
 public class TextDisplayFormatPostProcessor implements DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>> {
 
+    private final TextFormattingCache textCache = new TextFormattingCache(TextFormattingCache.DEFAULT_MAX_SIZE);
+
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
         List<TextDisplayLine> lines = content.getContent();
         List<TextDisplayLine> formattedLines = new ArrayList<>();
         for (TextDisplayLine line : lines) {
-            String formattedText = Common.colorize(line.getText());
+            String formattedText = textCache.parse(line.getText(), Common::colorize);
             TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.isAnimated());
             formattedLines.add(formattedLine);
         }
