@@ -20,6 +20,8 @@ package eu.decentsoftware.holograms.platform.api.render.metadata;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Represents an immutable key used to define and manage metadata of a specific type.
  * The {@code MetadataKey} is parameterized by the type of value it can hold and
@@ -45,7 +47,7 @@ public final class MetadataKey<T> {
      * @param valueType The type of the value associated with the metadata key.
      */
     public MetadataKey(@NotNull MetadataType type, @NotNull Class<T> valueType) {
-        this(type, valueType, Object::equals);
+        this(type, valueType, Objects::equals);
     }
 
     /**
