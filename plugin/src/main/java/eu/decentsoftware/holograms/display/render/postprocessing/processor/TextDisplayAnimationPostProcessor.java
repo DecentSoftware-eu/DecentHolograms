@@ -32,6 +32,9 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
 
     @Override
     public DisplayContent<String> process(DisplayContent<String> content) {
+        if (!content.isAnimated()) {
+            return content;
+        }
         String animatedText = animationManager.parseTextAnimations(content.getContent());
         return new TextDisplayContent(animatedText);
     }
