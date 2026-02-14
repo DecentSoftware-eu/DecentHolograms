@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.render.postprocessing.processor;
 
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.display.render.postprocessing.cache.TextFormattingCache;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.render.postprocessing.processor;
+package eu.decentsoftware.holograms.display.render.postprocessing.cache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
