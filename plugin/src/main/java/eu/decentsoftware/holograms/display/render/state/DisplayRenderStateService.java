@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinit
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
@@ -66,7 +67,7 @@ public class DisplayRenderStateService {
     private <T> CompiledAttributeValue<T> compileAttribute(AttributeKey<T> key, DisplayAttribute<T> attribute, DisplayRenderContext context) {
         AttributeValue<T> value = getValueOrDefault(key, attribute);
         if (value == null) {
-            return null;
+            return new StaticCompiledAttributeValue<>(null);
         }
         return value.compile(context);
     }

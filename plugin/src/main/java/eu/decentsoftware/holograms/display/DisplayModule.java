@@ -19,28 +19,91 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
-import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
+import eu.decentsoftware.holograms.display.attribute.AttributeConfigMapper;
+import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandlerRegistry;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultBooleanHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultBrightnessHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultColorHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultEnumHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultLineWidthHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultOpacityHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultPitchHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultScaleHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultShadowRadiusHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultShadowStrengthHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultSkullTextureHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultTranslationHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultYawHandler;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
+import eu.decentsoftware.holograms.display.attribute.definition.BillboardAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.BrightnessAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.GlowColorAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ItemDisplayTypeAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ItemEnchantedAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ItemLeatherColorAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ItemSkullTextureAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.PitchAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ScaleAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ShadowRadiusAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.ShadowStrengthAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextAlignmentAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextBackgroundColorAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextLineWidthAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextOpacityAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextSeeThroughAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TextShadowAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.TranslationAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.definition.YawAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValueTypeRegistry;
+import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValueType;
+import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValueType;
+import eu.decentsoftware.holograms.display.attribute.value.display.BrightnessValueType;
+import eu.decentsoftware.holograms.display.attribute.value.display.ItemDisplayTypeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.ItemDisplayTypeValueType;
+import eu.decentsoftware.holograms.display.attribute.value.display.TextAlignmentValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.TextAlignmentValueType;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanValueType;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValueType;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.IntegerValueType;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValueFactory;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValueType;
+import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValueType;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
 import eu.decentsoftware.holograms.display.config.DisplayConfigService;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
+import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
+import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
+import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSerializer;
+import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
+import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
+import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderDiffService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
+import eu.decentsoftware.holograms.platform.api.data.DecentColor;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
+import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 /**
  * Manages the display module, including initialization, reloading, and shutdown.
@@ -66,25 +129,78 @@ public class DisplayModule {
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationManager);
         DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
-        AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry(displayPlaceholderService);
+        AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter, renderStateManager, postProcessingService);
-        DisplayRenderStateService stateService = new DisplayRenderStateService(attributeDefinitionRegistry, displayTypeRegistry);
+        DisplayRenderStateService stateService = new DisplayRenderStateService(displayTypeRegistry, attributeDefinitionRegistry);
         TextDisplayPlayerPageManager playerPageManager = new TextDisplayPlayerPageManager();
         LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
         DisplayRenderingService renderingService = new DisplayRenderingService(
                 visibilityService, playerService, stateService, renderService, playerPageManager, logicalDisplayRenderStateManager);
-        DisplayConfigService configService = new DisplayConfigService(plugin);
-        DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeDefinitionRegistry);
+        AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
+        DisplayConfigService configService = new DisplayConfigService(plugin, createTypeSerializers(attributeValueTypeRegistry));
+        AttributeConfigMapper attributeConfigMapper = new AttributeConfigMapper(attributeDefinitionRegistry, attributeValueTypeRegistry);
+        DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
         this.playerPageManager = new TextDisplayPlayerPageManager();
         this.displayService = new DisplayService(persistenceService, renderingService, playerPageManager);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService, playerService);
-        AttributeCommandHandler attributeCommandHandler = new AttributeCommandHandler(attributeDefinitionRegistry);
-        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandHandler);
+        AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
+        AttributeCommandService attributeCommandService = new AttributeCommandService(attributeDefinitionRegistry, commandHandlerRegistry);
+        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandService);
+    }
+
+    private AttributeCommandHandlerRegistry createCommandHandlerRegistry(DisplayPlaceholderService placeholderService) {
+        AttributeCommandHandlerRegistry registry = new AttributeCommandHandlerRegistry();
+        registry.register(BillboardAttributeDefinition.KEY, new DefaultEnumHandler<>(DisplayBillboardConstraints.class, BillboardConstraintsValue::new));
+        registry.register(BrightnessAttributeDefinition.KEY, new DefaultBrightnessHandler());
+        DefaultColorHandler defaultColorHandler = new DefaultColorHandler();
+        registry.register(GlowColorAttributeDefinition.KEY, defaultColorHandler);
+        registry.register(ItemDisplayTypeAttributeDefinition.KEY, new DefaultEnumHandler<>(ItemDisplayType.class, ItemDisplayTypeValue::new));
+        registry.register(ItemEnchantedAttributeDefinition.KEY, new DefaultBooleanHandler());
+        registry.register(ItemLeatherColorAttributeDefinition.KEY, defaultColorHandler);
+        registry.register(ItemSkullTextureAttributeDefinition.KEY, new DefaultSkullTextureHandler(new StringValueFactory(placeholderService)));
+        registry.register(PitchAttributeDefinition.KEY, new DefaultPitchHandler());
+        registry.register(ScaleAttributeDefinition.KEY, new DefaultScaleHandler());
+        registry.register(ShadowRadiusAttributeDefinition.KEY, new DefaultShadowRadiusHandler());
+        registry.register(ShadowStrengthAttributeDefinition.KEY, new DefaultShadowStrengthHandler());
+        registry.register(TextAlignmentAttributeDefinition.KEY, new DefaultEnumHandler<>(TextDisplayAlignment.class, TextAlignmentValue::new));
+        registry.register(TextBackgroundColorAttributeDefinition.KEY, defaultColorHandler);
+        registry.register(TextLineWidthAttributeDefinition.KEY, new DefaultLineWidthHandler());
+        registry.register(TextOpacityAttributeDefinition.KEY, new DefaultOpacityHandler());
+        registry.register(TextSeeThroughAttributeDefinition.KEY, new DefaultBooleanHandler());
+        registry.register(TextShadowAttributeDefinition.KEY, new DefaultBooleanHandler());
+        registry.register(TranslationAttributeDefinition.KEY, new DefaultTranslationHandler());
+        registry.register(YawAttributeDefinition.KEY, new DefaultYawHandler());
+        return registry;
+    }
+
+    private AttributeValueTypeRegistry createAttributeValueTypeRegistry(DisplayPlaceholderService placeholderService) {
+        AttributeValueTypeRegistry registry = new AttributeValueTypeRegistry();
+        registry.register(new BooleanValueType());
+        registry.register(new FloatValueType());
+        registry.register(new IntegerValueType());
+        registry.register(new StringValueType(new StringValueFactory(placeholderService)));
+        registry.register(new Vector3fValueType());
+        registry.register(new BillboardConstraintsValueType());
+        registry.register(new BrightnessValueType());
+        registry.register(new ItemDisplayTypeValueType());
+        registry.register(new TextAlignmentValueType());
+        registry.register(new RgbaValueType());
+        return registry;
+    }
+
+    private TypeSerializerCollection createTypeSerializers(AttributeValueTypeRegistry attributeValueTypeRegistry) {
+        return TypeSerializerCollection.builder()
+                .register(DecentLocation.class, new DecentLocationSerializer())
+                .register(DecentVector3f.class, new DisplayVector3fSerializer())
+                .register(DecentColor.class, new DisplayColorSerializer())
+                .register(DisplayBrightness.class, new DisplayBrightnessSerializer())
+                .register(ConfigAttribute.class, new ConfigAttributeSerializer(attributeValueTypeRegistry))
+                .build();
     }
 
     public void initialize() {

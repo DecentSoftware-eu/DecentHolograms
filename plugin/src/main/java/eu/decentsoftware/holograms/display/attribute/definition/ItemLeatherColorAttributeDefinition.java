@@ -19,23 +19,18 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.command.handler.DecentColorAttributeCommandHelper;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
-
-import java.util.List;
 
 public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("leather-color", DecentColor.class);
-    private final DecentColorAttributeCommandHelper commandHandler = new DecentColorAttributeCommandHelper();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -59,15 +54,5 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.ITEM};
-    }
-
-    @Override
-    public @NotNull AttributeValue<DecentColor> parse(String[] args) {
-        return commandHandler.parseAttributeColorValue(args);
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        return commandHandler.getHints(args);
     }
 }

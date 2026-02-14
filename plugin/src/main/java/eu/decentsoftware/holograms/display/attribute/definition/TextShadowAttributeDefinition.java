@@ -27,12 +27,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class TextShadowAttributeDefinition implements AttributeDefinition<Boolean> {
 
@@ -68,19 +63,5 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
             state.addMetadata(metadataValue);
         }
         return metadataValue;
-    }
-
-    @Override
-    public @NotNull AttributeValue<Boolean> parse(String[] args) {
-        boolean bool = Boolean.parseBoolean(args[0]);
-        return new BooleanValue(bool);
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return Arrays.asList("true", "false");
-        }
-        return Collections.emptyList();
     }
 }

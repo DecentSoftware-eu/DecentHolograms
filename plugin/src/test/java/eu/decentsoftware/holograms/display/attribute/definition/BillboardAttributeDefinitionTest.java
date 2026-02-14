@@ -19,30 +19,24 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
-import org.bukkit.command.CommandSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 
 class BillboardAttributeDefinitionTest {
 
@@ -66,13 +60,14 @@ class BillboardAttributeDefinitionTest {
 
     @Test
     void testDefaultValue() {
-        assertEquals(DisplayBillboardConstraints.FIXED, definition.getDefaultValue());
+        AttributeValue<DisplayBillboardConstraints> defaultValue = definition.getDefaultValue();
+
+        assertInstanceOf(BillboardConstraintsValue.class, defaultValue);
+        assertEquals(DisplayBillboardConstraints.FIXED, ((BillboardConstraintsValue) defaultValue).getBillboardConstraints());
     }
 
     private static Object[][] provideValuesForApply() {
         return new Object[][]{
-                // Default value
-                {null, DisplayBillboardConstraints.FIXED},
                 {DisplayBillboardConstraints.FIXED, DisplayBillboardConstraints.FIXED},
                 {DisplayBillboardConstraints.HORIZONTAL, DisplayBillboardConstraints.HORIZONTAL},
                 {DisplayBillboardConstraints.VERTICAL, DisplayBillboardConstraints.VERTICAL},
@@ -93,53 +88,5 @@ class BillboardAttributeDefinitionTest {
         assertNotNull(metadataValue);
         assertEquals(expectedValue, metadataValue.getValue());
         assertFalse(metadataValue.isAnimated());
-    }
-
-    private static Object[][] provideValidInputsForParse() {
-        return new Object[][]{
-                {new String[]{"FIXED"}, DisplayBillboardConstraints.FIXED},
-                {new String[]{"HORIZONTAL"}, DisplayBillboardConstraints.HORIZONTAL},
-                {new String[]{"VERTICAL"}, DisplayBillboardConstraints.VERTICAL},
-                {new String[]{"CENTER"}, DisplayBillboardConstraints.CENTER},
-                // Only the first argument should be used
-                {new String[]{"FIXED", "anything else after"}, DisplayBillboardConstraints.FIXED},
-        };
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideValidInputsForParse")
-    void testParse_validInputs(String[] args, DisplayBillboardConstraints expectedValue) {
-        assertEquals(expectedValue, definition.parse(args));
-    }
-
-    @Test
-    void testParse_unknownValue() {
-        AttributeParseException exception = assertThrows(AttributeParseException.class, () -> definition.parse(new String[]{"UNKNOWN"}));
-
-        assertEquals("Billboard options are: FIXED, VERTICAL, HORIZONTAL, CENTER", exception.getMessage());
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0, 2, 3})
-    void testHints_notFirstArgument(int argumentsLength) {
-        CommandSender sender = mock(CommandSender.class);
-        String[] args = new String[argumentsLength];
-
-        List<String> hints = definition.getHints(sender, args);
-
-        assertNotNull(hints);
-        assertTrue(hints.isEmpty());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"", "F", "anything"})
-    void testHints_firstArgument(String firstArgument) {
-        CommandSender sender = mock(CommandSender.class);
-        String[] args = new String[]{firstArgument};
-
-        List<String> hints = definition.getHints(sender, args);
-
-        assertNotNull(hints);
-        assertEquals(Arrays.asList("FIXED", "VERTICAL", "HORIZONTAL", "CENTER"), hints);
     }
 }

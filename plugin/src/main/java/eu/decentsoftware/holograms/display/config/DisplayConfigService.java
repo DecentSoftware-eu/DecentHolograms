@@ -19,17 +19,7 @@
 package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
-import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
-import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSerializer;
-import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
-import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
-import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
-import eu.decentsoftware.holograms.platform.api.data.DecentColor;
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
-import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
@@ -52,9 +42,9 @@ public class DisplayConfigService {
     private final Path displaysDirectory;
     private final TypeSerializerCollection serializers;
 
-    public DisplayConfigService(JavaPlugin plugin) {
+    public DisplayConfigService(JavaPlugin plugin, TypeSerializerCollection serializers) {
         this.displaysDirectory = plugin.getDataFolder().toPath().resolve(DISPLAYS_DIR);
-        this.serializers = createSerializers();
+        this.serializers = serializers;
     }
 
     public List<ConfigDisplay> loadAll() {
@@ -126,16 +116,6 @@ public class DisplayConfigService {
                 .defaultOptions(options ->
                         options.serializers(serializerCollection -> serializerCollection.registerAll(serializers))
                 )
-                .build();
-    }
-
-    private static TypeSerializerCollection createSerializers() {
-        return TypeSerializerCollection.builder()
-                .register(DecentLocation.class, new DecentLocationSerializer())
-                .register(DecentVector3f.class, new DisplayVector3fSerializer())
-                .register(DecentColor.class, new DisplayColorSerializer())
-                .register(DisplayBrightness.class, new DisplayBrightnessSerializer())
-                .register(ConfigAttribute.class, new ConfigAttributeSerializer())
                 .build();
     }
 

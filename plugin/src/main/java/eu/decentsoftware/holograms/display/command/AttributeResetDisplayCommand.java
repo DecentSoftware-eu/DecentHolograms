@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.display.attribute.AttributeCommandHandler;
+import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.plugin.Validator;
 
@@ -39,12 +39,12 @@ import eu.decentsoftware.holograms.plugin.Validator;
 class AttributeResetDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
-    private final AttributeCommandHandler attributeCommandHandler;
+    private final AttributeCommandService attributeCommandService;
 
-    AttributeResetDisplayCommand(DisplayService displayService, AttributeCommandHandler attributeCommandHandler) {
+    AttributeResetDisplayCommand(DisplayService displayService, AttributeCommandService attributeCommandService) {
         super("reset-attribute");
         this.displayService = displayService;
-        this.attributeCommandHandler = attributeCommandHandler;
+        this.attributeCommandService = attributeCommandService;
     }
 
     @Override
@@ -53,13 +53,13 @@ class AttributeResetDisplayCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
-            AttributeDefinition<?> attributeDefinition = attributeCommandHandler.getAttributeDefinition(args[1], display);
+            AttributeDefinition<?> attributeDefinition = attributeCommandService.getAttributeDefinition(args[1], display);
             if (attributeDefinition == null) {
                 Lang.DISPLAY_ATTRIBUTE_DOES_NOT_EXIST.send(sender, args[1]);
                 return true;
             }
 
-            attributeCommandHandler.resetAttribute(display, attributeDefinition);
+            attributeCommandService.resetAttribute(display, attributeDefinition);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_ATTRIBUTE_RESET.send(sender, attributeDefinition.getName());
@@ -75,7 +75,7 @@ class AttributeResetDisplayCommand extends DecentCommand {
             } else if (args.length == 2) {
                 DisplayBase display = displayService.getDisplay(args[0]);
                 if (display != null) {
-                    return TabCompleteHandler.getPartialMatches(args[1], attributeCommandHandler.getApplicableAttributeNames(display));
+                    return TabCompleteHandler.getPartialMatches(args[1], attributeCommandService.getApplicableAttributeNames(display));
                 }
             }
             return null;

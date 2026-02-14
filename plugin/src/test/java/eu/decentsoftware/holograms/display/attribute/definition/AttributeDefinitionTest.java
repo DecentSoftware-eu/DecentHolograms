@@ -25,19 +25,14 @@ import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValu
 import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -54,10 +49,6 @@ class AttributeDefinitionTest {
 
         DisplayType[] applicableDisplayTypes = definition.getApplicableDisplayTypes();
         assertEquals(DisplayType.values().length, applicableDisplayTypes.length);
-
-        List<String> hints = definition.getHints(mock(CommandSender.class), new String[0]);
-        assertNotNull(hints);
-        assertTrue(hints.isEmpty());
     }
 
     @ParameterizedTest
@@ -106,11 +97,6 @@ class AttributeDefinitionTest {
         @Override
         public void apply(CompiledAttributeValue<String> value, FinalDisplayRenderState state) {
 
-        }
-
-        @Override
-        public @NonNull AttributeValue<String> parse(String[] args) {
-            return new StringValue("parsed", null);
         }
     }
 

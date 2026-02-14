@@ -19,29 +19,18 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class BillboardAttributeDefinition implements AttributeDefinition<DisplayBillboardConstraints> {
 
     public static final AttributeKey<DisplayBillboardConstraints> KEY = AttributeKey.of("billboard", DisplayBillboardConstraints.class);
-
     private static final BillboardConstraintsValue DEFAULT_VALUE = new BillboardConstraintsValue(DisplayBillboardConstraints.FIXED);
-    private static final List<String> VALUE_HINTS = Arrays.stream(DisplayBillboardConstraints.values())
-            .map(Enum::name)
-            .collect(Collectors.toList());
 
     @Override
     public @NotNull AttributeKey<DisplayBillboardConstraints> getKey() {
@@ -56,23 +45,5 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     @Override
     public void apply(CompiledAttributeValue<DisplayBillboardConstraints> value, FinalDisplayRenderState state) {
         state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(value.evaluate()));
-    }
-
-    @Override
-    public @NotNull AttributeValue<DisplayBillboardConstraints> parse(String[] args) {
-        try {
-            DisplayBillboardConstraints billboardConstraints = DisplayBillboardConstraints.valueOf(args[0]);
-            return new BillboardConstraintsValue(billboardConstraints);
-        } catch (IllegalArgumentException e) {
-            throw new AttributeParseException("Billboard options are: " + String.join(", ", VALUE_HINTS));
-        }
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return VALUE_HINTS;
-        }
-        return Collections.emptyList();
     }
 }

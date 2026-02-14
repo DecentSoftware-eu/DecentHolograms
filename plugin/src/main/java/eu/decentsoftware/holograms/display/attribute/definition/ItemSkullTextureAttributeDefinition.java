@@ -19,8 +19,6 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.command.AttributeCommandHandler;
-import eu.decentsoftware.holograms.display.attribute.command.handler.SkullTextureHandler;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
@@ -32,11 +30,6 @@ import org.jetbrains.annotations.Nullable;
 public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<String> {
 
     public static final AttributeKey<String> KEY = AttributeKey.of("skull-texture", String.class);
-    private final SkullTextureHandler commandHandler;
-
-    public ItemSkullTextureAttributeDefinition(SkullTextureHandler commandHandler) {
-        this.commandHandler = commandHandler;
-    }
 
     @Override
     public @NotNull AttributeKey<String> getKey() {
@@ -60,10 +53,5 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
         itemDisplayContent.getContent().setSkullTexture(value.evaluate());
-    }
-
-    @Override
-    public AttributeCommandHandler<String> getDefaultCommandHandler() {
-        return commandHandler;
     }
 }

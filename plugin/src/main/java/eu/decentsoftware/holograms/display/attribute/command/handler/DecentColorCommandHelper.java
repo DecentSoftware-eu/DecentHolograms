@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class DecentColorAttributeCommandHelper {
+final class DecentColorCommandHelper {
 
     private static final Map<String, DecentColor> NAMED_COLORS = new HashMap<>();
     private static final List<String> BYTE_HINTS =

@@ -18,16 +18,15 @@
 
 package eu.decentsoftware.holograms.display.config;
 
-import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.display.attribute.AttributeConfigMapper;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
-import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
@@ -43,10 +42,10 @@ import java.util.stream.Collectors;
 
 public class DisplayConfigMapper {
 
-    private final AttributeDefinitionRegistry attributeDefinitionRegistry;
+    private final AttributeConfigMapper attributeConfigMapper;
 
-    public DisplayConfigMapper(AttributeDefinitionRegistry attributeDefinitionRegistry) {
-        this.attributeDefinitionRegistry = attributeDefinitionRegistry;
+    public DisplayConfigMapper(AttributeConfigMapper attributeConfigMapper) {
+        this.attributeConfigMapper = attributeConfigMapper;
     }
 
     public DisplayBase toDomain(ConfigDisplay dto) {
@@ -66,7 +65,7 @@ public class DisplayConfigMapper {
             default:
                 throw new DisplayConfigException("Unknown display type: " + dto.getType());
         }
-        attributesToDomain(display, dto.getAttributes());
+        attributeConfigMapper.attributesToDomain(display, dto.getAttributes());
         return display;
     }
 
@@ -126,25 +125,6 @@ public class DisplayConfigMapper {
         settings.setDisplayRange(dto.getDisplayRange());
         settings.setUpdateInterval(dto.getUpdateInterval());
         return settings;
-    }
-
-    private void attributesToDomain(DisplayBase display, Map<String, ConfigAttribute> dto) {
-        dto.forEach((name, attribute) -> attributeToDomain(display, name, attribute));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> void attributeToDomain(DisplayBase display, String name, ConfigAttribute attribute) {
-        AttributeDefinition<T> definition = (AttributeDefinition<T>) attributeDefinitionRegistry.getDefinitionByName(name);
-        if (definition == null) {
-            Log.warn("Found unknown attribute " + name + " for display " + display.getName() + ". Skipping.");
-            return;
-        }
-        if (!definition.applicableTo(display)) {
-            Log.warn("Found incompatible attribute " + name + " for display " + display.getName() + ". Skipping.");
-            return;
-        }
-        DisplayAttribute<T> attributeInstance = new DisplayAttribute<>(definition.getKey(), attribute.getValue());
-        display.setAttribute(definition.getKey(), attributeInstance);
     }
 
     public ConfigDisplay toDto(DisplayBase domain) {
@@ -210,7 +190,11 @@ public class DisplayConfigMapper {
 
     private ConfigAttribute attributeToDto(DisplayAttribute<?> attribute) {
         ConfigAttribute dto = new ConfigAttribute();
-        dto.setValue(attribute.getRawValue());
+        AttributeValue<?> attributeValue = attribute.getValue();
+        if (attributeValue != null) {
+            dto.setValueType(attributeValue.getTypeKey());
+        }
+        dto.setValue(attributeValue);
         return dto;
     }
 }

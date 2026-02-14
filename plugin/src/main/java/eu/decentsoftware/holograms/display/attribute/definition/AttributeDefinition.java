@@ -20,17 +20,12 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Definition of an attribute that can be applied to a display.
@@ -136,31 +131,5 @@ public interface AttributeDefinition<T> {
             return null;
         }
         return value.toHumanReadableString();
-    }
-
-    /**
-     * Parse the attribute value from command arguments and validate it.
-     *
-     * @param args The command arguments.
-     * @return The validated, parsed value.
-     * @throws AttributeParseException If the value cannot be parsed.
-     * @since 2.10.0
-     */
-    @NotNull
-    default AttributeValue<T> parse(String[] args) {
-        return null;
-    }
-
-    /**
-     * Get command hints for this attribute based on the current input.
-     *
-     * @param sender The command sender.
-     * @param args   The current input.
-     * @return The hints.
-     * @since 2.10.0
-     */
-    @NotNull
-    default List<String> getHints(CommandSender sender, String[] args) {
-        return Collections.emptyList();
     }
 }

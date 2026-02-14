@@ -25,12 +25,7 @@ import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanVal
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boolean> {
 
@@ -58,19 +53,5 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
         itemDisplayContent.getContent().setEnchanted(value.evaluate());
-    }
-
-    @Override
-    public @NotNull AttributeValue<Boolean> parse(String[] args) {
-        boolean bool = Boolean.parseBoolean(args[0]);
-        return new BooleanValue(bool);
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return Arrays.asList("true", "false");
-        }
-        return Collections.emptyList();
     }
 }

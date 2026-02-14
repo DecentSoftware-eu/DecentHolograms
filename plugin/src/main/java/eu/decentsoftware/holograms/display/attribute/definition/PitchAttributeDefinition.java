@@ -19,19 +19,13 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class PitchAttributeDefinition implements AttributeDefinition<Float> {
 
@@ -61,26 +55,5 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
                     finalValue
             ));
         }
-    }
-
-    @Override
-    public @NotNull AttributeValue<Float> parse(String[] args) {
-        try {
-            float parsed = Float.parseFloat(args[0]);
-            if (parsed < -90.0f || parsed > 90.0f) {
-                throw new AttributeParseException("Pitch must be between -90 and 90.");
-            }
-            return new FloatValue(parsed);
-        } catch (NumberFormatException e) {
-            throw new AttributeParseException("Pitch must be a number.");
-        }
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return Arrays.asList("-90", "-45", "0", "45", "90");
-        }
-        return Collections.emptyList();
     }
 }

@@ -19,20 +19,14 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.IntegerValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class TextLineWidthAttributeDefinition implements AttributeDefinition<Integer> {
 
@@ -56,26 +50,5 @@ public class TextLineWidthAttributeDefinition implements AttributeDefinition<Int
     @Override
     public void apply(CompiledAttributeValue<Integer> value, FinalDisplayRenderState state) {
         state.addMetadata(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(value.evaluate()));
-    }
-
-    @Override
-    public @NotNull AttributeValue<Integer> parse(String[] args) {
-        try {
-            int lineWidth = Integer.parseInt(args[0]);
-            if (lineWidth < 1) {
-                throw new AttributeParseException("Line width must be higher than 0.");
-            }
-            return new IntegerValue(lineWidth);
-        } catch (NumberFormatException e) {
-            throw new AttributeParseException("Line width must be a positive integer.");
-        }
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return Arrays.asList("200", "300", "400", "500", "1000");
-        }
-        return Collections.emptyList();
     }
 }

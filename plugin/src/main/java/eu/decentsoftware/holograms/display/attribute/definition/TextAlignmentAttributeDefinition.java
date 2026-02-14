@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.AttributeParseException;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.TextAlignmentValue;
@@ -29,20 +28,11 @@ import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignmen
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
 
     public static final AttributeKey<TextDisplayAlignment> KEY = AttributeKey.of("alignment", TextDisplayAlignment.class);
-    private static final List<String> VALUE_HINTS = Arrays.stream(TextDisplayAlignment.values())
-            .map(Enum::name)
-            .collect(Collectors.toList());
 
     @Override
     public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
@@ -74,23 +64,5 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
             state.addMetadata(metadataValue);
         }
         return metadataValue;
-    }
-
-    @Override
-    public @NotNull AttributeValue<TextDisplayAlignment> parse(String[] args) {
-        try {
-            TextDisplayAlignment alignment = TextDisplayAlignment.valueOf(args[0]);
-            return new TextAlignmentValue(alignment);
-        } catch (IllegalArgumentException e) {
-            throw new AttributeParseException("Text alignment options are: " + String.join(", ", VALUE_HINTS));
-        }
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return VALUE_HINTS;
-        }
-        return Collections.emptyList();
     }
 }

@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.command.handler.DecentColorAttributeCommandHelper;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValue;
@@ -27,15 +26,11 @@ import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class TextBackgroundColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("background-color", DecentColor.class);
-    private final DecentColorAttributeCommandHelper commandHandler = new DecentColorAttributeCommandHelper();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -56,15 +51,5 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
     @Override
     public void apply(CompiledAttributeValue<DecentColor> value, FinalDisplayRenderState state) {
         state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(value.evaluate()));
-    }
-
-    @Override
-    public @NotNull AttributeValue<DecentColor> parse(String[] args) {
-        return commandHandler.parseAttributeColorValue(args);
-    }
-
-    @Override
-    public @NotNull List<String> getHints(CommandSender sender, String[] args) {
-        return commandHandler.getHints(args);
     }
 }

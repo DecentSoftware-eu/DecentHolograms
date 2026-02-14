@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,13 +49,13 @@ public class AttributeDefinitionRegistry {
     /**
      * Create a new registry and register all built-in attribute definitions.
      */
-    public AttributeDefinitionRegistry(DisplayPlaceholderService placeholderService) {
-        registerAllAttributeDefinitions(placeholderService);
+    public AttributeDefinitionRegistry() {
+        registerAllAttributeDefinitions();
         populateDefinitionsByKey();
         populateDefinitionsByDisplayType();
     }
 
-    private void registerAllAttributeDefinitions(DisplayPlaceholderService placeholderService) {
+    private void registerAllAttributeDefinitions() {
         // General
         registerDefinition(new YawAttributeDefinition());
         registerDefinition(new PitchAttributeDefinition());
@@ -80,7 +79,7 @@ public class AttributeDefinitionRegistry {
         registerDefinition(new ItemDisplayTypeAttributeDefinition());
         registerDefinition(new ItemEnchantedAttributeDefinition());
         registerDefinition(new ItemLeatherColorAttributeDefinition());
-        registerDefinition(new ItemSkullTextureAttributeDefinition(placeholderService));
+        registerDefinition(new ItemSkullTextureAttributeDefinition());
     }
 
     private void populateDefinitionsByKey() {

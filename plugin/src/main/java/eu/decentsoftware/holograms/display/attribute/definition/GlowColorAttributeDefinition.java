@@ -19,8 +19,6 @@
 package eu.decentsoftware.holograms.display.attribute.definition;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
-import eu.decentsoftware.holograms.display.attribute.command.AttributeCommandHandler;
-import eu.decentsoftware.holograms.display.attribute.command.handler.StaticColorHandler;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
@@ -32,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 public class GlowColorAttributeDefinition implements AttributeDefinition<DecentColor> {
 
     public static final AttributeKey<DecentColor> KEY = AttributeKey.of("glow-color", DecentColor.class);
-    private final StaticColorHandler commandHandler = new StaticColorHandler();
 
     @Override
     public @NotNull AttributeKey<DecentColor> getKey() {
@@ -58,10 +55,5 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     @Override
     public @NotNull DisplayType[] getApplicableDisplayTypes() {
         return new DisplayType[]{DisplayType.ITEM, DisplayType.BLOCK};
-    }
-
-    @Override
-    public AttributeCommandHandler<DecentColor> getDefaultCommandHandler() {
-        return commandHandler;
     }
 }

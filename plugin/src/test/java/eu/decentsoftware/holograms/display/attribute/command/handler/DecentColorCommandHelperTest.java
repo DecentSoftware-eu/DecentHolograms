@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DecentColorAttributeCommandHelperTest {
+class DecentColorCommandHelperTest {
 
     private static final Map<String, DecentColor> NAMED_COLORS = new HashMap<>();
 
@@ -64,11 +64,11 @@ class DecentColorAttributeCommandHelperTest {
         NAMED_COLORS.put("WHITE", DecentColor.WHITE);
     }
 
-    private DecentColorAttributeCommandHelper handler;
+    private DecentColorCommandHelper handler;
 
     @BeforeEach
     void setUp() {
-        handler = new DecentColorAttributeCommandHelper();
+        handler = new DecentColorCommandHelper();
     }
 
     @Nested
