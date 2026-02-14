@@ -33,12 +33,12 @@ public class TextDisplayFormatPostProcessor implements DisplayContentPostProcess
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
         List<TextDisplayLine> lines = content.getContent();
-        List<TextDisplayLine> formattedLines = new ArrayList<>();
+        List<TextDisplayLine> formattedLines = new ArrayList<>(lines.size());
         for (TextDisplayLine line : lines) {
             String formattedText = textCache.parse(line.getText(), Common::colorize);
             TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.isAnimated());
             formattedLines.add(formattedLine);
         }
-        return new TextDisplayContent(formattedLines);
+        return new TextDisplayContent(formattedLines, content.isAnimated());
     }
 }

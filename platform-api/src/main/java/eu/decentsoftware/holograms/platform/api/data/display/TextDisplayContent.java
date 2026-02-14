@@ -32,6 +32,11 @@ public final class TextDisplayContent implements DisplayContent<List<TextDisplay
         this.animated = text.stream().anyMatch(TextDisplayLine::isAnimated);
     }
 
+    public TextDisplayContent(List<TextDisplayLine> text, boolean animated) {
+        this.text = text;
+        this.animated = animated;
+    }
+
     @Override
     public List<TextDisplayLine> getContent() {
         return text;
