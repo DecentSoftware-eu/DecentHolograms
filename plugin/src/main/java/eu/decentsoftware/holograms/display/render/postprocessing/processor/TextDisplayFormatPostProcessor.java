@@ -21,12 +21,22 @@ package eu.decentsoftware.holograms.display.render.postprocessing.processor;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 
-public class TextDisplayFormatPostProcessor implements DisplayContentPostProcessor<String, DisplayContent<String>> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TextDisplayFormatPostProcessor implements DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>> {
 
     @Override
-    public DisplayContent<String> process(DisplayContent<String> content) {
-        String processedText = Common.colorize(content.getContent());
-        return new TextDisplayContent(processedText);
+    public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
+        List<TextDisplayLine> lines = content.getContent();
+        List<TextDisplayLine> formattedLines = new ArrayList<>();
+        for (TextDisplayLine line : lines) {
+            String formattedText = Common.colorize(line.getText());
+            TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.isAnimated());
+            formattedLines.add(formattedLine);
+        }
+        return new TextDisplayContent(formattedLines);
     }
 }

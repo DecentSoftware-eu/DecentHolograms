@@ -21,8 +21,12 @@ package eu.decentsoftware.holograms.display.render.postprocessing.processor;
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 
-public class TextDisplayAnimationPostProcessor implements DisplayContentPostProcessor<String, DisplayContent<String>> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TextDisplayAnimationPostProcessor implements DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>> {
 
     private final AnimationManager animationManager;
 
@@ -31,11 +35,24 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
     }
 
     @Override
-    public DisplayContent<String> process(DisplayContent<String> content) {
+    public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
         if (!content.isAnimated()) {
             return content;
         }
-        String animatedText = animationManager.parseTextAnimations(content.getContent());
-        return new TextDisplayContent(animatedText);
+
+        List<TextDisplayLine> lines = content.getContent();
+        List<TextDisplayLine> animatedLines = new ArrayList<>(lines.size());
+        for (TextDisplayLine line : lines) {
+            if (!line.isAnimated()) {
+                animatedLines.add(line);
+                continue;
+            }
+
+            String animatedText = animationManager.parseTextAnimations(line.getText());
+            TextDisplayLine animatedLine = new TextDisplayLine(animatedText, true);
+            animatedLines.add(animatedLine);
+        }
+
+        return new TextDisplayContent(animatedLines);
     }
 }

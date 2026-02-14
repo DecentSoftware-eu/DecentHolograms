@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextD
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -49,7 +50,7 @@ public final class DisplayTypeRegistry {
 
     private TextDisplayTypeDefinition initializeTextDisplayType(DisplayPlaceholderService displayPlaceholderService,
                                                                 AnimationManager animationManager) {
-        List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
+        List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
                 new TextDisplayAnimationPostProcessor(animationManager),
                 new TextDisplayFormatPostProcessor()
         ));

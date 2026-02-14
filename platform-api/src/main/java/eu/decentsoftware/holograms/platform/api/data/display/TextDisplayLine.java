@@ -18,44 +18,36 @@
 
 package eu.decentsoftware.holograms.platform.api.data.display;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public final class TextDisplayContent implements DisplayContent<List<TextDisplayLine>> {
+public final class TextDisplayLine {
 
-    private final List<TextDisplayLine> text;
+    private final String text;
     private final boolean animated;
 
-    public TextDisplayContent(List<TextDisplayLine> text) {
+    public TextDisplayLine(String text, boolean animated) {
         this.text = text;
-        this.animated = text.stream().anyMatch(TextDisplayLine::isAnimated);
+        this.animated = animated;
     }
 
-    @Override
-    public List<TextDisplayLine> getContent() {
+    public String getText() {
         return text;
     }
 
-    @Override
     public boolean isAnimated() {
         return animated;
     }
 
-    @Override
-    public DisplayContent<List<TextDisplayLine>> copy() {
-        List<TextDisplayLine> copiedLines = text.stream()
-                .map(TextDisplayLine::copy)
-                .collect(Collectors.toList());
-        return new TextDisplayContent(copiedLines);
+    public TextDisplayLine copy() {
+        return new TextDisplayLine(text, animated);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof TextDisplayContent)) {
+        if (!(o instanceof TextDisplayLine)) {
             return false;
         }
-        TextDisplayContent that = (TextDisplayContent) o;
+        TextDisplayLine that = (TextDisplayLine) o;
         return Objects.equals(text, that.text);
     }
 

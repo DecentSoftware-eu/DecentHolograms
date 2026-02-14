@@ -28,18 +28,19 @@ import eu.decentsoftware.holograms.display.render.postprocessing.processor.Displ
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
-import org.bukkit.ChatColor;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> {
+public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<TextDisplayLine>> {
 
     private final DisplayPlaceholderService displayPlaceholderService;
-    private final List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors;
+    private final List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors;
     private final AnimationManager animationManager;
 
     public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService,
-                                     List<DisplayContentPostProcessor<String, DisplayContent<String>>> postProcessors,
+                                     List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors,
                                      AnimationManager animationManager) {
         this.displayPlaceholderService = displayPlaceholderService;
         this.postProcessors = postProcessors;
@@ -52,18 +53,22 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<String> 
     }
 
     @Override
-    public DisplayContent<String> resolveContent(DisplayBase display, DisplayRenderContext context) {
+    public DisplayContent<List<TextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
         TextDisplay textDisplay = getTextDisplay(display);
 
         TextDisplayPage page = textDisplay.getPage(context.getPage());
-        String contentString = String.join(ChatColor.RESET + "\n", page.getLines());
-        String resolvedContent = displayPlaceholderService.replacePlaceholders(contentString, context);
-        boolean isContentAnimated = animationManager.containsAnimations(resolvedContent);
-        return new TextDisplayContent(resolvedContent, isContentAnimated);
+        List<TextDisplayLine> resolvedLines = new ArrayList<>();
+        for (String line : page.getLines()) {
+            String resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
+            boolean isLineAnimated = animationManager.containsAnimations(resolvedLine);
+            TextDisplayLine displayLine = new TextDisplayLine(resolvedLine, isLineAnimated);
+            resolvedLines.add(displayLine);
+        }
+        return new TextDisplayContent(resolvedLines);
     }
 
     @Override
-    public List<DisplayContentPostProcessor<String, DisplayContent<String>>> getContentPostProcessors() {
+    public List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> getContentPostProcessors() {
         return postProcessors;
     }
 

@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
@@ -34,6 +35,7 @@ import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRender
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
 import eu.decentsoftware.holograms.shared.DecentPosition;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -111,6 +113,18 @@ public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
         if (!(content instanceof TextDisplayContent)) {
             throw new IllegalArgumentException("Unsupported content type for Text display: " + content.getClass().getName());
         }
-        return ((TextDisplayContent) content).getContent();
+
+        List<TextDisplayLine> lines = ((TextDisplayContent) content).getContent();
+        boolean firstLine = true;
+        StringBuilder textBuilder = new StringBuilder();
+        for (TextDisplayLine line : lines) {
+            if (firstLine) {
+                firstLine = false;
+            } else {
+                textBuilder.append(ChatColor.RESET).append("\n");
+            }
+            textBuilder.append(line.getText());
+        }
+        return textBuilder.toString();
     }
 }
