@@ -158,6 +158,16 @@ public class Lang {
     public static final Phrase DISPLAY_TEXT_PAGE_SWITCHED = new Phrase("display.text.page.switched", "{prefix}Switched to page &b%2$d&7 of display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_REMOVED = new Phrase("display.text.page_removed", "{prefix}Removed page &b%2$d&7 of display &b'%1$s'&7.");
 
+    // Profiler
+    public static final Phrase PROFILER_STARTED = new Phrase("profiler.started", "{prefix}Profiler has been started!");
+    public static final Phrase PROFILER_ALREADY_RUNNING = new Phrase("profiler.already_running", "{prefix}Profiler is already running!");
+    public static final Phrase PROFILER_STOPPED = new Phrase("profiler.disabled", "{prefix}Profiler has been disabled!");
+    public static final Phrase PROFILER_NOT_RUNNING = new Phrase("profiler.not_running", "{prefix}Profiler is not running!");
+    public static final Phrase PROFILER_RESET = new Phrase("profiler.reset", "{prefix}Profiler has been reset!");
+    public static final Phrase PROFILER_METRIC_RESET = new Phrase("profiler.metric_reset", "{prefix}Metric &b'%1$s'&7 has been reset!");
+    public static final Phrase PROFILER_STATS = new Phrase("profiler.stats", "{prefix}Profiler stats:&f\n%1$s");
+    public static final Phrase PROFILER_METRIC_NOT_FOUND = new Phrase("profiler.metric_not_found", "{prefix}Metric with id &b'%1$s'&7 not found!");
+
     /*
      *	General Methods
      */

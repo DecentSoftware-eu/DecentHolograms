@@ -64,6 +64,32 @@ permissions:
     description: "Allows player to use the command '/dh convert <plugin>'"
     default: op
   #
+  # Profiler Sub-command permissions
+  dh.command.profiler:
+    description: "Allows player to use the command '/dh profiler' and all its sub-commands"
+    default: op
+    children:
+      dh.command.profiler.help: true
+      dh.command.profiler.start: true
+      dh.command.profiler.stop: true
+      dh.command.profiler.reset: true
+      dh.command.profiler.stats: true
+  dh.command.profiler.help:
+    description: "Allows player to use the command '/dh profiler help'"
+    default: op
+  dh.command.profiler.start:
+    description: "Allows player to use the command '/dh profiler start'"
+    default: op
+  dh.command.profiler.stop:
+    description: "Allows player to use the command '/dh profiler stop'"
+    default: op
+  dh.command.profiler.reset:
+    description: "Allows player to use the command '/dh profiler reset [metric]'"
+    default: op
+  dh.command.profiler.stats:
+    description: "Allows player to use the command '/dh profiler stats <metric>'"
+    default: op
+  #
   # Feature Sub-command permissions
   dh.command.features:
     description: "Allows player to use the command '/dh features' and all its sub-commands"

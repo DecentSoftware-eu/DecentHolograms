@@ -16,6 +16,8 @@ import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.command.ProfilerCommand;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,6 +40,7 @@ public class HologramsCommand extends DecentCommand {
 	public HologramsCommand(DisplaysCommand displaysCommand) {
 		super("decentholograms");
 
+        addSubCommand(new ProfilerCommand(DecentProfiler.getInstance()));
 		addSubCommand(new HelpSubCommand());
 		addSubCommand(new ReloadSubCommand());
 		addSubCommand(new ListSubCommand());
