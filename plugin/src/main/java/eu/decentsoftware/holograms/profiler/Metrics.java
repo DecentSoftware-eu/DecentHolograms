@@ -28,6 +28,7 @@ public final class Metrics {
     public static final String POST_PROCESS_TEXT_FORMAT = "post_process.text_format";
     public static final String POST_PROCESS_TEXT_FORMAT_LINE = "post_process.text_format.line";
     public static final String POST_PROCESS_TEXT_ANIMATIONS = "post_process.text_animations";
+    public static final String POST_PROCESS_TEXT_ANIMATIONS_LINE = "post_process.text_animations.line";
     public static final String RENDER_DIFF = "render.diff";
     public static final String RENDER_PLATFORM = "render.platform";
 }
