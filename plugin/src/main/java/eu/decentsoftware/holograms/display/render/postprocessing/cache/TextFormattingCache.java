@@ -18,6 +18,10 @@
 
 package eu.decentsoftware.holograms.display.render.postprocessing.cache;
 
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -28,6 +32,7 @@ public class TextFormattingCache {
     private final Map<String, String> cache;
 
     public TextFormattingCache(int maxSize) {
+        // Using accessOrder=true to implement LRU eviction policy
         this.cache = new LinkedHashMap<String, String>(maxSize, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
@@ -37,7 +42,9 @@ public class TextFormattingCache {
     }
 
     public String parse(String rawText, Function<String, String> parser) {
-        return cache.computeIfAbsent(rawText, parser);
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_FORMAT_LINE)) {
+            return cache.computeIfAbsent(rawText, parser);
+        }
     }
 
     public void invalidate() {

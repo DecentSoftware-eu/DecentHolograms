@@ -22,6 +22,9 @@ import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,12 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
 
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_ANIMATIONS)) {
+            return processInternal(content);
+        }
+    }
+
+    private DisplayContent<List<TextDisplayLine>> processInternal(DisplayContent<List<TextDisplayLine>> content) {
         if (!content.isAnimated()) {
             return content;
         }
@@ -49,8 +58,7 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
             }
 
             String animatedText = animationManager.parseTextAnimations(line.getText());
-            TextDisplayLine animatedLine = new TextDisplayLine(animatedText, true);
-            animatedLines.add(animatedLine);
+            animatedLines.add(new TextDisplayLine(animatedText, true));
         }
 
         return new TextDisplayContent(animatedLines);

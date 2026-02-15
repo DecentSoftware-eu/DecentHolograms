@@ -25,6 +25,9 @@ import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStat
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
 
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +54,9 @@ public class DisplayRenderService {
         FinalDisplayRenderState previousState = getPreviousState(handle, context);
         List<RenderIntent> intents = diffService.diff(currentState, previousState);
 
-        platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_PLATFORM)) {
+            platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
+        }
         saveCurrentState(handle, currentState, context);
     }
 

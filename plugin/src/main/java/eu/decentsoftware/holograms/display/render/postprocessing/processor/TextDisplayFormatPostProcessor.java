@@ -23,6 +23,9 @@ import eu.decentsoftware.holograms.display.render.postprocessing.cache.TextForma
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,12 @@ public class TextDisplayFormatPostProcessor implements DisplayContentPostProcess
 
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_FORMAT)) {
+            return processInternal(content);
+        }
+    }
+
+    private TextDisplayContent processInternal(DisplayContent<List<TextDisplayLine>> content) {
         List<TextDisplayLine> lines = content.getContent();
         List<TextDisplayLine> formattedLines = new ArrayList<>(lines.size());
         for (TextDisplayLine line : lines) {

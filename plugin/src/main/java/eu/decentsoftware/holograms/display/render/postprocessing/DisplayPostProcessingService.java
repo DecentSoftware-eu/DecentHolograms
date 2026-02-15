@@ -24,6 +24,9 @@ import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinit
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
 
 import java.util.Map;
 
@@ -39,6 +42,12 @@ public class DisplayPostProcessingService {
     }
 
     public FinalDisplayRenderState postProcess(LogicalDisplayRenderState logicalState) {
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS)) {
+            return postProcessInternal(logicalState);
+        }
+    }
+
+    private FinalDisplayRenderState postProcessInternal(LogicalDisplayRenderState logicalState) {
         FinalDisplayRenderState state = new FinalDisplayRenderState(logicalState.getId());
         state.setVisible(logicalState.isVisible());
         state.setLocation(logicalState.getLocation());

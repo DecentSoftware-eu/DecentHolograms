@@ -27,8 +27,12 @@ import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayConte
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.Metrics;
+import eu.decentsoftware.holograms.profiler.TimerHandle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,12 @@ import java.util.List;
 public class DisplayRenderDiffService {
 
     public List<RenderIntent> diff(@NotNull FinalDisplayRenderState currentState, @Nullable FinalDisplayRenderState previousState) {
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_DIFF)) {
+            return diffInternal(currentState, previousState);
+        }
+    }
+
+    private List<RenderIntent> diffInternal(@NonNull FinalDisplayRenderState currentState, @org.jspecify.annotations.Nullable FinalDisplayRenderState previousState) {
         List<RenderIntent> intentList = new ArrayList<>();
         if (previousState == null || !previousState.isVisible()) {
             if (currentState.isVisible()) {
