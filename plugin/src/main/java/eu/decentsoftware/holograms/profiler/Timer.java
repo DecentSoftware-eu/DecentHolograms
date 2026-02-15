@@ -21,9 +21,47 @@ package eu.decentsoftware.holograms.profiler;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 
+/**
+ * A histogram-based timer that records operation execution times and tracks distribution statistics.
+ *
+ * <p><b>Histogram Buckets:</b> Measurements are categorized into predefined time ranges
+ * (e.g., &lt;100ns, &lt;1µs, &lt;10µs, &lt;1ms) allowing you to see how many operations
+ * fall into each performance tier. This is crucial for identifying outliers and understanding
+ * the true distribution of performance, not just averages.</p>
+ *
+ * <p><b>Thread Safety:</b> All operations are thread-safe using atomic operations. Multiple
+ * threads can record measurements concurrently without external synchronization.</p>
+ *
+ * <p><b>Usage Example:</b></p>
+ * <pre>{@code
+ * Timer timer = new Timer("database.query");
+ *
+ * // Record measurements
+ * timer.record(1_234); // 1.234µs
+ * timer.record(450);   // 450ns
+ * timer.record(50_000); // 50µs
+ *
+ * // Get statistics
+ * System.out.println("Average: " + timer.getAvg() + "ns");
+ * System.out.println("P99: " + timer.getPercentile(99));
+ * System.out.println(timer.getFormattedStats());
+ * }</pre>
+ *
+ * <p><b>Why Histograms Matter:</b> Averages can hide performance problems. For example,
+ * an average of 1,000ns might come from operations taking [10,000ns, 100ns, 100ns, ...], where
+ * most operations are fast but outliers exist. The histogram distribution reveals this.</p>
+ *
+ * @author d0by
+ * @see DecentProfiler
+ * @see TimerHandle
+ * @since 2.10.0
+ */
 public class Timer implements ProfilerMetric {
 
-    // Histogram buckets (nanoseconds)
+    /**
+     * Predefined histogram buckets defining time ranges for categorizing measurements.
+     * Measurements are placed into the first bucket where {@code timeNs < upperBound}.
+     */
     private static final Bucket[] BUCKETS = {
             new Bucket(100, "< 100ns"),
             new Bucket(250, "< 250ns"),
@@ -45,7 +83,12 @@ public class Timer implements ProfilerMetric {
     private final AtomicLong maxTime = new AtomicLong(Long.MIN_VALUE);
     private final AtomicLongArray bucketCounts = new AtomicLongArray(BUCKETS.length);
 
-    public Timer(String name) {
+    /**
+     * Creates a new timer with the specified name.
+     *
+     * @param name The unique identifier for this timer (e.g., "text.cache.parse")
+     */
+    Timer(String name) {
         this.name = name;
     }
 
@@ -54,6 +97,24 @@ public class Timer implements ProfilerMetric {
         return name;
     }
 
+    /**
+     * Records a single timing measurement in nanoseconds.
+     *
+     * <p>This method updates:
+     * <ul>
+     *   <li>Total count and accumulated time (for average calculation)</li>
+     *   <li>Minimum and maximum observed times</li>
+     *   <li>Histogram bucket counts (for distribution analysis)</li>
+     * </ul>
+     *
+     * <p><b>Thread Safety:</b> This method is thread-safe and can be called concurrently
+     * from multiple threads.</p>
+     *
+     * <p><b>Performance:</b> Recording a measurement takes approximately 50-100ns due to
+     * atomic operations and bucket lookup.</p>
+     *
+     * @param timeNs The elapsed time in nanoseconds to record
+     */
     public void record(long timeNs) {
         totalCount.incrementAndGet();
         totalTime.addAndGet(timeNs);
@@ -71,6 +132,9 @@ public class Timer implements ProfilerMetric {
         }
     }
 
+    /**
+     * Atomically updates the minimum recorded time if the new time is smaller.
+     */
     private void updateMin(long timeNs) {
         long currentMin;
         do {
@@ -78,6 +142,9 @@ public class Timer implements ProfilerMetric {
         } while (timeNs < currentMin && !minTime.compareAndSet(currentMin, timeNs));
     }
 
+    /**
+     * Atomically updates the maximum recorded time if the new time is larger.
+     */
     private void updateMax(long timeNs) {
         long currentMax;
         do {
@@ -85,38 +152,91 @@ public class Timer implements ProfilerMetric {
         } while (timeNs > currentMax && !maxTime.compareAndSet(currentMax, timeNs));
     }
 
-    public String getName() {
-        return name;
-    }
-
+    /**
+     * Returns the total number of measurements recorded.
+     *
+     * @return The total count of recorded measurements
+     */
     public long getTotalCount() {
         return totalCount.get();
     }
 
+    /**
+     * Calculates and returns the average time across all measurements.
+     *
+     * @return The average time in nanoseconds, or 0 if no measurements recorded
+     */
     public long getAvg() {
         long count = totalCount.get();
         return count == 0 ? 0 : totalTime.get() / count;
     }
 
+    /**
+     * Returns the minimum time recorded.
+     *
+     * @return The minimum time in nanoseconds, or 0 if no measurements recorded
+     */
     public long getMin() {
         long min = minTime.get();
         return min == Long.MAX_VALUE ? 0 : min;
     }
 
+    /**
+     * Returns the maximum time recorded.
+     *
+     * <p><b>Note:</b> Very high maximum values (&gt;1ms for sub-microsecond operations)
+     * are often caused by JVM garbage collection, OS context switches, or JIT compilation
+     * rather than the measured operation itself.</p>
+     *
+     * @return The maximum time in nanoseconds, or 0 if no measurements recorded
+     */
     public long getMax() {
         long max = maxTime.get();
         return max == Long.MIN_VALUE ? 0 : max;
     }
 
+    /**
+     * Returns the count of measurements in a specific histogram bucket.
+     *
+     * @param index The bucket index (0 to BUCKETS.length - 1)
+     * @return The number of measurements in this bucket
+     */
     public long getBucketCount(int index) {
         return bucketCounts.get(index);
     }
 
+    /**
+     * Calculates what percentage of measurements fall into a specific bucket.
+     *
+     * @param index The bucket index (0 to BUCKETS.length - 1)
+     * @return The percentage (0.0 to 100.0) of measurements in this bucket
+     */
     public double getBucketPercentage(int index) {
         long total = totalCount.get();
         return total == 0 ? 0.0 : (double) bucketCounts.get(index) / total * 100.0;
     }
 
+    /**
+     * Estimates the percentile value based on histogram buckets.
+     *
+     * <p>Returns the upper bound label of the bucket containing the percentile.
+     * For example, if P95 falls in the "&lt;5µs" bucket, this returns "&lt;5µs".</p>
+     *
+     * <p><b>Accuracy:</b> This is an approximation based on histogram buckets,
+     * not exact percentile calculation. It's accurate enough for performance analysis
+     * while using minimal memory.</p>
+     *
+     * <p><b>Common Percentiles:</b></p>
+     * <ul>
+     *   <li>P50 (median): Half of operations are faster than this</li>
+     *   <li>P95: 95% of operations are faster than this</li>
+     *   <li>P99: 99% of operations are faster than this (useful for finding outliers)</li>
+     *   <li>P99.9: 99.9% of operations are faster than this (rare worst cases)</li>
+     * </ul>
+     *
+     * @param p The percentile to calculate (0.0 to 100.0)
+     * @return The bucket label containing this percentile (e.g., "&lt;5µs")
+     */
     public String getPercentile(double p) {
         long total = totalCount.get();
         long targetCount = (long) (total * p / 100.0);
@@ -150,6 +270,7 @@ public class Timer implements ProfilerMetric {
         sb.append(String.format("\n  Avg: %,d ns", getAvg()));
         sb.append(String.format("\n  Min: %,d ns", getMin()));
         sb.append(String.format("\n  Max: %,d ns", getMax()));
+        sb.append(String.format("\n  P50: %s", getPercentile(50)));
         sb.append(String.format("\n  P95: %s", getPercentile(95)));
         sb.append(String.format("\n  P99: %s", getPercentile(99)));
         sb.append(String.format("\n  P99.9: %s", getPercentile(99.9)));

@@ -18,7 +18,36 @@
 
 package eu.decentsoftware.holograms.profiler;
 
+/**
+ * A handle for timing operations that automatically records elapsed time when closed.
+ *
+ * <p>This class is designed to be used with try-with-resources to automatically measure
+ * the execution time of code blocks. When the handle is closed (either explicitly or
+ * automatically at the end of a try-with-resources block), it calculates the elapsed
+ * time since creation and records it in the associated {@link Timer}.</p>
+ *
+ * <p><b>Usage Example:</b></p>
+ * <pre>{@code
+ * try (TimerHandle handle = profiler.startTimer("operation.name")) {
+ *     // Code to be measured
+ *     performExpensiveOperation();
+ * } // Automatically records elapsed time here
+ * }</pre>
+ *
+ * <p><b>Thread Safety:</b> Each TimerHandle instance is intended for use by a single thread.
+ * The underlying {@link Timer} handles concurrent updates safely.</p>
+ *
+ * @author d0by
+ * @see DecentProfiler#startTimer(String)
+ * @see Timer
+ * @since 2.10.0
+ */
 public class TimerHandle implements AutoCloseable {
+
+    /**
+     * A singleton no-op handle returned when profiling is disabled.
+     * This handle performs no timing or recording operations, ensuring zero overhead.
+     */
     public static final TimerHandle NOOP = new TimerHandle(null, 0);
 
     private final Timer timer;

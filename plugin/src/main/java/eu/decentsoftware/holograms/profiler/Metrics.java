@@ -18,6 +18,9 @@
 
 package eu.decentsoftware.holograms.profiler;
 
+/**
+ * Centralized class for defining metric identifiers used in the profiler.
+ */
 public final class Metrics {
 
     private Metrics() {
