@@ -36,8 +36,4 @@ public class TimerHandle implements AutoCloseable {
             timer.record(elapsed);
         }
     }
-
-    public void stop() {
-        close();
-    }
 }

@@ -24,17 +24,18 @@ import java.util.concurrent.atomic.AtomicLongArray;
 public class Timer implements ProfilerMetric {
 
     // Histogram buckets (nanoseconds)
-    private static final long[] BUCKETS = {
-            100,           // < 100ns
-            500,           // < 500ns
-            1_000,         // < 1µs
-            5_000,         // < 5µs
-            10_000,        // < 10µs
-            50_000,        // < 50µs
-            100_000,       // < 100µs
-            500_000,       // < 500µs
-            1_000_000,     // < 1ms
-            Long.MAX_VALUE // >= 1ms
+    private static final Bucket[] BUCKETS = {
+            new Bucket(100, "< 100ns"),
+            new Bucket(250, "< 250ns"),
+            new Bucket(500, "< 500ns"),
+            new Bucket(1_000, "< 1µs"),
+            new Bucket(5_000, "< 5µs"),
+            new Bucket(10_000, "< 10µs"),
+            new Bucket(50_000, "< 50µs"),
+            new Bucket(100_000, "< 100µs"),
+            new Bucket(500_000, "< 500µs"),
+            new Bucket(1_000_000, "< 1ms"),
+            new Bucket(Long.MAX_VALUE, ">= 1ms")
     };
 
     private final String name;
@@ -63,7 +64,7 @@ public class Timer implements ProfilerMetric {
 
         // Find bucket and increment
         for (int i = 0; i < BUCKETS.length; i++) {
-            if (timeNs < BUCKETS[i]) {
+            if (timeNs < BUCKETS[i].upperBound) {
                 bucketCounts.incrementAndGet(i);
                 break;
             }
@@ -116,7 +117,7 @@ public class Timer implements ProfilerMetric {
         return total == 0 ? 0.0 : (double) bucketCounts.get(index) / total * 100.0;
     }
 
-    public long getPercentile(double p) {
+    public String getPercentile(double p) {
         long total = totalCount.get();
         long targetCount = (long) (total * p / 100.0);
 
@@ -124,10 +125,10 @@ public class Timer implements ProfilerMetric {
         for (int i = 0; i < BUCKETS.length; i++) {
             cumulative += bucketCounts.get(i);
             if (cumulative >= targetCount) {
-                return BUCKETS[i]; // Return bucket upper bound
+                return BUCKETS[i].label; // Return bucket upper bound
             }
         }
-        return BUCKETS[BUCKETS.length - 1];
+        return BUCKETS[BUCKETS.length - 1].label;
     }
 
     @Override
@@ -149,25 +150,30 @@ public class Timer implements ProfilerMetric {
         sb.append(String.format("\n  Avg: %,d ns", getAvg()));
         sb.append(String.format("\n  Min: %,d ns", getMin()));
         sb.append(String.format("\n  Max: %,d ns", getMax()));
-        sb.append(String.format("\n  P95: <%,d ns", getPercentile(95)));
-        sb.append(String.format("\n  P99: <%,d ns", getPercentile(99)));
-        sb.append(String.format("\n  P99.9: <%,d ns", getPercentile(99.9)));
+        sb.append(String.format("\n  P95: %s", getPercentile(95)));
+        sb.append(String.format("\n  P99: %s", getPercentile(99)));
+        sb.append(String.format("\n  P99.9: %s", getPercentile(99.9)));
         sb.append("\n  Distribution:");
-
-        String[] labels = {
-                "< 100ns", "< 500ns", "< 1µs", "< 5µs", "< 10µs",
-                "< 50µs", "< 100µs", "< 500µs", "< 1ms", ">= 1ms"
-        };
 
         for (int i = 0; i < BUCKETS.length; i++) {
             long bucketCount = getBucketCount(i);
             if (bucketCount > 0) {
                 double percentage = getBucketPercentage(i);
                 sb.append(String.format("\n    %s: %,d (%.2f%%)",
-                        labels[i], bucketCount, percentage));
+                        BUCKETS[i].label, bucketCount, percentage));
             }
         }
 
         return sb.toString();
+    }
+
+    private static class Bucket {
+        private final long upperBound;
+        private final String label;
+
+        private Bucket(long upperBound, String label) {
+            this.upperBound = upperBound;
+            this.label = label;
+        }
     }
 }
