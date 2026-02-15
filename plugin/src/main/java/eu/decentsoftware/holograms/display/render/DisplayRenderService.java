@@ -53,6 +53,9 @@ public class DisplayRenderService {
         FinalDisplayRenderState currentState = postProcessingService.postProcess(state);
         FinalDisplayRenderState previousState = getPreviousState(handle, context);
         List<RenderIntent> intents = diffService.diff(currentState, previousState);
+        if (intents.isEmpty()) {
+            return; // No changes, skip rendering
+        }
 
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_PLATFORM)) {
             platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
