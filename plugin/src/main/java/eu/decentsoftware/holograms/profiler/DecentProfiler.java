@@ -205,21 +205,34 @@ public final class DecentProfiler {
         return timers.keySet();
     }
 
+    /**
+     * Generates a human-readable report of all timers and their statistics.
+     *
+     * <p>The report includes average time, total calls, and key percentiles (P50, P95, P99)
+     * for each timer. Timers are sorted by average time in descending order.</p>
+     *
+     * @return A formatted string containing the profiler statistics
+     */
     public String getStats() {
-        StringBuilder sb = new StringBuilder("\n=== Profiler Statistics ===");
+        StringBuilder sb = new StringBuilder("\n=== Profiler Statistics ===\n");
 
         // Sort by total time (most expensive first)
         List<Timer> sorted = new ArrayList<>(timers.values());
-        sorted.sort((a, b) -> Long.compare(
-                b.getTotalCount() * b.getAvg(),
-                a.getTotalCount() * a.getAvg()
-        ));
+        sorted.sort((a, b) -> Long.compare(b.getTotalTime(), a.getTotalTime()));
 
         for (Timer timer : sorted) {
-            sb.append(timer.getFormattedStats());
+            sb.append(String.format("%s:\n  %,10d ns avg | %,10d calls | P50: %8s | P95: %8s | P99: %8s\n",
+                    timer.getId(),
+                    timer.getAvg(),
+                    timer.getTotalCount(),
+                    timer.getPercentile(50),
+                    timer.getPercentile(95),
+                    timer.getPercentile(99)
+            ));
         }
 
-        sb.append("\n============================");
+        sb.append("============================\n");
+        sb.append("Use '/dh profiler stats <timer>' for detailed statistics.");
         return sb.toString();
     }
 }

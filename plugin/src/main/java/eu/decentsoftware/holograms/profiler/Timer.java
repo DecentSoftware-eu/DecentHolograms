@@ -161,6 +161,15 @@ public class Timer {
     }
 
     /**
+     * Returns the total accumulated time across all measurements.
+     *
+     * @return The total time in nanoseconds
+     */
+    public long getTotalTime() {
+        return totalTime.get();
+    }
+
+    /**
      * Calculates and returns the average time across all measurements.
      *
      * @return The average time in nanoseconds, or 0 if no measurements recorded
