@@ -24,13 +24,13 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
-import eu.decentsoftware.holograms.profiler.ProfilerMetric;
+import eu.decentsoftware.holograms.profiler.Timer;
 
 import java.util.Collections;
 
 @CommandInfo(
-        usage = "/dh profiler reset [metric]",
-        description = "Resets all collected profiler data",
+        usage = "/dh profiler reset [timer]",
+        description = "Resets all profiler data or a specific timer",
         permissions = "dh.command.profiler.reset"
 )
 class ProfilerResetCommand extends DecentCommand {
@@ -46,14 +46,14 @@ class ProfilerResetCommand extends DecentCommand {
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
             if (args.length > 0) {
-                String metricId = args[0];
-                ProfilerMetric metric = profiler.getTimer(metricId);
-                if (metric == null) {
-                    Lang.PROFILER_METRIC_NOT_FOUND.send(sender, metricId);
+                String timerId = args[0];
+                Timer timer = profiler.getTimer(timerId);
+                if (timer == null) {
+                    Lang.PROFILER_TIMER_NOT_FOUND.send(sender, timerId);
                     return true;
                 }
-                metric.reset();
-                Lang.PROFILER_METRIC_RESET.send(sender, metricId);
+                timer.reset();
+                Lang.PROFILER_TIMER_RESET.send(sender, timerId);
                 return true;
             }
             profiler.reset();

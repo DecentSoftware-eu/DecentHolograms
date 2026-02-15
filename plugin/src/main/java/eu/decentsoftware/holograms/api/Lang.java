@@ -164,9 +164,9 @@ public class Lang {
     public static final Phrase PROFILER_STOPPED = new Phrase("profiler.disabled", "{prefix}Profiler has been disabled!");
     public static final Phrase PROFILER_NOT_RUNNING = new Phrase("profiler.not_running", "{prefix}Profiler is not running!");
     public static final Phrase PROFILER_RESET = new Phrase("profiler.reset", "{prefix}Profiler has been reset!");
-    public static final Phrase PROFILER_METRIC_RESET = new Phrase("profiler.metric_reset", "{prefix}Metric &b'%1$s'&7 has been reset!");
+    public static final Phrase PROFILER_TIMER_RESET = new Phrase("profiler.timer_reset", "{prefix}Timer &b'%1$s'&7 has been reset!");
     public static final Phrase PROFILER_STATS = new Phrase("profiler.stats", "{prefix}Profiler stats:&f\n%1$s");
-    public static final Phrase PROFILER_METRIC_NOT_FOUND = new Phrase("profiler.metric_not_found", "{prefix}Metric with id &b'%1$s'&7 not found!");
+    public static final Phrase PROFILER_TIMER_NOT_FOUND = new Phrase("profiler.timer_not_found", "{prefix}Timer with id &b'%1$s'&7 not found!");
 
     /*
      *	General Methods

@@ -24,13 +24,13 @@ import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
-import eu.decentsoftware.holograms.profiler.ProfilerMetric;
+import eu.decentsoftware.holograms.profiler.Timer;
 
 import java.util.Collections;
 
 @CommandInfo(
-        usage = "/dh profiler stats [metric]",
-        description = "View stats for a specific profiler metric",
+        usage = "/dh profiler stats [timer]",
+        description = "View stats for a specific profiler timer",
         permissions = "dh.command.profiler.stats"
 )
 class ProfilerStatsCommand extends DecentCommand {
@@ -50,14 +50,14 @@ class ProfilerStatsCommand extends DecentCommand {
                 return true;
             }
 
-            String metricId = args[0];
-            ProfilerMetric metric = profiler.getTimer(metricId);
-            if (metric == null) {
-                Lang.PROFILER_METRIC_NOT_FOUND.send(sender, metricId);
+            String timerId = args[0];
+            Timer timer = profiler.getTimer(timerId);
+            if (timer == null) {
+                Lang.PROFILER_TIMER_NOT_FOUND.send(sender, timerId);
                 return true;
             }
 
-            Lang.PROFILER_STATS.send(sender, metric.getFormattedStats());
+            Lang.PROFILER_STATS.send(sender, timer.getFormattedStats());
             return true;
         };
     }

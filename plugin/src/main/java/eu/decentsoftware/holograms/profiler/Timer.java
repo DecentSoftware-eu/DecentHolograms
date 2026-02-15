@@ -56,7 +56,7 @@ import java.util.concurrent.atomic.AtomicLongArray;
  * @see TimerHandle
  * @since 2.10.0
  */
-public class Timer implements ProfilerMetric {
+public class Timer {
 
     /**
      * Predefined histogram buckets defining time ranges for categorizing measurements.
@@ -92,7 +92,6 @@ public class Timer implements ProfilerMetric {
         this.name = name;
     }
 
-    @Override
     public String getId() {
         return name;
     }
@@ -251,7 +250,6 @@ public class Timer implements ProfilerMetric {
         return BUCKETS[BUCKETS.length - 1].label;
     }
 
-    @Override
     public void reset() {
         totalCount.set(0);
         totalTime.set(0);
@@ -262,7 +260,6 @@ public class Timer implements ProfilerMetric {
         }
     }
 
-    @Override
     public String getFormattedStats() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append(name).append(":");
