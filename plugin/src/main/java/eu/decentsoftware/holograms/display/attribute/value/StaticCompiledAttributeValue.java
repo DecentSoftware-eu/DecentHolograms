@@ -29,6 +29,7 @@ package eu.decentsoftware.holograms.display.attribute.value;
  */
 public final class StaticCompiledAttributeValue<T> implements CompiledAttributeValue<T> {
 
+    private static final StaticCompiledAttributeValue<?> EMPTY = new StaticCompiledAttributeValue<>(null);
     private final T value;
 
     /**
@@ -44,5 +45,17 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
     @Override
     public T evaluate() {
         return value;
+    }
+
+    /**
+     * Returns a shared instance of {@code StaticCompiledAttributeValue} that represents an empty or null value.
+     *
+     * @param <T> The type parameter for the returned instance, allowing it to be used in contexts where a specific type is expected.
+     * @return A {@code StaticCompiledAttributeValue} instance with a null value. This can be used as a singleton for cases where
+     * a constant null value is needed, avoiding the overhead of creating multiple instances.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> StaticCompiledAttributeValue<T> empty() {
+        return (StaticCompiledAttributeValue<T>) EMPTY;
     }
 }

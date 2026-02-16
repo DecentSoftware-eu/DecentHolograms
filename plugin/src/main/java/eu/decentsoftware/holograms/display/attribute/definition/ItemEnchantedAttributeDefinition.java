@@ -38,7 +38,7 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
 
     @Override
     public AttributeValue<Boolean> getDefaultValue() {
-        return new BooleanValue(false);
+        return BooleanValue.FALSE;
     }
 
     @Override

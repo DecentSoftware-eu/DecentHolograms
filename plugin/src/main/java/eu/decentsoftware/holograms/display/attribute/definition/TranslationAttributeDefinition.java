@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class TranslationAttributeDefinition implements AttributeDefinition<DecentVector3f> {
 
     public static final AttributeKey<DecentVector3f> KEY = AttributeKey.of("translation", DecentVector3f.class);
-    private final Vector3fValue defaultValue = new Vector3fValue(0, 0, 0);
+    private static final Vector3fValue DEFAULT_VALUE = new Vector3fValue(0, 0, 0);
 
     @Override
     public @NotNull AttributeKey<DecentVector3f> getKey() {
@@ -39,7 +39,7 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Decen
 
     @Override
     public AttributeValue<DecentVector3f> getDefaultValue() {
-        return defaultValue;
+        return DEFAULT_VALUE;
     }
 
     @Override

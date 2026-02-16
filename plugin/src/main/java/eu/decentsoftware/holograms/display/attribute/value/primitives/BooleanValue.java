@@ -25,9 +25,11 @@ import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 
 public final class BooleanValue implements AttributeValue<Boolean> {
 
+    public static final BooleanValue TRUE = new BooleanValue(true);
+    public static final BooleanValue FALSE = new BooleanValue(false);
     private final boolean value;
 
-    public BooleanValue(boolean value) {
+    private BooleanValue(boolean value) {
         this.value = value;
     }
 
@@ -48,5 +50,9 @@ public final class BooleanValue implements AttributeValue<Boolean> {
 
     public boolean getValue() {
         return value;
+    }
+
+    public static BooleanValue of(boolean value) {
+        return value ? TRUE : FALSE;
     }
 }

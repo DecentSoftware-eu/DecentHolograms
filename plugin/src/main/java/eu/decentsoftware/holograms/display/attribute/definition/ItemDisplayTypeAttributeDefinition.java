@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<ItemDisplayType> {
 
     public static final AttributeKey<ItemDisplayType> KEY = AttributeKey.of("display-type", ItemDisplayType.class);
+    private static final ItemDisplayTypeValue DEFAULT_VALUE = new ItemDisplayTypeValue(ItemDisplayType.NONE);
 
     @Override
     public @NotNull AttributeKey<ItemDisplayType> getKey() {
@@ -39,7 +40,7 @@ public class ItemDisplayTypeAttributeDefinition implements AttributeDefinition<I
 
     @Override
     public AttributeValue<ItemDisplayType> getDefaultValue() {
-        return new ItemDisplayTypeValue(ItemDisplayType.NONE);
+        return DEFAULT_VALUE;
     }
 
     @Override

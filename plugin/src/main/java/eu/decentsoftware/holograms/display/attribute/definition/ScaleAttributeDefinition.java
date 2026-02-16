@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ScaleAttributeDefinition implements AttributeDefinition<DecentVector3f> {
 
     public static final AttributeKey<DecentVector3f> KEY = AttributeKey.of("scale", DecentVector3f.class);
-    private final Vector3fValue defaultValue = new Vector3fValue(1, 1, 1);
+    private static final Vector3fValue DEFAULT_VALUE = new Vector3fValue(1, 1, 1);
 
     @Override
     public @NotNull AttributeKey<DecentVector3f> getKey() {
@@ -39,7 +39,7 @@ public class ScaleAttributeDefinition implements AttributeDefinition<DecentVecto
 
     @Override
     public AttributeValue<DecentVector3f> getDefaultValue() {
-        return defaultValue;
+        return DEFAULT_VALUE;
     }
 
     @Override

@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
 
     public static final AttributeKey<Integer> KEY = AttributeKey.of("text-opacity", Integer.class);
+    private static final IntegerValue DEFAULT_VALUE = new IntegerValue(255);
 
     @Override
     public @NotNull AttributeKey<Integer> getKey() {
@@ -38,7 +39,7 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
 
     @Override
     public AttributeValue<Integer> getDefaultValue() {
-        return new IntegerValue(255);
+        return DEFAULT_VALUE;
     }
 
     @Override

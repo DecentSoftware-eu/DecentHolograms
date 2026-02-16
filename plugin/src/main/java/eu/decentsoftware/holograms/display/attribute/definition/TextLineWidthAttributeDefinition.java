@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 public class TextLineWidthAttributeDefinition implements AttributeDefinition<Integer> {
 
     public static final AttributeKey<Integer> KEY = AttributeKey.of("line-width", Integer.class);
+    private static final IntegerValue DEFAULT_VALUE = new IntegerValue(300);
 
     @Override
     public @NotNull AttributeKey<Integer> getKey() {
@@ -39,7 +40,7 @@ public class TextLineWidthAttributeDefinition implements AttributeDefinition<Int
 
     @Override
     public @Nullable AttributeValue<Integer> getDefaultValue() {
-        return new IntegerValue(300);
+        return DEFAULT_VALUE;
     }
 
     @Override

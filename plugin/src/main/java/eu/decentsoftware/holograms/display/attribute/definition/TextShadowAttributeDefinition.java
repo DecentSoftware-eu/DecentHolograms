@@ -40,7 +40,7 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
 
     @Override
     public AttributeValue<Boolean> getDefaultValue() {
-        return new BooleanValue(false);
+        return BooleanValue.FALSE;
     }
 
     @Override

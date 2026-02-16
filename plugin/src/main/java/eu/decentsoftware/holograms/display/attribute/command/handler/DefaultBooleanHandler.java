@@ -36,7 +36,7 @@ public class DefaultBooleanHandler implements AttributeCommandHandler<Boolean> {
     @Override
     public AttributeValue<Boolean> parse(String[] args) {
         boolean value = Boolean.parseBoolean(args[0]);
-        return new BooleanValue(value);
+        return BooleanValue.of(value);
     }
 
     @Override

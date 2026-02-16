@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
 
     public static final AttributeKey<TextDisplayAlignment> KEY = AttributeKey.of("alignment", TextDisplayAlignment.class);
+    private static final TextAlignmentValue DEFAULT_VALUE = new TextAlignmentValue(TextDisplayAlignment.CENTER);
 
     @Override
     public @NotNull AttributeKey<TextDisplayAlignment> getKey() {
@@ -41,7 +42,7 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
 
     @Override
     public AttributeValue<TextDisplayAlignment> getDefaultValue() {
-        return new TextAlignmentValue(TextDisplayAlignment.CENTER);
+        return DEFAULT_VALUE;
     }
 
     @Override

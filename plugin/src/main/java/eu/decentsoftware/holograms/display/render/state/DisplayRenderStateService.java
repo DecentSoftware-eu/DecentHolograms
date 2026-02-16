@@ -67,7 +67,7 @@ public class DisplayRenderStateService {
     private <T> CompiledAttributeValue<T> compileAttribute(AttributeKey<T> key, DisplayAttribute<T> attribute, DisplayRenderContext context) {
         AttributeValue<T> value = getValueOrDefault(key, attribute);
         if (value == null) {
-            return new StaticCompiledAttributeValue<>(null);
+            return StaticCompiledAttributeValue.empty();
         }
         return value.compile(context);
     }

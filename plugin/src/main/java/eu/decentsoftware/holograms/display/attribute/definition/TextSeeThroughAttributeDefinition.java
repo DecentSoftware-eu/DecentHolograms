@@ -40,7 +40,7 @@ public class TextSeeThroughAttributeDefinition implements AttributeDefinition<Bo
 
     @Override
     public AttributeValue<Boolean> getDefaultValue() {
-        return new BooleanValue(false);
+        return BooleanValue.FALSE;
     }
 
     @Override
