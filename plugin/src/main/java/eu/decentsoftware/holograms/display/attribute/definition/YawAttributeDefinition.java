@@ -21,7 +21,6 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValue;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class YawAttributeDefinition implements AttributeDefinition<Float> {
 
     @Override
     public @Nullable AttributeValue<Float> getDefaultValue() {
-        return new FloatValue(0.0f);
+        return null;
     }
 
     @Override
