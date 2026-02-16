@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
 import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformAdapter;
 import lombok.Getter;
 import lombok.NonNull;
@@ -80,8 +81,10 @@ public final class DecentHolograms {
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
         PlatformAdapter platformAdapter = new BukkitPlatformAdapter(nmsAdapter.getDisplayRendererFactory());
-        this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
-        this.displayModule.initialize();
+        if (platformAdapter.getCapabilities().supports(PlatformCapability.DISPLAY_ENTITIES)) {
+            this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
+            this.displayModule.initialize();
+        }
 
         pluginManager.registerEvents(new PlayerListener(this), this.plugin);
         pluginManager.registerEvents(new WorldListener(hologramManager), this.plugin);
@@ -93,7 +96,9 @@ public final class DecentHolograms {
     }
 
     void disable() {
-        this.displayModule.shutdown();
+        if (this.displayModule != null) {
+            this.displayModule.shutdown();
+        }
         this.nmsPacketListenerService.shutdown();
         this.featureManager.destroy();
         this.hologramManager.destroy();
@@ -120,7 +125,9 @@ public final class DecentHolograms {
         this.animationManager.reload();
         this.hologramManager.reload();
         this.featureManager.reload();
-        this.displayModule.reload();
+        if (this.displayModule != null) {
+            this.displayModule.reload();
+        }
 
         EventFactory.fireReloadEvent();
     }

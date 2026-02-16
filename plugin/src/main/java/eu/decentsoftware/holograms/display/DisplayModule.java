@@ -91,7 +91,6 @@ import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateM
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
-import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
@@ -113,7 +112,6 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 public class DisplayModule {
 
     private final JavaPlugin plugin;
-    private final PlatformAdapter platformAdapter;
     private final DisplayService displayService;
     private final DisplayUpdater displayUpdater;
     private final DisplayListener displayListener;
@@ -122,7 +120,6 @@ public class DisplayModule {
 
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
-        this.platformAdapter = platformAdapter;
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
         DisplayRenderDiffService renderDiffService = new DisplayRenderDiffService();
         FinalDisplayRenderStateManager renderStateManager = new FinalDisplayRenderStateManager();
@@ -203,33 +200,20 @@ public class DisplayModule {
     }
 
     public void initialize() {
-        if (displaysUnsupported()) {
-            return;
-        }
         this.displayService.reload();
         this.displayUpdater.register();
         Bukkit.getPluginManager().registerEvents(displayListener, plugin);
     }
 
     public void reload() {
-        if (displaysUnsupported()) {
-            return;
-        }
         this.displayService.reload();
     }
 
     public void shutdown() {
-        if (displaysUnsupported()) {
-            return;
-        }
         HandlerList.unregisterAll(displayListener);
         this.displayUpdater.unregister();
         this.playerPageManager.shutdown();
         this.displayService.shutdown();
-    }
-
-    private boolean displaysUnsupported() {
-        return !platformAdapter.getCapabilities().supports(PlatformCapability.DISPLAY_ENTITIES);
     }
 
     public DisplayService getDisplayService() {

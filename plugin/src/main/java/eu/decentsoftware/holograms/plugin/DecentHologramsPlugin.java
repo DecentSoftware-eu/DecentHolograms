@@ -44,7 +44,7 @@ public class DecentHologramsPlugin extends JavaPlugin {
 
         CommandManager commandManager = decentHolograms.getCommandManager();
         DisplayModule displayModule = decentHolograms.getDisplayModule();
-        DecentCommand mainCommand = new HologramsCommand(displayModule.getDisplaysCommand());
+        DecentCommand mainCommand = new HologramsCommand(displayModule == null ? null : displayModule.getDisplaysCommand());
         commandManager.setMainCommand(mainCommand);
         commandManager.registerCommand(mainCommand);
 
