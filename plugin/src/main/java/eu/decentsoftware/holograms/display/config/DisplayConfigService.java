@@ -22,8 +22,6 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.TypeSerializerCollection;
-import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.IOException;
@@ -40,11 +38,11 @@ public class DisplayConfigService {
     private static final String DISPLAYS_DIR = "displays";
 
     private final Path displaysDirectory;
-    private final TypeSerializerCollection serializers;
+    private final YamlConfigurationLoaderFactory loaderFactory;
 
-    public DisplayConfigService(JavaPlugin plugin, TypeSerializerCollection serializers) {
+    public DisplayConfigService(JavaPlugin plugin, YamlConfigurationLoaderFactory loaderFactory) {
         this.displaysDirectory = plugin.getDataFolder().toPath().resolve(DISPLAYS_DIR);
-        this.serializers = serializers;
+        this.loaderFactory = loaderFactory;
     }
 
     public List<ConfigDisplay> loadAll() {
@@ -66,7 +64,7 @@ public class DisplayConfigService {
         Path path = resolve(displayName);
 
         try {
-            YamlConfigurationLoader loader = createLoader(path);
+            YamlConfigurationLoader loader = loaderFactory.createLoader(path);
             ConfigurationNode root = loader.createNode();
             root.set(ConfigDisplay.class, config);
             loader.save(root);
@@ -95,7 +93,7 @@ public class DisplayConfigService {
     }
 
     private ConfigDisplay loadSingle(Path path) throws IOException {
-        YamlConfigurationLoader loader = createLoader(path);
+        YamlConfigurationLoader loader = loaderFactory.createLoader(path);
         ConfigurationNode root = loader.load();
         ConfigDisplay configDisplay = root.get(ConfigDisplay.class);
         if (configDisplay != null) {
@@ -106,17 +104,6 @@ public class DisplayConfigService {
 
     private String getDisplayNameFromPath(Path path) {
         return path.getFileName().toString().replace(".yml", "");
-    }
-
-    private YamlConfigurationLoader createLoader(Path path) {
-        return YamlConfigurationLoader.builder()
-                .path(path)
-                .indent(2)
-                .nodeStyle(NodeStyle.BLOCK)
-                .defaultOptions(options ->
-                        options.serializers(serializerCollection -> serializerCollection.registerAll(serializers))
-                )
-                .build();
     }
 
     private void ensureDirectoryExists() {

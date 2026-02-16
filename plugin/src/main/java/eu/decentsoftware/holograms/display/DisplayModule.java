@@ -55,6 +55,7 @@ import eu.decentsoftware.holograms.display.attribute.definition.TextSeeThroughAt
 import eu.decentsoftware.holograms.display.attribute.definition.TextShadowAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.TranslationAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.YawAttributeDefinition;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValueSerializer;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValueTypeRegistry;
 import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValueType;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
@@ -74,8 +75,11 @@ import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
 import eu.decentsoftware.holograms.display.config.DisplayConfigService;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
+import eu.decentsoftware.holograms.display.config.YamlConfigurationLoaderFactory;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
+import eu.decentsoftware.holograms.display.config.dto.ConfigDefaultAttribute;
 import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
+import eu.decentsoftware.holograms.display.config.serializer.ConfigDefaultAttributeSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
@@ -136,7 +140,9 @@ public class DisplayModule {
         DisplayRenderingService renderingService = new DisplayRenderingService(
                 visibilityService, playerService, stateService, renderService, playerPageManager, logicalDisplayRenderStateManager);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
-        DisplayConfigService configService = new DisplayConfigService(plugin, createTypeSerializers(attributeValueTypeRegistry));
+        AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
+        YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));
+        DisplayConfigService configService = new DisplayConfigService(plugin, yamlConfigurationLoaderFactory);
         AttributeConfigMapper attributeConfigMapper = new AttributeConfigMapper(attributeDefinitionRegistry, attributeValueTypeRegistry);
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
@@ -189,13 +195,14 @@ public class DisplayModule {
         return registry;
     }
 
-    private TypeSerializerCollection createTypeSerializers(AttributeValueTypeRegistry attributeValueTypeRegistry) {
+    private TypeSerializerCollection createTypeSerializers(AttributeValueSerializer attributeValueSerializer) {
         return TypeSerializerCollection.builder()
                 .register(DecentLocation.class, new DecentLocationSerializer())
                 .register(DecentVector3f.class, new DisplayVector3fSerializer())
                 .register(DecentColor.class, new DisplayColorSerializer())
                 .register(DisplayBrightness.class, new DisplayBrightnessSerializer())
-                .register(ConfigAttribute.class, new ConfigAttributeSerializer(attributeValueTypeRegistry))
+                .register(ConfigAttribute.class, new ConfigAttributeSerializer(attributeValueSerializer))
+                .register(ConfigDefaultAttribute.class, new ConfigDefaultAttributeSerializer(attributeValueSerializer))
                 .build();
     }
 

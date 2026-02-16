@@ -18,9 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValueType;
-import eu.decentsoftware.holograms.display.attribute.value.AttributeValueTypeRegistry;
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValueSerializer;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -31,10 +29,10 @@ import java.lang.reflect.Type;
 
 public final class ConfigAttributeSerializer implements TypeSerializer<ConfigAttribute> {
 
-    private final AttributeValueTypeRegistry attributeValueTypeRegistry;
+    private final AttributeValueSerializer attributeValueSerializer;
 
-    public ConfigAttributeSerializer(AttributeValueTypeRegistry attributeValueTypeRegistry) {
-        this.attributeValueTypeRegistry = attributeValueTypeRegistry;
+    public ConfigAttributeSerializer(AttributeValueSerializer attributeValueSerializer) {
+        this.attributeValueSerializer = attributeValueSerializer;
     }
 
     @Override
@@ -43,13 +41,8 @@ public final class ConfigAttributeSerializer implements TypeSerializer<ConfigAtt
         ConfigurationNode valueNode = node.node("value");
         ConfigAttribute configAttribute = new ConfigAttribute();
         configAttribute.setValueType(typeKey);
-        configAttribute.setValue(deserializeValue(typeKey, valueNode));
+        configAttribute.setValue(attributeValueSerializer.deserialize(typeKey, valueNode));
         return configAttribute;
-    }
-
-    private <V extends AttributeValue<T>, T> V deserializeValue(String typeId, ConfigurationNode node) throws SerializationException {
-        AttributeValueType<V, T> valueTypeDefinition = getAttributeValueTypeDefinition(typeId);
-        return valueTypeDefinition.deserialize(node);
     }
 
     @Override
@@ -59,39 +52,8 @@ public final class ConfigAttributeSerializer implements TypeSerializer<ConfigAtt
             return;
         }
 
-        validateConfigAttribute(attribute);
-
         node.node("value-type").set(attribute.getValueType());
         ConfigurationNode valueNode = node.node("value");
-        AttributeValue<?> value = attribute.getValue();
-        serializeValue(attribute.getValueType(), value, valueNode);
-    }
-
-    private <V extends AttributeValue<T>, T> void serializeValue(String typeId, V value, ConfigurationNode node) throws SerializationException {
-        AttributeValueType<V, T> valueTypeDefinition = getAttributeValueTypeDefinition(typeId);
-        valueTypeDefinition.serialize(value, node);
-    }
-
-    private <V extends AttributeValue<T>, T> AttributeValueType<V, T> getAttributeValueTypeDefinition(String typeId) throws SerializationException {
-        AttributeValueType<V, T> valueTypeDefinition = attributeValueTypeRegistry.getByTypeId(typeId);
-        if (valueTypeDefinition == null) {
-            throw new SerializationException("Unknown attribute value type: " + typeId);
-        }
-        return valueTypeDefinition;
-    }
-
-    private void validateConfigAttribute(ConfigAttribute attribute) throws SerializationException {
-        String declaredTypeId = attribute.getValueType();
-        AttributeValue<?> value = attribute.getValue();
-        // Validate that the declared type matches the actual value class
-        AttributeValueType<?, ?> valueTypeDefinition = getAttributeValueTypeDefinition(declaredTypeId);
-        if (!valueTypeDefinition.getValueClass().equals(value.getClass())) {
-            throw new SerializationException(String.format(
-                    "Type mismatch: ConfigAttribute declares type '%s' (expects %s) but contains %s",
-                    declaredTypeId,
-                    valueTypeDefinition.getValueClass().getSimpleName(),
-                    value.getClass().getSimpleName()
-            ));
-        }
+        attributeValueSerializer.serialize(attribute.getValueType(), attribute.getValue(), valueNode);
     }
 }
