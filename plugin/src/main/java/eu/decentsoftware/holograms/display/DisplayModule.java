@@ -133,9 +133,9 @@ public class DisplayModule {
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter, renderStateManager, postProcessingService);
         DisplayRenderStateService stateService = new DisplayRenderStateService(displayTypeRegistry);
-        TextDisplayPlayerPageManager playerPageManager = new TextDisplayPlayerPageManager();
         LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
+        this.playerPageManager = new TextDisplayPlayerPageManager();
         DisplayRenderingService renderingService = new DisplayRenderingService(
                 visibilityService, playerService, stateService, renderService, playerPageManager, logicalDisplayRenderStateManager);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
@@ -144,7 +144,6 @@ public class DisplayModule {
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
-        this.playerPageManager = new TextDisplayPlayerPageManager();
         this.displayService = new DisplayService(persistenceService, renderingService, playerPageManager);
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService, playerService);
