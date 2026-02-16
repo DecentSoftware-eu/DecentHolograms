@@ -68,7 +68,7 @@ public class AttributeCommandService {
 
     public <T> void resetAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
         AttributeKey<T> attributeKey = attributeDefinition.getKey();
-        display.setAttribute(attributeKey, new DisplayAttribute<>(attributeKey, null));
+        display.setAttribute(attributeKey, new DisplayAttribute<>(attributeKey, attributeDefinition.getDefaultValue()));
     }
 
     public <T> String getAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
