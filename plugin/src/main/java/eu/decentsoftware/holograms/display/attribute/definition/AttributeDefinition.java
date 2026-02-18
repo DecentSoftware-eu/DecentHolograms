@@ -109,6 +109,21 @@ public interface AttributeDefinition<T> {
     }
 
     /**
+     * Check if this attribute is applicable to a specific display type.
+     *
+     * @param displayType The display type to check.
+     * @return True if applicable, false otherwise.
+     */
+    default boolean applicableTo(DisplayType displayType) {
+        for (DisplayType applicableDisplayType : getApplicableDisplayTypes()) {
+            if (applicableDisplayType == displayType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Apply the attribute to a {@link FinalDisplayRenderState}.
      *
      * <p>This method may perform post-processing on the value before applying it.</p>

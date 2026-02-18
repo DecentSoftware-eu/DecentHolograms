@@ -121,6 +121,7 @@ public class DisplayModule {
     private final DisplayListener displayListener;
     private final TextDisplayPlayerPageManager playerPageManager;
     private final DisplaysCommand displaysCommand;
+    private final AttributeDefaultService attributeDefaultService;
 
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
@@ -151,7 +152,12 @@ public class DisplayModule {
         this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
-        AttributeCommandService attributeCommandService = new AttributeCommandService(attributeDefinitionRegistry, commandHandlerRegistry);
+        AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
+        AttributeDefaultRepository attributeDefaultRepository = new AttributeDefaultRepository(
+                yamlConfigurationLoaderFactory, attributeDefinitionRegistry, attributeValueTypeRegistry, plugin.getDataFolder().toPath());
+        this.attributeDefaultService = new AttributeDefaultService(attributeDefaultRegistry, attributeDefinitionRegistry, attributeDefaultRepository);
+        AttributeCommandService attributeCommandService = new AttributeCommandService(
+                attributeDefinitionRegistry, commandHandlerRegistry, attributeDefaultService);
         this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandService);
     }
 
@@ -207,12 +213,14 @@ public class DisplayModule {
     }
 
     public void initialize() {
+        this.attributeDefaultService.reload();
         this.displayService.reload();
         this.displayUpdater.register();
         Bukkit.getPluginManager().registerEvents(displayListener, plugin);
     }
 
     public void reload() {
+        this.attributeDefaultService.reload();
         this.displayService.reload();
     }
 
@@ -221,6 +229,7 @@ public class DisplayModule {
         this.displayUpdater.unregister();
         this.playerPageManager.shutdown();
         this.displayService.shutdown();
+        this.attributeDefaultService.shutdown();
     }
 
     public DisplayService getDisplayService() {

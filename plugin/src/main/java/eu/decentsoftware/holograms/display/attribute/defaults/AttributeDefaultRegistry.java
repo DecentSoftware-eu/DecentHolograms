@@ -22,7 +22,6 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,24 +67,21 @@ public class AttributeDefaultRegistry {
     }
 
     /**
-     * Retrieves all default values for a specific display type.
-     *
-     * @param displayType the display type for which to retrieve default values
-     * @return an unmodifiable map of attribute keys to default values, or an empty map if none exist
-     */
-    public Map<AttributeKey<?>, AttributeValue<?>> getAllDefaultValues(DisplayType displayType) {
-        AttributeDefaultValueHolder holder = defaultValueHolder.get(displayType);
-        if (holder == null) {
-            return Collections.emptyMap();
-        }
-        return holder.getAllDefaultValues();
-    }
-
-    /**
      * Clears all registered default values for all display types.
      */
     public void clear() {
         defaultValueHolder.clear();
+    }
+
+    /**
+     * Returns the total number of registered default values.
+     *
+     * @return the total number of registered default values
+     */
+    public int size() {
+        return defaultValueHolder.values().stream()
+                .mapToInt(AttributeDefaultValueHolder::size)
+                .sum();
     }
 
     private static class AttributeDefaultValueHolder {
@@ -100,8 +96,8 @@ public class AttributeDefaultRegistry {
             return (AttributeValue<T>) defaultValues.get(attributeKey);
         }
 
-        private Map<AttributeKey<?>, AttributeValue<?>> getAllDefaultValues() {
-            return Collections.unmodifiableMap(defaultValues);
+        private int size() {
+            return defaultValues.size();
         }
     }
 }

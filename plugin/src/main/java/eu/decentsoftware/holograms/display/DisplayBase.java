@@ -72,6 +72,10 @@ public abstract class DisplayBase {
         return (DisplayAttribute<T>) attributes.get(key);
     }
 
+    public boolean hasAttribute(AttributeKey<?> key) {
+        return attributes.containsKey(key);
+    }
+
     public void setAttributes(Map<AttributeKey<?>, DisplayAttribute<?>> attributes) {
         this.attributes.clear();
         this.attributes.putAll(attributes);
