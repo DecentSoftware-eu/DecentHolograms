@@ -33,6 +33,7 @@ import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
@@ -56,10 +57,12 @@ import java.util.stream.Stream;
 class CreateDisplayCommand extends DecentCommand {
 
     private final DisplayService displayService;
+    private final AttributeDefaultService attributeDefaultService;
 
-    CreateDisplayCommand(DisplayService displayService) {
+    CreateDisplayCommand(DisplayService displayService, AttributeDefaultService attributeDefaultService) {
         super("create");
         this.displayService = displayService;
+        this.attributeDefaultService = attributeDefaultService;
     }
 
     @Override
@@ -84,6 +87,7 @@ class CreateDisplayCommand extends DecentCommand {
 
             Location location = ((Player) sender).getLocation();
             DisplayBase display = createDisplay(type, name, args, fromBukkitLocation(location));
+            attributeDefaultService.applyDefaultValues(display);
             displayService.saveDisplay(display);
 
             Lang.DISPLAY_CREATED.send(sender, name);

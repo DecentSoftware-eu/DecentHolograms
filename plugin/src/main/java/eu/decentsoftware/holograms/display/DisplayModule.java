@@ -158,7 +158,7 @@ public class DisplayModule {
         this.attributeDefaultService = new AttributeDefaultService(attributeDefaultRegistry, attributeDefinitionRegistry, attributeDefaultRepository);
         AttributeCommandService attributeCommandService = new AttributeCommandService(
                 attributeDefinitionRegistry, commandHandlerRegistry, attributeDefaultService);
-        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandService);
+        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandService, attributeDefaultService);
     }
 
     private AttributeCommandHandlerRegistry createCommandHandlerRegistry(DisplayPlaceholderService placeholderService) {
