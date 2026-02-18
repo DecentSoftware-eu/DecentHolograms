@@ -25,19 +25,19 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Arrays;
 
 @CommandInfo(
-        usage = "/dh d addline <name> <page> <text>",
+        usage = "/dh d addline <name> <text>",
         description = "Add a line of text to a Text Display.",
         permissions = {"dh.command.displays.text.addline"},
         aliases = {"appendline"},
-        minArgs = 3
+        minArgs = 2
 )
 class TextDisplayAddLineCommand extends DecentCommand {
 
@@ -53,13 +53,15 @@ class TextDisplayAddLineCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            Validator.validateArgsCount(3, args);
+            Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
-            String text = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+            String text = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             TextDisplay textDisplay = (TextDisplay) display;
-            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
-            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
+            // Pages disabled
+            //            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
+            //            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
+            TextDisplayPage page = textDisplay.getPages().get(0);
             page.addLine(text);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
@@ -73,9 +75,9 @@ class TextDisplayAddLineCommand extends DecentCommand {
         return (sender, args) -> {
             if (args.length == 1) {
                 return tabCompleteHelper.getDisplayNames(args[0]);
-            } else if (args.length == 2) {
-                return tabCompleteHelper.getPageIndexes(args[0], args[1]);
-            }
+            } //else if (args.length == 2) {
+            // return tabCompleteHelper.getPageIndexes(args[0], args[1]);
+            //}
             return null;
         };
     }

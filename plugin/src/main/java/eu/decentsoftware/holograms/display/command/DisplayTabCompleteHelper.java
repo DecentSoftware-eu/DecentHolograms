@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
-import eu.decentsoftware.holograms.plugin.Validator;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,13 +53,13 @@ class DisplayTabCompleteHelper {
                 .collect(Collectors.toList())));
     }
 
-    List<String> getLineIndexes(String displayName, String pageIndex, String input) {
+    List<String> getLineIndexes(String displayName, String input) {
         DisplayBase display = displayService.getDisplay(displayName);
         if (!(display instanceof TextDisplay)) {
             return Collections.emptyList();
         }
         TextDisplay textDisplay = (TextDisplay) display;
-        TextDisplayPage page = textDisplay.getPage(Validator.getInteger(pageIndex) - 1);
+        TextDisplayPage page = textDisplay.getPage(0);
         if (page == null) {
             return Collections.emptyList();
         }

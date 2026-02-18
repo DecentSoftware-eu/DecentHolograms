@@ -428,14 +428,14 @@ permissions:
     description: "Allows player to use the command '/dh displays set-item <display> <item>'"
     default: op
   dh.command.displays.text.addline:
-    description: "Allows player to use the command '/dh displays add-line <display> <page> <text>'"
+    description: "Allows player to use the command '/dh displays add-line <display> <text>'"
     default: op
   dh.command.displays.text.insertline:
-    description: "Allows player to use the command '/dh displays insert-line <display> <page> <index> <text>'"
+    description: "Allows player to use the command '/dh displays insert-line <display> <index> <text>'"
     default: op
   dh.command.displays.text.removeline:
-    description: "Allows player to use the command '/dh displays remove-line <display> <page> <index>'"
+    description: "Allows player to use the command '/dh displays remove-line <display> <index>'"
     default: op
   dh.command.displays.text.setline:
-    description: "Allows player to use the command '/dh displays set-line <display> <page> <index> <text>'"
+    description: "Allows player to use the command '/dh displays set-line <display> <index> <text>'"
     default: op

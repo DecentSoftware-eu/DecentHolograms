@@ -25,17 +25,17 @@ import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 @CommandInfo(
-        usage = "/dh d removeline <name> <page> <index>",
+        usage = "/dh d removeline <name> <index>",
         description = "Remove a line of text from a Text Display.",
         permissions = {"dh.command.displays.text.removeline"},
         aliases = {"remline"},
-        minArgs = 3
+        minArgs = 2
 )
 class TextDisplayRemoveLineCommand extends DecentCommand {
 
@@ -51,13 +51,15 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            Validator.validateArgsCount(3, args);
+            Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
-            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
-            int index = Validator.getInteger(args[2], 1, page.getLines().size(), "Line index out of bounds.");
+            // Pages disabled
+            //            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Page index out of bounds.");
+            //            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
+            TextDisplayPage page = textDisplay.getPages().get(0);
+            int index = Validator.getInteger(args[1], 1, page.getLines().size(), "Line index out of bounds.");
             page.removeLine(index - 1);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
@@ -71,10 +73,10 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
         return (sender, args) -> {
             if (args.length == 1) {
                 return tabCompleteHelper.getDisplayNames(args[0]);
+                //} else if (args.length == 2) {
+                //    return tabCompleteHelper.getPageIndexes(args[0], args[1]);
             } else if (args.length == 2) {
-                return tabCompleteHelper.getPageIndexes(args[0], args[1]);
-            } else if (args.length == 3) {
-                return tabCompleteHelper.getLineIndexes(args[0], args[1], args[2]);
+                return tabCompleteHelper.getLineIndexes(args[0], args[1]);
             }
             return null;
         };
