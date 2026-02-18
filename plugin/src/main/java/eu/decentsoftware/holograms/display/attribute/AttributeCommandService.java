@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandlerRegistry;
+import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
@@ -40,11 +41,14 @@ public class AttributeCommandService {
 
     private final AttributeDefinitionRegistry attributeDefinitionRegistry;
     private final AttributeCommandHandlerRegistry commandHandlerRegistry;
+    private final AttributeDefaultService attributeDefaultService;
 
     public AttributeCommandService(AttributeDefinitionRegistry attributeDefinitionRegistry,
-                                   AttributeCommandHandlerRegistry commandHandlerRegistry) {
+                                   AttributeCommandHandlerRegistry commandHandlerRegistry,
+                                   AttributeDefaultService attributeDefaultService) {
         this.attributeDefinitionRegistry = attributeDefinitionRegistry;
         this.commandHandlerRegistry = commandHandlerRegistry;
+        this.attributeDefaultService = attributeDefaultService;
     }
 
     public <T> void setAttribute(DisplayBase display, AttributeDefinition<T> definition, String[] args) {
@@ -67,8 +71,7 @@ public class AttributeCommandService {
     }
 
     public <T> void resetAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
-        AttributeKey<T> attributeKey = attributeDefinition.getKey();
-        display.setAttribute(attributeKey, new DisplayAttribute<>(attributeKey, attributeDefinition.getDefaultValue()));
+        attributeDefaultService.setToDefaultValue(display, attributeDefinition);
     }
 
     public <T> String getAttribute(DisplayBase display, AttributeDefinition<T> attributeDefinition) {
@@ -124,7 +127,7 @@ public class AttributeCommandService {
 
     private String[] getArgsForHandler(AttributeCommandHandler<?> handler, String[] inputArgs) {
         if (handler.isDefault()) {
-            return inputArgs; // Pass all args to default handler
+            return inputArgs; // Pass all args to the default handler
         } else {
             // For non-default handlers, the first arg is the keyword, so we pass the rest as value args
             return Arrays.copyOfRange(inputArgs, 1, inputArgs.length);
