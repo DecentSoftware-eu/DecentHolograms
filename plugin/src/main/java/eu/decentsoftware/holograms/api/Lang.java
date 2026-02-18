@@ -157,6 +157,7 @@ public class Lang {
     public static final Phrase DISPLAY_TEXT_LINE_REMOVED = new Phrase("display.text.line.removed", "{prefix}Removed line &b%2$d&7 of display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_LINE_INSERTED = new Phrase("display.text.line.inserted", "{prefix}Inserted line to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_LINE_SWAPPED = new Phrase("display.text.line.swapped", "{prefix}Swapped lines &b%2$d&7 and &b%3$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_CANNOT_SWAP_SELF = new Phrase("display.text.line.cannot_swap_self", "{prefix}&cCannot swap a line with itself!");
     public static final Phrase DISPLAY_TEXT_PAGE_ADDED = new Phrase("display.text.page.added", "{prefix}Added page to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_INSERTED = new Phrase("display.text.page.inserted", "{prefix}Inserted page to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_SWITCHED = new Phrase("display.text.page.switched", "{prefix}Switched to page &b%2$d&7 of display &b'%1$s'&7.");

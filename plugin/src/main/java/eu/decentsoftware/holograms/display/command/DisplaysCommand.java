@@ -70,6 +70,7 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new TextDisplayInsertLineCommand(displayService, tabCompleteHelper));
         addSubCommand(new TextDisplayRemoveLineCommand(displayService, tabCompleteHelper));
         addSubCommand(new TextDisplaySetLineCommand(displayService, tabCompleteHelper));
+        addSubCommand(new TextDisplaySwapLineCommand(displayService, tabCompleteHelper));
         // Pages disabled
         //        addSubCommand(new TextDisplayAddPageCommand(displayService, tabCompleteHelper));
         //        addSubCommand(new TextDisplayInsertPageCommand(displayService, tabCompleteHelper));

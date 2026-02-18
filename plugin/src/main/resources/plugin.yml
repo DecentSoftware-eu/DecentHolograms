@@ -354,8 +354,8 @@ permissions:
       dh.command.displays.displayrange: true
       dh.command.displays.updateinterval: true
       dh.command.displays.attribute: true
-      dh.command.displays.reset-attribute: true
-      dh.command.displays.list-attributes: true
+      dh.command.displays.resetattribute: true
+      dh.command.displays.listattributes: true
       dh.command.displays.center: true
       dh.command.displays.movehere: true
       dh.command.displays.teleport: true
@@ -368,6 +368,7 @@ permissions:
       dh.command.displays.text.insertline: true
       dh.command.displays.text.removeline: true
       dh.command.displays.text.setline: true
+      dh.command.displays.text.swaplines: true
   dh.command.displays.help:
     description: "Allows player to use the command '/dh displays help'"
     default: op
@@ -401,10 +402,10 @@ permissions:
   dh.command.displays.attribute:
     description: "Allows player to use the command '/dh displays attribute <display> <attribute> [value]'"
     default: op
-  dh.command.displays.reset-attribute:
+  dh.command.displays.resetattribute:
     description: "Allows player to use the command '/dh displays reset-attribute <display> <attribute>'"
     default: op
-  dh.command.displays.list-attributes:
+  dh.command.displays.listattributes:
     description: "Allows player to use the command '/dh displays list-attributes <display>'"
     default: op
   dh.command.displays.center:
@@ -442,4 +443,7 @@ permissions:
     default: op
   dh.command.displays.text.setline:
     description: "Allows player to use the command '/dh displays set-line <display> <index> <text>'"
+    default: op
+  dh.command.displays.text.swaplines:
+    description: "Allows player to use the command '/dh displays swap-lines <display> <index1> <index2>'"
     default: op
