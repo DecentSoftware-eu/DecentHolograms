@@ -354,7 +354,8 @@ permissions:
       dh.command.displays.displayrange: true
       dh.command.displays.updateinterval: true
       dh.command.displays.attribute: true
-      dh.command.displays.resetattribute: true
+      dh.command.displays.reset-attribute: true
+      dh.command.displays.list-attributes: true
       dh.command.displays.center: true
       dh.command.displays.movehere: true
       dh.command.displays.teleport: true
@@ -400,8 +401,11 @@ permissions:
   dh.command.displays.attribute:
     description: "Allows player to use the command '/dh displays attribute <display> <attribute> [value]'"
     default: op
-  dh.command.displays.resetattribute:
+  dh.command.displays.reset-attribute:
     description: "Allows player to use the command '/dh displays reset-attribute <display> <attribute>'"
+    default: op
+  dh.command.displays.list-attributes:
+    description: "Allows player to use the command '/dh displays list-attributes <display>'"
     default: op
   dh.command.displays.center:
     description: "Allows player to use the command '/dh displays center <display>'"

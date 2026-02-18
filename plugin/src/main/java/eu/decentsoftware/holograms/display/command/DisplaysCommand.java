@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayCloneService;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
 
 @CommandInfo(
@@ -39,7 +40,8 @@ public class DisplaysCommand extends DecentCommand {
     public DisplaysCommand(DisplayService displayService,
                            DisplayCloneService displayCloneService,
                            AttributeCommandService attributeCommandService,
-                           AttributeDefaultService attributeDefaultService) {
+                           AttributeDefaultService attributeDefaultService,
+                           DisplayAttributeService displayAttributeService) {
         super("displays");
 
         addSubCommand(new DisplaysHelpCommand(this));
@@ -54,6 +56,7 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new UpdateIntervalDisplayCommand(displayService));
         addSubCommand(new AttributeDisplayCommand(displayService, attributeCommandService));
         addSubCommand(new AttributeResetDisplayCommand(displayService, attributeCommandService));
+        addSubCommand(new AttributeListDisplayCommand(displayService, displayAttributeService));
         addSubCommand(new CenterDisplayCommand(displayService));
         addSubCommand(new MoveHereDisplayCommand(displayService));
         addSubCommand(new TeleportDisplayCommand(displayService));
@@ -68,10 +71,10 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new TextDisplayRemoveLineCommand(displayService, tabCompleteHelper));
         addSubCommand(new TextDisplaySetLineCommand(displayService, tabCompleteHelper));
         // Pages disabled
-//        addSubCommand(new TextDisplayAddPageCommand(displayService, tabCompleteHelper));
-//        addSubCommand(new TextDisplayInsertPageCommand(displayService, tabCompleteHelper));
-//        addSubCommand(new TextDisplayRemovePageCommand(displayService, tabCompleteHelper));
-//        addSubCommand(new TextDisplaySwitchPageCommand(displayService, tabCompleteHelper, textDisplayPlayerPageManager));
+        //        addSubCommand(new TextDisplayAddPageCommand(displayService, tabCompleteHelper));
+        //        addSubCommand(new TextDisplayInsertPageCommand(displayService, tabCompleteHelper));
+        //        addSubCommand(new TextDisplayRemovePageCommand(displayService, tabCompleteHelper));
+        //        addSubCommand(new TextDisplaySwitchPageCommand(displayService, tabCompleteHelper, textDisplayPlayerPageManager));
     }
 
     @Override

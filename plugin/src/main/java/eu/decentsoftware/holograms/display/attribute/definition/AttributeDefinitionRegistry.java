@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,8 @@ import java.util.Map;
  */
 public class AttributeDefinitionRegistry {
 
-    private final Map<String, AttributeDefinition<?>> definitionsByName = new HashMap<>();
+    // LinkedHashMap to preserve insertion order
+    private final Map<String, AttributeDefinition<?>> definitionsByName = new LinkedHashMap<>();
     private final Map<DisplayType, List<AttributeDefinition<?>>> definitionsByDisplayType = new EnumMap<>(DisplayType.class);
     private final Map<AttributeKey<?>, AttributeDefinition<?>> definitionsByKey = new HashMap<>();
 

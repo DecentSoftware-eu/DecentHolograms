@@ -140,6 +140,10 @@ public class Lang {
     public static final Phrase DISPLAY_ATTRIBUTE_RESET = new Phrase("display.attribute.reset", "{prefix}Reset attribute &b'%1$s'&7.");
     public static final Phrase DISPLAY_ATTRIBUTE_GET = new Phrase("display.attribute.get", "{prefix}Attribute &b'%1$s'&7 is set to value: &b'%2$s&b'&7.");
     public static final Phrase DISPLAY_ATTRIBUTE_GET_NOT_SET = new Phrase("display.attribute.get_not_set", "{prefix}Attribute &b'%1$s'&7 is not set.");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_HEADER = new Phrase("display.attribute.list.header", "&r\n&3&lDISPLAY ATTRIBUTES\n&fAll attributes of display '%s'.\n&r");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_ENTRY = new Phrase("display.attribute.list.entry", " &8• &7%s: &b%s");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_FOOTER = new Phrase("display.attribute.list.footer", "\n");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_EMPTY = new Phrase("display.attribute.list.empty", "{prefix}There are no attributes set on that display.");
     public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}&aTeleported!");
     public static final Phrase DISPLAY_WORLD_DOES_NOT_EXIST = new Phrase("display.world_does_not_exist", "{prefix}&cWorld of display '%1$s' doesn't exist!");
     public static final Phrase DISPLAY_LIST_NO_DISPLAYS = new Phrase("display.list.no_displays", "{prefix}There are currently no displays.");

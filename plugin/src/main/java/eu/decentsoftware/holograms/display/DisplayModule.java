@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
 import eu.decentsoftware.holograms.display.attribute.AttributeConfigMapper;
+import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
 import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandlerRegistry;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultBooleanHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultBrightnessHandler;
@@ -158,7 +159,9 @@ public class DisplayModule {
         this.attributeDefaultService = new AttributeDefaultService(attributeDefaultRegistry, attributeDefinitionRegistry, attributeDefaultRepository);
         AttributeCommandService attributeCommandService = new AttributeCommandService(
                 attributeDefinitionRegistry, commandHandlerRegistry, attributeDefaultService);
-        this.displaysCommand = new DisplaysCommand(displayService, displayCloneService, attributeCommandService, attributeDefaultService);
+        DisplayAttributeService displayAttributeService = new DisplayAttributeService(attributeDefinitionRegistry);
+        this.displaysCommand = new DisplaysCommand(
+                displayService, displayCloneService, attributeCommandService, attributeDefaultService, displayAttributeService);
     }
 
     private AttributeCommandHandlerRegistry createCommandHandlerRegistry(DisplayPlaceholderService placeholderService) {
