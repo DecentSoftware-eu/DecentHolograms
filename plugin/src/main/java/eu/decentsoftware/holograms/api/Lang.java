@@ -131,9 +131,9 @@ public class Lang {
     public static final Phrase DISPLAY_DISABLED = new Phrase("display.disabled", "{prefix}Display has been disabled!");
     public static final Phrase DISPLAY_DISPLAY_RANGE_SET = new Phrase("display.display_range_set", "{prefix}Display range has been set!");
     public static final Phrase DISPLAY_UPDATE_INTERVAL_SET = new Phrase("display.update_interval_set", "{prefix}Update interval has been set!");
-    public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing_set", "{prefix}Facing has been set!");
-    public static final Phrase DISPLAY_FACING_INVALID_YAW = new Phrase("display.facing_invalid_yaw", "{prefix}&cYaw must be a valid number between -180 and 180 degrees.");
-    public static final Phrase DISPLAY_FACING_INVALID_PITCH = new Phrase("display.facing_invalid_pitch", "{prefix}&cPitch must be a valid number between -90 and 90 degrees.");
+    public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing.set", "{prefix}Facing has been set!");
+    public static final Phrase DISPLAY_FACING_INVALID_YAW = new Phrase("display.facing.invalid_yaw", "{prefix}&cYaw must be a valid number between -180 and 180 degrees.");
+    public static final Phrase DISPLAY_FACING_INVALID_PITCH = new Phrase("display.facing.invalid_pitch", "{prefix}&cPitch must be a valid number between -90 and 90 degrees.");
     public static final Phrase DISPLAY_ATTRIBUTE_DOES_NOT_EXIST = new Phrase("display.attribute.does_not_exist", "{prefix}Attribute &b'%1$s'&7 does not exist for that display.");
     public static final Phrase DISPLAY_ATTRIBUTE_INVALID_VALUE = new Phrase("display.attribute.invalid_value", "{prefix}&cInvalid value for attribute '%1$s'&c: %2$s");
     public static final Phrase DISPLAY_ATTRIBUTE_SET = new Phrase("display.attribute.set", "{prefix}Set attribute &b'%1$s'&7 to &b'%2$s&b'&7.");
@@ -152,15 +152,15 @@ public class Lang {
     public static final Phrase DISPLAY_INVALID_BLOCK_TYPE = new Phrase("display.invalid_block_type", "{prefix}&cInvalid block type: '%1$s'");
     public static final Phrase DISPLAY_BLOCK_SET = new Phrase("display.block_set", "{prefix}Set block of display &b'%1$s'&7 to &b'%2$s'&7.");
     public static final Phrase DISPLAY_ITEM_SET = new Phrase("display.item_set", "{prefix}Set item of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_LINE_ADDED = new Phrase("display.text.line_added", "{prefix}Added line to display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_LINE_SET = new Phrase("display.text.line_set", "{prefix}Set line &b%2$d&7 of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_LINE_REMOVED = new Phrase("display.text.line_removed", "{prefix}Removed line &b%2$d&7 of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_LINE_INSERTED = new Phrase("display.text.line_inserted", "{prefix}Inserted line to display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_LINE_SWAPPED = new Phrase("display.text.line_swapped", "{prefix}Swapped lines &b%2$d&7 and &b%3$d&7 of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_PAGE_ADDED = new Phrase("display.text.page_added", "{prefix}Added page to display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_PAGE_INSERTED = new Phrase("display.text.page_inserted", "{prefix}Inserted page to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_ADDED = new Phrase("display.text.line.added", "{prefix}Added line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SET = new Phrase("display.text.line.set", "{prefix}Set line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_REMOVED = new Phrase("display.text.line.removed", "{prefix}Removed line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_INSERTED = new Phrase("display.text.line.inserted", "{prefix}Inserted line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SWAPPED = new Phrase("display.text.line.swapped", "{prefix}Swapped lines &b%2$d&7 and &b%3$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_PAGE_ADDED = new Phrase("display.text.page.added", "{prefix}Added page to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_PAGE_INSERTED = new Phrase("display.text.page.inserted", "{prefix}Inserted page to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_PAGE_SWITCHED = new Phrase("display.text.page.switched", "{prefix}Switched to page &b%2$d&7 of display &b'%1$s'&7.");
-    public static final Phrase DISPLAY_TEXT_PAGE_REMOVED = new Phrase("display.text.page_removed", "{prefix}Removed page &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_PAGE_REMOVED = new Phrase("display.text.page.removed", "{prefix}Removed page &b%2$d&7 of display &b'%1$s'&7.");
 
     // Profiler
     public static final Phrase PROFILER_STARTED = new Phrase("profiler.started", "{prefix}Profiler has been started!");
