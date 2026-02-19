@@ -113,7 +113,7 @@ public abstract class ActionType {
             if (location == null) {
                 return false;
             }
-            DECENT_HOLOGRAMS.getScheduler().executeAtEntity(player, () -> player.teleport(location));
+            DECENT_HOLOGRAMS.getScheduler().executeAtEntity(player, () -> io.papermc.lib.PaperLib.teleportAsync(player, location));
             return true;
         }
     };

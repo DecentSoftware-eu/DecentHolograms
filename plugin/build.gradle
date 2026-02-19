@@ -10,6 +10,7 @@ repositories {
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url = "https://repo.codemc.io/repository/maven-public/" }
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+    maven { url = "https://repo.papermc.io/repository/maven-public/" }
 }
 
 configurations {
@@ -30,6 +31,7 @@ dependencies {
     implementation(libs.bstats.bukkit)
     implementation(libs.item.nbt.api)
     implementation(libs.xseries)
+    implementation(libs.paperlib)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
@@ -66,6 +68,7 @@ shadowJar {
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+    relocate "io.papermc.lib", "eu.decentsoftware.holograms.libs.paperlib"
 }
 
 publishing {
