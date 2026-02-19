@@ -31,7 +31,11 @@ public class DisplayVisibilityService {
     private final Map<String, Set<UUID>> viewersMap = new ConcurrentHashMap<>();
 
     public boolean isShownToPlayer(DisplayBase display, PlatformPlayer player) {
-        return getViewers(display).contains(player.getUniqueId());
+        Set<UUID> viewerSet = viewersMap.get(display.getName());
+        if (viewerSet == null) {
+            return false;
+        }
+        return viewerSet.contains(player.getUniqueId());
     }
 
     public void addViewer(DisplayBase display, PlatformPlayer player) {
