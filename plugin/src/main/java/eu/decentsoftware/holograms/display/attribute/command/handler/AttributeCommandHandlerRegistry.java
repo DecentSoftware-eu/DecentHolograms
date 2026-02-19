@@ -36,7 +36,8 @@ public class AttributeCommandHandlerRegistry {
 
     private final Map<AttributeKey<?>, HandlerSet<?>> handlerSets = new ConcurrentHashMap<>();
 
-    public <T> void register(AttributeKey<T> key, AttributeCommandHandler<T> defaultHandler, AttributeCommandHandler<T>... keywordHandlers) {
+    @SafeVarargs
+    public final <T> void register(AttributeKey<T> key, AttributeCommandHandler<T> defaultHandler, AttributeCommandHandler<T>... keywordHandlers) {
         register(key, defaultHandler);
         for (AttributeCommandHandler<T> keywordHandler : keywordHandlers) {
             register(key, keywordHandler);

@@ -74,7 +74,7 @@ import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValu
 import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValueType;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
-import eu.decentsoftware.holograms.display.config.DisplayConfigService;
+import eu.decentsoftware.holograms.display.config.DisplayRepository;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.config.YamlConfigurationLoaderFactory;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
@@ -144,7 +144,7 @@ public class DisplayModule {
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
         YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));
-        DisplayConfigService configService = new DisplayConfigService(plugin, yamlConfigurationLoaderFactory);
+        DisplayRepository configService = new DisplayRepository(plugin, yamlConfigurationLoaderFactory);
         AttributeConfigMapper attributeConfigMapper = new AttributeConfigMapper(attributeDefinitionRegistry, attributeValueTypeRegistry);
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);

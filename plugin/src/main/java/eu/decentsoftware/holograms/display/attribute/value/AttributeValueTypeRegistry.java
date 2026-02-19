@@ -18,10 +18,8 @@
 
 package eu.decentsoftware.holograms.display.attribute.value;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class AttributeValueTypeRegistry {
 
@@ -63,28 +61,5 @@ public class AttributeValueTypeRegistry {
 
     public AttributeValueType<? extends AttributeValue<?>, ?> getByTypeIdUnsafe(String typeId) {
         return byTypeId.get(typeId);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <V extends AttributeValue<T>, T> AttributeValueType<V, T> getByValue(AttributeValue<T> value) {
-        AttributeValueType<V, T> definition = (AttributeValueType<V, T>) byValueClass.get(value.getClass());
-        if (definition == null) {
-            throw new IllegalArgumentException("No definition registered for value class: " + value.getClass().getName());
-        }
-        return definition;
-    }
-
-    /**
-     * Check if a type ID is registered.
-     */
-    public boolean isRegistered(String typeId) {
-        return byTypeId.containsKey(typeId);
-    }
-
-    /**
-     * Get all registered type IDs.
-     */
-    public Set<String> getRegisteredTypeIds() {
-        return Collections.unmodifiableSet(byTypeId.keySet());
     }
 }

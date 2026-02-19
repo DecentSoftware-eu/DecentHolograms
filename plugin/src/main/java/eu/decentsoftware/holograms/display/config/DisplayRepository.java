@@ -33,14 +33,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DisplayConfigService {
+public class DisplayRepository {
 
     private static final String DISPLAYS_DIR = "displays";
 
     private final Path displaysDirectory;
     private final YamlConfigurationLoaderFactory loaderFactory;
 
-    public DisplayConfigService(JavaPlugin plugin, YamlConfigurationLoaderFactory loaderFactory) {
+    public DisplayRepository(JavaPlugin plugin, YamlConfigurationLoaderFactory loaderFactory) {
         this.displaysDirectory = plugin.getDataFolder().toPath().resolve(DISPLAYS_DIR);
         this.loaderFactory = loaderFactory;
     }

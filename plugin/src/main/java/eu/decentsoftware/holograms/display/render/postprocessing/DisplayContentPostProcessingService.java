@@ -34,7 +34,6 @@ public class DisplayContentPostProcessingService {
         this.displayTypeRegistry = displayTypeRegistry;
     }
 
-    // TODO: try to make this type-safe
     @SuppressWarnings("unchecked")
     public <T> DisplayContent<T> postProcessContent(DisplayType displayType, DisplayContent<T> content) {
         DisplayTypeDefinition<T> displayTypeDefinition = (DisplayTypeDefinition<T>) displayTypeRegistry.getDefinition(displayType);

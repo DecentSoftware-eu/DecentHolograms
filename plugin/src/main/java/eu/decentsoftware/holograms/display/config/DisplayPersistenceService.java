@@ -27,10 +27,10 @@ import java.util.List;
 
 public class DisplayPersistenceService {
 
-    private final DisplayConfigService configService;
+    private final DisplayRepository configService;
     private final DisplayConfigMapper configMapper;
 
-    public DisplayPersistenceService(DisplayConfigService configService, DisplayConfigMapper configMapper) {
+    public DisplayPersistenceService(DisplayRepository configService, DisplayConfigMapper configMapper) {
         this.configService = configService;
         this.configMapper = configMapper;
     }

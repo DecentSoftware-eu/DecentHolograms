@@ -106,10 +106,6 @@ public class DisplayService {
         });
     }
 
-    public void updateVisibilityForPlayer(PlatformPlayer player) {
-        displays.values().forEach(display -> renderingService.updateVisibility(display, player));
-    }
-
     public Set<String> getRegisteredDisplayNames() {
         return displays.keySet();
     }

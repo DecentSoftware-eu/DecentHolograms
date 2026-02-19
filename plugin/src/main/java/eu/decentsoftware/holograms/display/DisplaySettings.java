@@ -18,9 +18,6 @@
 
 package eu.decentsoftware.holograms.display;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Settings of a Display.
  *
@@ -28,8 +25,6 @@ import lombok.Setter;
  * @see DisplayBase
  * @since 2.10.0
  */
-@Getter
-@Setter
 public class DisplaySettings {
 
     /**
@@ -59,5 +54,29 @@ public class DisplaySettings {
         copy.setDisplayRange(this.getDisplayRange());
         copy.setUpdateInterval(this.getUpdateInterval());
         return copy;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public double getDisplayRange() {
+        return displayRange;
+    }
+
+    public void setDisplayRange(double displayRange) {
+        this.displayRange = displayRange;
+    }
+
+    public int getUpdateInterval() {
+        return updateInterval;
+    }
+
+    public void setUpdateInterval(int updateInterval) {
+        this.updateInterval = updateInterval;
     }
 }

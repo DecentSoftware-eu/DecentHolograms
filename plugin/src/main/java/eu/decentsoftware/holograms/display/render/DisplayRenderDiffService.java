@@ -32,7 +32,6 @@ import eu.decentsoftware.holograms.profiler.Metrics;
 import eu.decentsoftware.holograms.profiler.TimerHandle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class DisplayRenderDiffService {
         }
     }
 
-    private List<RenderIntent> diffInternal(@NonNull FinalDisplayRenderState currentState, @org.jspecify.annotations.Nullable FinalDisplayRenderState previousState) {
+    private List<RenderIntent> diffInternal(@NotNull FinalDisplayRenderState currentState, @Nullable FinalDisplayRenderState previousState) {
         List<RenderIntent> intentList = new ArrayList<>();
         if (previousState == null || !previousState.isVisible()) {
             if (currentState.isVisible()) {
