@@ -1,0 +1,14 @@
+dependencies {
+    compileOnly "org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT"
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}

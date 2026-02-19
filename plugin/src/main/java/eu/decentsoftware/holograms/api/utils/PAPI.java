@@ -1,0 +1,71 @@
+package eu.decentsoftware.holograms.api.utils;
+
+import eu.decentsoftware.holograms.integration.Integration;
+import lombok.experimental.UtilityClass;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@UtilityClass
+public class PAPI {
+
+    /**
+     * Check if PlaceholderAPI is available.
+     *
+     * @return True if PlaceholderAPI is available.
+     */
+    public static boolean isAvailable() {
+        return Integration.PLACEHOLDER_API.isAvailable();
+    }
+
+    /**
+     * Set placeholders to given String for a given Player.
+     *
+     * @param player The player.
+     * @param string The string.
+     * @return The string with replaced placeholders.
+     */
+    public static String setPlaceholders(Player player, String string) {
+        if (isAvailable()) {
+            try {
+                return PlaceholderAPI.setPlaceholders(player, string);
+            } catch (Exception e) {
+                Log.warn("Failed to replace placeholders in string '%s' for player '%s'."
+                        + " This issue likely originates from a placeholder provided by another plugin."
+                        + " Please contact the developer(s) of any plugin mentioned in the stack trace.", e, string, player.getName());
+                return string;
+            }
+        }
+        return string;
+    }
+
+    /**
+     * Set placeholders to the given List of Strings for a given Player.
+     *
+     * @param player     The player.
+     * @param stringList The string list.
+     * @return The string with replaced placeholders.
+     */
+    public static List<String> setPlaceholders(Player player, List<String> stringList) {
+        if (isAvailable()) {
+            return stringList.stream().map(s -> setPlaceholders(player, s)).collect(Collectors.toList());
+        }
+        return stringList;
+    }
+
+    /**
+     * Check if the given string contains any placeholders.
+     *
+     * @param string The string.
+     * @return True if the string contains any placeholders, false otherwise.
+     */
+    public static boolean containsPlaceholders(String string) {
+        if (isAvailable()) {
+            return PlaceholderAPI.containsPlaceholders(string);
+        }
+        return false;
+    }
+
+}

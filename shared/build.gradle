@@ -1,0 +1,10 @@
+dependencies {
+    compileOnly(libs.spigot)
+
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+}
+
+test {
+    useJUnitPlatform()
+}

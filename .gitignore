@@ -6,6 +6,7 @@ out
 /run/
 *.iml
 /.idea_modules/
+!gradle-wrapper.jar
 
 ### Java ###
 *.class
