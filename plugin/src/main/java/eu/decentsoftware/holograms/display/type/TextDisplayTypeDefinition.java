@@ -58,13 +58,15 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
 
         TextDisplayPage page = textDisplay.getPage(context.getPage());
         List<TextDisplayLine> resolvedLines = new ArrayList<>();
+        boolean anyLineAnimated = false;
         for (String line : page.getLines()) {
             String resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
             boolean isLineAnimated = animationManager.containsAnimations(resolvedLine);
+            anyLineAnimated |= isLineAnimated;
             TextDisplayLine displayLine = new TextDisplayLine(resolvedLine, isLineAnimated);
             resolvedLines.add(displayLine);
         }
-        return new TextDisplayContent(resolvedLines);
+        return new TextDisplayContent(resolvedLines, anyLineAnimated);
     }
 
     @Override

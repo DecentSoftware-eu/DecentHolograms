@@ -18,19 +18,14 @@
 
 package eu.decentsoftware.holograms.platform.api.data.display;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public final class TextDisplayContent implements DisplayContent<List<TextDisplayLine>> {
 
     private final List<TextDisplayLine> text;
     private final boolean animated;
-
-    public TextDisplayContent(List<TextDisplayLine> text) {
-        this.text = text;
-        this.animated = text.stream().anyMatch(TextDisplayLine::isAnimated);
-    }
 
     public TextDisplayContent(List<TextDisplayLine> text, boolean animated) {
         this.text = text;
@@ -49,10 +44,11 @@ public final class TextDisplayContent implements DisplayContent<List<TextDisplay
 
     @Override
     public DisplayContent<List<TextDisplayLine>> copy() {
-        List<TextDisplayLine> copiedLines = text.stream()
-                .map(TextDisplayLine::copy)
-                .collect(Collectors.toList());
-        return new TextDisplayContent(copiedLines);
+        List<TextDisplayLine> copiedLines = new ArrayList<>(text.size());
+        for (TextDisplayLine textDisplayLine : text) {
+            copiedLines.add(textDisplayLine.copy());
+        }
+        return new TextDisplayContent(copiedLines, animated);
     }
 
     @Override

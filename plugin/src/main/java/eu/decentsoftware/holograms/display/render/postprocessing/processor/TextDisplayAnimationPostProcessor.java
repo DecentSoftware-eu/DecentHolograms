@@ -63,6 +63,6 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
             }
         }
 
-        return new TextDisplayContent(animatedLines);
+        return new TextDisplayContent(animatedLines, true);
     }
 }
