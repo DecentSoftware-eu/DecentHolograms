@@ -47,6 +47,11 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
         return value;
     }
 
+    @Override
+    public boolean isStatic() {
+        return true;
+    }
+
     /**
      * Returns a shared instance of {@code StaticCompiledAttributeValue} that represents an empty or null value.
      *

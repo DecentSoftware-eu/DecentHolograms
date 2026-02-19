@@ -121,7 +121,7 @@ public class DisplayRenderingService {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
             LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle, context);
-            if (state == null) {
+            if (state == null || !state.isNeedsPostProcessing()) {
                 return;
             }
 
