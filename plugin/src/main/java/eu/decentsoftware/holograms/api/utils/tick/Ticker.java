@@ -30,7 +30,6 @@ public class Ticker {
      * Stop the ticker and unregister all ticked objects.
      */
     public void destroy() {
-        S.stopTask(taskId);
         tickedObjects.clear();
     }
 
