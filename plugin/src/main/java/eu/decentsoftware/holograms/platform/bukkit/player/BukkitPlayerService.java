@@ -26,10 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class BukkitPlayerService implements PlatformPlayerService {
 
@@ -52,10 +53,10 @@ public class BukkitPlayerService implements PlatformPlayerService {
 
     @Override
     public @NotNull @Unmodifiable Collection<PlatformPlayer> getOnlinePlayers() {
-        return Collections.unmodifiableCollection(
-                Bukkit.getOnlinePlayers().stream()
-                        .map(this::getPlayer)
-                        .collect(Collectors.toList())
-        );
+        List<PlatformPlayer> players = new ArrayList<>();
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            players.add(getPlayer(onlinePlayer));
+        }
+        return Collections.unmodifiableCollection(players);
     }
 }
