@@ -118,7 +118,7 @@ public class DisplayModule {
 
     private final JavaPlugin plugin;
     private final DisplayService displayService;
-    private final DisplayUpdater displayUpdater;
+    private final DisplayUpdateScheduler displayUpdateScheduler;
     private final DisplayListener displayListener;
     private final TextDisplayPlayerPageManager playerPageManager;
     private final DisplaysCommand displaysCommand;
@@ -150,7 +150,6 @@ public class DisplayModule {
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
         this.displayService = new DisplayService(persistenceService, renderingService, playerPageManager);
-        this.displayUpdater = new DisplayUpdater(displayService, renderingService);
         this.displayListener = new DisplayListener(displayService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
@@ -162,6 +161,7 @@ public class DisplayModule {
         DisplayAttributeService displayAttributeService = new DisplayAttributeService(attributeDefinitionRegistry);
         this.displaysCommand = new DisplaysCommand(
                 displayService, displayCloneService, attributeCommandService, attributeDefaultService, displayAttributeService);
+        this.displayUpdateScheduler = new DisplayUpdateScheduler(displayService, renderingService);
     }
 
     private AttributeCommandHandlerRegistry createCommandHandlerRegistry(DisplayPlaceholderService placeholderService) {
@@ -218,7 +218,7 @@ public class DisplayModule {
     public void initialize() {
         this.attributeDefaultService.reload();
         this.displayService.reload();
-        this.displayUpdater.register();
+        this.displayUpdateScheduler.start();
         Bukkit.getPluginManager().registerEvents(displayListener, plugin);
     }
 
@@ -229,7 +229,7 @@ public class DisplayModule {
 
     public void shutdown() {
         HandlerList.unregisterAll(displayListener);
-        this.displayUpdater.unregister();
+        this.displayUpdateScheduler.shutdown();
         this.playerPageManager.shutdown();
         this.displayService.shutdown();
         this.attributeDefaultService.shutdown();

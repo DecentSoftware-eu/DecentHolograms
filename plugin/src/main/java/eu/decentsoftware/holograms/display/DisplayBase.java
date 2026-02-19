@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class DisplayBase {
 
@@ -34,6 +35,8 @@ public abstract class DisplayBase {
     protected DecentLocation location;
     protected DisplaySettings settings;
     protected Map<AttributeKey<?>, DisplayAttribute<?>> attributes = new ConcurrentHashMap<>();
+
+    private transient final AtomicLong lastLogicalUpdateMs = new AtomicLong(0);
 
     protected DisplayBase(String name, DecentLocation location, DisplaySettings settings) {
         this.name = name;
@@ -87,5 +90,13 @@ public abstract class DisplayBase {
 
     public Collection<DisplayAttribute<?>> getAttributes() {
         return Collections.unmodifiableCollection(attributes.values());
+    }
+
+    public long getLastLogicalUpdateMs() {
+        return lastLogicalUpdateMs.get();
+    }
+
+    public void setLastLogicalUpdateMs(long lastLogicalUpdateMs) {
+        this.lastLogicalUpdateMs.set(lastLogicalUpdateMs);
     }
 }
