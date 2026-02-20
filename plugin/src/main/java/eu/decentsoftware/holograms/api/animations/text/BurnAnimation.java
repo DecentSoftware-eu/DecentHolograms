@@ -1,8 +1,8 @@
 package eu.decentsoftware.holograms.api.animations.text;
 
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
+import eu.decentsoftware.holograms.api.utils.color.StripColorUtil;
 import lombok.NonNull;
 
 public class BurnAnimation extends TextAnimation {
@@ -20,7 +20,7 @@ public class BurnAnimation extends TextAnimation {
                 string = string.replace(color, "");
             }
         }
-        String stripped = Common.stripColors(string);
+        String stripped = StripColorUtil.stripLegacyColorCodes(string);
         int currentStep = getCurrentStep(step, stripped.length());
         String start = stripped.substring(0, currentStep);
         String end = stripped.substring(currentStep);
