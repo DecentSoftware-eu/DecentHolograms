@@ -112,9 +112,9 @@ public class DisplayRenderingService {
             DisplayRenderContext context = getDisplayRenderContext(display, player);
             LogicalDisplayRenderState state = stateService.buildRenderState(display, context);
             state.setVisible(visible);
+            state.setChanged(true);
 
             logicalDisplayRenderStateManager.updateState(handle, context, state);
-            renderService.render(handle, state, context);
         } catch (Exception e) {
             Log.warn("Failed to update logical state of display '%s' for player '%s'.", e, display.getName(), player.getName());
         }
@@ -125,8 +125,12 @@ public class DisplayRenderingService {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
             LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle, context);
-            if (state == null || !state.isNeedsPostProcessing()) {
+            if (state == null || (!state.isChanged() && !state.isNeedsPostProcessing())) {
                 return;
+            }
+
+            if (state.isChanged()) {
+                state.setChanged(false);
             }
 
             renderService.render(handle, state, context);
