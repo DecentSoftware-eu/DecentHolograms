@@ -30,6 +30,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.metadata.DisplayMetadataType;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataType;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.syncher.DataWatcher;
 import org.bukkit.entity.Player;
@@ -81,7 +82,11 @@ abstract class AbstractDisplayRenderer<C> implements NmsDisplayRenderer<C> {
 
     private <T> void applyMetadatum(NmsDisplayMetadata<T> metadatum, EntityMetadataBuilder metadataBuilder) {
         MetadataKey<T> key = metadatum.getKey();
-        switch (key.getType()) {
+        MetadataType type = key.getType();
+        if (!(type instanceof DisplayMetadataType)) {
+            throw new IllegalStateException("Unexpected value: " + type);
+        }
+        switch ((DisplayMetadataType) type) {
             case DisplayMetadataType.TRANSLATION -> metadataBuilder.withDisplayTranslation((DecentVector3f) metadatum.getValue());
             case DisplayMetadataType.SCALE -> metadataBuilder.withDisplayScale((DecentVector3f) metadatum.getValue());
             case DisplayMetadataType.BILLBOARD_CONSTRAINTS ->
@@ -113,7 +118,7 @@ abstract class AbstractDisplayRenderer<C> implements NmsDisplayRenderer<C> {
                 ItemDisplayType itemDisplayType = (ItemDisplayType) metadatum.getValue();
                 metadataBuilder.withItemDisplayData(itemDisplayType);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + key.getType());
+            default -> throw new IllegalStateException("Unexpected value: " + type);
         }
     }
 }
