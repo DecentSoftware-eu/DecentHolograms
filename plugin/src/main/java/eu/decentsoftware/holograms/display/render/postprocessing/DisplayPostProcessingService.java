@@ -59,16 +59,16 @@ public class DisplayPostProcessingService {
 
     private void applyAttributes(LogicalDisplayRenderState logicalState, FinalDisplayRenderState state) {
         Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
-        for (AttributeKey<?> attributeKey : attributeMap.keySet()) {
-            applyAttribute(attributeKey, logicalState, state);
+        for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
+            applyAttribute(entry.getKey(), entry.getValue(), state);
         }
     }
 
-    private <T> void applyAttribute(AttributeKey<T> key, LogicalDisplayRenderState logicalState, FinalDisplayRenderState state) {
-        CompiledAttributeValue<T> attribute = logicalState.getAttributeValue(key);
+    @SuppressWarnings("unchecked")
+    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, FinalDisplayRenderState state) {
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
-            definition.apply(attribute, state);
+            definition.apply((CompiledAttributeValue<T>) attributeValue, state);
         }
     }
 }

@@ -73,11 +73,6 @@ public class LogicalDisplayRenderState {
         attributeValues.put(key, value);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> CompiledAttributeValue<T> getAttributeValue(AttributeKey<T> key) {
-        return (CompiledAttributeValue<T>) attributeValues.get(key);
-    }
-
     public Map<AttributeKey<?>, CompiledAttributeValue<?>> getAttributeValues() {
         return attributeValues;
     }
