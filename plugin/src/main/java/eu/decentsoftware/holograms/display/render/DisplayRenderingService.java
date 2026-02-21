@@ -59,11 +59,15 @@ public class DisplayRenderingService {
     }
 
     public void hideForEveryone(DisplayBase display) {
-        playerService.getOnlinePlayers().forEach(player -> hideForPlayer(display, player));
+        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
+            hideForPlayer(display, onlinePlayer);
+        }
     }
 
     public void updateVisibility(DisplayBase display) {
-        playerService.getOnlinePlayers().forEach(player -> updateVisibility(display, player));
+        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
+            updateVisibility(display, onlinePlayer);
+        }
     }
 
     public void updateVisibility(DisplayBase display, PlatformPlayer player) {
@@ -77,19 +81,19 @@ public class DisplayRenderingService {
     }
 
     public void update(DisplayBase display) {
-        playerService.getOnlinePlayers().forEach(player -> {
-            if (visibilityService.isShownToPlayer(display, player)) {
-                renderForPlayer(display, player);
+        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
+            if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
+                renderForPlayer(display, onlinePlayer);
             }
-        });
+        }
     }
 
     public void postProcess(DisplayBase display) {
-        playerService.getOnlinePlayers().forEach(player -> {
-            if (visibilityService.isShownToPlayer(display, player)) {
-                renderLogicalState(display, player);
+        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
+            if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
+                renderLogicalState(display, onlinePlayer);
             }
-        });
+        }
     }
 
     public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
