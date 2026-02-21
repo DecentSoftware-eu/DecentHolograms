@@ -153,7 +153,7 @@ public class DisplayModule {
         DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
-        DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter, renderStateManager, postProcessingService);
+        DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter.getRenderService(), renderStateManager, postProcessingService);
         DisplayRenderStateService stateService = new DisplayRenderStateService(displayTypeRegistry);
         LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();

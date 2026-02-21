@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProc
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
-import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
@@ -35,16 +35,16 @@ import java.util.UUID;
 public class DisplayRenderService {
 
     private final DisplayRenderDiffService diffService;
-    private final PlatformAdapter platformAdapter;
+    private final PlatformRenderService platformRenderService;
     private final FinalDisplayRenderStateManager finalStateManager;
     private final DisplayPostProcessingService postProcessingService;
 
     public DisplayRenderService(DisplayRenderDiffService diffService,
-                                PlatformAdapter platformAdapter,
+                                PlatformRenderService platformRenderService,
                                 FinalDisplayRenderStateManager finalStateManager,
                                 DisplayPostProcessingService postProcessingService) {
         this.diffService = diffService;
-        this.platformAdapter = platformAdapter;
+        this.platformRenderService = platformRenderService;
         this.finalStateManager = finalStateManager;
         this.postProcessingService = postProcessingService;
     }
@@ -58,7 +58,7 @@ public class DisplayRenderService {
         }
 
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_PLATFORM)) {
-            platformAdapter.getRenderService().render(context.getPlayer(), handle, intents);
+            platformRenderService.render(context.getPlayer(), handle, intents);
         }
         saveCurrentState(handle, currentState, context);
     }
