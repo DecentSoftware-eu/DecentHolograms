@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
+import eu.decentsoftware.holograms.api.animations.compile.AnimationCompiler;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
 import eu.decentsoftware.holograms.display.attribute.AttributeConfigMapper;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
@@ -130,7 +131,8 @@ public class DisplayModule {
         DisplayRenderDiffService renderDiffService = new DisplayRenderDiffService();
         FinalDisplayRenderStateManager renderStateManager = new FinalDisplayRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
-        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationManager);
+        AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
+        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager);
         DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);

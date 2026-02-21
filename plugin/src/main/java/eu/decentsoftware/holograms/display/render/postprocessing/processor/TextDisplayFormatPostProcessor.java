@@ -46,7 +46,7 @@ public class TextDisplayFormatPostProcessor implements DisplayContentPostProcess
         List<TextDisplayLine> formattedLines = new ArrayList<>(lines.size());
         for (TextDisplayLine line : lines) {
             String formattedText = textCache.parse(line.getText(), Common::colorize);
-            TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.isAnimated());
+            TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.getAnimations());
             formattedLines.add(formattedLine);
         }
         return new TextDisplayContent(formattedLines, content.isAnimated());

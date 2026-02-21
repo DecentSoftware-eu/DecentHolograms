@@ -18,7 +18,8 @@
 
 package eu.decentsoftware.holograms.display.type;
 
-import eu.decentsoftware.holograms.api.animations.AnimationManager;
+import eu.decentsoftware.holograms.api.animations.compile.AnimationCompiler;
+import eu.decentsoftware.holograms.api.animations.compile.CompiledAnimationsOutput;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.TextDisplayPage;
@@ -37,14 +38,14 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
 
     private final DisplayPlaceholderService displayPlaceholderService;
     private final List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors;
-    private final AnimationManager animationManager;
+    private final AnimationCompiler animationCompiler;
 
     public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService,
                                      List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors,
-                                     AnimationManager animationManager) {
+                                     AnimationCompiler animationCompiler) {
         this.displayPlaceholderService = displayPlaceholderService;
         this.postProcessors = postProcessors;
-        this.animationManager = animationManager;
+        this.animationCompiler = animationCompiler;
     }
 
     @Override
@@ -61,9 +62,14 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
         boolean anyLineAnimated = false;
         for (String line : page.getLines()) {
             String resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
-            boolean isLineAnimated = animationManager.containsAnimations(resolvedLine);
-            anyLineAnimated |= isLineAnimated;
-            TextDisplayLine displayLine = new TextDisplayLine(resolvedLine, isLineAnimated);
+
+            CompiledAnimationsOutput compiledAnimationsOutput = animationCompiler.compileAnimations(resolvedLine);
+            resolvedLine = compiledAnimationsOutput.getStrippedString();
+
+            TextDisplayLine displayLine = new TextDisplayLine(resolvedLine, compiledAnimationsOutput.getAnimations());
+
+            anyLineAnimated |= displayLine.isAnimated();
+
             resolvedLines.add(displayLine);
         }
         return new TextDisplayContent(resolvedLines, anyLineAnimated);

@@ -16,48 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api.data.display;
+package eu.decentsoftware.holograms.api.animations.compile;
+
+import eu.decentsoftware.holograms.platform.api.data.display.CompiledAnimation;
 
 import java.util.List;
-import java.util.Objects;
 
-public final class TextDisplayLine {
+public class CompiledAnimationsOutput {
 
-    private final String text;
+    private final String strippedString;
     private final List<CompiledAnimation> animations;
 
-    public TextDisplayLine(String text, List<CompiledAnimation> animations) {
-        this.text = text;
+    public CompiledAnimationsOutput(String strippedString, List<CompiledAnimation> animations) {
+        this.strippedString = strippedString;
         this.animations = animations;
     }
 
-    public String getText() {
-        return text;
+    public String getStrippedString() {
+        return strippedString;
     }
 
     public List<CompiledAnimation> getAnimations() {
         return animations;
-    }
-
-    public boolean isAnimated() {
-        return !animations.isEmpty();
-    }
-
-    public TextDisplayLine copy() {
-        return new TextDisplayLine(text, animations);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TextDisplayLine)) {
-            return false;
-        }
-        TextDisplayLine that = (TextDisplayLine) o;
-        return Objects.equals(text, that.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(text);
     }
 }

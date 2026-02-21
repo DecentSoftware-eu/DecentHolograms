@@ -58,8 +58,8 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
             }
 
             try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_ANIMATIONS_LINE)) {
-                String animatedText = animationManager.parseTextAnimations(line.getText());
-                animatedLines.add(new TextDisplayLine(animatedText, true));
+                String animatedText = animationManager.applyAnimations(line.getText(), line.getAnimations());
+                animatedLines.add(new TextDisplayLine(animatedText, line.getAnimations()));
             }
         }
 

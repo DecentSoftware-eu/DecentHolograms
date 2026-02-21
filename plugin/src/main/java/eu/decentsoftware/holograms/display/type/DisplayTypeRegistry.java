@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.type;
 
 import eu.decentsoftware.holograms.api.animations.AnimationManager;
+import eu.decentsoftware.holograms.api.animations.compile.AnimationCompiler;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
@@ -38,23 +39,28 @@ public final class DisplayTypeRegistry {
 
     private final Map<DisplayType, DisplayTypeDefinition<?>> definitions = new HashMap<>();
 
-    public DisplayTypeRegistry(DisplayPlaceholderService displayPlaceholderService, AnimationManager animationManager) {
-        registerDefaultTypes(displayPlaceholderService, animationManager);
+    public DisplayTypeRegistry(DisplayPlaceholderService displayPlaceholderService,
+                               AnimationCompiler animationCompiler,
+                               AnimationManager animationManager) {
+        registerDefaultTypes(displayPlaceholderService, animationCompiler, animationManager);
     }
 
-    private void registerDefaultTypes(DisplayPlaceholderService displayPlaceholderService, AnimationManager animationManager) {
-        registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationManager));
+    private void registerDefaultTypes(DisplayPlaceholderService displayPlaceholderService,
+                                      AnimationCompiler animationCompiler,
+                                      AnimationManager animationManager) {
+        registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler, animationManager));
         registerDisplayType(DisplayType.ITEM, new ItemDisplayTypeDefinition());
         registerDisplayType(DisplayType.BLOCK, new BlockDisplayTypeDefinition());
     }
 
     private TextDisplayTypeDefinition initializeTextDisplayType(DisplayPlaceholderService displayPlaceholderService,
+                                                                AnimationCompiler animationCompiler,
                                                                 AnimationManager animationManager) {
         List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
                 new TextDisplayAnimationPostProcessor(animationManager),
                 new TextDisplayFormatPostProcessor()
         ));
-        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationManager);
+        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationCompiler);
     }
 
     private <T extends DisplayTypeDefinition<?>> void registerDisplayType(DisplayType type, T definition) {
