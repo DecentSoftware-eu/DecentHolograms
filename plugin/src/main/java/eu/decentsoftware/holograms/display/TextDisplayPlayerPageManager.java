@@ -18,71 +18,36 @@
 
 package eu.decentsoftware.holograms.display;
 
-import com.google.common.base.Preconditions;
-
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TextDisplayPlayerPageManager {
 
-    private final Map<DisplayViewKey, Integer> pageMap = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<String, Integer>> pageMap = new HashMap<>();
 
     public void shutdown() {
         pageMap.clear();
     }
 
-    public Integer getPage(String displayName, UUID playerUniqueId) {
-        DisplayViewKey key = DisplayViewKey.of(displayName, playerUniqueId);
-        return pageMap.getOrDefault(key, 0);
+    public int getPage(String displayName, UUID playerUniqueId) {
+        Map<String, Integer> playerPageMap = pageMap.get(playerUniqueId);
+        if (playerPageMap == null) {
+            return 0;
+        }
+        return playerPageMap.getOrDefault(displayName, 0);
     }
 
     public void setPage(String displayName, UUID playerUniqueId, int page) {
-        DisplayViewKey key = DisplayViewKey.of(displayName, playerUniqueId);
-        pageMap.put(key, page);
+        Map<String, Integer> playerPageMap = pageMap.computeIfAbsent(playerUniqueId, k -> new ConcurrentHashMap<>());
+        playerPageMap.put(displayName, page);
     }
 
     public void clearPage(String displayName, UUID playerUniqueId) {
-        DisplayViewKey key = DisplayViewKey.of(displayName, playerUniqueId);
-        pageMap.remove(key);
-    }
-
-    private static class DisplayViewKey {
-        private final String displayName;
-        private final UUID playerUniqueId;
-
-        private DisplayViewKey(String displayName, UUID playerUniqueId) {
-            this.displayName = displayName;
-            this.playerUniqueId = playerUniqueId;
-        }
-
-        public static DisplayViewKey of(String displayName, UUID playerUniqueId) {
-            Preconditions.checkNotNull(displayName, "displayName cannot be null");
-            Preconditions.checkNotNull(playerUniqueId, "playerUniqueId cannot be null");
-            return new DisplayViewKey(displayName, playerUniqueId);
-        }
-
-        @Override
-        public String toString() {
-            return "DisplayViewKey{" +
-                    "displayName='" + displayName + '\'' +
-                    ", playerUniqueId=" + playerUniqueId +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof DisplayViewKey)) {
-                return false;
-            }
-            DisplayViewKey that = (DisplayViewKey) o;
-            return Objects.equals(displayName, that.displayName) && Objects.equals(playerUniqueId, that.playerUniqueId);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(displayName, playerUniqueId);
+        Map<String, Integer> playerPageMap = pageMap.get(playerUniqueId);
+        if (playerPageMap != null) {
+            playerPageMap.remove(displayName);
         }
     }
 }

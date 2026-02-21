@@ -144,7 +144,7 @@ public class DisplayRenderingService {
     }
 
     private DisplayRenderContext getDisplayRenderContext(DisplayBase display, PlatformPlayer player) {
-        Integer page = pageManager.getPage(display.getName(), player.getUniqueId());
+        int page = pageManager.getPage(display.getName(), player.getUniqueId());
         return new DisplayRenderContext(player, page);
     }
 }

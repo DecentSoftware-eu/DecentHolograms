@@ -23,9 +23,9 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 public class DisplayRenderContext {
 
     private final PlatformPlayer player;
-    private final Integer page;
+    private final int page;
 
-    public DisplayRenderContext(PlatformPlayer player, Integer page) {
+    public DisplayRenderContext(PlatformPlayer player, int page) {
         this.player = player;
         this.page = page;
     }
@@ -34,7 +34,7 @@ public class DisplayRenderContext {
         return player;
     }
 
-    public Integer getPage() {
+    public int getPage() {
         return page;
     }
 }
