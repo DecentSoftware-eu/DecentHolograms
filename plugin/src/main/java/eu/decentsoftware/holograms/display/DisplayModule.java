@@ -92,24 +92,38 @@ import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
+import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
+import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
+import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
 import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
+import eu.decentsoftware.holograms.display.type.ItemDisplayTypeDefinition;
+import eu.decentsoftware.holograms.display.type.TextDisplayTypeDefinition;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
+import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.platform.bukkit.text.CachingBukkitLegacyTextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Manages the display module, including initialization, reloading, and shutdown.
@@ -135,7 +149,7 @@ public class DisplayModule {
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
         this.textFormatter = new CachingBukkitLegacyTextFormatter();
-        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager, textFormatter);
+        DisplayTypeRegistry displayTypeRegistry = createDisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager, textFormatter);
         DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
@@ -218,6 +232,28 @@ public class DisplayModule {
                 .register(ConfigAttribute.class, new ConfigAttributeSerializer(attributeValueSerializer))
                 .register(ConfigDefaultAttribute.class, new ConfigDefaultAttributeSerializer(attributeValueSerializer))
                 .build();
+    }
+
+    private DisplayTypeRegistry createDisplayTypeRegistry(DisplayPlaceholderService displayPlaceholderService,
+                                                          AnimationCompiler animationCompiler,
+                                                          AnimationManager animationManager,
+                                                          TextFormatter textFormatter) {
+        DisplayTypeRegistry registry = new DisplayTypeRegistry();
+        registry.registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler, animationManager, textFormatter));
+        registry.registerDisplayType(DisplayType.ITEM, new ItemDisplayTypeDefinition());
+        registry.registerDisplayType(DisplayType.BLOCK, new BlockDisplayTypeDefinition());
+        return registry;
+    }
+
+    private TextDisplayTypeDefinition initializeTextDisplayType(DisplayPlaceholderService displayPlaceholderService,
+                                                                AnimationCompiler animationCompiler,
+                                                                AnimationManager animationManager,
+                                                                TextFormatter textFormatter) {
+        List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
+                new TextDisplayAnimationPostProcessor(animationManager),
+                new TextDisplayFormatPostProcessor(textFormatter)
+        ));
+        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationCompiler);
     }
 
     public void initialize() {
