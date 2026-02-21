@@ -57,10 +57,8 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     private MetadataValue<TextDisplayProperties> getTextDisplayPropertiesMetadataValue(FinalDisplayRenderState state) {
-        MetadataValue<TextDisplayProperties> metadataValue;
-        if (state.hasMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES)) {
-            metadataValue = state.getMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES);
-        } else {
+        MetadataValue<TextDisplayProperties> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES);
+        if (metadataValue == null) {
             metadataValue = BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(new TextDisplayProperties());
             state.addMetadata(metadataValue);
         }

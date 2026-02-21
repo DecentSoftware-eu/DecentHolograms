@@ -81,10 +81,6 @@ public final class FinalDisplayRenderState {
         return (MetadataValue<T>) metadataValues.get(key);
     }
 
-    public boolean hasMetadataValue(MetadataKey<?> key) {
-        return metadataValues.containsKey(key);
-    }
-
     public DisplayContent<?> getContent() {
         return content;
     }
