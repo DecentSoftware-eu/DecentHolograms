@@ -75,8 +75,8 @@ import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValu
 import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValueType;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.display.config.DisplayConfigMapper;
-import eu.decentsoftware.holograms.display.config.DisplayRepository;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
+import eu.decentsoftware.holograms.display.config.DisplayRepository;
 import eu.decentsoftware.holograms.display.config.YamlConfigurationLoaderFactory;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDefaultAttribute;
@@ -105,6 +105,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
+import eu.decentsoftware.holograms.platform.bukkit.text.CachingBukkitLegacyTextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -124,6 +125,7 @@ public class DisplayModule {
     private final TextDisplayPlayerPageManager playerPageManager;
     private final DisplaysCommand displaysCommand;
     private final AttributeDefaultService attributeDefaultService;
+    private final CachingBukkitLegacyTextFormatter textFormatter;
 
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
@@ -132,7 +134,8 @@ public class DisplayModule {
         FinalDisplayRenderStateManager renderStateManager = new FinalDisplayRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
-        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager);
+        this.textFormatter = new CachingBukkitLegacyTextFormatter();
+        DisplayTypeRegistry displayTypeRegistry = new DisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager, textFormatter);
         DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
@@ -235,6 +238,7 @@ public class DisplayModule {
         this.playerPageManager.shutdown();
         this.displayService.shutdown();
         this.attributeDefaultService.shutdown();
+        this.textFormatter.invalidate();
     }
 
     public DisplayService getDisplayService() {

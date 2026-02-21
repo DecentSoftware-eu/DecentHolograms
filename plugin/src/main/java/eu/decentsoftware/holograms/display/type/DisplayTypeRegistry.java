@@ -27,6 +27,7 @@ import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextD
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
+import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -41,24 +42,27 @@ public final class DisplayTypeRegistry {
 
     public DisplayTypeRegistry(DisplayPlaceholderService displayPlaceholderService,
                                AnimationCompiler animationCompiler,
-                               AnimationManager animationManager) {
-        registerDefaultTypes(displayPlaceholderService, animationCompiler, animationManager);
+                               AnimationManager animationManager,
+                               TextFormatter textFormatter) {
+        registerDefaultTypes(displayPlaceholderService, animationCompiler, animationManager, textFormatter);
     }
 
     private void registerDefaultTypes(DisplayPlaceholderService displayPlaceholderService,
                                       AnimationCompiler animationCompiler,
-                                      AnimationManager animationManager) {
-        registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler, animationManager));
+                                      AnimationManager animationManager,
+                                      TextFormatter textFormatter) {
+        registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler, animationManager, textFormatter));
         registerDisplayType(DisplayType.ITEM, new ItemDisplayTypeDefinition());
         registerDisplayType(DisplayType.BLOCK, new BlockDisplayTypeDefinition());
     }
 
     private TextDisplayTypeDefinition initializeTextDisplayType(DisplayPlaceholderService displayPlaceholderService,
                                                                 AnimationCompiler animationCompiler,
-                                                                AnimationManager animationManager) {
+                                                                AnimationManager animationManager,
+                                                                TextFormatter textFormatter) {
         List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
                 new TextDisplayAnimationPostProcessor(animationManager),
-                new TextDisplayFormatPostProcessor()
+                new TextDisplayFormatPostProcessor(textFormatter)
         ));
         return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationCompiler);
     }

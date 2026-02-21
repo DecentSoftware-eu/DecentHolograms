@@ -18,11 +18,10 @@
 
 package eu.decentsoftware.holograms.display.render.postprocessing.processor;
 
-import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.display.render.postprocessing.cache.TextFormattingCache;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
+import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
 import eu.decentsoftware.holograms.profiler.Metrics;
 import eu.decentsoftware.holograms.profiler.TimerHandle;
@@ -32,7 +31,11 @@ import java.util.List;
 
 public class TextDisplayFormatPostProcessor implements DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>> {
 
-    private final TextFormattingCache textCache = new TextFormattingCache(TextFormattingCache.DEFAULT_MAX_SIZE);
+    private final TextFormatter textFormatter;
+
+    public TextDisplayFormatPostProcessor(TextFormatter textFormatter) {
+        this.textFormatter = textFormatter;
+    }
 
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
@@ -45,7 +48,7 @@ public class TextDisplayFormatPostProcessor implements DisplayContentPostProcess
         List<TextDisplayLine> lines = content.getContent();
         List<TextDisplayLine> formattedLines = new ArrayList<>(lines.size());
         for (TextDisplayLine line : lines) {
-            String formattedText = textCache.parse(line.getText(), Common::colorize);
+            String formattedText = textFormatter.format(line.getText());
             TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.getAnimations());
             formattedLines.add(formattedLine);
         }
