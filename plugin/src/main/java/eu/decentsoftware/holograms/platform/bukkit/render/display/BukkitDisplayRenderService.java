@@ -27,9 +27,10 @@ import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class BukkitDisplayRenderService {
 
@@ -46,9 +47,12 @@ public abstract class BukkitDisplayRenderService {
     }
 
     protected List<NmsDisplayMetadata<?>> mapMetadata(Map<MetadataKey<?>, MetadataValue<?>> metadataValues) {
-        return metadataValues.values().stream()
-                .map(this::mapMetadatum)
-                .collect(Collectors.toList());
+        Collection<MetadataValue<?>> values = metadataValues.values();
+        List<NmsDisplayMetadata<?>> mappedValues = new ArrayList<>(values.size());
+        for (MetadataValue<?> value : values) {
+            mappedValues.add(mapMetadatum(value));
+        }
+        return mappedValues;
     }
 
     protected <T> NmsDisplayMetadata<T> mapMetadatum(MetadataValue<T> metadataValue) {
