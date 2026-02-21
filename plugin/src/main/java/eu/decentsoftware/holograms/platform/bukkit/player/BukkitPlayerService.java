@@ -53,8 +53,9 @@ public class BukkitPlayerService implements PlatformPlayerService {
 
     @Override
     public @NotNull @Unmodifiable Collection<PlatformPlayer> getOnlinePlayers() {
-        List<PlatformPlayer> players = new ArrayList<>();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        List<PlatformPlayer> players = new ArrayList<>(onlinePlayers.size());
+        for (Player onlinePlayer : onlinePlayers) {
             players.add(getPlayer(onlinePlayer));
         }
         return Collections.unmodifiableCollection(players);
