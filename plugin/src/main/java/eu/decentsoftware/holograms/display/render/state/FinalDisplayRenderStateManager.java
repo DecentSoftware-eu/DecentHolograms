@@ -29,14 +29,22 @@ public class FinalDisplayRenderStateManager {
     private final Map<UUID, Map<String, FinalDisplayRenderState>> states = new ConcurrentHashMap<>();
 
     public FinalDisplayRenderState getState(UUID playerUniqueId, RenderObjectHandle handle) {
-        return getPlayerRenderStateMap(playerUniqueId).get(handle.getId());
+        Map<String, FinalDisplayRenderState> stateMap = states.get(playerUniqueId);
+        if (stateMap == null) {
+            return null;
+        }
+        return stateMap.get(handle.getId());
     }
 
     public void setState(UUID playerUniqueId, RenderObjectHandle handle, FinalDisplayRenderState state) {
-        getPlayerRenderStateMap(playerUniqueId).put(handle.getId(), state);
-    }
-
-    private Map<String, FinalDisplayRenderState> getPlayerRenderStateMap(UUID playerUniqueId) {
-        return states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
+        Map<String, FinalDisplayRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
+        if (state == null) {
+            playerStates.remove(handle.getId());
+            if (playerStates.isEmpty()) {
+                states.remove(playerUniqueId);
+            }
+        } else {
+            playerStates.put(handle.getId(), state);
+        }
     }
 }

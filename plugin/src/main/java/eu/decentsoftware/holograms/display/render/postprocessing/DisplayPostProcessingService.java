@@ -48,8 +48,10 @@ public class DisplayPostProcessingService {
     }
 
     private FinalDisplayRenderState postProcessInternal(LogicalDisplayRenderState logicalState) {
+        if (logicalState == null) {
+            return null;
+        }
         FinalDisplayRenderState state = new FinalDisplayRenderState(logicalState.getId());
-        state.setVisible(logicalState.isVisible());
         state.setLocation(logicalState.getLocation());
         state.setDisplayType(logicalState.getDisplayType());
         state.setContent(contentPostProcessingService.postProcessContent(logicalState.getDisplayType(), logicalState.getContent()));

@@ -21,30 +21,7 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class DisplayVisibilityService {
-
-    private final Map<String, Set<UUID>> viewersMap = new ConcurrentHashMap<>();
-
-    public boolean isShownToPlayer(DisplayBase display, PlatformPlayer player) {
-        Set<UUID> viewerSet = viewersMap.get(display.getName());
-        if (viewerSet == null) {
-            return false;
-        }
-        return viewerSet.contains(player.getUniqueId());
-    }
-
-    public void addViewer(DisplayBase display, PlatformPlayer player) {
-        getViewers(display).add(player.getUniqueId());
-    }
-
-    public void removeViewer(DisplayBase display, PlatformPlayer player) {
-        getViewers(display).remove(player.getUniqueId());
-    }
 
     public boolean shouldBeShownToPlayer(DisplayBase display, PlatformPlayer player) {
         return isDisplayEnabled(display) && isPlayerWithinDisplayRange(display, player);
@@ -60,9 +37,5 @@ public class DisplayVisibilityService {
         DecentLocation playerLocation = player.getLocation();
         return displayLocation.isSameWorld(playerLocation)
                 && displayLocation.distanceSquared(playerLocation) <= displayRange * displayRange;
-    }
-
-    public Set<UUID> getViewers(DisplayBase display) {
-        return viewersMap.computeIfAbsent(display.getName(), k -> ConcurrentHashMap.newKeySet());
     }
 }

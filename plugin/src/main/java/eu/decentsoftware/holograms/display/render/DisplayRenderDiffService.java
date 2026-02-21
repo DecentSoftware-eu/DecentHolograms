@@ -30,24 +30,22 @@ import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
 import eu.decentsoftware.holograms.profiler.Metrics;
 import eu.decentsoftware.holograms.profiler.TimerHandle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayRenderDiffService {
 
-    public List<RenderIntent> diff(@NotNull FinalDisplayRenderState currentState, @Nullable FinalDisplayRenderState previousState) {
+    public List<RenderIntent> diff(FinalDisplayRenderState currentState, FinalDisplayRenderState previousState) {
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_DIFF)) {
             return diffInternal(currentState, previousState);
         }
     }
 
-    private List<RenderIntent> diffInternal(@NotNull FinalDisplayRenderState currentState, @Nullable FinalDisplayRenderState previousState) {
+    private List<RenderIntent> diffInternal(FinalDisplayRenderState currentState, FinalDisplayRenderState previousState) {
         List<RenderIntent> intentList = new ArrayList<>();
-        if (previousState == null || !previousState.isVisible()) {
-            if (currentState.isVisible()) {
+        if (previousState == null) {
+            if (currentState != null) {
                 intentList.add(new SpawnDisplayRenderIntent(
                         currentState.getLocation(),
                         currentState.getMetadataValues(),
@@ -55,7 +53,7 @@ public class DisplayRenderDiffService {
                 ));
             }
             return intentList;
-        } else if (!currentState.isVisible()) {
+        } else if (currentState == null) {
             intentList.add(new DespawnDisplayRenderIntent());
             return intentList;
         }

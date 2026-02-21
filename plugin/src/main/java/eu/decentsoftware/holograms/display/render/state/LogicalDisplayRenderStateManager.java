@@ -18,8 +18,6 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -31,17 +29,23 @@ public class LogicalDisplayRenderStateManager {
     private final Map<UUID, Map<String, LogicalDisplayRenderState>> states = new ConcurrentHashMap<>();
 
     @Nullable
-    public LogicalDisplayRenderState getCurrentState(RenderObjectHandle handle, DisplayRenderContext context) {
-        UUID playerUniqueId = context.getPlayer().getUniqueId();
-        return getPlayerRenderStateMap(playerUniqueId).get(handle.getId());
+    public LogicalDisplayRenderState getCurrentState(String displayName, UUID playerUniqueId) {
+        Map<String, LogicalDisplayRenderState> playerStates = states.get(playerUniqueId);
+        if (playerStates == null) {
+            return null;
+        }
+        return playerStates.get(displayName);
     }
 
-    public void updateState(RenderObjectHandle handle, DisplayRenderContext context, LogicalDisplayRenderState state) {
-        UUID playerUniqueId = context.getPlayer().getUniqueId();
-        getPlayerRenderStateMap(playerUniqueId).put(handle.getId(), state);
-    }
-
-    private Map<String, LogicalDisplayRenderState> getPlayerRenderStateMap(UUID playerUniqueId) {
-        return states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
+    public void updateState(String displayName, UUID playerUniqueId, LogicalDisplayRenderState state) {
+        Map<String, LogicalDisplayRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
+        if (state == null) {
+            playerStates.remove(displayName);
+            if (playerStates.isEmpty()) {
+                states.remove(playerUniqueId);
+            }
+        } else {
+            playerStates.put(displayName, state);
+        }
     }
 }

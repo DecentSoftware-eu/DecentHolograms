@@ -30,7 +30,6 @@ import java.util.Map;
 public final class FinalDisplayRenderState {
 
     private final String id;
-    private boolean visible;
     private DisplayType displayType;
     private DecentLocation location;
     private final Map<MetadataKey<?>, MetadataValue<?>> metadataValues = new LinkedHashMap<>();
@@ -42,14 +41,6 @@ public final class FinalDisplayRenderState {
 
     public String getId() {
         return id;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public DisplayType getDisplayType() {

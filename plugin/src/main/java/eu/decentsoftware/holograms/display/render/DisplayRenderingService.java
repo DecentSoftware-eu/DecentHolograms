@@ -53,68 +53,65 @@ public class DisplayRenderingService {
     }
 
     public void hideDisplayForPlayer(DisplayBase display, PlatformPlayer player) {
-        if (visibilityService.isShownToPlayer(display, player)) {
-            hideForPlayer(display, player);
+        if (isIsShownToPlayer(display, player)) {
+            updateLogicalState(display, player, false);
         }
     }
 
     public void hideForEveryone(DisplayBase display) {
-        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
-            hideForPlayer(display, onlinePlayer);
+        for (PlatformPlayer player : playerService.getOnlinePlayers()) {
+            updateLogicalState(display, player, false);
         }
     }
 
     public void updateVisibility(DisplayBase display) {
-        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
-            updateVisibility(display, onlinePlayer);
+        for (PlatformPlayer player : playerService.getOnlinePlayers()) {
+            updateVisibility(display, player);
         }
     }
 
     public void updateVisibility(DisplayBase display, PlatformPlayer player) {
         boolean shouldBeShownToPlayer = visibilityService.shouldBeShownToPlayer(display, player);
-        boolean isShownToPlayer = visibilityService.isShownToPlayer(display, player);
+        boolean isShownToPlayer = isIsShownToPlayer(display, player);
         if (shouldBeShownToPlayer && !isShownToPlayer) {
-            renderForPlayer(display, player);
+            updateLogicalState(display, player, true);
         } else if (!shouldBeShownToPlayer && isShownToPlayer) {
-            hideForPlayer(display, player);
+            updateLogicalState(display, player, false);
         }
     }
 
+    private boolean isIsShownToPlayer(DisplayBase display, PlatformPlayer player) {
+        return logicalDisplayRenderStateManager.getCurrentState(display.getName(), player.getUniqueId()) != null;
+    }
+
     public void update(DisplayBase display) {
-        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
-            if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
-                renderForPlayer(display, onlinePlayer);
+        for (PlatformPlayer player : playerService.getOnlinePlayers()) {
+            if (isIsShownToPlayer(display, player)) {
+                updateLogicalState(display, player, true);
             }
         }
     }
 
     public void postProcess(DisplayBase display) {
         for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
-            if (visibilityService.isShownToPlayer(display, onlinePlayer)) {
-                renderLogicalState(display, onlinePlayer);
-            }
+            renderLogicalState(display, onlinePlayer);
         }
-    }
-
-    public void hideForPlayer(DisplayBase display, PlatformPlayer player) {
-        updateLogicalState(display, player, false);
-        visibilityService.removeViewer(display, player);
-    }
-
-    public void renderForPlayer(DisplayBase display, PlatformPlayer player) {
-        updateLogicalState(display, player, true);
-        visibilityService.addViewer(display, player);
     }
 
     private void updateLogicalState(DisplayBase display, PlatformPlayer player, boolean visible) {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
-            LogicalDisplayRenderState state = stateService.buildRenderState(display, context);
-            state.setVisible(visible);
-            state.setChanged(true);
+            LogicalDisplayRenderState state;
+            if (visible) {
+                state = stateService.buildRenderState(display, context);
+                state.setChanged(true);
+            } else {
+                state = null;
+                renderService.render(handle, null, context);
+            }
 
-            logicalDisplayRenderStateManager.updateState(handle, context, state);
+            logicalDisplayRenderStateManager.updateState(handle.getId(), context.getPlayer().getUniqueId(), state);
         } catch (Exception e) {
             Log.warn("Failed to update logical state of display '%s' for player '%s'.", e, display.getName(), player.getName());
         }
@@ -124,7 +121,7 @@ public class DisplayRenderingService {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
-            LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle, context);
+            LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
             if (state == null || (!state.isChanged() && !state.isNeedsPostProcessing())) {
                 return;
             }

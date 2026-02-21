@@ -30,7 +30,6 @@ import java.util.Map;
 public class LogicalDisplayRenderState {
 
     private final String id;
-    private boolean visible;
     private DisplayType displayType;
     private DecentLocation location;
     private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
@@ -44,14 +43,6 @@ public class LogicalDisplayRenderState {
 
     public String getId() {
         return id;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public DisplayType getDisplayType() {

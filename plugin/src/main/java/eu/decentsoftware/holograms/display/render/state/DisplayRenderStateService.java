@@ -39,7 +39,6 @@ public class DisplayRenderStateService {
 
     public LogicalDisplayRenderState buildRenderState(DisplayBase display, DisplayRenderContext context) {
         LogicalDisplayRenderState state = new LogicalDisplayRenderState(display.getName());
-        state.setVisible(true);
         state.setDisplayType(display.getType());
         state.setLocation(display.getLocation());
         applyContent(display, state, context);
