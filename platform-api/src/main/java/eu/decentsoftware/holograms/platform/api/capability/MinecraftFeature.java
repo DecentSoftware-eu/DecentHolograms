@@ -19,15 +19,23 @@
 package eu.decentsoftware.holograms.platform.api.capability;
 
 /**
- * Marker interface representing specific platform capabilities that can be queried for feature support.
+ * Enum representing specific Minecraft features that can be queried for platform support.
  *
- * <p>This enum is used in conjunction with {@link PlatformCapabilities} to determine whether
- * a particular feature is supported by the platform. Each constant defines a distinct capability
- * and serves as a key when performing platform capability checks.</p>
+ * <p>Each constant in this enum defines a particular Minecraft feature. These constants act
+ * as keys when performing capability checks using the {@link PlatformCapabilities} interface.</p>
+ *
+ * <p>This enum is used in conjunction with the {@link PlatformCapability} marker interface to
+ * identify features supported by a given platform.</p>
  *
  * @author d0by
+ * @see PlatformCapability
  * @see PlatformCapabilities
  * @since 2.10.0
  */
-public interface PlatformCapability {
+public enum MinecraftFeature implements PlatformCapability {
+    /**
+     * This capability represents the ability to use Minecraft's Display Entities,
+     * introduced in Minecraft 1.19.4.
+     */
+    DISPLAY_ENTITIES
 }

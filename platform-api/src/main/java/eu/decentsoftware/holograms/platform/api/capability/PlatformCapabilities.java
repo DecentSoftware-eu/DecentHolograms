@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.api.capability;
 
+import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,6 +39,8 @@ public interface PlatformCapabilities {
      * @param capability The capability to check.
      * @return True if the platform supports the specified capability, false otherwise.
      * @see PlatformCapability
+     * @see MinecraftFeature
+     * @see TextFormat
      * @since 2.10.0
      */
     boolean supports(@NotNull PlatformCapability capability);

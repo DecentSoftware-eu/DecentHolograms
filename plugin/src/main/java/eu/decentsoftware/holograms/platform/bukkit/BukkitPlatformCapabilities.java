@@ -19,15 +19,26 @@
 package eu.decentsoftware.holograms.platform.bukkit;
 
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.platform.api.capability.MinecraftFeature;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapability;
+import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import org.jetbrains.annotations.NotNull;
 
 public class BukkitPlatformCapabilities implements PlatformCapabilities {
 
     @Override
     public boolean supports(@NotNull PlatformCapability capability) {
-        switch (capability) {
+        if (capability instanceof MinecraftFeature) {
+            return supportsMinecraftFeature((MinecraftFeature) capability);
+        } else if (capability instanceof TextFormat) {
+            return capability == TextFormat.LEGACY;
+        }
+        return false;
+    }
+
+    private boolean supportsMinecraftFeature(MinecraftFeature minecraftFeature) {
+        switch (minecraftFeature) {
             case DISPLAY_ENTITIES:
                 return Version.afterOrEqual(Version.v1_19_R3);
         }
