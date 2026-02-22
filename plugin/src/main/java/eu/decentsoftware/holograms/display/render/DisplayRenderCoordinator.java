@@ -22,33 +22,33 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayVisibilityService;
 import eu.decentsoftware.holograms.display.TextDisplayPlayerPageManager;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 
-public class DisplayRenderingService {
+public class DisplayRenderCoordinator {
 
     private final DisplayVisibilityService visibilityService;
     private final PlatformPlayerService playerService;
-    private final DisplayRenderStateService stateService;
+    private final LogicalDisplayRenderStateBuilder logicalDisplayRenderStateBuilder;
     private final DisplayRenderService renderService;
-    private final TextDisplayPlayerPageManager pageManager;
+    private final TextDisplayPlayerPageManager playerPageManager;
     private final LogicalDisplayRenderStateManager logicalDisplayRenderStateManager;
 
-    public DisplayRenderingService(DisplayVisibilityService visibilityService,
-                                   PlatformPlayerService playerService,
-                                   DisplayRenderStateService stateService,
-                                   DisplayRenderService renderService,
-                                   TextDisplayPlayerPageManager pageManager,
-                                   LogicalDisplayRenderStateManager logicalDisplayRenderStateManager) {
+    public DisplayRenderCoordinator(DisplayVisibilityService visibilityService,
+                                    PlatformPlayerService playerService,
+                                    LogicalDisplayRenderStateBuilder logicalDisplayRenderStateBuilder,
+                                    DisplayRenderService renderService,
+                                    TextDisplayPlayerPageManager playerPageManager,
+                                    LogicalDisplayRenderStateManager logicalDisplayRenderStateManager) {
         this.visibilityService = visibilityService;
         this.playerService = playerService;
-        this.stateService = stateService;
+        this.logicalDisplayRenderStateBuilder = logicalDisplayRenderStateBuilder;
         this.renderService = renderService;
-        this.pageManager = pageManager;
+        this.playerPageManager = playerPageManager;
         this.logicalDisplayRenderStateManager = logicalDisplayRenderStateManager;
     }
 
@@ -104,7 +104,7 @@ public class DisplayRenderingService {
             DisplayRenderContext context = getDisplayRenderContext(display, player);
             LogicalDisplayRenderState state;
             if (visible) {
-                state = stateService.buildRenderState(display, context);
+                state = logicalDisplayRenderStateBuilder.buildRenderState(display, context);
                 state.setChanged(true);
             } else {
                 state = null;
@@ -141,7 +141,7 @@ public class DisplayRenderingService {
     }
 
     private DisplayRenderContext getDisplayRenderContext(DisplayBase display, PlatformPlayer player) {
-        int page = pageManager.getPage(display.getName(), player.getUniqueId());
+        int page = playerPageManager.getPage(display.getName(), player.getUniqueId());
         return new DisplayRenderContext(player, page);
     }
 }

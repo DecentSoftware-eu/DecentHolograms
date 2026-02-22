@@ -29,11 +29,11 @@ import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 
-public class DisplayRenderStateService {
+public class LogicalDisplayRenderStateBuilder {
 
     private final DisplayTypeRegistry displayTypeRegistry;
 
-    public DisplayRenderStateService(DisplayTypeRegistry displayTypeRegistry) {
+    public LogicalDisplayRenderStateBuilder(DisplayTypeRegistry displayTypeRegistry) {
         this.displayTypeRegistry = displayTypeRegistry;
     }
 

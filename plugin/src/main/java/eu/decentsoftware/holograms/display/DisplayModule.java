@@ -88,14 +88,14 @@ import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSeriali
 import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderDiffService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
-import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.DisplayRenderStateService;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
@@ -154,11 +154,11 @@ public class DisplayModule {
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter.getRenderService(), renderStateManager, postProcessingService);
-        DisplayRenderStateService stateService = new DisplayRenderStateService(displayTypeRegistry);
+        LogicalDisplayRenderStateBuilder stateService = new LogicalDisplayRenderStateBuilder(displayTypeRegistry);
         LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
         this.playerPageManager = new TextDisplayPlayerPageManager();
-        DisplayRenderingService renderingService = new DisplayRenderingService(
+        DisplayRenderCoordinator renderCoordinator = new DisplayRenderCoordinator(
                 visibilityService, playerService, stateService, renderService, playerPageManager, logicalDisplayRenderStateManager);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
@@ -168,7 +168,7 @@ public class DisplayModule {
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
-        this.displayService = new DisplayService(persistenceService, renderingService, playerPageManager);
+        this.displayService = new DisplayService(persistenceService, renderCoordinator, playerPageManager);
         this.displayListener = new DisplayListener(displayService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
@@ -180,7 +180,7 @@ public class DisplayModule {
         DisplayAttributeService displayAttributeService = new DisplayAttributeService(attributeDefinitionRegistry);
         this.displaysCommand = new DisplaysCommand(
                 displayService, displayCloneService, attributeCommandService, attributeDefaultService, displayAttributeService);
-        this.displayUpdateScheduler = new DisplayUpdateScheduler(displayService, renderingService);
+        this.displayUpdateScheduler = new DisplayUpdateScheduler(displayService, renderCoordinator);
     }
 
     private AttributeCommandHandlerRegistry createCommandHandlerRegistry(DisplayPlaceholderService placeholderService) {

@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LogicalDisplayRenderState {
+public final class LogicalDisplayRenderState {
 
     private final String id;
     private DisplayType displayType;

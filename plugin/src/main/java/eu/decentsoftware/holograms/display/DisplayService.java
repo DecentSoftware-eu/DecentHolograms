@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
-import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
@@ -35,20 +35,20 @@ import java.util.stream.Collectors;
 public class DisplayService {
 
     private final DisplayPersistenceService persistenceService;
-    private final DisplayRenderingService renderingService;
+    private final DisplayRenderCoordinator renderCoordinator;
     private final TextDisplayPlayerPageManager playerPageManager;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
     public DisplayService(DisplayPersistenceService persistenceService,
-                          DisplayRenderingService renderingService,
+                          DisplayRenderCoordinator renderCoordinator,
                           TextDisplayPlayerPageManager playerPageManager) {
         this.persistenceService = persistenceService;
-        this.renderingService = renderingService;
+        this.renderCoordinator = renderCoordinator;
         this.playerPageManager = playerPageManager;
     }
 
     public void shutdown() {
-        this.displays.values().forEach(renderingService::hideForEveryone);
+        this.displays.values().forEach(renderCoordinator::hideForEveryone);
         this.displays.clear();
     }
 
@@ -60,7 +60,7 @@ public class DisplayService {
             List<DisplayBase> loadedDisplays = persistenceService.loadAllDisplays();
             for (DisplayBase display : loadedDisplays) {
                 registerDisplay(display);
-                renderingService.updateVisibility(display);
+                renderCoordinator.updateVisibility(display);
             }
             Log.info("Loaded %d displays!", loadedDisplays.size());
         } catch (DisplayConfigException e) {
@@ -86,22 +86,22 @@ public class DisplayService {
         if (removedDisplay == null) {
             return false;
         }
-        renderingService.hideForEveryone(removedDisplay);
+        renderCoordinator.hideForEveryone(removedDisplay);
         persistenceService.deleteDisplay(removedDisplay);
         return true;
     }
 
     public void updateDisplayVisibility(DisplayBase display) {
-        renderingService.updateVisibility(display);
+        renderCoordinator.updateVisibility(display);
     }
 
     public void updateDisplay(DisplayBase displayBase) {
-        renderingService.update(displayBase);
+        renderCoordinator.update(displayBase);
     }
 
     public void hideDisplaysForPlayer(PlatformPlayer player) {
         displays.values().forEach(display -> {
-            renderingService.hideDisplayForPlayer(display, player);
+            renderCoordinator.hideDisplayForPlayer(display, player);
             playerPageManager.clearPage(display.getName(), player.getUniqueId());
         });
     }

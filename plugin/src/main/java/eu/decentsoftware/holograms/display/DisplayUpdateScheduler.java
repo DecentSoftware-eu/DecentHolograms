@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.display;
 
 import eu.decentsoftware.holograms.api.utils.Log;
-import eu.decentsoftware.holograms.display.render.DisplayRenderingService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,11 +43,11 @@ public class DisplayUpdateScheduler {
 
     private final ScheduledExecutorService executor;
     private final DisplayService displayService;
-    private final DisplayRenderingService renderingService;
+    private final DisplayRenderCoordinator renderCoordinator;
 
-    public DisplayUpdateScheduler(DisplayService displayService, DisplayRenderingService renderingService) {
+    public DisplayUpdateScheduler(DisplayService displayService, DisplayRenderCoordinator renderCoordinator) {
         this.displayService = displayService;
-        this.renderingService = renderingService;
+        this.renderCoordinator = renderCoordinator;
         this.executor = Executors.newSingleThreadScheduledExecutor(this::createThread);
     }
 
@@ -98,7 +98,7 @@ public class DisplayUpdateScheduler {
     private void tickLogicalStates(long currentTime) {
         for (DisplayBase display : displayService.getRegisteredDisplays()) {
             if (shouldUpdateLogicalState(display, currentTime)) {
-                renderingService.update(display);
+                renderCoordinator.update(display);
                 display.setLastLogicalUpdateMs(System.currentTimeMillis());
             }
         }
@@ -106,13 +106,13 @@ public class DisplayUpdateScheduler {
 
     private void tickVisibility() {
         for (DisplayBase display : displayService.getRegisteredDisplays()) {
-            renderingService.updateVisibility(display);
+            renderCoordinator.updateVisibility(display);
         }
     }
 
     private void tickPostProcessing() {
         for (DisplayBase display : displayService.getRegisteredDisplays()) {
-            renderingService.postProcess(display);
+            renderCoordinator.postProcess(display);
         }
     }
 
