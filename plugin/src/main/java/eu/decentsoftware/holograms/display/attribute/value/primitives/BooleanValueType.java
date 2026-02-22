@@ -48,7 +48,10 @@ public final class BooleanValueType implements AttributeValueType<BooleanValue, 
 
     @Override
     public BooleanValue deserialize(ConfigurationNode node) throws SerializationException {
-        boolean value = node.getBoolean(false);
+        Boolean value = node.get(Boolean.class);
+        if (value == null) {
+            throw new SerializationException("value is missing");
+        }
         return BooleanValue.of(value);
     }
 }

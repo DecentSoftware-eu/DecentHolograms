@@ -48,7 +48,10 @@ public final class IntegerValueType implements AttributeValueType<IntegerValue, 
 
     @Override
     public IntegerValue deserialize(ConfigurationNode node) throws SerializationException {
-        int value = node.getInt();
+        Integer value = node.get(Integer.class);
+        if (value == null) {
+            throw new SerializationException("value is missing");
+        }
         return new IntegerValue(value);
     }
 }

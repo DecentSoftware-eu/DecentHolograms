@@ -51,11 +51,20 @@ public final class RgbaValueType implements AttributeValueType<RgbaValue, Decent
     }
 
     @Override
-    public RgbaValue deserialize(ConfigurationNode node) {
-        int red = node.node("red").getInt(0);
-        int green = node.node("green").getInt(0);
-        int blue = node.node("blue").getInt(0);
-        Integer alpha = node.node("alpha").getInt();
+    public RgbaValue deserialize(ConfigurationNode node) throws SerializationException {
+        Integer red = node.node("red").get(Integer.class);
+        if (red == null) {
+            throw new SerializationException("red is missing");
+        }
+        Integer green = node.node("green").get(Integer.class);
+        if (green == null) {
+            throw new SerializationException("green is missing");
+        }
+        Integer blue = node.node("blue").get(Integer.class);
+        if (blue == null) {
+            throw new SerializationException("blue is missing");
+        }
+        Integer alpha = node.node("alpha").get(Integer.class);
         return new RgbaValue(red, green, blue, alpha);
     }
 }

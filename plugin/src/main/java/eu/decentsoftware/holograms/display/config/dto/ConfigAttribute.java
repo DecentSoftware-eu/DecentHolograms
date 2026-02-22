@@ -19,12 +19,20 @@
 package eu.decentsoftware.holograms.display.config.dto;
 
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
 public class ConfigAttribute {
+    /**
+     * Marker for invalid attributes.
+     *
+     * <p>This marker is returned by {@link ConfigAttributeSerializer} when an attribute is invalid and cannot be loaded.
+     * Invalid attributes are skipped during deserialization, and a warning is logged.</p>
+     */
+    public static final ConfigAttribute INVALID = new ConfigAttribute();
     @Setting("value-type")
     @Required
     private String valueType;

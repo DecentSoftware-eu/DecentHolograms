@@ -51,9 +51,18 @@ public final class Vector3fValueType implements AttributeValueType<Vector3fValue
 
     @Override
     public Vector3fValue deserialize(ConfigurationNode node) throws SerializationException {
-        float x = node.node("x").getFloat();
-        float y = node.node("y").getFloat();
-        float z = node.node("z").getFloat();
+        Float x = node.node("x").get(Float.class);
+        if (x == null) {
+            throw new SerializationException("x is missing");
+        }
+        Float y = node.node("y").get(Float.class);
+        if (y == null) {
+            throw new SerializationException("y is missing");
+        }
+        Float z = node.node("z").get(Float.class);
+        if (z == null) {
+            throw new SerializationException("z is missing");
+        }
         return new Vector3fValue(x, y, z);
     }
 }

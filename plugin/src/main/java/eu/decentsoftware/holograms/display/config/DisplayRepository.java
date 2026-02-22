@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.display.config;
 
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
+import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -95,11 +96,17 @@ public class DisplayRepository {
     private ConfigDisplay loadSingle(Path path) throws IOException {
         YamlConfigurationLoader loader = loaderFactory.createLoader(path);
         ConfigurationNode root = loader.load();
-        ConfigDisplay configDisplay = root.get(ConfigDisplay.class);
-        if (configDisplay != null) {
-            configDisplay.setName(getDisplayNameFromPath(path));
+        String displayName = getDisplayNameFromPath(path);
+        try {
+            ConfigAttributeSerializer.setDisplayName(displayName);
+            ConfigDisplay configDisplay = root.get(ConfigDisplay.class);
+            if (configDisplay != null) {
+                configDisplay.setName(displayName);
+            }
+            return configDisplay;
+        } finally {
+            ConfigAttributeSerializer.clearDisplayName();
         }
-        return configDisplay;
     }
 
     private String getDisplayNameFromPath(Path path) {

@@ -50,8 +50,14 @@ public final class BrightnessValueType implements AttributeValueType<BrightnessV
 
     @Override
     public BrightnessValue deserialize(ConfigurationNode node) throws SerializationException {
-        int blockLight = node.node("block-light").getInt();
-        int skyLight = node.node("sky-light").getInt();
+        Integer blockLight = node.node("block-light").get(Integer.class);
+        if (blockLight == null) {
+            throw new SerializationException("block-light is missing");
+        }
+        Integer skyLight = node.node("sky-light").get(Integer.class);
+        if (skyLight == null) {
+            throw new SerializationException("sky-light is missing");
+        }
         return new BrightnessValue(blockLight, skyLight);
     }
 }

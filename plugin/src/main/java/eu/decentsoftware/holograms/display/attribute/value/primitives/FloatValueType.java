@@ -48,7 +48,10 @@ public final class FloatValueType implements AttributeValueType<FloatValue, Floa
 
     @Override
     public FloatValue deserialize(ConfigurationNode node) throws SerializationException {
-        float value = node.getFloat();
+        Float value = node.get(Float.class);
+        if (value == null) {
+            throw new SerializationException("value is missing");
+        }
         return new FloatValue(value);
     }
 }

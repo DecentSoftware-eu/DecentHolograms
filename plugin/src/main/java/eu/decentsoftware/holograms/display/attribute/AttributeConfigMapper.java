@@ -45,6 +45,9 @@ public class AttributeConfigMapper {
     }
 
     private void attributeToDomain(DisplayBase display, String name, ConfigAttribute attribute) {
+        if (ConfigAttribute.INVALID.equals(attribute)) {
+            return;
+        }
         AttributeDefinition<?> definition = attributeDefinitionRegistry.getDefinitionByName(name);
         if (validateAttributeConfiguration(display, name, attribute, definition)) {
             setAttributeTypeSafe(display, definition, attribute);
