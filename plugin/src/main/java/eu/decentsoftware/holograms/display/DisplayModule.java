@@ -37,6 +37,9 @@ import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultShad
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultSkullTextureHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultTranslationHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultYawHandler;
+import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultRegistry;
+import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultRepository;
+import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.attribute.definition.BillboardAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.BrightnessAttributeDefinition;
@@ -86,17 +89,17 @@ import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSeria
 import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
+import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.DisplayRenderDiffService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
-import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
@@ -129,6 +132,7 @@ import java.util.List;
  * Manages the display module, including initialization, reloading, and shutdown.
  *
  * @author d0by
+ * @since 2.10.0
  */
 public class DisplayModule {
 
