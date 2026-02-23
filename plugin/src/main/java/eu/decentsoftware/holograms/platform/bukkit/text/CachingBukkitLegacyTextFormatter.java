@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.platform.bukkit.text;
 
-import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
@@ -98,7 +98,7 @@ public class CachingBukkitLegacyTextFormatter implements TextFormatter {
                 return cached;
             }
 
-            String formatted = Common.colorize(text);
+            String formatted = IridiumColorAPI.process(text);
             cache.put(text, formatted);
             return formatted;
         }

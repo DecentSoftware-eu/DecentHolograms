@@ -7,9 +7,9 @@ import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
+import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
 import eu.decentsoftware.holograms.nms.api.NmsHologramPartData;
@@ -355,7 +355,7 @@ public class HologramLine extends HologramObject {
             }
         }
 
-        return Common.colorize(string);
+        return IridiumColorAPI.processCached(string);
     }
 
     @NonNull

@@ -59,11 +59,14 @@ public class IridiumColorAPI {
      * Processes a string to add color to it.
      * Thanks to Distressing for helping with the regex <3
      *
+     * <p>This method implements a cache to re-use its outputs when possible.</p>
+     *
      * @param string The string we want to process
      * @since 1.0.0
+     * @see #process(String)
      */
     @Nonnull
-    public static String process(@Nonnull String string) {
+    public static String processCached(@Nonnull String string) {
         String result = LRU_CACHE.getResult(string);
         if (result != null) {
             return result;
@@ -74,6 +77,23 @@ public class IridiumColorAPI {
         }
         string = ChatColor.translateAlternateColorCodes('&', string);
         LRU_CACHE.put(input, string);
+        return string;
+    }
+
+    /**
+     * Processes a string to add color to it.
+     * Thanks to Distressing for helping with the regex <3
+     *
+     * @param string The string we want to process
+     * @since 1.0.0
+     * @see #processCached(String)
+     */
+    @Nonnull
+    public static String process(@Nonnull String string) {
+        for (Pattern pattern : PATTERNS) {
+            string = pattern.process(string);
+        }
+        string = ChatColor.translateAlternateColorCodes('&', string);
         return string;
     }
 
@@ -167,8 +187,8 @@ public class IridiumColorAPI {
     /**
      * Removes all color codes from the provided String, including IridiumColorAPI patterns.
      *
-     * @param string    The String which should be stripped
-     * @return          The stripped string without color codes
+     * @param string The String which should be stripped
+     * @return The stripped string without color codes
      * @since 1.0.5
      */
     @Nonnull
@@ -214,7 +234,7 @@ public class IridiumColorAPI {
         if (step <= 1) {
             return new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE};
         }
-        
+
         ChatColor[] colors = new ChatColor[step];
         int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
         int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
