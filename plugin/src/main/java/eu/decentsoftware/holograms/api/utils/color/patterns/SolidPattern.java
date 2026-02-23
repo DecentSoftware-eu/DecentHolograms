@@ -16,6 +16,10 @@ public class SolidPattern implements Pattern {
      * @return The new String with an applied pattern
      */
     public String process(String string) {
+        if (string.indexOf('#') == -1) {
+            return string;
+        }
+
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String color = matcher.group(1);
