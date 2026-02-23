@@ -22,9 +22,10 @@ import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
-import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.capability.MinecraftFeature;
 import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformAdapter;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerListener;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -80,7 +81,7 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        PlatformAdapter platformAdapter = new BukkitPlatformAdapter(nmsAdapter.getDisplayRendererFactory());
+        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(nmsAdapter.getDisplayRendererFactory());
         if (platformAdapter.getCapabilities().supports(MinecraftFeature.DISPLAY_ENTITIES)) {
             this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
             this.displayModule.initialize();
@@ -88,6 +89,8 @@ public final class DecentHolograms {
 
         pluginManager.registerEvents(new PlayerListener(this), this.plugin);
         pluginManager.registerEvents(new WorldListener(hologramManager), this.plugin);
+        BukkitPlayerService playerService = (BukkitPlayerService) platformAdapter.getPlayerService();
+        pluginManager.registerEvents(new BukkitPlayerListener(playerService), this.plugin);
 
         setupMetrics();
         checkForUpdates();

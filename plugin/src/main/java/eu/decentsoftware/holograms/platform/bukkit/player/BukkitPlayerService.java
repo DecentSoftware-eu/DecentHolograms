@@ -20,44 +20,53 @@ package eu.decentsoftware.holograms.platform.bukkit.player;
 
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BukkitPlayerService implements PlatformPlayerService {
+
+    private final List<PlatformPlayer> onlinePlayers = new CopyOnWriteArrayList<>();
+    private final Map<UUID, PlatformPlayer> playerMap = new ConcurrentHashMap<>();
 
     @Override
     public @NotNull PlatformPlayer getPlayer(@NotNull Object platformPlayer) {
         if (!(platformPlayer instanceof Player)) {
-            throw new IllegalArgumentException("Player object must be of type Player");
+            throw new IllegalArgumentException("Player object must be of type " + Player.class.getName());
+        }
+        BukkitPlayer bukkitPlayer = (BukkitPlayer) getPlayer(((Player) platformPlayer).getUniqueId());
+        if (bukkitPlayer != null) {
+            return bukkitPlayer;
         }
         return new BukkitPlayer((Player) platformPlayer);
     }
 
     @Override
     public @Nullable PlatformPlayer getPlayer(@NotNull UUID uniqueId) {
-        Player player = Bukkit.getPlayer(uniqueId);
-        if (player == null) {
-            return null;
-        }
-        return new BukkitPlayer(player);
+        return playerMap.get(uniqueId);
     }
 
     @Override
-    public @NotNull @Unmodifiable Collection<PlatformPlayer> getOnlinePlayers() {
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        List<PlatformPlayer> players = new ArrayList<>(onlinePlayers.size());
-        for (Player onlinePlayer : onlinePlayers) {
-            players.add(getPlayer(onlinePlayer));
-        }
-        return Collections.unmodifiableCollection(players);
+    public @NotNull Collection<PlatformPlayer> getOnlinePlayers() {
+        return onlinePlayers;
+    }
+
+    public void registerPlayer(Player player) {
+        BukkitPlayer bukkitPlayer = new BukkitPlayer(player);
+        onlinePlayers.add(bukkitPlayer);
+        playerMap.put(player.getUniqueId(), bukkitPlayer);
+    }
+
+    public void unregisterPlayer(Player player) {
+        BukkitPlayer bukkitPlayer = new BukkitPlayer(player);
+        onlinePlayers.remove(bukkitPlayer);
+        playerMap.remove(player.getUniqueId());
     }
 }

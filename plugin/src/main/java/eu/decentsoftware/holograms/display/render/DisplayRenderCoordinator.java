@@ -93,8 +93,8 @@ public class DisplayRenderCoordinator {
     }
 
     public void postProcess(DisplayBase display) {
-        for (PlatformPlayer onlinePlayer : playerService.getOnlinePlayers()) {
-            renderLogicalState(display, onlinePlayer);
+        for (PlatformPlayer player : playerService.getOnlinePlayers()) {
+            renderLogicalState(display, player);
         }
     }
 

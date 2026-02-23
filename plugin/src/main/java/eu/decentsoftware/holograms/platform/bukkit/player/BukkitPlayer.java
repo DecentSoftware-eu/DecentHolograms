@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class BukkitPlayer implements PlatformPlayer {
@@ -59,5 +60,19 @@ public class BukkitPlayer implements PlatformPlayer {
                 location.getYaw(),
                 location.getPitch()
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BukkitPlayer)) {
+            return false;
+        }
+        BukkitPlayer that = (BukkitPlayer) o;
+        return Objects.equals(platformPlayer.getUniqueId(), that.platformPlayer.getUniqueId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(platformPlayer.getUniqueId());
     }
 }
