@@ -22,9 +22,8 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.jetbrains.annotations.NotNull;
 
 public class TranslationAttributeDefinition implements AttributeDefinition<DecentVector3f> {
@@ -43,7 +42,7 @@ public class TranslationAttributeDefinition implements AttributeDefinition<Decen
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DecentVector3f> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.TRANSLATION.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<DecentVector3f> value, MutableRenderState state) {
+        state.setTranslation(value.evaluate());
     }
 }

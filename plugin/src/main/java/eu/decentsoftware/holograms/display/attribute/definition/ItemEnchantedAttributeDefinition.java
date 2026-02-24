@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
     }
 
     @Override
-    public void apply(CompiledAttributeValue<Boolean> value, FinalDisplayRenderState state) {
+    public void apply(CompiledAttributeValue<Boolean> value, MutableRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }

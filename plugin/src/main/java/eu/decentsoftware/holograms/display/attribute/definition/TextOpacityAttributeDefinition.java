@@ -22,9 +22,8 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.IntegerValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.jetbrains.annotations.NotNull;
 
 public class TextOpacityAttributeDefinition implements AttributeDefinition<Integer> {
@@ -48,7 +47,7 @@ public class TextOpacityAttributeDefinition implements AttributeDefinition<Integ
     }
 
     @Override
-    public void apply(CompiledAttributeValue<Integer> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<Integer> value, MutableRenderState state) {
+        state.setTextOpacity(value.evaluate());
     }
 }

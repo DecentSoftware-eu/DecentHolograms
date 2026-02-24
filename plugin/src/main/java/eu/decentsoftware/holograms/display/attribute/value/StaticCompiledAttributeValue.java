@@ -31,6 +31,7 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
 
     private static final StaticCompiledAttributeValue<?> EMPTY = new StaticCompiledAttributeValue<>(null);
     private final T value;
+    private boolean dirty;
 
     /**
      * Constructs a new {@code StaticCompiledAttributeValue} with the specified value.
@@ -40,16 +41,23 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
      */
     public StaticCompiledAttributeValue(T value) {
         this.value = value;
+        this.dirty = true;
     }
 
     @Override
     public T evaluate() {
+        dirty = false;
         return value;
     }
 
     @Override
     public boolean isStatic() {
         return true;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
     }
 
     /**

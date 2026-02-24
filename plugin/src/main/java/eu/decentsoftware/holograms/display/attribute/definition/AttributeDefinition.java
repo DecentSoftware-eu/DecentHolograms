@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,7 +124,7 @@ public interface AttributeDefinition<T> {
     }
 
     /**
-     * Apply the attribute to a {@link FinalDisplayRenderState}.
+     * Apply the attribute to a {@link MutableRenderState}.
      *
      * <p>This method may perform post-processing on the value before applying it.</p>
      *
@@ -132,7 +132,7 @@ public interface AttributeDefinition<T> {
      * @param state The render state.
      * @since 2.10.0
      */
-    void apply(CompiledAttributeValue<T> value, FinalDisplayRenderState state);
+    void apply(CompiledAttributeValue<T> value, MutableRenderState state);
 
     /**
      * Format the attribute value as a string for display purposes.

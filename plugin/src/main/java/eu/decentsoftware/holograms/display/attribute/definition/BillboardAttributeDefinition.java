@@ -22,9 +22,8 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.jetbrains.annotations.NotNull;
 
 public class BillboardAttributeDefinition implements AttributeDefinition<DisplayBillboardConstraints> {
@@ -43,7 +42,7 @@ public class BillboardAttributeDefinition implements AttributeDefinition<Display
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DisplayBillboardConstraints> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<DisplayBillboardConstraints> value, MutableRenderState state) {
+        state.setBillboardConstraints(value.evaluate());
     }
 }

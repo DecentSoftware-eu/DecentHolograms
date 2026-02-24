@@ -22,8 +22,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.FloatValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import org.jetbrains.annotations.NotNull;
 
 public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Float> {
@@ -41,7 +40,7 @@ public class ShadowRadiusAttributeDefinition implements AttributeDefinition<Floa
     }
 
     @Override
-    public void apply(CompiledAttributeValue<Float> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.SHADOW_RADIUS.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<Float> value, MutableRenderState state) {
+        state.setShadowRadius(value.evaluate());
     }
 }

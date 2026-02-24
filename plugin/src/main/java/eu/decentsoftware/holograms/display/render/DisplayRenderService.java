@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.display.render;
 
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
@@ -34,14 +34,14 @@ import java.util.UUID;
 
 public class DisplayRenderService {
 
-    private final DisplayRenderDiffService diffService;
+    private final DisplayRenderIntentMaterializer diffService;
     private final PlatformRenderService platformRenderService;
-    private final FinalDisplayRenderStateManager finalStateManager;
+    private final MutableRenderStateManager finalStateManager;
     private final DisplayPostProcessingService postProcessingService;
 
-    public DisplayRenderService(DisplayRenderDiffService diffService,
+    public DisplayRenderService(DisplayRenderIntentMaterializer diffService,
                                 PlatformRenderService platformRenderService,
-                                FinalDisplayRenderStateManager finalStateManager,
+                                MutableRenderStateManager finalStateManager,
                                 DisplayPostProcessingService postProcessingService) {
         this.diffService = diffService;
         this.platformRenderService = platformRenderService;
@@ -49,10 +49,13 @@ public class DisplayRenderService {
         this.postProcessingService = postProcessingService;
     }
 
-    public void render(RenderObjectHandle handle, LogicalDisplayRenderState state, DisplayRenderContext context) {
-        FinalDisplayRenderState currentState = postProcessingService.postProcess(state);
-        FinalDisplayRenderState previousState = getPreviousState(handle, context);
-        List<RenderIntent> intents = diffService.diff(currentState, previousState);
+    public void render(RenderObjectHandle handle, LogicalDisplayRenderState logicalState, DisplayRenderContext context) {
+        MutableRenderState previousState = getPreviousState(handle, context);
+        MutableRenderState currentState = postProcessingService.postProcess(logicalState, previousState);
+        if (currentState != null && !currentState.hasChanges()) {
+            return;
+        }
+        List<RenderIntent> intents = diffService.materializeIntents(currentState);
         if (intents.isEmpty()) {
             return; // No changes, skip rendering
         }
@@ -60,15 +63,18 @@ public class DisplayRenderService {
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_PLATFORM)) {
             platformRenderService.render(context.getPlayer(), handle, intents);
         }
-        saveCurrentState(handle, currentState, context);
+
+        if (previousState == null) {
+            saveCurrentState(handle, currentState, context);
+        }
     }
 
-    private void saveCurrentState(RenderObjectHandle handle, FinalDisplayRenderState state, DisplayRenderContext context) {
+    private void saveCurrentState(RenderObjectHandle handle, MutableRenderState state, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
         finalStateManager.setState(playerUniqueId, handle, state);
     }
 
-    private FinalDisplayRenderState getPreviousState(RenderObjectHandle handle, DisplayRenderContext context) {
+    private MutableRenderState getPreviousState(RenderObjectHandle handle, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
         return finalStateManager.getState(playerUniqueId, handle);
     }

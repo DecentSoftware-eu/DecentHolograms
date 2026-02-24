@@ -22,12 +22,9 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.TextAlignmentValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
 public class TextAlignmentAttributeDefinition implements AttributeDefinition<TextDisplayAlignment> {
@@ -51,17 +48,7 @@ public class TextAlignmentAttributeDefinition implements AttributeDefinition<Tex
     }
 
     @Override
-    public void apply(CompiledAttributeValue<TextDisplayAlignment> value, FinalDisplayRenderState state) {
-        MetadataValue<TextDisplayProperties> metadataValue = getTextDisplayPropertiesMetadataValue(state);
-        metadataValue.getValue().setAlignment(value.evaluate());
-    }
-
-    private MetadataValue<TextDisplayProperties> getTextDisplayPropertiesMetadataValue(FinalDisplayRenderState state) {
-        MetadataValue<TextDisplayProperties> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES);
-        if (metadataValue == null) {
-            metadataValue = BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(new TextDisplayProperties());
-            state.addMetadata(metadataValue);
-        }
-        return metadataValue;
+    public void apply(CompiledAttributeValue<TextDisplayAlignment> value, MutableRenderState state) {
+        state.setTextAlignment(value.evaluate());
     }
 }

@@ -24,20 +24,20 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FinalDisplayRenderStateManager {
+public class MutableRenderStateManager {
 
-    private final Map<UUID, Map<String, FinalDisplayRenderState>> states = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<String, MutableRenderState>> states = new ConcurrentHashMap<>();
 
-    public FinalDisplayRenderState getState(UUID playerUniqueId, RenderObjectHandle handle) {
-        Map<String, FinalDisplayRenderState> stateMap = states.get(playerUniqueId);
+    public MutableRenderState getState(UUID playerUniqueId, RenderObjectHandle handle) {
+        Map<String, MutableRenderState> stateMap = states.get(playerUniqueId);
         if (stateMap == null) {
             return null;
         }
         return stateMap.get(handle.getId());
     }
 
-    public void setState(UUID playerUniqueId, RenderObjectHandle handle, FinalDisplayRenderState state) {
-        Map<String, FinalDisplayRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
+    public void setState(UUID playerUniqueId, RenderObjectHandle handle, MutableRenderState state) {
+        Map<String, MutableRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
         if (state == null) {
             playerStates.remove(handle.getId());
             if (playerStates.isEmpty()) {

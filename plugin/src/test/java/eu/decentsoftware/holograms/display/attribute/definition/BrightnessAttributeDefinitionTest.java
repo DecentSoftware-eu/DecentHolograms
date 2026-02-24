@@ -22,17 +22,15 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BrightnessValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -76,15 +74,11 @@ class BrightnessAttributeDefinitionTest {
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBrightness value, DisplayBrightness expectedValue) {
         CompiledAttributeValue<DisplayBrightness> attribute = new StaticCompiledAttributeValue<>(value);
-        FinalDisplayRenderState state = new FinalDisplayRenderState("id");
+        MutableRenderState state = new MutableRenderState("id", DisplayType.TEXT);
 
         definition.apply(attribute, state);
 
-        assertEquals(1, state.getMetadataValues().size());
-        MetadataValue<DisplayBrightness> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.BRIGHTNESS);
-        assertNotNull(metadataValue);
-        assertDisplayBrightness(expectedValue, metadataValue.getValue());
-        assertFalse(metadataValue.isAnimated());
+        assertDisplayBrightness(expectedValue, value);
     }
 
     @Test

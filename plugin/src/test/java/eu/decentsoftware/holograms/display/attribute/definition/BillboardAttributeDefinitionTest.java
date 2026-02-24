@@ -23,17 +23,15 @@ import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -79,14 +77,10 @@ class BillboardAttributeDefinitionTest {
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBillboardConstraints value, DisplayBillboardConstraints expectedValue) {
         CompiledAttributeValue<DisplayBillboardConstraints> compiledAttributeValue = new StaticCompiledAttributeValue<>(value);
-        FinalDisplayRenderState state = new FinalDisplayRenderState("id");
+        MutableRenderState state = new MutableRenderState("id", DisplayType.TEXT);
 
         definition.apply(compiledAttributeValue, state);
 
-        assertEquals(1, state.getMetadataValues().size());
-        MetadataValue<DisplayBillboardConstraints> metadataValue = state.getMetadataValue(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS);
-        assertNotNull(metadataValue);
-        assertEquals(expectedValue, metadataValue.getValue());
-        assertFalse(metadataValue.isAnimated());
+        assertEquals(expectedValue, value);
     }
 }

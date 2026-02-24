@@ -90,7 +90,7 @@ import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSe
 import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
-import eu.decentsoftware.holograms.display.render.DisplayRenderDiffService;
+import eu.decentsoftware.holograms.display.render.DisplayRenderIntentMaterializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
@@ -98,7 +98,7 @@ import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProc
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
@@ -148,8 +148,8 @@ public class DisplayModule {
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
-        DisplayRenderDiffService renderDiffService = new DisplayRenderDiffService();
-        FinalDisplayRenderStateManager renderStateManager = new FinalDisplayRenderStateManager();
+        DisplayRenderIntentMaterializer renderDiffService = new DisplayRenderIntentMaterializer();
+        MutableRenderStateManager renderStateManager = new MutableRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
         this.textFormatter = new CachingBukkitLegacyTextFormatter();

@@ -21,9 +21,8 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.jetbrains.annotations.NotNull;
 
 public class BrightnessAttributeDefinition implements AttributeDefinition<DisplayBrightness> {
@@ -41,7 +40,7 @@ public class BrightnessAttributeDefinition implements AttributeDefinition<Displa
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DisplayBrightness> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.BRIGHTNESS.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<DisplayBrightness> value, MutableRenderState state) {
+        state.setBrightness(value.evaluate());
     }
 }

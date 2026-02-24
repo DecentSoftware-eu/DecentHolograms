@@ -85,4 +85,19 @@ public interface CompiledAttributeValue<T> {
     default boolean isStatic() {
         return false;
     }
+
+    /**
+     * Checks if this attribute's value has changed since the last evaluation.
+     *
+     * <p>For static values, this always returns false after the first evaluation.
+     * For animated values, this checks if the current frame produces a different
+     * value than the previous frame.</p>
+     *
+     * <p>This method MUST be called before {@link #evaluate()} to determine if
+     * re-evaluation is necessary. The rendering pipeline uses this to skip
+     * unnecessary work.</p>
+     *
+     * @return true if the value has changed and needs re-evaluation
+     */
+    boolean isDirty();
 }

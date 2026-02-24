@@ -22,10 +22,9 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValue;
-import eu.decentsoftware.holograms.display.render.state.FinalDisplayRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
 import org.jetbrains.annotations.NotNull;
 
 public class TextBackgroundColorAttributeDefinition implements AttributeDefinition<DecentColor> {
@@ -49,7 +48,7 @@ public class TextBackgroundColorAttributeDefinition implements AttributeDefiniti
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DecentColor> value, FinalDisplayRenderState state) {
-        state.addMetadata(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(value.evaluate()));
+    public void apply(CompiledAttributeValue<DecentColor> value, MutableRenderState state) {
+        state.setTextBackgroundColor(value.evaluate());
     }
 }

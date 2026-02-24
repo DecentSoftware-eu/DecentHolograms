@@ -30,16 +30,16 @@ public final class TextDisplayProperties {
         return hasShadow;
     }
 
-    public void setHasShadow(boolean hasShadow) {
-        this.hasShadow = hasShadow;
+    public void setHasShadow(Boolean hasShadow) {
+        this.hasShadow = hasShadow != null && hasShadow;
     }
 
     public boolean isSeeThrough() {
         return seeThrough;
     }
 
-    public void setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
+    public void setSeeThrough(Boolean seeThrough) {
+        this.seeThrough = seeThrough != null && seeThrough;
     }
 
     public TextDisplayAlignment getAlignment() {
