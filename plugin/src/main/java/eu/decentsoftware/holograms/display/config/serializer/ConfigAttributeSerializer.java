@@ -101,7 +101,7 @@ public final class ConfigAttributeSerializer implements TypeSerializer<ConfigAtt
         }
 
         node.node("value-type").set(attribute.getValueType());
-        ConfigurationNode valueNode = getValueNode(node);
+        ConfigurationNode valueNode = node.node("value");
         attributeValueSerializer.serialize(attribute.getValueType(), attribute.getValue(), valueNode);
     }
 }
