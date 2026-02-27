@@ -40,5 +40,6 @@ public class BlockDisplay extends DisplayBase {
 
     public void setMaterial(String material) {
         this.material = material;
+        markContentDirty();
     }
 }

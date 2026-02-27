@@ -43,9 +43,13 @@ public class LogicalRenderStateBuilder {
         }
 
         currentState.setLocation(display.getLocation());
-        applyContent(display, currentState, context);
-        currentState.clearAttributes();
-        applyAttributes(display, currentState, context);
+        if (display.checkContentDirty()) {
+            applyContent(display, currentState, context);
+        }
+        if (display.checkConfigDirty()) {
+            currentState.clearAttributes();
+            applyAttributes(display, currentState, context);
+        }
 
         return currentState;
     }

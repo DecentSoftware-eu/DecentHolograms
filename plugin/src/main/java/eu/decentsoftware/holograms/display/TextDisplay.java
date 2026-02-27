@@ -41,27 +41,33 @@ public class TextDisplay extends DisplayBase {
 
     public void addLine(String line) {
         this.lines.add(line);
+        markContentDirty();
     }
 
     public void addLine(int index, String line) {
         this.lines.add(index, line);
+        markContentDirty();
     }
 
     public void setLine(int index, String line) {
         this.lines.set(index, line);
+        markContentDirty();
     }
 
     public void removeLine(int index) {
         this.lines.remove(index);
+        markContentDirty();
     }
 
     public void setLines(List<String> lines) {
         this.lines.clear();
         this.lines.addAll(lines);
+        markContentDirty();
     }
 
     public void swapLines(int index1, int index2) {
         Collections.swap(this.lines, index1, index2);
+        markContentDirty();
     }
 
     public List<String> getLines() {

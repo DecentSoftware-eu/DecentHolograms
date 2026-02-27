@@ -37,6 +37,8 @@ public abstract class DisplayBase {
     protected Map<AttributeKey<?>, DisplayAttribute<?>> attributes = new ConcurrentHashMap<>();
 
     private transient final AtomicLong lastLogicalUpdateMs = new AtomicLong(0);
+    private transient volatile boolean configDirty = true;
+    private transient volatile boolean contentDirty = true;
 
     protected DisplayBase(String name, DecentLocation location, DisplaySettings settings) {
         this.name = name;
@@ -56,6 +58,7 @@ public abstract class DisplayBase {
 
     public void setLocation(DecentLocation location) {
         this.location = location;
+        markConfigDirty();
     }
 
     public DisplaySettings getSettings() {
@@ -68,6 +71,7 @@ public abstract class DisplayBase {
 
     public <T> void setAttribute(AttributeKey<T> key, DisplayAttribute<T> attribute) {
         attributes.put(key, attribute);
+        markConfigDirty();
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +86,7 @@ public abstract class DisplayBase {
     public void setAttributes(Map<AttributeKey<?>, DisplayAttribute<?>> attributes) {
         this.attributes.clear();
         this.attributes.putAll(attributes);
+        markConfigDirty();
     }
 
     public Map<AttributeKey<?>, DisplayAttribute<?>> getAttributesMap() {
@@ -98,5 +103,29 @@ public abstract class DisplayBase {
 
     public void setLastLogicalUpdateMs(long lastLogicalUpdateMs) {
         this.lastLogicalUpdateMs.set(lastLogicalUpdateMs);
+    }
+
+    public void markContentDirty() {
+        contentDirty = true;
+    }
+
+    public void markConfigDirty() {
+        configDirty = true;
+    }
+
+    public boolean checkContentDirty() {
+        if (contentDirty) {
+            contentDirty = false;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkConfigDirty() {
+        if (configDirty) {
+            configDirty = false;
+            return true;
+        }
+        return false;
     }
 }
