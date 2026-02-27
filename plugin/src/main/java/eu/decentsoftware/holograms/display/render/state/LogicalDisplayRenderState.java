@@ -30,13 +30,14 @@ import java.util.Map;
 public final class LogicalDisplayRenderState {
 
     private final String id;
-    private DisplayType displayType;
+    private final DisplayType displayType;
     private DecentLocation location;
     private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
     private DisplayContent<?> content;
 
-    public LogicalDisplayRenderState(String id) {
+    public LogicalDisplayRenderState(String id, DisplayType displayType) {
         this.id = id;
+        this.displayType = displayType;
     }
 
     public String getId() {
@@ -45,10 +46,6 @@ public final class LogicalDisplayRenderState {
 
     public DisplayType getDisplayType() {
         return displayType;
-    }
-
-    public void setDisplayType(DisplayType displayType) {
-        this.displayType = displayType;
     }
 
     public DecentLocation getLocation() {
@@ -65,6 +62,10 @@ public final class LogicalDisplayRenderState {
 
     public Map<AttributeKey<?>, CompiledAttributeValue<?>> getAttributeValues() {
         return attributeValues;
+    }
+
+    public void clearAttributes() {
+        attributeValues.clear();
     }
 
     public DisplayContent<?> getContent() {

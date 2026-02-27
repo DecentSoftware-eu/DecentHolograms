@@ -102,15 +102,18 @@ public class DisplayRenderCoordinator {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
+            LogicalDisplayRenderState currentState = logicalDisplayRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
             LogicalDisplayRenderState state;
             if (visible) {
-                state = logicalDisplayRenderStateBuilder.buildRenderState(display, context);
+                state = logicalDisplayRenderStateBuilder.updateState(display, context, currentState);
             } else {
                 state = null;
                 renderService.render(handle, null, context);
             }
 
-            logicalDisplayRenderStateManager.updateState(handle.getId(), context.getPlayer().getUniqueId(), state);
+            if (currentState == null || state == null) {
+                logicalDisplayRenderStateManager.updateState(handle.getId(), context.getPlayer().getUniqueId(), state);
+            }
         } catch (Exception e) {
             Log.warn("Failed to update logical state of display '%s' for player '%s'.", e, display.getName(), player.getName());
         }

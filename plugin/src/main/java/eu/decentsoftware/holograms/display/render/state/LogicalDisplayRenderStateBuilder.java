@@ -37,9 +37,21 @@ public class LogicalDisplayRenderStateBuilder {
         this.displayTypeRegistry = displayTypeRegistry;
     }
 
-    public LogicalDisplayRenderState buildRenderState(DisplayBase display, DisplayRenderContext context) {
-        LogicalDisplayRenderState state = new LogicalDisplayRenderState(display.getName());
-        state.setDisplayType(display.getType());
+    public LogicalDisplayRenderState updateState(DisplayBase display, DisplayRenderContext context, LogicalDisplayRenderState currentState) {
+        if (currentState == null) {
+            return createNewLogicalDisplayRenderState(display, context);
+        }
+
+        currentState.setLocation(display.getLocation());
+        applyContent(display, currentState, context);
+        currentState.clearAttributes();
+        applyAttributes(display, currentState, context);
+
+        return currentState;
+    }
+
+    private LogicalDisplayRenderState createNewLogicalDisplayRenderState(DisplayBase display, DisplayRenderContext context) {
+        LogicalDisplayRenderState state = new LogicalDisplayRenderState(display.getName(), display.getType());
         state.setLocation(display.getLocation());
         applyContent(display, state, context);
         applyAttributes(display, state, context);
