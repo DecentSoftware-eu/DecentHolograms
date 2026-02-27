@@ -23,7 +23,7 @@ import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +77,7 @@ class BillboardAttributeDefinitionTest {
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBillboardConstraints value, DisplayBillboardConstraints expectedValue) {
         CompiledAttributeValue<DisplayBillboardConstraints> compiledAttributeValue = new StaticCompiledAttributeValue<>(value);
-        MutableRenderState state = new MutableRenderState("id", DisplayType.TEXT);
+        PresentedRenderState state = new PresentedRenderState("id", DisplayType.TEXT);
 
         definition.apply(compiledAttributeValue, state);
 

@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class PitchAttributeDefinition implements AttributeDefinition<Float> {
     }
 
     @Override
-    public void apply(CompiledAttributeValue<Float> value, MutableRenderState state) {
+    public void apply(CompiledAttributeValue<Float> value, PresentedRenderState state) {
         Float finalValue = value.evaluate();
         if (finalValue != null) {
             DecentLocation location = state.getLocation();

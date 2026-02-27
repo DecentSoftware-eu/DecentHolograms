@@ -18,5 +18,5 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-public final class LogicalDisplayRenderStateManager extends AbstractRenderStateManager<LogicalDisplayRenderState> {
+public final class PresentedRenderStateManager extends AbstractRenderStateManager<PresentedRenderState> {
 }

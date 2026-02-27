@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +41,7 @@ public class GlowColorAttributeDefinition implements AttributeDefinition<DecentC
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DecentColor> value, MutableRenderState state) {
+    public void apply(CompiledAttributeValue<DecentColor> value, PresentedRenderState state) {
         state.setGlowColor(value.evaluate());
     }
 

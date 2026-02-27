@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class LogicalDisplayRenderState {
+public final class LogicalRenderState {
 
     private final String id;
     private final DisplayType displayType;
@@ -35,7 +35,7 @@ public final class LogicalDisplayRenderState {
     private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
     private DisplayContent<?> content;
 
-    public LogicalDisplayRenderState(String id, DisplayType displayType) {
+    public LogicalRenderState(String id, DisplayType displayType) {
         this.id = id;
         this.displayType = displayType;
     }

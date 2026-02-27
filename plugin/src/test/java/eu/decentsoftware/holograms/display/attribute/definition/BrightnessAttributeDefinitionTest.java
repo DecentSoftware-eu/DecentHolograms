@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BrightnessValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +74,7 @@ class BrightnessAttributeDefinitionTest {
     @MethodSource("provideValuesForApply")
     void testApply(DisplayBrightness value, DisplayBrightness expectedValue) {
         CompiledAttributeValue<DisplayBrightness> attribute = new StaticCompiledAttributeValue<>(value);
-        MutableRenderState state = new MutableRenderState("id", DisplayType.TEXT);
+        PresentedRenderState state = new PresentedRenderState("id", DisplayType.TEXT);
 
         definition.apply(attribute, state);
 

@@ -22,8 +22,8 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
 import eu.decentsoftware.holograms.profiler.Metrics;
 import eu.decentsoftware.holograms.profiler.TimerHandle;
@@ -41,13 +41,13 @@ public class DisplayPostProcessingService {
         this.contentPostProcessingService = contentPostProcessingService;
     }
 
-    public MutableRenderState postProcess(LogicalDisplayRenderState logicalState, MutableRenderState mutableState) {
+    public PresentedRenderState postProcess(LogicalRenderState logicalState, PresentedRenderState mutableState) {
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS)) {
             return postProcessInternal(logicalState, mutableState);
         }
     }
 
-    private MutableRenderState postProcessInternal(LogicalDisplayRenderState logicalState, MutableRenderState mutableState) {
+    private PresentedRenderState postProcessInternal(LogicalRenderState logicalState, PresentedRenderState mutableState) {
         if (logicalState == null) {
             return null;
         }
@@ -66,19 +66,19 @@ public class DisplayPostProcessingService {
         return mutableState;
     }
 
-    private MutableRenderState createMutableRenderState(LogicalDisplayRenderState logicalState) {
-        MutableRenderState state = new MutableRenderState(logicalState.getId(), logicalState.getDisplayType());
+    private PresentedRenderState createMutableRenderState(LogicalRenderState logicalState) {
+        PresentedRenderState state = new PresentedRenderState(logicalState.getId(), logicalState.getDisplayType());
         state.setLocation(logicalState.getLocation());
         applyContent(logicalState, state);
         applyAttributes(logicalState, state);
         return state;
     }
 
-    private void applyContent(LogicalDisplayRenderState logicalState, MutableRenderState mutableState) {
+    private void applyContent(LogicalRenderState logicalState, PresentedRenderState mutableState) {
         mutableState.setContent(contentPostProcessingService.postProcessContent(logicalState.getDisplayType(), logicalState.getContent()));
     }
 
-    private void applyDirtyAttributes(LogicalDisplayRenderState logicalState, MutableRenderState mutableState) {
+    private void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState mutableState) {
         Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
         for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
             CompiledAttributeValue<?> value = entry.getValue();
@@ -88,7 +88,7 @@ public class DisplayPostProcessingService {
         }
     }
 
-    private void applyAttributes(LogicalDisplayRenderState logicalState, MutableRenderState mutableState) {
+    private void applyAttributes(LogicalRenderState logicalState, PresentedRenderState mutableState) {
         Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
         for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
             applyAttribute(entry.getKey(), entry.getValue(), mutableState);
@@ -96,7 +96,7 @@ public class DisplayPostProcessingService {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, MutableRenderState mutableState) {
+    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, PresentedRenderState mutableState) {
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
             definition.apply((CompiledAttributeValue<T>) attributeValue, mutableState);

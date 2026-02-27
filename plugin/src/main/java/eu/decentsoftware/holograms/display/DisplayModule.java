@@ -98,9 +98,9 @@ import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProc
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateBuilder;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.display.type.ItemDisplayTypeDefinition;
@@ -148,7 +148,7 @@ public class DisplayModule {
         this.plugin = plugin;
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
         DisplayRenderIntentMaterializer renderDiffService = new DisplayRenderIntentMaterializer();
-        MutableRenderStateManager renderStateManager = new MutableRenderStateManager();
+        PresentedRenderStateManager renderStateManager = new PresentedRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
         this.textFormatter = new CachingBukkitLegacyTextFormatter();
@@ -157,11 +157,11 @@ public class DisplayModule {
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
         DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter.getRenderService(), renderStateManager, postProcessingService);
-        LogicalDisplayRenderStateBuilder stateService = new LogicalDisplayRenderStateBuilder(displayTypeRegistry);
-        LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
+        LogicalRenderStateBuilder stateService = new LogicalRenderStateBuilder(displayTypeRegistry);
+        LogicalRenderStateManager logicalRenderStateManager = new LogicalRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
         DisplayRenderCoordinator renderCoordinator = new DisplayRenderCoordinator(
-                visibilityService, playerService, stateService, renderService, logicalDisplayRenderStateManager);
+                visibilityService, playerService, stateService, renderService, logicalRenderStateManager);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
         YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));

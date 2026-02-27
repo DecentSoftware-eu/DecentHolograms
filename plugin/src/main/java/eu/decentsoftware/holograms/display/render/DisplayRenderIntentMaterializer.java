@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.render;
 
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.display.render.state.MutableStateField;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayProperties;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
@@ -42,13 +42,13 @@ import java.util.Map;
 
 public class DisplayRenderIntentMaterializer {
 
-    public List<RenderIntent> materializeIntents(MutableRenderState state) {
+    public List<RenderIntent> materializeIntents(PresentedRenderState state) {
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_DIFF)) {
             return materializeIntentsInternal(state);
         }
     }
 
-    private List<RenderIntent> materializeIntentsInternal(MutableRenderState state) {
+    private List<RenderIntent> materializeIntentsInternal(PresentedRenderState state) {
         if (state == null) {
             return Collections.singletonList(new DespawnDisplayRenderIntent());
         }
@@ -107,7 +107,7 @@ public class DisplayRenderIntentMaterializer {
         return new UpdateMetadataRenderIntent<>(key, key.createValue(value));
     }
 
-    private Map<MetadataKey<?>, MetadataValue<?>> getFullMetadata(MutableRenderState state) {
+    private Map<MetadataKey<?>, MetadataValue<?>> getFullMetadata(PresentedRenderState state) {
         Map<MetadataKey<?>, MetadataValue<?>> metadata = new HashMap<>();
         if (state.getBillboardConstraints() != null) {
             metadata.put(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS, BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(state.getBillboardConstraints()));

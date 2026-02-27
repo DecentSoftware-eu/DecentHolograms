@@ -31,7 +31,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignmen
 import java.util.EnumSet;
 import java.util.Set;
 
-public class MutableRenderState {
+public class PresentedRenderState {
 
     private final String id;
     private final DisplayType displayType;
@@ -57,7 +57,7 @@ public class MutableRenderState {
     private final EnumSet<MutableStateField> dirtyFields = EnumSet.noneOf(MutableStateField.class);
     private boolean isNew = true;
 
-    public MutableRenderState(String id, DisplayType displayType) {
+    public PresentedRenderState(String id, DisplayType displayType) {
         this.id = id;
         this.displayType = displayType;
     }

@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.BooleanValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class TextShadowAttributeDefinition implements AttributeDefinition<Boolea
     }
 
     @Override
-    public void apply(CompiledAttributeValue<Boolean> value, MutableRenderState state) {
+    public void apply(CompiledAttributeValue<Boolean> value, PresentedRenderState state) {
         state.setTextShadow(value.evaluate());
     }
 }

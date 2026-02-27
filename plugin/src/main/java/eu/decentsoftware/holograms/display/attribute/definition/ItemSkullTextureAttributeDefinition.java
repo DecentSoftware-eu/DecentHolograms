@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.attribute.definition;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
     }
 
     @Override
-    public void apply(CompiledAttributeValue<String> value, MutableRenderState state) {
+    public void apply(CompiledAttributeValue<String> value, PresentedRenderState state) {
         if (!(state.getContent() instanceof ItemDisplayContent)) {
             return;
         }

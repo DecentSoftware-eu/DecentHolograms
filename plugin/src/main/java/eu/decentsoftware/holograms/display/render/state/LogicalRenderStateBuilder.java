@@ -29,15 +29,15 @@ import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 
-public class LogicalDisplayRenderStateBuilder {
+public class LogicalRenderStateBuilder {
 
     private final DisplayTypeRegistry displayTypeRegistry;
 
-    public LogicalDisplayRenderStateBuilder(DisplayTypeRegistry displayTypeRegistry) {
+    public LogicalRenderStateBuilder(DisplayTypeRegistry displayTypeRegistry) {
         this.displayTypeRegistry = displayTypeRegistry;
     }
 
-    public LogicalDisplayRenderState updateState(DisplayBase display, DisplayRenderContext context, LogicalDisplayRenderState currentState) {
+    public LogicalRenderState updateState(DisplayBase display, DisplayRenderContext context, LogicalRenderState currentState) {
         if (currentState == null) {
             return createNewLogicalDisplayRenderState(display, context);
         }
@@ -50,21 +50,21 @@ public class LogicalDisplayRenderStateBuilder {
         return currentState;
     }
 
-    private LogicalDisplayRenderState createNewLogicalDisplayRenderState(DisplayBase display, DisplayRenderContext context) {
-        LogicalDisplayRenderState state = new LogicalDisplayRenderState(display.getName(), display.getType());
+    private LogicalRenderState createNewLogicalDisplayRenderState(DisplayBase display, DisplayRenderContext context) {
+        LogicalRenderState state = new LogicalRenderState(display.getName(), display.getType());
         state.setLocation(display.getLocation());
         applyContent(display, state, context);
         applyAttributes(display, state, context);
         return state;
     }
 
-    private void applyAttributes(DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {
+    private void applyAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         for (AttributeKey<?> attributeKey : display.getAttributesMap().keySet()) {
             applyAttribute(attributeKey, display, state, context);
         }
     }
 
-    private <T> void applyAttribute(AttributeKey<T> key, DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {
+    private <T> void applyAttribute(AttributeKey<T> key, DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         DisplayAttribute<T> attribute = display.getAttribute(key);
         CompiledAttributeValue<T> value = compileAttribute(attribute, context);
         state.addAttribute(key, value);
@@ -78,7 +78,7 @@ public class LogicalDisplayRenderStateBuilder {
         return value.compile(context);
     }
 
-    private void applyContent(DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {
+    private void applyContent(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         DisplayTypeDefinition<?> displayTypeDefinition = displayTypeRegistry.getDefinition(display.getType());
         DisplayContent<?> content = displayTypeDefinition.resolveContent(display, context);
         state.setContent(content);

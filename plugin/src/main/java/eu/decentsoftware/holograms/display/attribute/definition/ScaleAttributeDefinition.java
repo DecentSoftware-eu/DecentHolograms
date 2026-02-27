@@ -22,7 +22,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.Vector3fValue;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public class ScaleAttributeDefinition implements AttributeDefinition<DecentVecto
     }
 
     @Override
-    public void apply(CompiledAttributeValue<DecentVector3f> value, MutableRenderState state) {
+    public void apply(CompiledAttributeValue<DecentVector3f> value, PresentedRenderState state) {
         state.setScale(value.evaluate());
     }
 }

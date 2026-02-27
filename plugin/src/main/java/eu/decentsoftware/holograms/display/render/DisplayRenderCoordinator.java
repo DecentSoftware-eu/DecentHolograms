@@ -21,9 +21,9 @@ package eu.decentsoftware.holograms.display.render;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayVisibilityService;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
-import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateBuilder;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
@@ -32,20 +32,20 @@ public class DisplayRenderCoordinator {
 
     private final DisplayVisibilityService visibilityService;
     private final PlatformPlayerService playerService;
-    private final LogicalDisplayRenderStateBuilder logicalDisplayRenderStateBuilder;
+    private final LogicalRenderStateBuilder logicalRenderStateBuilder;
     private final DisplayRenderService renderService;
-    private final LogicalDisplayRenderStateManager logicalDisplayRenderStateManager;
+    private final LogicalRenderStateManager logicalRenderStateManager;
 
     public DisplayRenderCoordinator(DisplayVisibilityService visibilityService,
                                     PlatformPlayerService playerService,
-                                    LogicalDisplayRenderStateBuilder logicalDisplayRenderStateBuilder,
+                                    LogicalRenderStateBuilder logicalRenderStateBuilder,
                                     DisplayRenderService renderService,
-                                    LogicalDisplayRenderStateManager logicalDisplayRenderStateManager) {
+                                    LogicalRenderStateManager logicalRenderStateManager) {
         this.visibilityService = visibilityService;
         this.playerService = playerService;
-        this.logicalDisplayRenderStateBuilder = logicalDisplayRenderStateBuilder;
+        this.logicalRenderStateBuilder = logicalRenderStateBuilder;
         this.renderService = renderService;
-        this.logicalDisplayRenderStateManager = logicalDisplayRenderStateManager;
+        this.logicalRenderStateManager = logicalRenderStateManager;
     }
 
     public void hideDisplayForPlayer(DisplayBase display, PlatformPlayer player) {
@@ -77,7 +77,7 @@ public class DisplayRenderCoordinator {
     }
 
     private boolean isIsShownToPlayer(DisplayBase display, PlatformPlayer player) {
-        return logicalDisplayRenderStateManager.getCurrentState(display.getName(), player.getUniqueId()) != null;
+        return logicalRenderStateManager.getCurrentState(display.getName(), player.getUniqueId()) != null;
     }
 
     public void update(DisplayBase display) {
@@ -98,17 +98,17 @@ public class DisplayRenderCoordinator {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(player);
-            LogicalDisplayRenderState currentState = logicalDisplayRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
-            LogicalDisplayRenderState state;
+            LogicalRenderState currentState = logicalRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
+            LogicalRenderState state;
             if (visible) {
-                state = logicalDisplayRenderStateBuilder.updateState(display, context, currentState);
+                state = logicalRenderStateBuilder.updateState(display, context, currentState);
             } else {
                 state = null;
                 renderService.render(handle, null, context);
             }
 
             if (currentState == null || state == null) {
-                logicalDisplayRenderStateManager.updateState(handle.getId(), context.getPlayer().getUniqueId(), state);
+                logicalRenderStateManager.updateState(handle.getId(), context.getPlayer().getUniqueId(), state);
             }
         } catch (Exception e) {
             Log.warn("Failed to update logical state of display '%s' for player '%s'.", e, display.getName(), player.getName());
@@ -119,7 +119,7 @@ public class DisplayRenderCoordinator {
         try {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(player);
-            LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
+            LogicalRenderState state = logicalRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
             if (state == null) {
                 return;
             }
