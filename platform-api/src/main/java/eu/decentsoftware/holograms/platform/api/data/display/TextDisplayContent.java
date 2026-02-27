@@ -38,7 +38,7 @@ public final class TextDisplayContent implements DisplayContent<List<TextDisplay
     }
 
     @Override
-    public boolean isAnimated() {
+    public boolean isDirty() {
         return animated;
     }
 

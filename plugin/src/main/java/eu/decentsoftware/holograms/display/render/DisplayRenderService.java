@@ -52,7 +52,7 @@ public class DisplayRenderService {
     public void render(RenderObjectHandle handle, LogicalDisplayRenderState logicalState, DisplayRenderContext context) {
         MutableRenderState previousState = getPreviousState(handle, context);
         MutableRenderState currentState = postProcessingService.postProcess(logicalState, previousState);
-        if (currentState != null && !currentState.hasChanges()) {
+        if (logicalState != null && currentState != null && !currentState.hasChanges()) {
             return;
         }
         List<RenderIntent> intents = diffService.materializeIntents(currentState);
@@ -64,7 +64,7 @@ public class DisplayRenderService {
             platformRenderService.render(context.getPlayer(), handle, intents);
         }
 
-        if (previousState == null) {
+        if (previousState == null || currentState == null) {
             saveCurrentState(handle, currentState, context);
         }
     }

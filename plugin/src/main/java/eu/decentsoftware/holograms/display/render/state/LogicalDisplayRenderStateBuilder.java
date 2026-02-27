@@ -43,20 +43,7 @@ public class LogicalDisplayRenderStateBuilder {
         state.setLocation(display.getLocation());
         applyContent(display, state, context);
         applyAttributes(display, state, context);
-        applyNeedsPostProcessing(state);
         return state;
-    }
-
-    private void applyNeedsPostProcessing(LogicalDisplayRenderState state) {
-        if (state.getContent().isAnimated()) {
-            return;
-        }
-        for (CompiledAttributeValue<?> value : state.getAttributeValues().values()) {
-            if (!value.isStatic()) {
-                return;
-            }
-        }
-        state.setNeedsPostProcessing(false);
     }
 
     private void applyAttributes(DisplayBase display, LogicalDisplayRenderState state, DisplayRenderContext context) {

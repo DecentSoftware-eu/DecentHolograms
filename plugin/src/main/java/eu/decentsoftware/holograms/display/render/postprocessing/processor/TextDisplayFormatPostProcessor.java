@@ -52,6 +52,6 @@ public class TextDisplayFormatPostProcessor implements DisplayContentPostProcess
             TextDisplayLine formattedLine = new TextDisplayLine(formattedText, line.getAnimations());
             formattedLines.add(formattedLine);
         }
-        return new TextDisplayContent(formattedLines, content.isAnimated());
+        return new TextDisplayContent(formattedLines, content.isDirty());
     }
 }

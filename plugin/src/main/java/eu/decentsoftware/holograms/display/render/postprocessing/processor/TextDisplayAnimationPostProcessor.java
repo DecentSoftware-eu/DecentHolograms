@@ -39,10 +39,6 @@ public class TextDisplayAnimationPostProcessor implements DisplayContentPostProc
 
     @Override
     public DisplayContent<List<TextDisplayLine>> process(DisplayContent<List<TextDisplayLine>> content) {
-        if (!content.isAnimated()) {
-            return content;
-        }
-
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_ANIMATIONS)) {
             return processInternal(content);
         }

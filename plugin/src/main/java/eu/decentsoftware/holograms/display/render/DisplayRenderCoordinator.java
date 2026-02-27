@@ -105,7 +105,6 @@ public class DisplayRenderCoordinator {
             LogicalDisplayRenderState state;
             if (visible) {
                 state = logicalDisplayRenderStateBuilder.buildRenderState(display, context);
-                state.setChanged(true);
             } else {
                 state = null;
                 renderService.render(handle, null, context);
@@ -122,12 +121,8 @@ public class DisplayRenderCoordinator {
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(display, player);
             LogicalDisplayRenderState state = logicalDisplayRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
-            if (state == null || (!state.isChanged() && !state.isNeedsPostProcessing())) {
+            if (state == null) {
                 return;
-            }
-
-            if (state.isChanged()) {
-                state.setChanged(false);
             }
 
             renderService.render(handle, state, context);

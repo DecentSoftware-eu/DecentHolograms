@@ -58,7 +58,7 @@ public class DisplayPostProcessingService {
 
         mutableState.beginFrame();
 
-        if (logicalState.getContent().isAnimated()) {
+        if (logicalState.getContent().isDirty()) {
             applyContent(logicalState, mutableState);
         }
 

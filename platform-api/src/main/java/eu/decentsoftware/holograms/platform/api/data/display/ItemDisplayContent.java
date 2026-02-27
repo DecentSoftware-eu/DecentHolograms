@@ -36,6 +36,11 @@ public final class ItemDisplayContent implements DisplayContent<ItemDescriptor> 
     }
 
     @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    @Override
     public DisplayContent<ItemDescriptor> copy() {
         return new ItemDisplayContent(descriptor.copy());
     }

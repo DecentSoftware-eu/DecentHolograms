@@ -24,7 +24,5 @@ public interface DisplayContent<T> {
 
     DisplayContent<T> copy();
 
-    default boolean isAnimated() {
-        return false;
-    }
+    boolean isDirty();
 }

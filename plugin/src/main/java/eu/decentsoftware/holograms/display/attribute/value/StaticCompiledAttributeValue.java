@@ -51,11 +51,6 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
     }
 
     @Override
-    public boolean isStatic() {
-        return true;
-    }
-
-    @Override
     public boolean isDirty() {
         return dirty;
     }

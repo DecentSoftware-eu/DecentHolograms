@@ -36,6 +36,11 @@ public final class BlockDisplayContent implements DisplayContent<BlockDescriptor
     }
 
     @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    @Override
     public DisplayContent<BlockDescriptor> copy() {
         return new BlockDisplayContent(descriptor.copy());
     }

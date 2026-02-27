@@ -70,23 +70,6 @@ public interface CompiledAttributeValue<T> {
     T evaluate();
 
     /**
-     * Indicates whether this compiled attribute value is static.
-     *
-     * <p>A static compiled value always returns the same result during evaluation,
-     * whereas a dynamic compiled value computes or updates its result based
-     * on runtime factors, such as elapsed time or game state.</p>
-     *
-     * <p>Static attribute values allow for optimizations in the rendering pipeline.
-     * Namely, regular post-processing can be skipped entirely for static values
-     * as they have no animations or dynamic values to update.</p>
-     *
-     * @return true if this compiled attribute value is static, false otherwise
-     */
-    default boolean isStatic() {
-        return false;
-    }
-
-    /**
      * Checks if this attribute's value has changed since the last evaluation.
      *
      * <p>For static values, this always returns false after the first evaluation.

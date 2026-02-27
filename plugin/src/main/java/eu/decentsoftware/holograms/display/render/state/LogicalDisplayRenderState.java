@@ -34,8 +34,6 @@ public final class LogicalDisplayRenderState {
     private DecentLocation location;
     private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
     private DisplayContent<?> content;
-    private boolean needsPostProcessing = true;
-    private boolean changed = true;
 
     public LogicalDisplayRenderState(String id) {
         this.id = id;
@@ -75,21 +73,5 @@ public final class LogicalDisplayRenderState {
 
     public void setContent(DisplayContent<?> content) {
         this.content = content;
-    }
-
-    public boolean isNeedsPostProcessing() {
-        return needsPostProcessing;
-    }
-
-    public void setNeedsPostProcessing(boolean needsPostProcessing) {
-        this.needsPostProcessing = needsPostProcessing;
-    }
-
-    public boolean isChanged() {
-        return changed;
-    }
-
-    public void setChanged(boolean changed) {
-        this.changed = changed;
     }
 }
