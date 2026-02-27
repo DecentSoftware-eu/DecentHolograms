@@ -36,15 +36,11 @@ public class DisplayService {
 
     private final DisplayPersistenceService persistenceService;
     private final DisplayRenderCoordinator renderCoordinator;
-    private final TextDisplayPlayerPageManager playerPageManager;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
-    public DisplayService(DisplayPersistenceService persistenceService,
-                          DisplayRenderCoordinator renderCoordinator,
-                          TextDisplayPlayerPageManager playerPageManager) {
+    public DisplayService(DisplayPersistenceService persistenceService, DisplayRenderCoordinator renderCoordinator) {
         this.persistenceService = persistenceService;
         this.renderCoordinator = renderCoordinator;
-        this.playerPageManager = playerPageManager;
     }
 
     public void shutdown() {
@@ -100,10 +96,9 @@ public class DisplayService {
     }
 
     public void hideDisplaysForPlayer(PlatformPlayer player) {
-        displays.values().forEach(display -> {
+        for (DisplayBase display : displays.values()) {
             renderCoordinator.hideDisplayForPlayer(display, player);
-            playerPageManager.clearPage(display.getName(), player.getUniqueId());
-        });
+        }
     }
 
     public Set<String> getRegisteredDisplayNames() {

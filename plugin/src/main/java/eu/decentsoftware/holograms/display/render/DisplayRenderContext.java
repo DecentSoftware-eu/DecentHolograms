@@ -23,18 +23,12 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 public class DisplayRenderContext {
 
     private final PlatformPlayer player;
-    private final int page;
 
-    public DisplayRenderContext(PlatformPlayer player, int page) {
+    public DisplayRenderContext(PlatformPlayer player) {
         this.player = player;
-        this.page = page;
     }
 
     public PlatformPlayer getPlayer() {
         return player;
-    }
-
-    public int getPage() {
-        return page;
     }
 }

@@ -55,8 +55,6 @@ public class DisplayPlaceholderService {
     }
 
     private String replaceInternalPlaceholders(String content, DisplayRenderContext context) {
-        return content
-                .replace("{player}", context.getPlayer().getName())
-                .replace("{page}", String.valueOf(context.getPage()));
+        return content.replace("{player}", context.getPlayer().getName());
     }
 }

@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.attribute.AttributeConfigMapper;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
@@ -35,6 +34,7 @@ import eu.decentsoftware.holograms.display.config.dto.ConfigTextPage;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -93,23 +93,8 @@ public class DisplayConfigMapper {
             throw new DisplayConfigException("Text display must have at least one page");
         }
         TextDisplay textDisplay = new TextDisplay(dto.getName(), location, settings);
-        textDisplay.setPages(pagesToDomain(pages));
+        textDisplay.setLines(dto.getPages().get(0).getLines());
         return textDisplay;
-    }
-
-    private List<TextDisplayPage> pagesToDomain(List<ConfigTextPage> dto) {
-        return dto.stream()
-                .map(this::textDisplayPageToDomain)
-                .collect(Collectors.toList());
-    }
-
-    private TextDisplayPage textDisplayPageToDomain(ConfigTextPage pageDto) {
-        if (pageDto.getLines() == null || pageDto.getLines().isEmpty()) {
-            throw new DisplayConfigException("Text page must have at least one line");
-        }
-        TextDisplayPage textDisplayPage = new TextDisplayPage();
-        textDisplayPage.setLines(pageDto.getLines());
-        return textDisplayPage;
     }
 
     private DecentLocation locationToDomain(ConfigDecentLocation dto) {
@@ -149,14 +134,12 @@ public class DisplayConfigMapper {
     }
 
     private List<ConfigTextPage> pagesToDto(TextDisplay domain) {
-        return domain.getPages().stream()
-                .map(this::pageToDto)
-                .collect(Collectors.toList());
+        return Collections.singletonList(pageToDto(domain.getLines()));
     }
 
-    private ConfigTextPage pageToDto(TextDisplayPage page) {
+    private ConfigTextPage pageToDto(List<String> lines) {
         ConfigTextPage pageDto = new ConfigTextPage();
-        pageDto.setLines(page.getLines());
+        pageDto.setLines(lines);
         return pageDto;
     }
 

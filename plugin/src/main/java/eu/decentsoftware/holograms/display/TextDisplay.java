@@ -22,15 +22,16 @@ import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TextDisplay extends DisplayBase {
 
-    private final List<TextDisplayPage> pages;
+    private final List<String> lines;
 
     public TextDisplay(String name, DecentLocation location, DisplaySettings settings) {
         super(name, location, settings);
-        this.pages = new ArrayList<>();
+        this.lines = new ArrayList<>();
     }
 
     @Override
@@ -38,28 +39,32 @@ public class TextDisplay extends DisplayBase {
         return DisplayType.TEXT;
     }
 
-    public TextDisplayPage getPage(int index) {
-        return this.pages.get(index);
+    public void addLine(String line) {
+        this.lines.add(line);
     }
 
-    public void addPage(TextDisplayPage page) {
-        this.pages.add(page);
+    public void addLine(int index, String line) {
+        this.lines.add(index, line);
     }
 
-    public void addPage(int index, TextDisplayPage page) {
-        this.pages.add(index, page);
+    public void setLine(int index, String line) {
+        this.lines.set(index, line);
     }
 
-    public void removePage(int index) {
-        this.pages.remove(index);
+    public void removeLine(int index) {
+        this.lines.remove(index);
     }
 
-    public void setPages(List<TextDisplayPage> pages) {
-        this.pages.clear();
-        this.pages.addAll(pages);
+    public void setLines(List<String> lines) {
+        this.lines.clear();
+        this.lines.addAll(lines);
     }
 
-    public List<TextDisplayPage> getPages() {
-        return pages;
+    public void swapLines(int index1, int index2) {
+        Collections.swap(this.lines, index1, index2);
+    }
+
+    public List<String> getLines() {
+        return lines;
     }
 }

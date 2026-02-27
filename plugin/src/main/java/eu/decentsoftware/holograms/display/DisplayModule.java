@@ -98,9 +98,9 @@ import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProc
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.display.type.ItemDisplayTypeDefinition;
@@ -140,7 +140,6 @@ public class DisplayModule {
     private final DisplayService displayService;
     private final DisplayUpdateScheduler displayUpdateScheduler;
     private final DisplayListener displayListener;
-    private final TextDisplayPlayerPageManager playerPageManager;
     private final DisplaysCommand displaysCommand;
     private final AttributeDefaultService attributeDefaultService;
     private final CachingBukkitLegacyTextFormatter textFormatter;
@@ -161,9 +160,8 @@ public class DisplayModule {
         LogicalDisplayRenderStateBuilder stateService = new LogicalDisplayRenderStateBuilder(displayTypeRegistry);
         LogicalDisplayRenderStateManager logicalDisplayRenderStateManager = new LogicalDisplayRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
-        this.playerPageManager = new TextDisplayPlayerPageManager();
         DisplayRenderCoordinator renderCoordinator = new DisplayRenderCoordinator(
-                visibilityService, playerService, stateService, renderService, playerPageManager, logicalDisplayRenderStateManager);
+                visibilityService, playerService, stateService, renderService, logicalDisplayRenderStateManager);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
         YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));
@@ -172,7 +170,7 @@ public class DisplayModule {
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper);
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
-        this.displayService = new DisplayService(persistenceService, renderCoordinator, playerPageManager);
+        this.displayService = new DisplayService(persistenceService, renderCoordinator);
         this.displayListener = new DisplayListener(displayService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
@@ -275,7 +273,6 @@ public class DisplayModule {
     public void shutdown() {
         HandlerList.unregisterAll(displayListener);
         this.displayUpdateScheduler.shutdown();
-        this.playerPageManager.shutdown();
         this.displayService.shutdown();
         this.attributeDefaultService.shutdown();
         this.textFormatter.invalidate();

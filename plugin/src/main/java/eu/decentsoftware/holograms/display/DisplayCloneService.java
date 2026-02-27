@@ -54,7 +54,7 @@ public class DisplayCloneService {
     private TextDisplay cloneTextDisplay(TextDisplay display, String newName) {
         DisplaySettings settings = cloneSettings(display);
         TextDisplay clone = new TextDisplay(newName, display.getLocation(), settings);
-        clone.setPages(display.getPages());
+        clone.setLines(display.getLines());
         return clone;
     }
 

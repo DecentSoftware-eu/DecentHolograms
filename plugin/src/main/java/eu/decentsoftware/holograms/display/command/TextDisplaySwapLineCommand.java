@@ -26,11 +26,8 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
-
-import java.util.Collections;
 
 @CommandInfo(
         usage = "/dh d swap-lines <display> <line1> <line2>",
@@ -57,15 +54,14 @@ class TextDisplaySwapLineCommand extends DecentCommand {
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            TextDisplayPage page = textDisplay.getPages().get(0);
-            int index1 = Validator.getInteger(args[1], 1, page.getLines().size(), "Line 1 index out of bounds.");
-            int index2 = Validator.getInteger(args[2], 1, page.getLines().size(), "Line 2 index out of bounds.");
+            int index1 = Validator.getInteger(args[1], 1, textDisplay.getLines().size(), "Line 1 index out of bounds.");
+            int index2 = Validator.getInteger(args[2], 1, textDisplay.getLines().size(), "Line 2 index out of bounds.");
             if (index1 == index2) {
                 Lang.DISPLAY_TEXT_LINE_CANNOT_SWAP_SELF.send(sender, display.getName());
                 return true;
             }
 
-            Collections.swap(page.getLines(), index1 - 1, index2 - 1);
+            textDisplay.swapLines(index1 - 1, index2 - 1);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_LINE_SWAPPED.send(sender, display.getName(), index1, index2);

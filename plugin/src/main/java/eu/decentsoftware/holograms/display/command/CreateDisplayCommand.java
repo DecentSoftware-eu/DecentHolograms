@@ -32,7 +32,6 @@ import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
@@ -111,9 +110,7 @@ class CreateDisplayCommand extends DecentCommand {
             case TEXT:
                 String text = Validator.getLineContent(args, 2);
                 TextDisplay textDisplay = new TextDisplay(name, location, new DisplaySettings());
-                TextDisplayPage page = new TextDisplayPage();
-                page.setLines(Arrays.asList(text.split("\\\\n")));
-                textDisplay.addPage(page);
+                textDisplay.setLines(Arrays.asList(text.split("\\\\n")));
                 return textDisplay;
             case ITEM:
                 String materialString = args[2];

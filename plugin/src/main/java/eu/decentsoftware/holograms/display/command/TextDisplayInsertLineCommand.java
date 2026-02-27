@@ -26,7 +26,6 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
 
@@ -56,13 +55,9 @@ class TextDisplayInsertLineCommand extends DecentCommand {
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.TEXT);
 
             TextDisplay textDisplay = (TextDisplay) display;
-            // Pages disabled
-            //            int pageIndex = Validator.getInteger(args[1], 1, textDisplay.getPages().size(), "Line index out of bounds.");
-            //            TextDisplayPage page = textDisplay.getPages().get(pageIndex - 1);
-            TextDisplayPage page = textDisplay.getPages().get(0);
-            int index = Validator.getInteger(args[1], 1, page.getLines().size(), "Line index out of bounds.");
+            int index = Validator.getInteger(args[1], 1, textDisplay.getLines().size(), "Line index out of bounds.");
             String text = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-            page.addLine(index - 1, text);
+            textDisplay.addLine(index - 1, text);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
             Lang.DISPLAY_TEXT_LINE_INSERTED.send(sender, display.getName(), index);
@@ -75,8 +70,6 @@ class TextDisplayInsertLineCommand extends DecentCommand {
         return (sender, args) -> {
             if (args.length == 1) {
                 return tabCompleteHelper.getDisplayNames(args[0]);
-                //} else if (args.length == 2) {
-                //    return tabCompleteHelper.getPageIndexes(args[0], args[1]);
             } else if (args.length == 2) {
                 return tabCompleteHelper.getLineIndexes(args[0], args[1]);
             }

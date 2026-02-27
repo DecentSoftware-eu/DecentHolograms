@@ -22,7 +22,6 @@ import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,30 +40,13 @@ class DisplayTabCompleteHelper {
         return TabCompleteHandler.getPartialMatches(input, displayService.getRegisteredDisplayNames());
     }
 
-    List<String> getPageIndexes(String displayName, String input) {
-        DisplayBase display = displayService.getDisplay(displayName);
-        if (!(display instanceof TextDisplay)) {
-            return Collections.emptyList();
-        }
-        TextDisplay textDisplay = (TextDisplay) display;
-        return TabCompleteHandler.getPartialMatches(input, TabCompleteHandler.getPartialMatches(input, IntStream
-                .rangeClosed(1, textDisplay.getPages().size())
-                .boxed().map(String::valueOf)
-                .collect(Collectors.toList())));
-    }
-
     List<String> getLineIndexes(String displayName, String input) {
         DisplayBase display = displayService.getDisplay(displayName);
         if (!(display instanceof TextDisplay)) {
             return Collections.emptyList();
         }
-        TextDisplay textDisplay = (TextDisplay) display;
-        TextDisplayPage page = textDisplay.getPage(0);
-        if (page == null) {
-            return Collections.emptyList();
-        }
         return TabCompleteHandler.getPartialMatches(input, TabCompleteHandler.getPartialMatches(input, IntStream
-                .rangeClosed(1, page.getLines().size())
+                .rangeClosed(1, ((TextDisplay) display).getLines().size())
                 .boxed().map(String::valueOf)
                 .collect(Collectors.toList())));
     }

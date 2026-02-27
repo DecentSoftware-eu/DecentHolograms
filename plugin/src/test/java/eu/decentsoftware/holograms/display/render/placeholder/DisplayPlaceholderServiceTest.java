@@ -66,12 +66,11 @@ class DisplayPlaceholderServiceTest {
             PlatformPlayer player = createPlayer("Steve");
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(3);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Collections.emptyList());
 
-            String result = service.replacePlaceholders("Hello {player}, page {page}", context);
+            String result = service.replacePlaceholders("Hello {player}", context);
 
-            assertEquals("Hello Steve, page 3", result);
+            assertEquals("Hello Steve", result);
         }
 
         @Test
@@ -80,12 +79,11 @@ class DisplayPlaceholderServiceTest {
             PlatformPlayer player = createPlayer("Alex");
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(1);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Collections.emptyList());
 
-            String result = service.replacePlaceholders("{player}-{player}-{page}-{page}", context);
+            String result = service.replacePlaceholders("{player}-{player}", context);
 
-            assertEquals("Alex-Alex-1-1", result);
+            assertEquals("Alex-Alex", result);
         }
     }
 
@@ -100,7 +98,6 @@ class DisplayPlaceholderServiceTest {
             PlaceholderProvider provider = mock(PlaceholderProvider.class);
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(0);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Collections.singletonList(provider));
             when(provider.replace(eq("test"), any(PlaceholderContext.class))).thenReturn("replaced");
 
@@ -119,7 +116,6 @@ class DisplayPlaceholderServiceTest {
             PlaceholderProvider provider2 = mock(PlaceholderProvider.class);
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(0);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Arrays.asList(provider1, provider2));
 
             when(provider1.replace(eq("input"), any())).thenReturn("step1");
@@ -139,7 +135,6 @@ class DisplayPlaceholderServiceTest {
             PlaceholderProvider succeeding = mock(PlaceholderProvider.class);
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(0);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Arrays.asList(failing, succeeding));
 
             when(failing.replace(any(), any())).thenThrow(new RuntimeException("boom"));
@@ -164,7 +159,6 @@ class DisplayPlaceholderServiceTest {
             PlaceholderProvider provider = mock(PlaceholderProvider.class);
 
             when(context.getPlayer()).thenReturn(player);
-            when(context.getPage()).thenReturn(0);
             when(platformAdapter.getPlaceholderProviders()).thenReturn(Collections.singletonList(provider));
             when(provider.replace(any(), any())).thenAnswer(invocation -> {
                 PlaceholderContext ctx = invocation.getArgument(1);

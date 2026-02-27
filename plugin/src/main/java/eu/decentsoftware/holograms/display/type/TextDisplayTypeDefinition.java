@@ -22,7 +22,6 @@ import eu.decentsoftware.holograms.api.animations.compile.AnimationCompiler;
 import eu.decentsoftware.holograms.api.animations.compile.CompiledAnimationsOutput;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.TextDisplay;
-import eu.decentsoftware.holograms.display.TextDisplayPage;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
@@ -57,10 +56,9 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
     public DisplayContent<List<TextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
         TextDisplay textDisplay = getTextDisplay(display);
 
-        TextDisplayPage page = textDisplay.getPage(context.getPage());
         List<TextDisplayLine> resolvedLines = new ArrayList<>();
         boolean anyLineAnimated = false;
-        for (String line : page.getLines()) {
+        for (String line : textDisplay.getLines()) {
             String resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
 
             CompiledAnimationsOutput compiledAnimationsOutput = animationCompiler.compileAnimations(resolvedLine);
