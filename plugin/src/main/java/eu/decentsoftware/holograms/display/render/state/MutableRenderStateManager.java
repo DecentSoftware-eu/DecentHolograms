@@ -18,33 +18,5 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
-
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-public class MutableRenderStateManager {
-
-    private final Map<UUID, Map<String, MutableRenderState>> states = new ConcurrentHashMap<>();
-
-    public MutableRenderState getState(UUID playerUniqueId, RenderObjectHandle handle) {
-        Map<String, MutableRenderState> stateMap = states.get(playerUniqueId);
-        if (stateMap == null) {
-            return null;
-        }
-        return stateMap.get(handle.getId());
-    }
-
-    public void setState(UUID playerUniqueId, RenderObjectHandle handle, MutableRenderState state) {
-        Map<String, MutableRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
-        if (state == null) {
-            playerStates.remove(handle.getId());
-            if (playerStates.isEmpty()) {
-                states.remove(playerUniqueId);
-            }
-        } else {
-            playerStates.put(handle.getId(), state);
-        }
-    }
+public final class MutableRenderStateManager extends AbstractRenderStateManager<MutableRenderState> {
 }

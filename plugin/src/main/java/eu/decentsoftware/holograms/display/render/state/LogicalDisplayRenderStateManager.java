@@ -18,34 +18,5 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-public class LogicalDisplayRenderStateManager {
-
-    private final Map<UUID, Map<String, LogicalDisplayRenderState>> states = new ConcurrentHashMap<>();
-
-    @Nullable
-    public LogicalDisplayRenderState getCurrentState(String displayName, UUID playerUniqueId) {
-        Map<String, LogicalDisplayRenderState> playerStates = states.get(playerUniqueId);
-        if (playerStates == null) {
-            return null;
-        }
-        return playerStates.get(displayName);
-    }
-
-    public void updateState(String displayName, UUID playerUniqueId, LogicalDisplayRenderState state) {
-        Map<String, LogicalDisplayRenderState> playerStates = states.computeIfAbsent(playerUniqueId, uuid -> new ConcurrentHashMap<>());
-        if (state == null) {
-            playerStates.remove(displayName);
-            if (playerStates.isEmpty()) {
-                states.remove(playerUniqueId);
-            }
-        } else {
-            playerStates.put(displayName, state);
-        }
-    }
+public final class LogicalDisplayRenderStateManager extends AbstractRenderStateManager<LogicalDisplayRenderState> {
 }

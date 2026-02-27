@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.display.render;
 
 import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
-import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.LogicalDisplayRenderState;
 import eu.decentsoftware.holograms.display.render.state.MutableRenderState;
+import eu.decentsoftware.holograms.display.render.state.MutableRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
@@ -50,7 +50,7 @@ public class DisplayRenderService {
     }
 
     public void render(RenderObjectHandle handle, LogicalDisplayRenderState logicalState, DisplayRenderContext context) {
-        MutableRenderState previousState = getPreviousState(handle, context);
+        MutableRenderState previousState = getPreviousState(handle.getId(), context);
         MutableRenderState currentState = postProcessingService.postProcess(logicalState, previousState);
         if (logicalState != null && currentState != null && !currentState.hasChanges()) {
             return;
@@ -65,17 +65,17 @@ public class DisplayRenderService {
         }
 
         if (previousState == null || currentState == null) {
-            saveCurrentState(handle, currentState, context);
+            saveCurrentState(handle.getId(), currentState, context);
         }
     }
 
-    private void saveCurrentState(RenderObjectHandle handle, MutableRenderState state, DisplayRenderContext context) {
+    private void saveCurrentState(String displayName, MutableRenderState state, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
-        finalStateManager.setState(playerUniqueId, handle, state);
+        finalStateManager.updateState(displayName, playerUniqueId, state);
     }
 
-    private MutableRenderState getPreviousState(RenderObjectHandle handle, DisplayRenderContext context) {
+    private MutableRenderState getPreviousState(String displayName, DisplayRenderContext context) {
         UUID playerUniqueId = context.getPlayer().getUniqueId();
-        return finalStateManager.getState(playerUniqueId, handle);
+        return finalStateManager.getCurrentState(displayName, playerUniqueId);
     }
 }
