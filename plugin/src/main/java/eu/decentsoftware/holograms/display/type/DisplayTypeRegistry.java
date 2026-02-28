@@ -21,12 +21,12 @@ package eu.decentsoftware.holograms.display.type;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public final class DisplayTypeRegistry {
 
-    private final Map<DisplayType, DisplayTypeDefinition<?>> definitions = new HashMap<>();
+    private final Map<DisplayType, DisplayTypeDefinition<?>> definitions = new EnumMap<>(DisplayType.class);
 
     public <T extends DisplayTypeDefinition<?>> void registerDisplayType(DisplayType type, T definition) {
         this.definitions.put(type, definition);
