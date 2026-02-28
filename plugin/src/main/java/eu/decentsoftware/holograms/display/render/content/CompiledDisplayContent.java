@@ -23,4 +23,6 @@ public interface CompiledDisplayContent<T> {
     T getContent();
 
     boolean isDirty();
+
+    boolean isDynamic();
 }

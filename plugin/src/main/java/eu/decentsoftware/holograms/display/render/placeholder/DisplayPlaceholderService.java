@@ -24,6 +24,8 @@ import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderContext;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 
+import java.util.List;
+
 public class DisplayPlaceholderService {
 
     private final PlatformAdapter platformAdapter;
@@ -38,9 +40,25 @@ public class DisplayPlaceholderService {
         return content;
     }
 
+    public boolean containsPlaceholders(String content) {
+        if (content.contains("{player}")) {
+            return true;
+        }
+
+        List<PlaceholderProvider> placeholderProviders = platformAdapter.getPlaceholderProviders();
+        for (PlaceholderProvider placeholderProvider : placeholderProviders) {
+            if (placeholderProvider.containsPlaceholders(content)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private String replacePlatformPlaceholders(String content, DisplayRenderContext context) {
         PlaceholderContext placeholderContext = createPlaceholderContext(context);
-        for (PlaceholderProvider placeholderProvider : platformAdapter.getPlaceholderProviders()) {
+        List<PlaceholderProvider> placeholderProviders = platformAdapter.getPlaceholderProviders();
+        for (PlaceholderProvider placeholderProvider : placeholderProviders) {
             try {
                 content = placeholderProvider.replace(content, placeholderContext);
             } catch (Exception e) {

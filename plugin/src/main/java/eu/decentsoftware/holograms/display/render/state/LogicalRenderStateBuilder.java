@@ -43,7 +43,7 @@ public class LogicalRenderStateBuilder {
         }
 
         currentState.setLocation(display.getLocation());
-        if (display.checkContentDirty()) {
+        if (display.checkContentDirty() || currentState.getContent().isDynamic()) {
             applyContent(display, currentState, context);
         }
         if (display.checkConfigDirty()) {

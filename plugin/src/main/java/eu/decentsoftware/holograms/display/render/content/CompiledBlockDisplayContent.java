@@ -42,4 +42,9 @@ public final class CompiledBlockDisplayContent implements CompiledDisplayContent
     public boolean isDirty() {
         return dirty;
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

@@ -32,4 +32,9 @@ public class BukkitPlaceholderApiProvider implements PlaceholderProvider {
         Player player = ((BukkitPlayer) ctx.getPlayer()).getBukkitPlayer();
         return PAPI.setPlaceholders(player, input);
     }
+
+    @Override
+    public boolean containsPlaceholders(@NotNull String input) {
+        return PAPI.containsPlaceholders(input);
+    }
 }

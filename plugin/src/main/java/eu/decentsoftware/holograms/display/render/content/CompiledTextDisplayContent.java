@@ -24,11 +24,13 @@ public final class CompiledTextDisplayContent implements CompiledDisplayContent<
 
     private final List<TextDisplayLine> content;
     private final boolean animated;
+    private final boolean hasPlaceholders;
     private boolean dirty;
 
-    public CompiledTextDisplayContent(List<TextDisplayLine> content, boolean animated) {
+    public CompiledTextDisplayContent(List<TextDisplayLine> content, boolean animated, boolean hasPlaceholders) {
         this.content = content;
         this.animated = animated;
+        this.hasPlaceholders = hasPlaceholders;
         this.dirty = true;
     }
 
@@ -43,5 +45,10 @@ public final class CompiledTextDisplayContent implements CompiledDisplayContent<
     @Override
     public boolean isDirty() {
         return animated || dirty;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return hasPlaceholders;
     }
 }

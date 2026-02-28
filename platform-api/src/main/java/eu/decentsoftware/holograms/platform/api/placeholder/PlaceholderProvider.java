@@ -49,4 +49,12 @@ public interface PlaceholderProvider {
      */
     @NotNull
     String replace(@NotNull String input, @NotNull PlaceholderContext ctx);
+
+    /**
+     * Checks if the given input string contains placeholders.
+     *
+     * @param input The input string to check for placeholders. Must not be null.
+     * @return True if the input contains placeholders, false otherwise.
+     */
+    boolean containsPlaceholders(@NotNull String input);
 }

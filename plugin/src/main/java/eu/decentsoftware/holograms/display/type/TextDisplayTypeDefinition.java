@@ -23,11 +23,11 @@ import eu.decentsoftware.holograms.api.animations.compile.CompiledAnimationsOutp
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayContent;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.render.content.TextDisplayLine;
+import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,15 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
 
         List<TextDisplayLine> resolvedLines = new ArrayList<>();
         boolean anyLineAnimated = false;
+        boolean anyLineHasPlaceholders = false;
         for (String line : textDisplay.getLines()) {
-            String resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
+            String resolvedLine;
+            if (displayPlaceholderService.containsPlaceholders(line)) {
+                resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
+                anyLineHasPlaceholders = true;
+            } else {
+                resolvedLine = line;
+            }
 
             CompiledAnimationsOutput compiledAnimationsOutput = animationCompiler.compileAnimations(resolvedLine);
             resolvedLine = compiledAnimationsOutput.getStrippedString();
@@ -65,7 +72,7 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
 
             resolvedLines.add(displayLine);
         }
-        return new CompiledTextDisplayContent(resolvedLines, anyLineAnimated);
+        return new CompiledTextDisplayContent(resolvedLines, anyLineAnimated, anyLineHasPlaceholders);
     }
 
     private TextDisplay getTextDisplay(DisplayBase displayBase) {
