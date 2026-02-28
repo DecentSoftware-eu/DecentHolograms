@@ -42,6 +42,7 @@ import java.util.List;
 
 public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
 
+    private static final String LINE_SEPARATOR = ChatColor.RESET + "\n";
     private final NmsTextDisplayRenderer renderer;
 
     public BukkitTextDisplayRenderService(NmsTextDisplayRenderer renderer) {
@@ -120,7 +121,7 @@ public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
             if (firstLine) {
                 firstLine = false;
             } else {
-                textBuilder.append(ChatColor.RESET).append("\n");
+                textBuilder.append(LINE_SEPARATOR);
             }
             textBuilder.append(line);
         }
