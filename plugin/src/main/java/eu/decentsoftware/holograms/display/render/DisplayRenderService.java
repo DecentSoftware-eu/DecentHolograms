@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.display.render;
 
-import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderStateManager;

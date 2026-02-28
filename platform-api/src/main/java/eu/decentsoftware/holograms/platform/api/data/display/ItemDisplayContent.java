@@ -20,8 +20,6 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 
 import eu.decentsoftware.holograms.platform.api.data.ItemDescriptor;
 
-import java.util.Objects;
-
 public final class ItemDisplayContent implements DisplayContent<ItemDescriptor> {
 
     private final ItemDescriptor descriptor;
@@ -33,29 +31,5 @@ public final class ItemDisplayContent implements DisplayContent<ItemDescriptor> 
     @Override
     public ItemDescriptor getContent() {
         return descriptor;
-    }
-
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public DisplayContent<ItemDescriptor> copy() {
-        return new ItemDisplayContent(descriptor.copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof ItemDisplayContent)) {
-            return false;
-        }
-        ItemDisplayContent that = (ItemDisplayContent) o;
-        return Objects.equals(descriptor, that.descriptor);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(descriptor);
     }
 }

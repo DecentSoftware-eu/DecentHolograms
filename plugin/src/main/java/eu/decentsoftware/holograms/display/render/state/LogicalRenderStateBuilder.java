@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttribu
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 
 public class LogicalRenderStateBuilder {
 
@@ -84,7 +84,7 @@ public class LogicalRenderStateBuilder {
 
     private void applyContent(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         DisplayTypeDefinition<?> displayTypeDefinition = displayTypeRegistry.getDefinition(display.getType());
-        DisplayContent<?> content = displayTypeDefinition.resolveContent(display, context);
+        CompiledDisplayContent<?> content = displayTypeDefinition.resolveContent(display, context);
         state.setContent(content);
     }
 }

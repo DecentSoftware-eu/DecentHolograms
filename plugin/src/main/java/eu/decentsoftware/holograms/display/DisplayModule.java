@@ -92,12 +92,9 @@ import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSeri
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.DisplayRenderIntentMaterializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
+import eu.decentsoftware.holograms.display.render.TextPostProcessingService;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
-import eu.decentsoftware.holograms.display.render.postprocessing.DisplayContentPostProcessingService;
-import eu.decentsoftware.holograms.display.render.postprocessing.DisplayPostProcessingService;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayAnimationPostProcessor;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.TextDisplayFormatPostProcessor;
+import eu.decentsoftware.holograms.display.render.DisplayPostProcessingService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateBuilder;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderStateManager;
@@ -111,22 +108,15 @@ import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBrightness;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
-import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.platform.bukkit.text.CachingBukkitLegacyTextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Manages the display module, including initialization, reloading, and shutdown.
@@ -152,10 +142,10 @@ public class DisplayModule {
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
         this.textFormatter = new CachingBukkitLegacyTextFormatter();
-        DisplayTypeRegistry displayTypeRegistry = createDisplayTypeRegistry(displayPlaceholderService, animationCompiler, animationManager, textFormatter);
-        DisplayContentPostProcessingService contentPostProcessingService = new DisplayContentPostProcessingService(displayTypeRegistry);
+        DisplayTypeRegistry displayTypeRegistry = createDisplayTypeRegistry(displayPlaceholderService, animationCompiler);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
-        DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, contentPostProcessingService);
+        TextPostProcessingService textPostProcessingService = new TextPostProcessingService(animationManager, textFormatter);
+        DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, textPostProcessingService);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter.getRenderService(), renderStateManager, postProcessingService);
         LogicalRenderStateBuilder stateService = new LogicalRenderStateBuilder(displayTypeRegistry);
         LogicalRenderStateManager logicalRenderStateManager = new LogicalRenderStateManager();
@@ -237,25 +227,17 @@ public class DisplayModule {
     }
 
     private DisplayTypeRegistry createDisplayTypeRegistry(DisplayPlaceholderService displayPlaceholderService,
-                                                          AnimationCompiler animationCompiler,
-                                                          AnimationManager animationManager,
-                                                          TextFormatter textFormatter) {
+                                                          AnimationCompiler animationCompiler) {
         DisplayTypeRegistry registry = new DisplayTypeRegistry();
-        registry.registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler, animationManager, textFormatter));
+        registry.registerDisplayType(DisplayType.TEXT, initializeTextDisplayType(displayPlaceholderService, animationCompiler));
         registry.registerDisplayType(DisplayType.ITEM, new ItemDisplayTypeDefinition());
         registry.registerDisplayType(DisplayType.BLOCK, new BlockDisplayTypeDefinition());
         return registry;
     }
 
     private TextDisplayTypeDefinition initializeTextDisplayType(DisplayPlaceholderService displayPlaceholderService,
-                                                                AnimationCompiler animationCompiler,
-                                                                AnimationManager animationManager,
-                                                                TextFormatter textFormatter) {
-        List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors = Collections.unmodifiableList(Arrays.asList(
-                new TextDisplayAnimationPostProcessor(animationManager),
-                new TextDisplayFormatPostProcessor(textFormatter)
-        ));
-        return new TextDisplayTypeDefinition(displayPlaceholderService, postProcessors, animationCompiler);
+                                                                AnimationCompiler animationCompiler) {
+        return new TextDisplayTypeDefinition(displayPlaceholderService, animationCompiler);
     }
 
     public void initialize() {

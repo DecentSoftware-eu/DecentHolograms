@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.animations.compile;
 
-import eu.decentsoftware.holograms.platform.api.data.display.CompiledAnimation;
+import eu.decentsoftware.holograms.display.render.content.CompiledAnimation;
 
 import java.util.List;
 

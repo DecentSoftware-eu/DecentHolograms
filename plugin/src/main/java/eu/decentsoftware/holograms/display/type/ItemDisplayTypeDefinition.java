@@ -22,9 +22,9 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.ItemDisplay;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.data.ItemDescriptor;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledItemDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 
 public class ItemDisplayTypeDefinition implements DisplayTypeDefinition<ItemDescriptor> {
 
@@ -34,11 +34,11 @@ public class ItemDisplayTypeDefinition implements DisplayTypeDefinition<ItemDesc
     }
 
     @Override
-    public DisplayContent<ItemDescriptor> resolveContent(DisplayBase display, DisplayRenderContext context) {
+    public CompiledDisplayContent<ItemDescriptor> resolveContent(DisplayBase display, DisplayRenderContext context) {
         ItemDisplay itemDisplay = getItemDisplay(display);
 
         ItemDescriptor itemDescriptor = new ItemDescriptor(itemDisplay.getMaterial());
-        return new ItemDisplayContent(itemDescriptor);
+        return new CompiledItemDisplayContent(itemDescriptor);
     }
 
     private ItemDisplay getItemDisplay(DisplayBase displayBase) {

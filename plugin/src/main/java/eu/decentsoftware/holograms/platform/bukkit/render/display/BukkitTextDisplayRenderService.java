@@ -26,7 +26,6 @@ import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
@@ -114,16 +113,16 @@ public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
             throw new IllegalArgumentException("Unsupported content type for Text display: " + content.getClass().getName());
         }
 
-        List<TextDisplayLine> lines = ((TextDisplayContent) content).getContent();
+        List<String> lines = ((TextDisplayContent) content).getContent();
         boolean firstLine = true;
         StringBuilder textBuilder = new StringBuilder();
-        for (TextDisplayLine line : lines) {
+        for (String line : lines) {
             if (firstLine) {
                 firstLine = false;
             } else {
                 textBuilder.append(ChatColor.RESET).append("\n");
             }
-            textBuilder.append(line.getText());
+            textBuilder.append(line);
         }
         return textBuilder.toString();
     }

@@ -7,7 +7,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
-import eu.decentsoftware.holograms.platform.api.data.display.CompiledAnimation;
+import eu.decentsoftware.holograms.display.render.content.CompiledAnimation;
 import lombok.NonNull;
 
 import java.io.File;
@@ -82,6 +82,11 @@ public class AnimationManager extends Ticked {
     }
 
     public String applyAnimations(String string, List<CompiledAnimation> animations) {
+        if (animations.isEmpty()) {
+            return string;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(string.length());
         for (CompiledAnimation compiledAnimation : animations) {
             TextAnimation animation = getAnimation(compiledAnimation.getAnimation());
             if (animation == null) {
@@ -91,9 +96,12 @@ public class AnimationManager extends Ticked {
             String animationFrame = animation.animate(body == null ? "" : body, getStep(), compiledAnimation.getArgs());
             int position = compiledAnimation.getPosition();
 
-            string = string.substring(0, position) + animationFrame + string.substring(position);
+            stringBuilder
+                    .append(string, 0, position)
+                    .append(animationFrame)
+                    .append(string.substring(position));
         }
-        return string;
+        return stringBuilder.toString();
     }
 
     public boolean containsAnimations(@NonNull String string) {

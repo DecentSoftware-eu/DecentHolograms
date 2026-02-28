@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api.data.display;
+package eu.decentsoftware.holograms.display.render.content;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class TextDisplayLine {
 
@@ -41,23 +40,5 @@ public final class TextDisplayLine {
 
     public boolean isAnimated() {
         return !animations.isEmpty();
-    }
-
-    public TextDisplayLine copy() {
-        return new TextDisplayLine(text, animations);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TextDisplayLine)) {
-            return false;
-        }
-        TextDisplayLine that = (TextDisplayLine) o;
-        return Objects.equals(text, that.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(text);
     }
 }

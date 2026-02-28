@@ -16,35 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api.data.display;
+package eu.decentsoftware.holograms.display.render.content;
 
-public class CompiledAnimation {
+import java.util.List;
 
-    private final String animation;
-    private final String[] args;
-    private final String body;
-    private final int position;
+public final class CompiledTextDisplayContent implements CompiledDisplayContent<List<TextDisplayLine>> {
 
-    public CompiledAnimation(String animation, String[] args, String body, int position) {
-        this.animation = animation;
-        this.args = args;
-        this.body = body;
-        this.position = position;
+    private final List<TextDisplayLine> content;
+    private final boolean animated;
+    private boolean dirty;
+
+    public CompiledTextDisplayContent(List<TextDisplayLine> content, boolean animated) {
+        this.content = content;
+        this.animated = animated;
+        this.dirty = true;
     }
 
-    public String getAnimation() {
-        return animation;
+    @Override
+    public List<TextDisplayLine> getContent() {
+        if (dirty) {
+            dirty = false;
+        }
+        return content;
     }
 
-    public String[] getArgs() {
-        return args;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public int getPosition() {
-        return position;
+    @Override
+    public boolean isDirty() {
+        return animated || dirty;
     }
 }

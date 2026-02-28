@@ -22,8 +22,8 @@ import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.data.BlockDescriptor;
-import eu.decentsoftware.holograms.platform.api.data.display.BlockDisplayContent;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledBlockDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 public class BlockDisplayTypeDefinition implements DisplayTypeDefinition<BlockDescriptor> {
@@ -34,11 +34,11 @@ public class BlockDisplayTypeDefinition implements DisplayTypeDefinition<BlockDe
     }
 
     @Override
-    public DisplayContent<BlockDescriptor> resolveContent(DisplayBase display, DisplayRenderContext context) {
+    public CompiledDisplayContent<BlockDescriptor> resolveContent(DisplayBase display, DisplayRenderContext context) {
         BlockDisplay blockDisplay = getBlockDisplay(display);
 
         BlockDescriptor blockDescriptor = new BlockDescriptor(blockDisplay.getMaterial());
-        return new BlockDisplayContent(blockDescriptor);
+        return new CompiledBlockDisplayContent(blockDescriptor);
     }
 
     private BlockDisplay getBlockDisplay(DisplayBase displayBase) {

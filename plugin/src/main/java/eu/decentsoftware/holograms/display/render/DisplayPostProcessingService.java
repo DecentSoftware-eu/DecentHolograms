@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.render.postprocessing;
+package eu.decentsoftware.holograms.display.render;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
@@ -24,21 +24,29 @@ import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinit
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
+import eu.decentsoftware.holograms.platform.api.data.display.BlockDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledBlockDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledItemDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
 import eu.decentsoftware.holograms.profiler.Metrics;
 import eu.decentsoftware.holograms.profiler.TimerHandle;
 
+import java.util.List;
 import java.util.Map;
 
 public class DisplayPostProcessingService {
 
     private final AttributeDefinitionRegistry attributeDefinitionRegistry;
-    private final DisplayContentPostProcessingService contentPostProcessingService;
+    private final TextPostProcessingService textPostProcessingService;
 
     public DisplayPostProcessingService(AttributeDefinitionRegistry attributeDefinitionRegistry,
-                                        DisplayContentPostProcessingService contentPostProcessingService) {
+                                        TextPostProcessingService textPostProcessingService) {
         this.attributeDefinitionRegistry = attributeDefinitionRegistry;
-        this.contentPostProcessingService = contentPostProcessingService;
+        this.textPostProcessingService = textPostProcessingService;
     }
 
     public PresentedRenderState postProcess(LogicalRenderState logicalState, PresentedRenderState mutableState) {
@@ -74,8 +82,30 @@ public class DisplayPostProcessingService {
         return state;
     }
 
-    private void applyContent(LogicalRenderState logicalState, PresentedRenderState mutableState) {
-        mutableState.setContent(contentPostProcessingService.postProcessContent(logicalState.getDisplayType(), logicalState.getContent()));
+    private void applyContent(LogicalRenderState logicalState, PresentedRenderState presentedState) {
+        if (logicalState.getDisplayType() == DisplayType.TEXT) {
+            applyTextContent(presentedState, (CompiledTextDisplayContent) logicalState.getContent());
+        } else if (logicalState.getDisplayType() == DisplayType.ITEM) {
+            applyItemContent(presentedState, (CompiledItemDisplayContent) logicalState.getContent());
+        } else if (logicalState.getDisplayType() == DisplayType.BLOCK) {
+            applyBlockContent(presentedState, (CompiledBlockDisplayContent) logicalState.getContent());
+        }
+    }
+
+    private void applyTextContent(PresentedRenderState presentedState, CompiledTextDisplayContent textContent) {
+        List<String> postProcessedLines = textPostProcessingService.postProcess(textContent);
+        TextDisplayContent content = new TextDisplayContent(postProcessedLines);
+        presentedState.setContent(content);
+    }
+
+    private void applyItemContent(PresentedRenderState presentedState, CompiledItemDisplayContent itemContent) {
+        ItemDisplayContent content = new ItemDisplayContent(itemContent.getContent());
+        presentedState.setContent(content);
+    }
+
+    private void applyBlockContent(PresentedRenderState presentedState, CompiledBlockDisplayContent blockContent) {
+        BlockDisplayContent content = new BlockDisplayContent(blockContent.getContent());
+        presentedState.setContent(content);
     }
 
     private void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState mutableState) {

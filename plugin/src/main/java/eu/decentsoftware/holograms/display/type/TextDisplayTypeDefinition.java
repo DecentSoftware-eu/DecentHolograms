@@ -24,11 +24,10 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
-import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayLine;
+import eu.decentsoftware.holograms.display.render.content.TextDisplayLine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +35,10 @@ import java.util.List;
 public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<TextDisplayLine>> {
 
     private final DisplayPlaceholderService displayPlaceholderService;
-    private final List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors;
     private final AnimationCompiler animationCompiler;
 
-    public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService,
-                                     List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> postProcessors,
-                                     AnimationCompiler animationCompiler) {
+    public TextDisplayTypeDefinition(DisplayPlaceholderService displayPlaceholderService, AnimationCompiler animationCompiler) {
         this.displayPlaceholderService = displayPlaceholderService;
-        this.postProcessors = postProcessors;
         this.animationCompiler = animationCompiler;
     }
 
@@ -53,7 +48,7 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
     }
 
     @Override
-    public DisplayContent<List<TextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
+    public CompiledDisplayContent<List<TextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
         TextDisplay textDisplay = getTextDisplay(display);
 
         List<TextDisplayLine> resolvedLines = new ArrayList<>();
@@ -70,12 +65,7 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
 
             resolvedLines.add(displayLine);
         }
-        return new TextDisplayContent(resolvedLines, anyLineAnimated);
-    }
-
-    @Override
-    public List<DisplayContentPostProcessor<List<TextDisplayLine>, DisplayContent<List<TextDisplayLine>>>> getContentPostProcessors() {
-        return postProcessors;
+        return new CompiledTextDisplayContent(resolvedLines, anyLineAnimated);
     }
 
     private TextDisplay getTextDisplay(DisplayBase displayBase) {

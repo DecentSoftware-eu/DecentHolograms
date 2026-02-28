@@ -21,8 +21,4 @@ package eu.decentsoftware.holograms.platform.api.data.display;
 public interface DisplayContent<T> {
 
     T getContent();
-
-    DisplayContent<T> copy();
-
-    boolean isDirty();
 }

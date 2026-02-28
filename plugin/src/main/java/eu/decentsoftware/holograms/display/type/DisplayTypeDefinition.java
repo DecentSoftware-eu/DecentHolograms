@@ -20,20 +20,12 @@ package eu.decentsoftware.holograms.display.type;
 
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
-import eu.decentsoftware.holograms.display.render.postprocessing.processor.DisplayContentPostProcessor;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
-
-import java.util.Collections;
-import java.util.List;
 
 public interface DisplayTypeDefinition<C> {
 
     DisplayType getType();
 
-    DisplayContent<C> resolveContent(DisplayBase display, DisplayRenderContext context);
-
-    default List<DisplayContentPostProcessor<C, DisplayContent<C>>> getContentPostProcessors() {
-        return Collections.emptyList();
-    }
+    CompiledDisplayContent<C> resolveContent(DisplayBase display, DisplayRenderContext context);
 }

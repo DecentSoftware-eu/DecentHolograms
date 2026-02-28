@@ -16,20 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.platform.api.data.display;
+package eu.decentsoftware.holograms.display.render.content;
 
-import java.util.List;
+import eu.decentsoftware.holograms.platform.api.data.BlockDescriptor;
 
-public final class TextDisplayContent implements DisplayContent<List<String>> {
+public final class CompiledBlockDisplayContent implements CompiledDisplayContent<BlockDescriptor> {
 
-    private final List<String> lines;
+    private final BlockDescriptor descriptor;
+    private boolean dirty;
 
-    public TextDisplayContent(List<String> lines) {
-        this.lines = lines;
+    public CompiledBlockDisplayContent(BlockDescriptor descriptor) {
+        this.descriptor = descriptor;
+        this.dirty = true;
     }
 
     @Override
-    public List<String> getContent() {
-        return lines;
+    public BlockDescriptor getContent() {
+        if (dirty) {
+            dirty = false;
+        }
+        return descriptor;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
     }
 }

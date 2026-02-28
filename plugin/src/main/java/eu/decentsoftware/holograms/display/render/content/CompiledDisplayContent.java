@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.display.render.postprocessing.processor;
+package eu.decentsoftware.holograms.display.render.content;
 
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+public interface CompiledDisplayContent<T> {
 
-public interface DisplayContentPostProcessor<T, C extends DisplayContent<T>> {
+    T getContent();
 
-    C process(C content);
+    boolean isDirty();
 }

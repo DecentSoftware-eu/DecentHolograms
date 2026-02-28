@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.display.render.state;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.LinkedHashMap;
@@ -33,7 +33,7 @@ public final class LogicalRenderState {
     private final DisplayType displayType;
     private DecentLocation location;
     private final Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeValues = new LinkedHashMap<>();
-    private DisplayContent<?> content;
+    private CompiledDisplayContent<?> content;
 
     public LogicalRenderState(String id, DisplayType displayType) {
         this.id = id;
@@ -68,11 +68,11 @@ public final class LogicalRenderState {
         attributeValues.clear();
     }
 
-    public DisplayContent<?> getContent() {
+    public CompiledDisplayContent<?> getContent() {
         return content;
     }
 
-    public void setContent(DisplayContent<?> content) {
+    public void setContent(CompiledDisplayContent<?> content) {
         this.content = content;
     }
 }
