@@ -92,10 +92,11 @@ import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSeri
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.DisplayRenderIntentMaterializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
-import eu.decentsoftware.holograms.display.render.TextPostProcessingService;
+import eu.decentsoftware.holograms.display.render.DisplayVisibilityService;
+import eu.decentsoftware.holograms.display.render.TextPostProcessor;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
-import eu.decentsoftware.holograms.display.render.DisplayPostProcessingService;
-import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateBuilder;
+import eu.decentsoftware.holograms.display.render.DisplayPostProcessor;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
@@ -112,7 +113,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
-import eu.decentsoftware.holograms.platform.bukkit.text.CachingBukkitLegacyTextFormatter;
+import eu.decentsoftware.holograms.platform.bukkit.text.LegacyCachingBukkitTextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -132,7 +133,7 @@ public class DisplayModule {
     private final DisplayListener displayListener;
     private final DisplaysCommand displaysCommand;
     private final AttributeDefaultService attributeDefaultService;
-    private final CachingBukkitLegacyTextFormatter textFormatter;
+    private final LegacyCachingBukkitTextFormatter textFormatter;
 
     public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
         this.plugin = plugin;
@@ -141,13 +142,13 @@ public class DisplayModule {
         PresentedRenderStateManager renderStateManager = new PresentedRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
         AnimationCompiler animationCompiler = new AnimationCompiler(animationManager);
-        this.textFormatter = new CachingBukkitLegacyTextFormatter();
+        this.textFormatter = new LegacyCachingBukkitTextFormatter();
         DisplayTypeRegistry displayTypeRegistry = createDisplayTypeRegistry(displayPlaceholderService, animationCompiler);
         AttributeDefinitionRegistry attributeDefinitionRegistry = new AttributeDefinitionRegistry();
-        TextPostProcessingService textPostProcessingService = new TextPostProcessingService(animationManager, textFormatter);
-        DisplayPostProcessingService postProcessingService = new DisplayPostProcessingService(attributeDefinitionRegistry, textPostProcessingService);
+        TextPostProcessor textPostProcessor = new TextPostProcessor(animationManager, textFormatter);
+        DisplayPostProcessor postProcessingService = new DisplayPostProcessor(attributeDefinitionRegistry, textPostProcessor);
         DisplayRenderService renderService = new DisplayRenderService(renderDiffService, platformAdapter.getRenderService(), renderStateManager, postProcessingService);
-        LogicalRenderStateBuilder stateService = new LogicalRenderStateBuilder(displayTypeRegistry);
+        LogicalRenderStateService stateService = new LogicalRenderStateService(displayTypeRegistry);
         LogicalRenderStateManager logicalRenderStateManager = new LogicalRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
         DisplayRenderCoordinator renderCoordinator = new DisplayRenderCoordinator(

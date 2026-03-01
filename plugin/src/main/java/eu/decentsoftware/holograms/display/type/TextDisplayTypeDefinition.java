@@ -25,14 +25,14 @@ import eu.decentsoftware.holograms.display.TextDisplay;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayContent;
-import eu.decentsoftware.holograms.display.render.content.TextDisplayLine;
+import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayLine;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<TextDisplayLine>> {
+public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<CompiledTextDisplayLine>> {
 
     private final DisplayPlaceholderService displayPlaceholderService;
     private final AnimationCompiler animationCompiler;
@@ -48,10 +48,10 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
     }
 
     @Override
-    public CompiledDisplayContent<List<TextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
+    public CompiledDisplayContent<List<CompiledTextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
         TextDisplay textDisplay = getTextDisplay(display);
 
-        List<TextDisplayLine> resolvedLines = new ArrayList<>();
+        List<CompiledTextDisplayLine> resolvedLines = new ArrayList<>();
         boolean anyLineAnimated = false;
         boolean anyLineHasPlaceholders = false;
         for (String line : textDisplay.getLines()) {
@@ -66,7 +66,7 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Tex
             CompiledAnimationsOutput compiledAnimationsOutput = animationCompiler.compileAnimations(resolvedLine);
             resolvedLine = compiledAnimationsOutput.getStrippedString();
 
-            TextDisplayLine displayLine = new TextDisplayLine(resolvedLine, compiledAnimationsOutput.getAnimations());
+            CompiledTextDisplayLine displayLine = new CompiledTextDisplayLine(resolvedLine, compiledAnimationsOutput.getAnimations());
 
             anyLineAnimated |= displayLine.isAnimated();
 

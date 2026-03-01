@@ -54,7 +54,7 @@ public class PresentedRenderState {
     private DecentVector3f translation;
     private Float yaw;
 
-    private final EnumSet<MutableStateField> dirtyFields = EnumSet.noneOf(MutableStateField.class);
+    private final EnumSet<PresentedRenderStateField> dirtyFields = EnumSet.noneOf(PresentedRenderStateField.class);
     private boolean isNew = true;
 
     public PresentedRenderState(String id, DisplayType displayType) {
@@ -81,7 +81,7 @@ public class PresentedRenderState {
     /**
      * Returns which fields were modified this frame.
      */
-    public Set<MutableStateField> getDirtyFields() {
+    public Set<PresentedRenderStateField> getDirtyFields() {
         return EnumSet.copyOf(dirtyFields);
     }
 
@@ -92,7 +92,7 @@ public class PresentedRenderState {
         return isNew || !dirtyFields.isEmpty();
     }
 
-    private void markDirty(MutableStateField field) {
+    private void markDirty(PresentedRenderStateField field) {
         dirtyFields.add(field);
     }
 
@@ -110,7 +110,7 @@ public class PresentedRenderState {
 
     public void setLocation(DecentLocation location) {
         this.location = location;
-        markDirty(MutableStateField.LOCATION);
+        markDirty(PresentedRenderStateField.LOCATION);
     }
 
     public DisplayContent<?> getContent() {
@@ -119,7 +119,7 @@ public class PresentedRenderState {
 
     public void setContent(DisplayContent<?> content) {
         this.content = content;
-        markDirty(MutableStateField.CONTENT);
+        markDirty(PresentedRenderStateField.CONTENT);
     }
 
     public DisplayBillboardConstraints getBillboardConstraints() {
@@ -128,7 +128,7 @@ public class PresentedRenderState {
 
     public void setBillboardConstraints(DisplayBillboardConstraints billboardConstraints) {
         this.billboardConstraints = billboardConstraints;
-        markDirty(MutableStateField.METADATA_BILLBOARD_CONSTRAINTS);
+        markDirty(PresentedRenderStateField.METADATA_BILLBOARD_CONSTRAINTS);
     }
 
     public DisplayBrightness getBrightness() {
@@ -137,7 +137,7 @@ public class PresentedRenderState {
 
     public void setBrightness(DisplayBrightness brightness) {
         this.brightness = brightness;
-        markDirty(MutableStateField.METADATA_BRIGHTNESS);
+        markDirty(PresentedRenderStateField.METADATA_BRIGHTNESS);
     }
 
     public DecentColor getGlowColor() {
@@ -146,7 +146,7 @@ public class PresentedRenderState {
 
     public void setGlowColor(DecentColor glowColor) {
         this.glowColor = glowColor;
-        markDirty(MutableStateField.METADATA_GLOW_COLOR);
+        markDirty(PresentedRenderStateField.METADATA_GLOW_COLOR);
     }
 
     public ItemDisplayType getItemDisplayType() {
@@ -155,7 +155,7 @@ public class PresentedRenderState {
 
     public void setItemDisplayType(ItemDisplayType itemDisplayType) {
         this.itemDisplayType = itemDisplayType;
-        markDirty(MutableStateField.METADATA_ITEM_DISPLAY_TYPE);
+        markDirty(PresentedRenderStateField.METADATA_ITEM_DISPLAY_TYPE);
     }
 
     public Float getPitch() {
@@ -164,7 +164,7 @@ public class PresentedRenderState {
 
     public void setPitch(Float pitch) {
         this.pitch = pitch;
-        markDirty(MutableStateField.LOCATION);
+        markDirty(PresentedRenderStateField.LOCATION);
     }
 
     public DecentVector3f getScale() {
@@ -173,7 +173,7 @@ public class PresentedRenderState {
 
     public void setScale(DecentVector3f scale) {
         this.scale = scale;
-        markDirty(MutableStateField.METADATA_SCALE);
+        markDirty(PresentedRenderStateField.METADATA_SCALE);
     }
 
     public Float getShadowRadius() {
@@ -182,7 +182,7 @@ public class PresentedRenderState {
 
     public void setShadowRadius(Float shadowRadius) {
         this.shadowRadius = shadowRadius;
-        markDirty(MutableStateField.METADATA_SHADOW_RADIUS);
+        markDirty(PresentedRenderStateField.METADATA_SHADOW_RADIUS);
     }
 
     public Float getShadowStrength() {
@@ -191,7 +191,7 @@ public class PresentedRenderState {
 
     public void setShadowStrength(Float shadowStrength) {
         this.shadowStrength = shadowStrength;
-        markDirty(MutableStateField.METADATA_SHADOW_STRENGTH);
+        markDirty(PresentedRenderStateField.METADATA_SHADOW_STRENGTH);
     }
 
     public TextDisplayAlignment getTextAlignment() {
@@ -200,7 +200,7 @@ public class PresentedRenderState {
 
     public void setTextAlignment(TextDisplayAlignment textAlignment) {
         this.textAlignment = textAlignment;
-        markDirty(MutableStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
     }
 
     public DecentColor getTextBackgroundColor() {
@@ -209,7 +209,7 @@ public class PresentedRenderState {
 
     public void setTextBackgroundColor(DecentColor textBackgroundColor) {
         this.textBackgroundColor = textBackgroundColor;
-        markDirty(MutableStateField.METADATA_TEXT_BACKGROUND_COLOR);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_BACKGROUND_COLOR);
     }
 
     public Integer getTextLineWidth() {
@@ -218,7 +218,7 @@ public class PresentedRenderState {
 
     public void setTextLineWidth(Integer textLineWidth) {
         this.textLineWidth = textLineWidth;
-        markDirty(MutableStateField.METADATA_TEXT_LINE_WIDTH);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_LINE_WIDTH);
     }
 
     public Integer getTextOpacity() {
@@ -227,7 +227,7 @@ public class PresentedRenderState {
 
     public void setTextOpacity(Integer textOpacity) {
         this.textOpacity = textOpacity;
-        markDirty(MutableStateField.METADATA_TEXT_DISPLAY_OPACITY);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_OPACITY);
     }
 
     public Boolean getTextSeeThrough() {
@@ -236,7 +236,7 @@ public class PresentedRenderState {
 
     public void setTextSeeThrough(Boolean textSeeThrough) {
         this.textSeeThrough = textSeeThrough;
-        markDirty(MutableStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
     }
 
     public Boolean getTextShadow() {
@@ -245,7 +245,7 @@ public class PresentedRenderState {
 
     public void setTextShadow(Boolean textShadow) {
         this.textShadow = textShadow;
-        markDirty(MutableStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
+        markDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES);
     }
 
     public DecentVector3f getTranslation() {
@@ -254,7 +254,7 @@ public class PresentedRenderState {
 
     public void setTranslation(DecentVector3f translation) {
         this.translation = translation;
-        markDirty(MutableStateField.METADATA_TRANSLATION);
+        markDirty(PresentedRenderStateField.METADATA_TRANSLATION);
     }
 
     public Float getYaw() {
@@ -263,6 +263,6 @@ public class PresentedRenderState {
 
     public void setYaw(Float yaw) {
         this.yaw = yaw;
-        markDirty(MutableStateField.LOCATION);
+        markDirty(PresentedRenderStateField.LOCATION);
     }
 }

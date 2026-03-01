@@ -36,21 +36,21 @@ public class DisplayRenderService {
     private final DisplayRenderIntentMaterializer intentMaterializer;
     private final PlatformRenderService platformRenderService;
     private final PresentedRenderStateManager presentedRenderStateManager;
-    private final DisplayPostProcessingService postProcessingService;
+    private final DisplayPostProcessor postProcessor;
 
     public DisplayRenderService(DisplayRenderIntentMaterializer intentMaterializer,
                                 PlatformRenderService platformRenderService,
                                 PresentedRenderStateManager presentedRenderStateManager,
-                                DisplayPostProcessingService postProcessingService) {
+                                DisplayPostProcessor postProcessor) {
         this.intentMaterializer = intentMaterializer;
         this.platformRenderService = platformRenderService;
         this.presentedRenderStateManager = presentedRenderStateManager;
-        this.postProcessingService = postProcessingService;
+        this.postProcessor = postProcessor;
     }
 
     public void render(RenderObjectHandle handle, LogicalRenderState logicalState, DisplayRenderContext context) {
         PresentedRenderState previousState = getPreviousState(handle.getId(), context);
-        PresentedRenderState currentState = postProcessingService.postProcess(logicalState, previousState);
+        PresentedRenderState currentState = postProcessor.postProcess(logicalState, previousState);
         if (logicalState != null && currentState != null && !currentState.hasChanges()) {
             return;
         }

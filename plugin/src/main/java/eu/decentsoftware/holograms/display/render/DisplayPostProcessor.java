@@ -38,40 +38,39 @@ import eu.decentsoftware.holograms.profiler.TimerHandle;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayPostProcessingService {
+public class DisplayPostProcessor {
 
     private final AttributeDefinitionRegistry attributeDefinitionRegistry;
-    private final TextPostProcessingService textPostProcessingService;
+    private final TextPostProcessor textPostProcessor;
 
-    public DisplayPostProcessingService(AttributeDefinitionRegistry attributeDefinitionRegistry,
-                                        TextPostProcessingService textPostProcessingService) {
+    public DisplayPostProcessor(AttributeDefinitionRegistry attributeDefinitionRegistry, TextPostProcessor textPostProcessor) {
         this.attributeDefinitionRegistry = attributeDefinitionRegistry;
-        this.textPostProcessingService = textPostProcessingService;
+        this.textPostProcessor = textPostProcessor;
     }
 
-    public PresentedRenderState postProcess(LogicalRenderState logicalState, PresentedRenderState mutableState) {
+    public PresentedRenderState postProcess(LogicalRenderState logicalState, PresentedRenderState presentedState) {
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS)) {
-            return postProcessInternal(logicalState, mutableState);
+            return postProcessInternal(logicalState, presentedState);
         }
     }
 
-    private PresentedRenderState postProcessInternal(LogicalRenderState logicalState, PresentedRenderState mutableState) {
+    private PresentedRenderState postProcessInternal(LogicalRenderState logicalState, PresentedRenderState presentedState) {
         if (logicalState == null) {
             return null;
         }
 
-        if (mutableState == null) {
+        if (presentedState == null) {
             return createMutableRenderState(logicalState);
         }
 
-        mutableState.beginFrame();
+        presentedState.beginFrame();
 
         if (logicalState.getContent().isDirty()) {
-            applyContent(logicalState, mutableState);
+            applyContent(logicalState, presentedState);
         }
 
-        applyDirtyAttributes(logicalState, mutableState);
-        return mutableState;
+        applyDirtyAttributes(logicalState, presentedState);
+        return presentedState;
     }
 
     private PresentedRenderState createMutableRenderState(LogicalRenderState logicalState) {
@@ -93,7 +92,7 @@ public class DisplayPostProcessingService {
     }
 
     private void applyTextContent(PresentedRenderState presentedState, CompiledTextDisplayContent textContent) {
-        List<String> postProcessedLines = textPostProcessingService.postProcess(textContent);
+        List<String> postProcessedLines = textPostProcessor.postProcess(textContent);
         TextDisplayContent content = new TextDisplayContent(postProcessedLines);
         presentedState.setContent(content);
     }
@@ -108,28 +107,28 @@ public class DisplayPostProcessingService {
         presentedState.setContent(content);
     }
 
-    private void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState mutableState) {
+    private void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
         Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
         for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
             CompiledAttributeValue<?> value = entry.getValue();
             if (value.isDirty()) {
-                applyAttribute(entry.getKey(), value, mutableState);
+                applyAttribute(entry.getKey(), value, presentedState);
             }
         }
     }
 
-    private void applyAttributes(LogicalRenderState logicalState, PresentedRenderState mutableState) {
+    private void applyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
         Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
         for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
-            applyAttribute(entry.getKey(), entry.getValue(), mutableState);
+            applyAttribute(entry.getKey(), entry.getValue(), presentedState);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, PresentedRenderState mutableState) {
+    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, PresentedRenderState presentedState) {
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
-            definition.apply((CompiledAttributeValue<T>) attributeValue, mutableState);
+            definition.apply((CompiledAttributeValue<T>) attributeValue, presentedState);
         }
     }
 }

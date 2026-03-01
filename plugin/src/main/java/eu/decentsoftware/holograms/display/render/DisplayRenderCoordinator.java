@@ -20,9 +20,8 @@ package eu.decentsoftware.holograms.display.render;
 
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
-import eu.decentsoftware.holograms.display.DisplayVisibilityService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
-import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateBuilder;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
@@ -32,18 +31,18 @@ public class DisplayRenderCoordinator {
 
     private final DisplayVisibilityService visibilityService;
     private final PlatformPlayerService playerService;
-    private final LogicalRenderStateBuilder logicalRenderStateBuilder;
+    private final LogicalRenderStateService logicalRenderStateService;
     private final DisplayRenderService renderService;
     private final LogicalRenderStateManager logicalRenderStateManager;
 
     public DisplayRenderCoordinator(DisplayVisibilityService visibilityService,
                                     PlatformPlayerService playerService,
-                                    LogicalRenderStateBuilder logicalRenderStateBuilder,
+                                    LogicalRenderStateService logicalRenderStateService,
                                     DisplayRenderService renderService,
                                     LogicalRenderStateManager logicalRenderStateManager) {
         this.visibilityService = visibilityService;
         this.playerService = playerService;
-        this.logicalRenderStateBuilder = logicalRenderStateBuilder;
+        this.logicalRenderStateService = logicalRenderStateService;
         this.renderService = renderService;
         this.logicalRenderStateManager = logicalRenderStateManager;
     }
@@ -101,7 +100,7 @@ public class DisplayRenderCoordinator {
             LogicalRenderState currentState = logicalRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
             LogicalRenderState state;
             if (visible) {
-                state = logicalRenderStateBuilder.updateState(display, context, currentState);
+                state = logicalRenderStateService.updateState(display, context, currentState);
             } else {
                 state = null;
                 renderService.render(handle, null, context);

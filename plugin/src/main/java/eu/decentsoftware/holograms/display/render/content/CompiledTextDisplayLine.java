@@ -20,12 +20,12 @@ package eu.decentsoftware.holograms.display.render.content;
 
 import java.util.List;
 
-public final class TextDisplayLine {
+public final class CompiledTextDisplayLine {
 
     private final String text;
     private final List<CompiledAnimation> animations;
 
-    public TextDisplayLine(String text, List<CompiledAnimation> animations) {
+    public CompiledTextDisplayLine(String text, List<CompiledAnimation> animations) {
         this.text = text;
         this.animations = animations;
     }

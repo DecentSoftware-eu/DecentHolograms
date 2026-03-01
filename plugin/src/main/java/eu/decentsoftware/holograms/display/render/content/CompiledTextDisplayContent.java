@@ -20,14 +20,14 @@ package eu.decentsoftware.holograms.display.render.content;
 
 import java.util.List;
 
-public final class CompiledTextDisplayContent implements CompiledDisplayContent<List<TextDisplayLine>> {
+public final class CompiledTextDisplayContent implements CompiledDisplayContent<List<CompiledTextDisplayLine>> {
 
-    private final List<TextDisplayLine> content;
+    private final List<CompiledTextDisplayLine> content;
     private final boolean animated;
     private final boolean hasPlaceholders;
     private boolean dirty;
 
-    public CompiledTextDisplayContent(List<TextDisplayLine> content, boolean animated, boolean hasPlaceholders) {
+    public CompiledTextDisplayContent(List<CompiledTextDisplayLine> content, boolean animated, boolean hasPlaceholders) {
         this.content = content;
         this.animated = animated;
         this.hasPlaceholders = hasPlaceholders;
@@ -35,7 +35,7 @@ public final class CompiledTextDisplayContent implements CompiledDisplayContent<
     }
 
     @Override
-    public List<TextDisplayLine> getContent() {
+    public List<CompiledTextDisplayLine> getContent() {
         if (dirty) {
             dirty = false;
         }

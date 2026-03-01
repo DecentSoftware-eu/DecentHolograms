@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.render.state;
 
-public enum MutableStateField {
+public enum PresentedRenderStateField {
     LOCATION,
     CONTENT,
     METADATA_BILLBOARD_CONSTRAINTS,

@@ -48,24 +48,24 @@ import java.util.Map;
  * @see TextFormat#LEGACY
  * @since 2.10.0
  */
-public class CachingBukkitLegacyTextFormatter implements TextFormatter {
+public class LegacyCachingBukkitTextFormatter implements TextFormatter {
 
     public static final int DEFAULT_MAX_CACHE_SIZE = 2000;
     private final Map<String, String> cache;
 
     /**
-     * Creates a new instance of the {@code CachingBukkitLegacyTextFormatter} with the default maximum cache size.
+     * Creates a new instance of the {@code LegacyCachingBukkitTextFormatter} with the default maximum cache size.
      *
-     * @see #CachingBukkitLegacyTextFormatter(int)
+     * @see #LegacyCachingBukkitTextFormatter(int)
      * @see #DEFAULT_MAX_CACHE_SIZE
      * @since 2.10.0
      */
-    public CachingBukkitLegacyTextFormatter() {
+    public LegacyCachingBukkitTextFormatter() {
         this(DEFAULT_MAX_CACHE_SIZE);
     }
 
     /**
-     * Constructs a new {@code CachingBukkitLegacyTextFormatter} instance with the specified maximum cache size.
+     * Constructs a new {@code LegacyCachingBukkitTextFormatter} instance with the specified maximum cache size.
      *
      * <p>The formatter uses the least recently used (LRU) eviction policy, implemented via a
      * {@link LinkedHashMap} with access order enabled. Text formatting results are cached
@@ -77,7 +77,7 @@ public class CachingBukkitLegacyTextFormatter implements TextFormatter {
      * @throws IllegalArgumentException if {@code maxSize} is not a positive integer.
      * @since 2.10.0
      */
-    public CachingBukkitLegacyTextFormatter(int maxSize) {
+    public LegacyCachingBukkitTextFormatter(int maxSize) {
         if (maxSize <= 0) {
             throw new IllegalArgumentException("maxSize must be a positive integer");
         }
