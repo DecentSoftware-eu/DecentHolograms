@@ -22,12 +22,12 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
-import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
-import eu.decentsoftware.holograms.platform.api.data.display.BlockDisplayContent;
 import eu.decentsoftware.holograms.display.render.content.CompiledBlockDisplayContent;
 import eu.decentsoftware.holograms.display.render.content.CompiledItemDisplayContent;
 import eu.decentsoftware.holograms.display.render.content.CompiledTextDisplayContent;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
+import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
+import eu.decentsoftware.holograms.platform.api.data.display.BlockDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
@@ -64,6 +64,10 @@ public class DisplayPostProcessor {
         }
 
         presentedState.beginFrame();
+
+        if (!logicalState.getLocation().equals(presentedState.getLocation())) {
+            presentedState.setLocation(logicalState.getLocation());
+        }
 
         if (logicalState.getContent().isDirty()) {
             applyContent(logicalState, presentedState);

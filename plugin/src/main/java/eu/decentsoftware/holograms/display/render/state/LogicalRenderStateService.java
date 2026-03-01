@@ -42,11 +42,11 @@ public class LogicalRenderStateService {
             return createNewLogicalDisplayRenderState(display, context);
         }
 
-        currentState.setLocation(display.getLocation());
         if (display.checkContentDirty() || currentState.getContent().isDynamic()) {
             applyContent(display, currentState, context);
         }
         if (display.checkConfigDirty()) {
+            currentState.setLocation(display.getLocation());
             currentState.clearAttributes();
             applyAttributes(display, currentState, context);
         }
