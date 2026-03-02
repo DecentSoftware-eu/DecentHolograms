@@ -20,11 +20,10 @@ package eu.decentsoftware.holograms.platform.api.render.intent;
 
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Represents a rendering operation for spawning a display at a specific location with associated metadata and content.
@@ -41,11 +40,11 @@ import java.util.Map;
 public final class SpawnDisplayRenderIntent implements RenderIntent {
 
     private final DecentLocation location;
-    private final Map<MetadataKey<?>, MetadataValue<?>> metadataValues;
+    private final List<MetadataValue<?>> metadataValues;
     private final DisplayContent<?> content;
 
     public SpawnDisplayRenderIntent(@NotNull DecentLocation location,
-                                    @NotNull Map<MetadataKey<?>, MetadataValue<?>> metadataValues,
+                                    @NotNull List<MetadataValue<?>> metadataValues,
                                     @NotNull DisplayContent<?> content) {
         this.location = location;
         this.metadataValues = metadataValues;
@@ -68,7 +67,7 @@ public final class SpawnDisplayRenderIntent implements RenderIntent {
      * @return The metadata values.
      */
     @NotNull
-    public Map<MetadataKey<?>, MetadataValue<?>> getMetadataValues() {
+    public List<MetadataValue<?>> getMetadataValues() {
         return metadataValues;
     }
 

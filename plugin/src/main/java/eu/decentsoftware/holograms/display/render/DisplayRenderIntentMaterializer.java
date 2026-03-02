@@ -36,9 +36,7 @@ import eu.decentsoftware.holograms.profiler.TimerHandle;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DisplayRenderIntentMaterializer {
 
@@ -107,48 +105,48 @@ public class DisplayRenderIntentMaterializer {
         return new UpdateMetadataRenderIntent<>(key, key.createValue(value));
     }
 
-    private Map<MetadataKey<?>, MetadataValue<?>> getFullMetadata(PresentedRenderState state) {
-        Map<MetadataKey<?>, MetadataValue<?>> metadata = new HashMap<>();
+    private List<MetadataValue<?>> getFullMetadata(PresentedRenderState state) {
+        List<MetadataValue<?>> metadata = new ArrayList<>();
         if (state.getBillboardConstraints() != null) {
-            metadata.put(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS, BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(state.getBillboardConstraints()));
+            metadata.add(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(state.getBillboardConstraints()));
         }
         if (state.getBrightness() != null) {
-            metadata.put(BuiltInMetadataKeys.BRIGHTNESS, BuiltInMetadataKeys.BRIGHTNESS.createValue(state.getBrightness()));
+            metadata.add(BuiltInMetadataKeys.BRIGHTNESS.createValue(state.getBrightness()));
         }
         if (state.getGlowColor() != null) {
-            metadata.put(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE, BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(state.getGlowColor()));
-            metadata.put(BuiltInMetadataKeys.GLOWING, BuiltInMetadataKeys.GLOWING.createValue(true));
+            metadata.add(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(state.getGlowColor()));
+            metadata.add(BuiltInMetadataKeys.GLOWING.createValue(true));
         }
         if (state.getItemDisplayType() != null) {
-            metadata.put(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE, BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(state.getItemDisplayType()));
+            metadata.add(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(state.getItemDisplayType()));
         }
         if (state.getScale() != null) {
-            metadata.put(BuiltInMetadataKeys.SCALE, BuiltInMetadataKeys.SCALE.createValue(state.getScale()));
+            metadata.add(BuiltInMetadataKeys.SCALE.createValue(state.getScale()));
         }
         if (state.getShadowRadius() != null) {
-            metadata.put(BuiltInMetadataKeys.SHADOW_RADIUS, BuiltInMetadataKeys.SHADOW_RADIUS.createValue(state.getShadowRadius()));
+            metadata.add(BuiltInMetadataKeys.SHADOW_RADIUS.createValue(state.getShadowRadius()));
         }
         if (state.getShadowStrength() != null) {
-            metadata.put(BuiltInMetadataKeys.SHADOW_STRENGTH, BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(state.getShadowStrength()));
+            metadata.add(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(state.getShadowStrength()));
         }
         if (state.getTextAlignment() != null || state.getTextSeeThrough() != null || state.getTextShadow() != null) {
             TextDisplayProperties properties = new TextDisplayProperties();
             properties.setAlignment(state.getTextAlignment());
             properties.setSeeThrough(state.getTextSeeThrough());
             properties.setHasShadow(state.getTextShadow());
-            metadata.put(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES, BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(properties));
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(properties));
         }
         if (state.getTextOpacity() != null) {
-            metadata.put(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY, BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(state.getTextOpacity()));
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(state.getTextOpacity()));
         }
         if (state.getTextBackgroundColor() != null) {
-            metadata.put(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND, BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(state.getTextBackgroundColor()));
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(state.getTextBackgroundColor()));
         }
         if (state.getTextLineWidth() != null) {
-            metadata.put(BuiltInMetadataKeys.TEXT_LINE_WIDTH, BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(state.getTextLineWidth()));
+            metadata.add(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(state.getTextLineWidth()));
         }
         if (state.getTranslation() != null) {
-            metadata.put(BuiltInMetadataKeys.TRANSLATION, BuiltInMetadataKeys.TRANSLATION.createValue(state.getTranslation()));
+            metadata.add(BuiltInMetadataKeys.TRANSLATION.createValue(state.getTranslation()));
         }
         return metadata;
     }
