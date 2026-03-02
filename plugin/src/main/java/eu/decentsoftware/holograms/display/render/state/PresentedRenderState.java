@@ -29,7 +29,6 @@ import eu.decentsoftware.holograms.platform.api.data.display.ItemDisplayType;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayAlignment;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 public class PresentedRenderState {
 
@@ -79,17 +78,14 @@ public class PresentedRenderState {
     }
 
     /**
-     * Returns which fields were modified this frame.
-     */
-    public Set<PresentedRenderStateField> getDirtyFields() {
-        return EnumSet.copyOf(dirtyFields);
-    }
-
-    /**
      * Checks if any fields were modified this frame.
      */
     public boolean hasChanges() {
         return isNew || !dirtyFields.isEmpty();
+    }
+
+    public boolean isDirty(PresentedRenderStateField field) {
+        return dirtyFields.contains(field);
     }
 
     private void markDirty(PresentedRenderStateField field) {

@@ -33,6 +33,7 @@ import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
+import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -51,23 +52,19 @@ public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
 
     @Override
     public void apply(Player player, RenderObjectHandle handle, List<RenderIntent> intents) {
-        List<NmsDisplayMetadata<?>> metadataToUpdate = new ArrayList<>();
         for (RenderIntent intent : intents) {
             if (intent instanceof SpawnDisplayRenderIntent) {
                 handleSpawnIntent(player, (SpawnDisplayRenderIntent) intent);
             } else if (intent instanceof UpdateDisplayContentRenderIntent) {
                 handleUpdateContentIntent(player, (UpdateDisplayContentRenderIntent) intent);
-            } else if (intent instanceof UpdateMetadataRenderIntent<?>) {
-                handleUpdateMetadataIntent((UpdateMetadataRenderIntent<?>) intent, metadataToUpdate);
+            } else if (intent instanceof UpdateMetadataRenderIntent) {
+                handleUpdateMetadataIntent(player, (UpdateMetadataRenderIntent) intent);
             } else if (intent instanceof MoveRenderIntent) {
                 handleMoveIntent(player, (MoveRenderIntent) intent);
             } else if (intent instanceof DespawnDisplayRenderIntent) {
                 handleDespawnIntent(player);
             }
         }
-
-        // Send all metadata at once; it can be in a single packet
-        sendCollectedMetadata(player, metadataToUpdate);
     }
 
     private void handleSpawnIntent(Player player, SpawnDisplayRenderIntent intent) {
@@ -86,9 +83,14 @@ public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
         renderer.updateContent(player, updateDisplayData);
     }
 
-    private void handleUpdateMetadataIntent(UpdateMetadataRenderIntent<?> intent, List<NmsDisplayMetadata<?>> metadataToUpdate) {
-        NmsDisplayMetadata<?> metadatum = mapMetadatum(intent.getValue());
-        metadataToUpdate.add(metadatum);
+    private void handleUpdateMetadataIntent(Player player, UpdateMetadataRenderIntent intent) {
+        List<MetadataValue<?>> metadataValues = intent.getMetadataValues();
+        List<NmsDisplayMetadata<?>> metadataToUpdate = new ArrayList<>(metadataValues.size());
+        for (MetadataValue<?> metadataValue : metadataValues) {
+            NmsDisplayMetadata<?> metadatum = mapMetadatum(metadataValue);
+            metadataToUpdate.add(metadatum);
+        }
+        sendCollectedMetadata(player, metadataToUpdate);
     }
 
     private void sendCollectedMetadata(Player player, List<NmsDisplayMetadata<?>> metadataToUpdate) {

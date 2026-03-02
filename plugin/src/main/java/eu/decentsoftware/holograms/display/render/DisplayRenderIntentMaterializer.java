@@ -28,7 +28,6 @@ import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRender
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.metadata.BuiltInMetadataKeys;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
 import eu.decentsoftware.holograms.profiler.Metrics;
@@ -61,44 +60,18 @@ public class DisplayRenderIntentMaterializer {
         }
 
         List<RenderIntent> intentList = new ArrayList<>();
-        for (PresentedRenderStateField dirtyField : state.getDirtyFields()) {
-            if (dirtyField == PresentedRenderStateField.LOCATION) {
-                intentList.add(new MoveRenderIntent(state.getLocation()));
-            } else if (dirtyField == PresentedRenderStateField.CONTENT) {
-                intentList.add(new UpdateDisplayContentRenderIntent(state.getContent()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_BILLBOARD_CONSTRAINTS) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS, state.getBillboardConstraints()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_BRIGHTNESS) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.BRIGHTNESS, state.getBrightness()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_GLOW_COLOR) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE, state.getGlowColor()));
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.GLOWING, state.getGlowColor() != null));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_ITEM_DISPLAY_TYPE) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE, state.getItemDisplayType()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_SCALE) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.SCALE, state.getScale()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_SHADOW_RADIUS) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.SHADOW_RADIUS, state.getShadowRadius()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_SHADOW_STRENGTH) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.SHADOW_STRENGTH, state.getShadowStrength()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES, getTextDisplayProperties(state)));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_DISPLAY_OPACITY) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY, state.getTextOpacity()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_BACKGROUND_COLOR) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND, state.getTextBackgroundColor()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_LINE_WIDTH) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_LINE_WIDTH, state.getTextLineWidth()));
-            } else if (dirtyField == PresentedRenderStateField.METADATA_TRANSLATION) {
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TRANSLATION, state.getTranslation()));
-            }
+        if (state.isDirty(PresentedRenderStateField.LOCATION)) {
+            intentList.add(new MoveRenderIntent(state.getLocation()));
+        }
+        if (state.isDirty(PresentedRenderStateField.CONTENT)) {
+            intentList.add(new UpdateDisplayContentRenderIntent(state.getContent()));
+        }
+        List<MetadataValue<?>> metadataValues = getChangedMetadata(state);
+        if (!metadataValues.isEmpty()) {
+            intentList.add(new UpdateMetadataRenderIntent(metadataValues));
         }
 
         return intentList;
-    }
-
-    private <T> UpdateMetadataRenderIntent<T> createMetadataIntent(MetadataKey<T> key, T value) {
-        return new UpdateMetadataRenderIntent<>(key, key.createValue(value));
     }
 
     private List<MetadataValue<?>> getFullMetadata(PresentedRenderState state) {
@@ -138,6 +111,48 @@ public class DisplayRenderIntentMaterializer {
             metadata.add(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(state.getTextLineWidth()));
         }
         if (state.getTranslation() != null) {
+            metadata.add(BuiltInMetadataKeys.TRANSLATION.createValue(state.getTranslation()));
+        }
+        return metadata;
+    }
+
+    private List<MetadataValue<?>> getChangedMetadata(PresentedRenderState state) {
+        List<MetadataValue<?>> metadata = new ArrayList<>();
+        if (state.isDirty(PresentedRenderStateField.METADATA_BILLBOARD_CONSTRAINTS)) {
+            metadata.add(BuiltInMetadataKeys.BILLBOARD_CONSTRAINTS.createValue(state.getBillboardConstraints()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_BRIGHTNESS)) {
+            metadata.add(BuiltInMetadataKeys.BRIGHTNESS.createValue(state.getBrightness()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_GLOW_COLOR)) {
+            metadata.add(BuiltInMetadataKeys.GLOW_COLOR_OVERRIDE.createValue(state.getGlowColor()));
+            metadata.add(BuiltInMetadataKeys.GLOWING.createValue(state.getGlowColor() != null));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_ITEM_DISPLAY_TYPE)) {
+            metadata.add(BuiltInMetadataKeys.ITEM_DISPLAY_TYPE.createValue(state.getItemDisplayType()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_SCALE)) {
+            metadata.add(BuiltInMetadataKeys.SCALE.createValue(state.getScale()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_SHADOW_RADIUS)) {
+            metadata.add(BuiltInMetadataKeys.SHADOW_RADIUS.createValue(state.getShadowRadius()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_SHADOW_STRENGTH)) {
+            metadata.add(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(state.getShadowStrength()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES)) {
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(getTextDisplayProperties(state)));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_TEXT_DISPLAY_OPACITY)) {
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(state.getTextOpacity()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_TEXT_BACKGROUND_COLOR)) {
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_BACKGROUND.createValue(state.getTextBackgroundColor()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_TEXT_LINE_WIDTH)) {
+            metadata.add(BuiltInMetadataKeys.TEXT_LINE_WIDTH.createValue(state.getTextLineWidth()));
+        }
+        if (state.isDirty(PresentedRenderStateField.METADATA_TRANSLATION)) {
             metadata.add(BuiltInMetadataKeys.TRANSLATION.createValue(state.getTranslation()));
         }
         return metadata;
