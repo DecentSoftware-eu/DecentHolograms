@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BukkitRenderService implements PlatformRenderService {
 
-    private final Map<String, BukkitDisplayRenderService> renderServices = new ConcurrentHashMap<>();
+    private final Map<String, BukkitDisplayRenderService<?>> renderServices = new ConcurrentHashMap<>();
     private final NmsDisplayRendererFactory rendererFactory;
     private final BukkitItemFactory itemFactory;
 
@@ -52,15 +52,15 @@ public class BukkitRenderService implements PlatformRenderService {
     @Override
     public void render(@NotNull PlatformPlayer player, @NotNull RenderObjectHandle handle, @NotNull List<RenderIntent> intents) {
         Player bukkitPlayer = ((BukkitPlayer) player).getBukkitPlayer();
-        BukkitDisplayRenderService renderService = getRenderService(handle);
-        renderService.apply(bukkitPlayer, handle, intents);
+        BukkitDisplayRenderService<?> renderService = getRenderService(handle);
+        renderService.apply(bukkitPlayer, intents);
     }
 
-    private BukkitDisplayRenderService getRenderService(RenderObjectHandle handle) {
+    private BukkitDisplayRenderService<?> getRenderService(RenderObjectHandle handle) {
         return renderServices.computeIfAbsent(handle.getId(), k -> createRenderService(handle));
     }
 
-    private BukkitDisplayRenderService createRenderService(RenderObjectHandle handle) {
+    private BukkitDisplayRenderService<?> createRenderService(RenderObjectHandle handle) {
         switch (handle.getDisplayType()) {
             case TEXT:
                 NmsTextDisplayRenderer textDisplayRenderer = rendererFactory.createTextDisplayRenderer();

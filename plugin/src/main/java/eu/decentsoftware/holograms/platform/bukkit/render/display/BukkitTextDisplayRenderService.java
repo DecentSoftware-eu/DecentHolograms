@@ -19,96 +19,38 @@
 package eu.decentsoftware.holograms.platform.bukkit.render.display;
 
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayMetadata;
-import eu.decentsoftware.holograms.nms.api.display.NmsMoveDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
-import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayContent;
 import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
-import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
-import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
-import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService {
+public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService<String> {
 
     private static final String LINE_SEPARATOR = ChatColor.RESET + "\n";
-    private final NmsTextDisplayRenderer renderer;
 
     public BukkitTextDisplayRenderService(NmsTextDisplayRenderer renderer) {
-        this.renderer = renderer;
+        super(renderer);
     }
 
     @Override
-    public void apply(Player player, RenderObjectHandle handle, List<RenderIntent> intents) {
-        for (RenderIntent intent : intents) {
-            if (intent instanceof SpawnDisplayRenderIntent) {
-                handleSpawnIntent(player, (SpawnDisplayRenderIntent) intent);
-            } else if (intent instanceof UpdateDisplayContentRenderIntent) {
-                handleUpdateContentIntent(player, (UpdateDisplayContentRenderIntent) intent);
-            } else if (intent instanceof UpdateMetadataRenderIntent) {
-                handleUpdateMetadataIntent(player, (UpdateMetadataRenderIntent) intent);
-            } else if (intent instanceof MoveRenderIntent) {
-                handleMoveIntent(player, (MoveRenderIntent) intent);
-            } else if (intent instanceof DespawnDisplayRenderIntent) {
-                handleDespawnIntent(player);
-            }
-        }
-    }
-
-    private void handleSpawnIntent(Player player, SpawnDisplayRenderIntent intent) {
-        DecentPosition position = mapPosition(intent.getLocation());
-        List<NmsDisplayMetadata<?>> metadata = mapMetadata(intent.getMetadataValues());
+    protected NmsSpawnDisplayData<String> createNmsSpawnDisplayData(SpawnDisplayRenderIntent intent,
+                                                                    DecentPosition position,
+                                                                    List<NmsDisplayMetadata<?>> metadata) {
         String text = getTextFromContent(intent.getContent());
-
-        NmsSpawnDisplayData<String> spawnDisplayData = new NmsSpawnDisplayData<>(position, metadata, text);
-        renderer.spawn(player, spawnDisplayData);
+        return new NmsSpawnDisplayData<>(position, metadata, text);
     }
 
-    private void handleUpdateContentIntent(Player player, UpdateDisplayContentRenderIntent intent) {
+    @Override
+    protected NmsUpdateDisplayContentData<String> createNmsUpdateDisplayContentData(UpdateDisplayContentRenderIntent intent) {
         String text = getTextFromContent(intent.getContent());
-
-        NmsUpdateDisplayContentData<String> updateDisplayData = new NmsUpdateDisplayContentData<>(text);
-        renderer.updateContent(player, updateDisplayData);
-    }
-
-    private void handleUpdateMetadataIntent(Player player, UpdateMetadataRenderIntent intent) {
-        List<MetadataValue<?>> metadataValues = intent.getMetadataValues();
-        List<NmsDisplayMetadata<?>> metadataToUpdate = new ArrayList<>(metadataValues.size());
-        for (MetadataValue<?> metadataValue : metadataValues) {
-            NmsDisplayMetadata<?> metadatum = mapMetadatum(metadataValue);
-            metadataToUpdate.add(metadatum);
-        }
-        sendCollectedMetadata(player, metadataToUpdate);
-    }
-
-    private void sendCollectedMetadata(Player player, List<NmsDisplayMetadata<?>> metadataToUpdate) {
-        if (!metadataToUpdate.isEmpty()) {
-            NmsUpdateDisplayMetadataData metadataData = new NmsUpdateDisplayMetadataData(metadataToUpdate);
-            renderer.updateMetadata(player, metadataData);
-        }
-    }
-
-    private void handleMoveIntent(Player player, MoveRenderIntent intent) {
-        DecentPosition position = mapPosition(intent.getLocation());
-
-        NmsMoveDisplayData moveDisplayData = new NmsMoveDisplayData(position);
-        renderer.move(player, moveDisplayData);
-    }
-
-    private void handleDespawnIntent(Player player) {
-        renderer.despawn(player);
+        return new NmsUpdateDisplayContentData<>(text);
     }
 
     private String getTextFromContent(DisplayContent<?> content) {
