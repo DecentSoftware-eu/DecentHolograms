@@ -82,11 +82,7 @@ public class DisplayRenderIntentMaterializer {
             } else if (dirtyField == PresentedRenderStateField.METADATA_SHADOW_STRENGTH) {
                 intentList.add(createMetadataIntent(BuiltInMetadataKeys.SHADOW_STRENGTH, state.getShadowStrength()));
             } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_DISPLAY_PROPERTIES) {
-                TextDisplayProperties properties = new TextDisplayProperties();
-                properties.setAlignment(state.getTextAlignment());
-                properties.setSeeThrough(state.getTextSeeThrough());
-                properties.setHasShadow(state.getTextShadow());
-                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES, properties));
+                intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES, getTextDisplayProperties(state)));
             } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_DISPLAY_OPACITY) {
                 intentList.add(createMetadataIntent(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY, state.getTextOpacity()));
             } else if (dirtyField == PresentedRenderStateField.METADATA_TEXT_BACKGROUND_COLOR) {
@@ -130,11 +126,7 @@ public class DisplayRenderIntentMaterializer {
             metadata.add(BuiltInMetadataKeys.SHADOW_STRENGTH.createValue(state.getShadowStrength()));
         }
         if (state.getTextAlignment() != null || state.getTextSeeThrough() != null || state.getTextShadow() != null) {
-            TextDisplayProperties properties = new TextDisplayProperties();
-            properties.setAlignment(state.getTextAlignment());
-            properties.setSeeThrough(state.getTextSeeThrough());
-            properties.setHasShadow(state.getTextShadow());
-            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(properties));
+            metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_PROPERTIES.createValue(getTextDisplayProperties(state)));
         }
         if (state.getTextOpacity() != null) {
             metadata.add(BuiltInMetadataKeys.TEXT_DISPLAY_OPACITY.createValue(state.getTextOpacity()));
@@ -149,5 +141,13 @@ public class DisplayRenderIntentMaterializer {
             metadata.add(BuiltInMetadataKeys.TRANSLATION.createValue(state.getTranslation()));
         }
         return metadata;
+    }
+
+    private TextDisplayProperties getTextDisplayProperties(PresentedRenderState state) {
+        TextDisplayProperties properties = new TextDisplayProperties();
+        properties.setAlignment(state.getTextAlignment());
+        properties.setSeeThrough(state.getTextSeeThrough());
+        properties.setHasShadow(state.getTextShadow());
+        return properties;
     }
 }
