@@ -59,16 +59,4 @@ public class MetadataValue<T> {
     public T getValue() {
         return value;
     }
-
-    /**
-     * Is this metadata value animated?
-     *
-     * <p>The core updates animated metadata values every tick via post-processing.</p>
-     *
-     * @return True if this metadata value is animated, false otherwise.
-     * @since 2.10.0
-     */
-    public boolean isAnimated() {
-        return false;
-    }
 }
