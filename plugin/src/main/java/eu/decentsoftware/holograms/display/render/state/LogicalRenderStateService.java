@@ -25,9 +25,9 @@ import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
-import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
 
 public class LogicalRenderStateService {
 
@@ -85,6 +85,9 @@ public class LogicalRenderStateService {
     private void applyContent(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         DisplayTypeDefinition<?> displayTypeDefinition = displayTypeRegistry.getDefinition(display.getType());
         CompiledDisplayContent<?> content = displayTypeDefinition.resolveContent(display, context);
+        if (content.equals(state.getContent())) {
+            return; // Content hasn't changed
+        }
         state.setContent(content);
     }
 }

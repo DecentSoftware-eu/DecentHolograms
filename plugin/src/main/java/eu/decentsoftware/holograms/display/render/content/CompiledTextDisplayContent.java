@@ -22,12 +22,17 @@ import java.util.List;
 
 public final class CompiledTextDisplayContent implements CompiledDisplayContent<List<CompiledTextDisplayLine>> {
 
+    private final List<String> resolvedContent;
     private final List<CompiledTextDisplayLine> content;
     private final boolean animated;
     private final boolean hasPlaceholders;
     private boolean dirty;
 
-    public CompiledTextDisplayContent(List<CompiledTextDisplayLine> content, boolean animated, boolean hasPlaceholders) {
+    public CompiledTextDisplayContent(List<String> resolvedContent,
+                                      List<CompiledTextDisplayLine> content,
+                                      boolean animated,
+                                      boolean hasPlaceholders) {
+        this.resolvedContent = resolvedContent;
         this.content = content;
         this.animated = animated;
         this.hasPlaceholders = hasPlaceholders;
@@ -50,5 +55,18 @@ public final class CompiledTextDisplayContent implements CompiledDisplayContent<
     @Override
     public boolean isDynamic() {
         return hasPlaceholders;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof CompiledTextDisplayContent)) {
+            return false;
+        }
+        return resolvedContent.equals(((CompiledTextDisplayContent) other).resolvedContent);
+    }
+
+    @Override
+    public int hashCode() {
+        return resolvedContent.hashCode();
     }
 }

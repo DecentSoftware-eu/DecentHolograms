@@ -47,4 +47,17 @@ public final class CompiledBlockDisplayContent implements CompiledDisplayContent
     public boolean isDynamic() {
         return false;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof CompiledBlockDisplayContent)) {
+            return false;
+        }
+        return descriptor.equals(((CompiledBlockDisplayContent) other).descriptor);
+    }
+
+    @Override
+    public int hashCode() {
+        return descriptor.hashCode();
+    }
 }

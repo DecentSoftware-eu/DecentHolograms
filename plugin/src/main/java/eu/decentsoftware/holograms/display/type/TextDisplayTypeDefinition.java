@@ -51,10 +51,12 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Com
     public CompiledDisplayContent<List<CompiledTextDisplayLine>> resolveContent(DisplayBase display, DisplayRenderContext context) {
         TextDisplay textDisplay = getTextDisplay(display);
 
-        List<CompiledTextDisplayLine> resolvedLines = new ArrayList<>();
+        List<String> displayLines = textDisplay.getLines();
+        List<String> resolvedContent = new ArrayList<>(displayLines.size());
+        List<CompiledTextDisplayLine> resolvedLines = new ArrayList<>(displayLines.size());
         boolean anyLineAnimated = false;
         boolean anyLineHasPlaceholders = false;
-        for (String line : textDisplay.getLines()) {
+        for (String line : displayLines) {
             String resolvedLine;
             if (displayPlaceholderService.containsPlaceholders(line)) {
                 resolvedLine = displayPlaceholderService.replacePlaceholders(line, context);
@@ -62,6 +64,8 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Com
             } else {
                 resolvedLine = line;
             }
+
+            resolvedContent.add(resolvedLine);
 
             CompiledAnimationsOutput compiledAnimationsOutput = animationCompiler.compileAnimations(resolvedLine);
             resolvedLine = compiledAnimationsOutput.getStrippedString();
@@ -72,7 +76,7 @@ public class TextDisplayTypeDefinition implements DisplayTypeDefinition<List<Com
 
             resolvedLines.add(displayLine);
         }
-        return new CompiledTextDisplayContent(resolvedLines, anyLineAnimated, anyLineHasPlaceholders);
+        return new CompiledTextDisplayContent(resolvedContent, resolvedLines, anyLineAnimated, anyLineHasPlaceholders);
     }
 
     private TextDisplay getTextDisplay(DisplayBase displayBase) {
