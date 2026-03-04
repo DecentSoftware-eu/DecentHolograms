@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
+import eu.decentsoftware.holograms.platform.api.PlatformEventListener;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 
@@ -36,11 +37,15 @@ public class DisplayService {
 
     private final DisplayPersistenceService persistenceService;
     private final DisplayRenderCoordinator renderCoordinator;
+    private final PlatformEventListener platformEventListener;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
-    public DisplayService(DisplayPersistenceService persistenceService, DisplayRenderCoordinator renderCoordinator) {
+    public DisplayService(DisplayPersistenceService persistenceService,
+                          DisplayRenderCoordinator renderCoordinator,
+                          PlatformEventListener platformEventListener) {
         this.persistenceService = persistenceService;
         this.renderCoordinator = renderCoordinator;
+        this.platformEventListener = platformEventListener;
     }
 
     public void shutdown() {
@@ -84,6 +89,7 @@ public class DisplayService {
         }
         renderCoordinator.hideForEveryone(removedDisplay);
         persistenceService.deleteDisplay(removedDisplay);
+        platformEventListener.onDisplayDestroyed(name);
         return true;
     }
 

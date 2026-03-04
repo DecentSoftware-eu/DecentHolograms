@@ -56,6 +56,10 @@ public class BukkitRenderService implements PlatformRenderService {
         renderService.apply(bukkitPlayer, intents);
     }
 
+    public void unloadDisplay(String name) {
+        renderServices.remove(name);
+    }
+
     private BukkitDisplayRenderService<?> getRenderService(RenderObjectHandle handle) {
         return renderServices.computeIfAbsent(handle.getId(), k -> createRenderService(handle));
     }

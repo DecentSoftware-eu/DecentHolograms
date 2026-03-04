@@ -161,7 +161,7 @@ public class DisplayModule {
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper, platformAdapter.getMaterialService());
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
-        this.displayService = new DisplayService(persistenceService, renderCoordinator);
+        this.displayService = new DisplayService(persistenceService, renderCoordinator, platformAdapter.getEventListener());
         this.displayListener = new DisplayListener(displayService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();

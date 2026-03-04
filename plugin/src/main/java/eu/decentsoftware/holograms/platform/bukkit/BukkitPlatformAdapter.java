@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.platform.bukkit;
 
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
+import eu.decentsoftware.holograms.platform.api.PlatformEventListener;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
 import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
@@ -36,10 +37,11 @@ import java.util.List;
 
 public class BukkitPlatformAdapter implements PlatformAdapter {
 
-    private final PlatformCapabilities capabilities;
-    private final PlatformMaterialService materialService;
+    private final BukkitPlatformCapabilities capabilities;
+    private final BukkitMaterialService materialService;
     private final BukkitPlayerService playerService;
     private final BukkitRenderService renderService;
+    private final BukkitEventListener eventListener;
     private final List<PlaceholderProvider> placeholderProviders;
 
     public BukkitPlatformAdapter(NmsDisplayRendererFactory rendererFactory) {
@@ -47,6 +49,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         materialService = new BukkitMaterialService();
         playerService = new BukkitPlayerService();
         renderService = new BukkitRenderService(rendererFactory, new BukkitItemFactory());
+        eventListener = new BukkitEventListener(renderService);
         placeholderProviders = Collections.singletonList(
                 new BukkitPlaceholderApiProvider()
         );
@@ -56,6 +59,12 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     @Override
     public PlatformCapabilities getCapabilities() {
         return capabilities;
+    }
+
+    @NotNull
+    @Override
+    public PlatformEventListener getEventListener() {
+        return eventListener;
     }
 
     @NotNull

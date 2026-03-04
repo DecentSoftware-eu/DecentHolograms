@@ -48,6 +48,18 @@ public interface PlatformAdapter {
     PlatformCapabilities getCapabilities();
 
     /**
+     * Get the event listener of this platform adapter.
+     *
+     * <p>The core uses this to propagate certain events to the platform implementation.</p>
+     *
+     * @return The event listener.
+     * @see PlatformEventListener
+     * @since 2.10.0
+     */
+    @NotNull
+    PlatformEventListener getEventListener();
+
+    /**
      * Get the material service of this platform adapter.
      *
      * <p>This service allows querying and managing material names on the server.</p>
