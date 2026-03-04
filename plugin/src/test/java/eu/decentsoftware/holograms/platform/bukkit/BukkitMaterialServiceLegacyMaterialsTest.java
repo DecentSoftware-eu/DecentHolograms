@@ -63,7 +63,7 @@ class BukkitMaterialServiceLegacyMaterialsTest {
             "MATERIAL:",
     })
     void testMappingLegacyMaterials_invalid(String from) {
-        assertNull(service.toMojangNamespacedKey(from).orElse(null));
+        assertNull(service.toMojangNamespacedKey(from));
     }
 
     @ParameterizedTest
@@ -150,6 +150,6 @@ class BukkitMaterialServiceLegacyMaterialsTest {
             "POTATO_ITEM,minecraft:potato",
     })
     void testMappingLegacyMaterials(String from, String expected) {
-        assertEquals(expected, service.toMojangNamespacedKey(from).orElse(null));
+        assertEquals(expected, service.toMojangNamespacedKey(from));
     }
 }

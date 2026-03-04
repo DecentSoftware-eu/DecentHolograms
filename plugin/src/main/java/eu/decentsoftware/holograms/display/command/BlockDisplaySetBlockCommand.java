@@ -23,16 +23,12 @@ import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.display.BlockDisplay;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.Material;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @CommandInfo(
         usage = "/dh d set-block <name> <block_type>",
@@ -44,10 +40,12 @@ import java.util.stream.Collectors;
 class BlockDisplaySetBlockCommand extends DecentCommand {
 
     private final DisplayService displayService;
+    private final PlatformMaterialService materialService;
 
-    BlockDisplaySetBlockCommand(DisplayService displayService) {
+    BlockDisplaySetBlockCommand(DisplayService displayService, PlatformMaterialService materialService) {
         super("set-block");
         this.displayService = displayService;
+        this.materialService = materialService;
     }
 
     @Override
@@ -56,18 +54,17 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.BLOCK);
 
-            String blockType = args[1];
-            Material material = DecentMaterial.parseMaterial(blockType);
-            if (material == null || !material.isBlock()) {
-                Lang.DISPLAY_INVALID_BLOCK_TYPE.send(sender, blockType);
+            String materialNamespacedKey = materialService.toMojangNamespacedKey(args[1]);
+            if (materialNamespacedKey == null || !materialService.isBlock(materialNamespacedKey)) {
+                Lang.DISPLAY_INVALID_BLOCK_TYPE.send(sender, materialNamespacedKey);
                 return true;
             }
 
             BlockDisplay blockDisplay = (BlockDisplay) display;
-            blockDisplay.setMaterial(material.name());
+            blockDisplay.setMaterial(materialNamespacedKey);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_BLOCK_SET.send(sender, display.getName(), blockType);
+            Lang.DISPLAY_BLOCK_SET.send(sender, display.getName(), materialNamespacedKey);
             return true;
         };
     }
@@ -78,10 +75,7 @@ class BlockDisplaySetBlockCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(Material.values())
-                        .filter(Material::isBlock)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                return TabCompleteHandler.getPartialMatches(args[1], materialService.getBlockMaterialNames());
             }
             return null;
         };

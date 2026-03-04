@@ -21,16 +21,14 @@ package eu.decentsoftware.holograms.display.command;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
-import eu.decentsoftware.holograms.api.commands.CommandTabCompleteHelper;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
-import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.display.ItemDisplay;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import eu.decentsoftware.holograms.plugin.Validator;
-import org.bukkit.Material;
 
 @CommandInfo(
         usage = "/dh d set-item <name> <item>",
@@ -42,10 +40,12 @@ import org.bukkit.Material;
 class ItemDisplaySetItemCommand extends DecentCommand {
 
     private final DisplayService displayService;
+    private final PlatformMaterialService materialService;
 
-    ItemDisplaySetItemCommand(DisplayService displayService) {
+    ItemDisplaySetItemCommand(DisplayService displayService, PlatformMaterialService materialService) {
         super("set-item");
         this.displayService = displayService;
+        this.materialService = materialService;
     }
 
     @Override
@@ -54,17 +54,17 @@ class ItemDisplaySetItemCommand extends DecentCommand {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplayOfType(displayService, args[0], DisplayType.ITEM);
 
-            String material = args[1];
-            Material materialEnum = DecentMaterial.parseMaterial(material);
-            if (materialEnum == null || !DecentMaterial.isItem(materialEnum)) {
-                materialEnum = Material.STONE;
+            String materialNamespacedKey = materialService.toMojangNamespacedKey(args[1]);
+            if (materialNamespacedKey == null || !materialService.isItem(materialNamespacedKey)) {
+                Lang.DISPLAY_INVALID_ITEM_TYPE.send(sender, args[1]);
+                return true;
             }
 
             ItemDisplay itemDisplay = (ItemDisplay) display;
-            itemDisplay.setMaterial(materialEnum.name());
+            itemDisplay.setMaterial(materialNamespacedKey);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_ITEM_SET.send(sender, display.getName());
+            Lang.DISPLAY_ITEM_SET.send(sender, display.getName(), materialNamespacedKey);
             return true;
         };
     }
@@ -75,7 +75,7 @@ class ItemDisplaySetItemCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], CommandTabCompleteHelper.getItemMaterialNames(sender));
+                return TabCompleteHandler.getPartialMatches(args[1], materialService.getItemMaterialNames());
             }
             return null;
         };

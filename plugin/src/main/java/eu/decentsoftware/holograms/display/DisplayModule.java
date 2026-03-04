@@ -172,7 +172,7 @@ public class DisplayModule {
                 attributeDefinitionRegistry, commandHandlerRegistry, attributeDefaultService);
         DisplayAttributeService displayAttributeService = new DisplayAttributeService(attributeDefinitionRegistry);
         this.displaysCommand = new DisplaysCommand(
-                displayService, displayCloneService, attributeCommandService, attributeDefaultService, displayAttributeService);
+                displayService, displayCloneService, attributeCommandService, attributeDefaultService, displayAttributeService, platformAdapter.getMaterialService());
         this.displayUpdateScheduler = new DisplayUpdateScheduler(displayService, renderCoordinator);
     }
 

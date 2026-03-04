@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.platform.bukkit.render.display;
 
-import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.nms.api.display.NmsBlockDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayMetadata;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
@@ -59,7 +58,7 @@ public class BukkitBlockDisplayRenderService extends BukkitDisplayRenderService<
         }
         BlockDisplayContent blockDisplayContent = (BlockDisplayContent) content;
         BlockDescriptor blockDescriptor = blockDisplayContent.getContent();
-        Material material = DecentMaterial.parseMaterial(blockDescriptor.getType());
+        Material material = Material.matchMaterial(blockDescriptor.getType());
         if (material == null) {
             return Material.STONE;
         }

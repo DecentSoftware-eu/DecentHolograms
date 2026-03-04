@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.platform.api;
 
 import eu.decentsoftware.holograms.platform.api.capability.PlatformCapabilities;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
@@ -45,6 +46,18 @@ public interface PlatformAdapter {
      */
     @NotNull
     PlatformCapabilities getCapabilities();
+
+    /**
+     * Get the material service of this platform adapter.
+     *
+     * <p>This service allows querying and managing material names on the server.</p>
+     *
+     * @return The material service.
+     * @see PlatformMaterialService
+     * @since 2.10.0
+     */
+    @NotNull
+    PlatformMaterialService getMaterialService();
 
     /**
      * Get the player service of this platform adapter.

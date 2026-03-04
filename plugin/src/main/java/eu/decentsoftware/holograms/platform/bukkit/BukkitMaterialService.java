@@ -19,9 +19,16 @@
 package eu.decentsoftware.holograms.platform.bukkit;
 
 import com.cryptomorin.xseries.XMaterial;
+import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
+import org.bukkit.Material;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Bukkit-specific service responsible for translating material identifiers
@@ -39,11 +46,14 @@ import java.util.Optional;
  * The core module should operate exclusively on Mojang namespaced IDs.</p>
  *
  * @author d0by
+ * @see PlatformMaterialService
  * @since 2.10.0
  */
-public class BukkitMaterialService {
+public class BukkitMaterialService implements PlatformMaterialService {
 
     private static final String MINECRAFT_NAMESPACE = "minecraft:";
+    private static List<String> itemMaterialNames;
+    private static List<String> blockMaterialNames;
 
     /**
      * Converts a Bukkit material identifier into a Mojang namespaced key.
@@ -65,11 +75,68 @@ public class BukkitMaterialService {
      * </pre>
      *
      * @param materialName the Bukkit material identifier to convert; not {@code null}
-     * @return an {@link Optional} containing the canonical Mojang namespaced ID if the material could be resolved; otherwise {@link Optional#empty()}
+     * @return the canonical Mojang namespaced ID if the material could be resolved; otherwise {@code null}
      * @since 2.10.0
      */
-    public Optional<String> toMojangNamespacedKey(String materialName) {
+    @Override
+    public String toMojangNamespacedKey(String materialName) {
+        if (materialName == null) {
+            return null;
+        }
+        if (materialName.startsWith(MINECRAFT_NAMESPACE)) {
+            return materialName;
+        }
         return XMaterial.matchXMaterial(materialName)
-                .map(xMaterial -> MINECRAFT_NAMESPACE + xMaterial.name().toLowerCase(Locale.ROOT));
+                .map(this::toMojangNamespacedKey)
+                .orElse(null);
+    }
+
+    private String toMojangNamespacedKey(Material material) {
+        return toMojangNamespacedKey(XMaterial.matchXMaterial(material));
+    }
+
+    private String toMojangNamespacedKey(XMaterial xMaterial) {
+        return MINECRAFT_NAMESPACE + xMaterial.name().toLowerCase(Locale.ROOT);
+    }
+
+    @Override
+    public List<String> getItemMaterialNames() {
+        if (itemMaterialNames == null) {
+            itemMaterialNames = initializeMaterialNamesList(DecentMaterial::isItem);
+        }
+        return itemMaterialNames;
+    }
+
+    @Override
+    public List<String> getBlockMaterialNames() {
+        if (blockMaterialNames == null) {
+            blockMaterialNames = initializeMaterialNamesList(Material::isBlock);
+        }
+        return blockMaterialNames;
+    }
+
+    private List<String> initializeMaterialNamesList(Predicate<Material> filter) {
+        return Collections.unmodifiableList(
+                Arrays.stream(Material.values())
+                        .filter(filter)
+                        .map(this::toMojangNamespacedKey)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @Override
+    public boolean isItem(String materialName) {
+        if (materialName != null && materialName.startsWith(MINECRAFT_NAMESPACE)) {
+            return getItemMaterialNames().contains(materialName);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isBlock(String materialName) {
+        if (materialName != null && materialName.startsWith(MINECRAFT_NAMESPACE)) {
+            return getBlockMaterialNames().contains(materialName);
+        }
+        return false;
     }
 }

@@ -28,6 +28,7 @@ import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.display.attribute.AttributeCommandService;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttributeService;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
 
 @CommandInfo(
         usage = "/dh displays help",
@@ -41,11 +42,12 @@ public class DisplaysCommand extends DecentCommand {
                            DisplayCloneService displayCloneService,
                            AttributeCommandService attributeCommandService,
                            AttributeDefaultService attributeDefaultService,
-                           DisplayAttributeService displayAttributeService) {
+                           DisplayAttributeService displayAttributeService,
+                           PlatformMaterialService materialService) {
         super("displays");
 
         addSubCommand(new DisplaysHelpCommand(this));
-        addSubCommand(new CreateDisplayCommand(displayService, attributeDefaultService));
+        addSubCommand(new CreateDisplayCommand(displayService, attributeDefaultService, materialService));
         addSubCommand(new DeleteDisplayCommand(displayService));
         addSubCommand(new MoveDisplayCommand(displayService));
         addSubCommand(new RenameDisplayCommand(displayService, displayCloneService));
@@ -63,8 +65,8 @@ public class DisplaysCommand extends DecentCommand {
         addSubCommand(new FacingDisplayCommand(displayService));
         addSubCommand(new ListDisplaysCommand(displayService));
         addSubCommand(new NearbyDisplaysCommand(displayService));
-        addSubCommand(new BlockDisplaySetBlockCommand(displayService));
-        addSubCommand(new ItemDisplaySetItemCommand(displayService));
+        addSubCommand(new BlockDisplaySetBlockCommand(displayService, materialService));
+        addSubCommand(new ItemDisplaySetItemCommand(displayService, materialService));
         DisplayTabCompleteHelper tabCompleteHelper = new DisplayTabCompleteHelper(displayService);
         addSubCommand(new TextDisplayAddLineCommand(displayService, tabCompleteHelper));
         addSubCommand(new TextDisplayInsertLineCommand(displayService, tabCompleteHelper));
