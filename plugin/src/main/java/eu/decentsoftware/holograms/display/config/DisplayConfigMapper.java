@@ -31,6 +31,7 @@ import eu.decentsoftware.holograms.display.config.dto.ConfigDecentLocation;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplaySettings;
 import eu.decentsoftware.holograms.display.config.dto.ConfigTextPage;
+import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialService;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 
 import java.util.Collection;
@@ -43,9 +44,11 @@ import java.util.stream.Collectors;
 public class DisplayConfigMapper {
 
     private final AttributeConfigMapper attributeConfigMapper;
+    private final PlatformMaterialService materialService;
 
-    public DisplayConfigMapper(AttributeConfigMapper attributeConfigMapper) {
+    public DisplayConfigMapper(AttributeConfigMapper attributeConfigMapper, PlatformMaterialService materialService) {
         this.attributeConfigMapper = attributeConfigMapper;
+        this.materialService = materialService;
     }
 
     public DisplayBase toDomain(ConfigDisplay dto) {
@@ -70,20 +73,28 @@ public class DisplayConfigMapper {
     }
 
     private BlockDisplay blockDisplayToDomain(ConfigDisplay dto, DecentLocation location, DisplaySettings settings) {
-        if (dto.getBlock() == null) {
+        String blockMaterial = dto.getBlock();
+        if (blockMaterial == null) {
             throw new DisplayConfigException("Block display must have a material");
         }
+        if (!materialService.isBlock(blockMaterial)) {
+            throw new DisplayConfigException("Found invalid block type '" + blockMaterial + "'.");
+        }
         BlockDisplay blockDisplay = new BlockDisplay(dto.getName(), location, settings);
-        blockDisplay.setMaterial(dto.getBlock());
+        blockDisplay.setMaterial(blockMaterial);
         return blockDisplay;
     }
 
     private ItemDisplay itemDisplayToDomain(ConfigDisplay dto, DecentLocation location, DisplaySettings settings) {
-        if (dto.getItem() == null) {
+        String itemMaterial = dto.getItem();
+        if (itemMaterial == null) {
             throw new DisplayConfigException("Item display must have an item");
         }
+        if (!materialService.isItem(itemMaterial)) {
+            throw new DisplayConfigException("Found invalid item type '" + itemMaterial + "'.");
+        }
         ItemDisplay itemDisplay = new ItemDisplay(dto.getName(), location, settings);
-        itemDisplay.setMaterial(dto.getItem());
+        itemDisplay.setMaterial(itemMaterial);
         return itemDisplay;
     }
 
