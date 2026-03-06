@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.animations.text;
 
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
-import eu.decentsoftware.holograms.api.utils.color.SpecialColorFormattingExtractionResult;
 import eu.decentsoftware.holograms.api.utils.color.StripColorUtil;
 import lombok.NonNull;
 
@@ -13,10 +12,9 @@ public class WaveAnimation extends TextAnimation {
 
     @Override
     public String animate(@NonNull String string, long step, String... args) {
-        SpecialColorFormattingExtractionResult strippingResult = StripColorUtil.extractSpecialColorsFormatting(string);
-        string = strippingResult.getCleanedString();
-
+        String specialColors = StripColorUtil.extractSpecialColorsFormatting(string);
         String stripped = StripColorUtil.stripLegacyColorCodes(string);
+
         int length = stripped.length();
         int size = length / 4;
         int currentStep = getCurrentStep(step, length + size);
@@ -27,7 +25,6 @@ public class WaveAnimation extends TextAnimation {
         String start = index1 != 0 ? stripped.substring(0, index1) : "";
         String mid = length > index2 ? stripped.substring(index1, index2) : stripped.substring(index1);
         String end = length > index2 ? stripped.substring(index2) : "";
-        String specialColors = strippingResult.getSpecialFormatting();
         return colPrimary + specialColors + start + colSecondary + specialColors + mid + colPrimary + specialColors + end;
     }
 

@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.api.animations.text;
 
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
-import eu.decentsoftware.holograms.api.utils.color.SpecialColorFormattingExtractionResult;
 import eu.decentsoftware.holograms.api.utils.color.StripColorUtil;
 import lombok.NonNull;
 
@@ -13,14 +12,12 @@ public class BurnAnimation extends TextAnimation {
 
     @Override
     public String animate(@NonNull String string, long step, String... args) {
-        SpecialColorFormattingExtractionResult strippingResult = StripColorUtil.extractSpecialColorsFormatting(string);
-        string = strippingResult.getCleanedString();
-
+        String specialColors = StripColorUtil.extractSpecialColorsFormatting(string);
         String stripped = StripColorUtil.stripLegacyColorCodes(string);
+
         int currentStep = getCurrentStep(step, stripped.length());
         String start = stripped.substring(0, currentStep);
         String end = stripped.substring(currentStep);
-        String specialColors = strippingResult.getSpecialFormatting();
         return args[1] + specialColors + start + args[0] + specialColors + end;
     }
 }

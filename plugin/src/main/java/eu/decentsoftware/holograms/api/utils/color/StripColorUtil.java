@@ -90,23 +90,21 @@ public class StripColorUtil {
     }
 
     /**
-     * Extracts special color codes, like "&l" or "§O", from the given string and returns them as a string
-     * along with the cleaned input string.
+     * Extracts special color codes, like "&l" or "§O", from the given string and returns them as a string.
      *
      * <p>Special format codes: k, l, m, n, o (or K, L, M, N, O)</p>
      *
      * @param string the input string potentially containing special color codes
-     * @return {@link SpecialColorFormattingExtractionResult} containing the cleaned string and the special color codes
+     * @return The extracted special color codes as a string
      * @since 2.10.0
      */
-    public static SpecialColorFormattingExtractionResult extractSpecialColorsFormatting(String string) {
+    public static String extractSpecialColorsFormatting(String string) {
         if (string.indexOf('&') == -1 && string.indexOf('§') == -1) {
-            return new SpecialColorFormattingExtractionResult(string, "");
+            return "";
         }
 
         StringBuilder specialColors = new StringBuilder();
         int length = string.length();
-        StringBuilder cleanedString = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             char c = string.charAt(i);
 
@@ -115,17 +113,14 @@ public class StripColorUtil {
                 if (isSpecialColorChar(next)) {
                     i++;
                     specialColors.append(c).append(next);
-                    continue;
                 }
             }
-
-            cleanedString.append(c);
         }
-        return new SpecialColorFormattingExtractionResult(cleanedString.toString(), specialColors.toString());
+        return specialColors.toString();
     }
 
     private static boolean isSpecialColorChar(char c) {
         c |= 32; // force lowercase for ASCII letters
-        return c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o';
+        return c >= 'k' && c <= 'o';
     }
 }
