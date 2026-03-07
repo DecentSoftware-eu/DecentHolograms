@@ -5,7 +5,6 @@ import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import eu.decentsoftware.holograms.display.render.content.CompiledAnimation;
 import lombok.NonNull;
@@ -85,7 +84,7 @@ public class AnimationManager extends Ticked {
             return string;
         }
 
-        StringBuilder stringBuilder = new StringBuilder(string.length());
+        StringBuilder stringBuilder = new StringBuilder(string);
         for (CompiledAnimation compiledAnimation : animations) {
             TextAnimation animation = getAnimation(compiledAnimation.getAnimation());
             if (animation == null) {
@@ -95,10 +94,7 @@ public class AnimationManager extends Ticked {
             String animationFrame = animation.animate(body == null ? "" : body, getStep(), compiledAnimation.getArgs());
             int position = compiledAnimation.getPosition();
 
-            stringBuilder
-                    .append(string, 0, position)
-                    .append(animationFrame)
-                    .append(string.substring(position));
+            stringBuilder.insert(position, animationFrame);
         }
         return stringBuilder.toString();
     }
