@@ -20,6 +20,8 @@ package eu.decentsoftware.holograms.nms.v1_21_R5;
 
 import eu.decentsoftware.holograms.nms.api.text.ComponentFormat;
 import eu.decentsoftware.holograms.nms.api.text.LegacyTextFormattingParser;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.ChatHexColor;
 import net.minecraft.network.chat.ChatModifier;
@@ -27,33 +29,46 @@ import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.IChatMutableComponent;
 import net.minecraft.network.chat.contents.LiteralContents;
 
-public final class LegacyTextFormattingParserImpl
-        extends LegacyTextFormattingParser<IChatMutableComponent, EnumChatFormat, ChatHexColor> {
+import java.util.ArrayList;
+import java.util.List;
+
+final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IChatMutableComponent, EnumChatFormat> {
 
     private static final EnumChatFormat[] FORMATS_BY_CHAR = new EnumChatFormat[128];
+    private static final EnumChatFormat[][] FORMATS_BY_FLAGS = new EnumChatFormat[32][];
+    private final Int2ObjectMap<ChatModifier> modifierCache = new Int2ObjectOpenHashMap<>(256);
 
     static {
         String formattingChars = "0123456789ABCDEFKLMNORabcdefklmnor";
         for (char c : formattingChars.toCharArray()) {
             FORMATS_BY_CHAR[c] = EnumChatFormat.a(c);
         }
+
+        // Just cache all combinations of special format flags for O(1) lookup
+        for (int flags = 0; flags < 32; flags++) {
+            List<EnumChatFormat> list = new ArrayList<>(5);
+            if ((flags & ComponentFormat.OBFUSCATED_MASK) != 0) {
+                list.add(EnumChatFormat.q);
+            }
+            if ((flags & ComponentFormat.BOLD_MASK) != 0) {
+                list.add(EnumChatFormat.r);
+            }
+            if ((flags & ComponentFormat.STRIKETHROUGH_MASK) != 0) {
+                list.add(EnumChatFormat.s);
+            }
+            if ((flags & ComponentFormat.UNDERLINED_MASK) != 0) {
+                list.add(EnumChatFormat.t);
+            }
+            if ((flags & ComponentFormat.ITALIC_MASK) != 0) {
+                list.add(EnumChatFormat.u);
+            }
+            FORMATS_BY_FLAGS[flags] = list.toArray(new EnumChatFormat[0]);
+        }
     }
 
     @Override
-    protected ComponentFormat<EnumChatFormat, ChatHexColor> createComponentFormat() {
-        return new ComponentFormatImpl();
-    }
-
-    private static class ComponentFormatImpl extends ComponentFormat<EnumChatFormat, ChatHexColor> {
-        @Override
-        protected boolean isColor(EnumChatFormat format) {
-            return !format.d();
-        }
-
-        @Override
-        protected boolean isResetFormat(EnumChatFormat format) {
-            return format == EnumChatFormat.v;
-        }
+    protected ComponentFormat createComponentFormat() {
+        return new ComponentFormat();
     }
 
     @Override
@@ -69,19 +84,32 @@ public final class LegacyTextFormattingParserImpl
     }
 
     @Override
-    protected IChatMutableComponent createFormattedComponent(
-            String text, ComponentFormat<EnumChatFormat, ChatHexColor> format) {
+    protected IChatMutableComponent createFormattedComponent(String text, ComponentFormat format) {
         ComponentContents contents = LiteralContents.a(text);
         IChatMutableComponent component = IChatMutableComponent.a(contents);
 
-        EnumChatFormat[] formatsArray = format.getFormats().toArray(new EnumChatFormat[0]);
-        ChatModifier modifier = ChatModifier.a.a(formatsArray);
-        if (format.getColor() != null) {
-            modifier = modifier.a(format.getColor());
-        }
+        ChatModifier modifier = getChatModifier(format);
         component.c(modifier);
 
         return component;
+    }
+
+    private ChatModifier getChatModifier(ComponentFormat format) {
+        ChatModifier modifier = modifierCache.get(format.getKey());
+        if (modifier == null) {
+            modifier = createChatModifier(format);
+            modifierCache.put(format.getKey(), modifier);
+        }
+        return modifier;
+    }
+
+    private ChatModifier createChatModifier(ComponentFormat format) {
+        EnumChatFormat[] formats = FORMATS_BY_FLAGS[format.getFlags()];
+        ChatModifier modifier = ChatModifier.a.a(formats);
+        if (format.getColor() != -1) {
+            modifier = modifier.a(ChatHexColor.a(format.getColor()));
+        }
+        return modifier;
     }
 
     @Override
@@ -98,7 +126,21 @@ public final class LegacyTextFormattingParserImpl
     }
 
     @Override
-    protected ChatHexColor getColor(int rgb) {
-        return ChatHexColor.a(rgb);
+    protected void applyFormat(ComponentFormat currentFormat, EnumChatFormat format) {
+        if (format.f() != null) {
+            currentFormat.setColor(format.f());
+            return;
+        }
+        if (format == EnumChatFormat.v) {
+            currentFormat.reset();
+            return;
+        }
+        switch (format) {
+            case q -> currentFormat.setObfuscated();
+            case r -> currentFormat.setBold();
+            case s -> currentFormat.setStrikethrough();
+            case t -> currentFormat.setUnderlined();
+            case u -> currentFormat.setItalic();
+        }
     }
 }

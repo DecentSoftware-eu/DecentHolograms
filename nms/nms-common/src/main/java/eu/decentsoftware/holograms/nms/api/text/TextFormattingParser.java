@@ -18,22 +18,22 @@
 
 package eu.decentsoftware.holograms.nms.api.text;
 
-public abstract class TextFormattingParser<C, F, L> {
+public abstract class TextFormattingParser<C, F> {
 
     public abstract C parse(String text);
 
-    protected abstract ComponentFormat<F, L> createComponentFormat();
+    protected abstract ComponentFormat createComponentFormat();
 
     protected abstract C createEmptyComponent();
 
     protected abstract C createTextComponent(String text);
 
-    protected abstract C createFormattedComponent(String text, ComponentFormat<F, L> format);
+    protected abstract C createFormattedComponent(String text, ComponentFormat format);
 
     protected abstract void addSibling(C parent, C child);
 
     protected abstract F parseFormat(char c);
 
-    protected abstract L getColor(int rgb);
+    protected abstract void applyFormat(ComponentFormat currentFormat, F format);
 
 }

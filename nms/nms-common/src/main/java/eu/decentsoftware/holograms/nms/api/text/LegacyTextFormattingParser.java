@@ -23,15 +23,15 @@ package eu.decentsoftware.holograms.nms.api.text;
  *
  * <p>Since click/hover actions are impossible in holograms, we don't need to parse them.</p>
  *
+ * @param <C> The type of component to return (IChatMutableComponent)
+ * @param <F> The type of format to apply (EnumChatFormat)
  * @author d0by
  * @since 2.10.0
  */
-public abstract class LegacyTextFormattingParser<C, F, L> extends TextFormattingParser<C, F, L> {
+public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingParser<C, F> {
 
-    private final ThreadLocal<ComponentFormat<F, L>> formatThreadLocal
-            = ThreadLocal.withInitial(this::createComponentFormat);
-    private final ThreadLocal<StringBuilder> stringBuilderThreadLocal
-            = ThreadLocal.withInitial(StringBuilder::new);
+    private final ThreadLocal<ComponentFormat> formatThreadLocal = ThreadLocal.withInitial(this::createComponentFormat);
+    private final ThreadLocal<StringBuilder> stringBuilderThreadLocal = ThreadLocal.withInitial(StringBuilder::new);
 
     @Override
     public C parse(String text) {
@@ -40,7 +40,7 @@ public abstract class LegacyTextFormattingParser<C, F, L> extends TextFormatting
         }
 
         StringBuilder currentText = stringBuilderThreadLocal.get();
-        ComponentFormat<F, L> currentFormat = formatThreadLocal.get();
+        ComponentFormat currentFormat = formatThreadLocal.get();
         C root = createEmptyComponent();
 
         char[] chars = text.toCharArray();
@@ -69,12 +69,12 @@ public abstract class LegacyTextFormattingParser<C, F, L> extends TextFormatting
     }
 
     private int tryParseLegacyFormat(
-            char nextChar, C root, StringBuilder currentText, ComponentFormat<F, L> currentFormat, int i) {
+            char nextChar, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
         // Try to parse legacy color/format code (§a, §l, etc.)
         F format = parseFormat(nextChar);
         if (format != null) {
             flushText(root, currentText, currentFormat);
-            currentFormat.addFormat(format);
+            applyFormat(currentFormat, format);
             i += 2;
         } else {
             i++;
@@ -83,12 +83,12 @@ public abstract class LegacyTextFormattingParser<C, F, L> extends TextFormatting
     }
 
     private int tryParseHexColor(
-            char[] chars, C root, StringBuilder currentText, ComponentFormat<F, L> currentFormat, int i) {
+            char[] chars, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
         // Try to parse hex color (§#RRGGBB)
         int rgb = getRgb(chars, i + 2);
-        if (rgb > 0 && rgb <= 0xFFFFFF) {
+        if (rgb >= 0 && rgb <= 0xffffff) {
             flushText(root, currentText, currentFormat);
-            currentFormat.setColor(getColor(rgb));
+            currentFormat.setColor(rgb);
             i += 8;
         } else {
             i++;
@@ -105,7 +105,7 @@ public abstract class LegacyTextFormattingParser<C, F, L> extends TextFormatting
                 | Character.digit(chars[startIndex + 5], 16);
     }
 
-    private void flushText(C root, StringBuilder text, ComponentFormat<F, L> format) {
+    private void flushText(C root, StringBuilder text, ComponentFormat format) {
         if (text.length() == 0) {
             // Nothing to flush, continue accumulating format
             return;

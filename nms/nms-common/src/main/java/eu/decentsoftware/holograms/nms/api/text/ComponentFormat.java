@@ -18,48 +18,79 @@
 
 package eu.decentsoftware.holograms.nms.api.text;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Component format holder. This class is responsible for holding the formatting information of a component
+ * until it is later applied to an actual component.
+ *
+ * @author d0by
+ * @see LegacyTextFormattingParser
+ * @since 2.10.0
+ */
+public class ComponentFormat {
 
-public abstract class ComponentFormat<F, L> {
+    public static final int UNSET_COLOR = -1;
+    public static final byte EMPTY_FLAGS = 0b00000000;
+    public static final byte OBFUSCATED_MASK = 1; // 0b00000001
+    public static final byte BOLD_MASK = 1 << 1; // 0b00000010
+    public static final byte STRIKETHROUGH_MASK = 1 << 2; // 0b00000100
+    public static final byte UNDERLINED_MASK = 1 << 3; // 0b00001000
+    public static final byte ITALIC_MASK = 1 << 4; // 0b00010000
 
-    private L color;
-    private final List<F> formats = new ArrayList<>();
-
-    protected abstract boolean isColor(F format);
-
-    protected abstract boolean isResetFormat(F format);
+    private int color = UNSET_COLOR;
+    private byte flags = EMPTY_FLAGS;
 
     public void reset() {
-        this.color = null;
-        this.formats.clear();
+        this.color = UNSET_COLOR;
+        this.flags = EMPTY_FLAGS;
     }
 
-    public void setColor(L color) {
+    /**
+     * Computes a unique key representing the current state of the color and formatting flags.
+     *
+     * <p>This value can safely be used as the key in a cache, if needed.</p>
+     *
+     * @return An integer key representing the combination of the color and formatting flags.
+     */
+    public int getKey() {
+        if (color == UNSET_COLOR) {
+            // Set the 0b10000000 bit to 1 when the color is not set
+            // this prevents conflicts with black (0) color
+            return flags | 0b10000000;
+        }
+        return (color << 8) | flags & 0xff;
+    }
+
+    public void setColor(int color) {
         this.color = color;
         // Color resets special formatting
-        this.formats.clear();
+        this.flags = EMPTY_FLAGS;
     }
 
-    public L getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void addFormat(F format) {
-        if (isResetFormat(format)) {
-            reset();
-            return;
-        }
-        if (isColor(format)) {
-            // Store simple colors as EnumChatFormat to be able to apply it with special formatting at once
-            // ChatHexColor has to be applied separately from special formatting,
-            // and it causes a new object to be allocated
-            setColor(null);
-        }
-        formats.add(format);
+    public void setObfuscated() {
+        flags |= OBFUSCATED_MASK;
     }
 
-    public List<F> getFormats() {
-        return formats;
+    public void setBold() {
+        flags |= BOLD_MASK;
+    }
+
+    public void setStrikethrough() {
+        flags |= STRIKETHROUGH_MASK;
+    }
+
+    public void setUnderlined() {
+        flags |= UNDERLINED_MASK;
+    }
+
+    public void setItalic() {
+        flags |= ITALIC_MASK;
+    }
+
+    public byte getFlags() {
+        return flags;
     }
 }

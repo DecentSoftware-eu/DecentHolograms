@@ -23,8 +23,8 @@ import java.util.Optional;
 
 class EntityMetadataBuilder {
 
+    private static final LegacyTextFormattingParserImpl textFormattingParser = new LegacyTextFormattingParserImpl();
     private final List<DataWatcher.Item<?>> watchableObjects;
-    private final LegacyTextFormattingParserImpl textFormattingParser = new LegacyTextFormattingParserImpl();
 
     private EntityMetadataBuilder() {
         this.watchableObjects = new ArrayList<>();
