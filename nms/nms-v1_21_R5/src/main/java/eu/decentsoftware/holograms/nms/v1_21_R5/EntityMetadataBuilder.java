@@ -14,7 +14,6 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.level.block.Block;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R5.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
 import org.joml.Vector3f;
 
@@ -25,6 +24,7 @@ import java.util.Optional;
 class EntityMetadataBuilder {
 
     private final List<DataWatcher.Item<?>> watchableObjects;
+    private final LegacyTextFormattingParserImpl textFormattingParser = new LegacyTextFormattingParserImpl();
 
     private EntityMetadataBuilder() {
         this.watchableObjects = new ArrayList<>();
@@ -80,7 +80,7 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withCustomName(String customName) {
-        IChatBaseComponent iChatBaseComponent = CraftChatMessage.fromStringOrNull(customName);
+        IChatBaseComponent iChatBaseComponent = textFormattingParser.parse(customName);
         Optional<IChatBaseComponent> optionalIChatBaseComponent = Optional.ofNullable(iChatBaseComponent);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalIChatBaseComponent));
         boolean visible = !Strings.isNullOrEmpty(customName);
@@ -183,7 +183,7 @@ class EntityMetadataBuilder {
         if (text == null) {
             component = null;
         } else {
-            component = CraftChatMessage.fromString(text, true, true)[0];
+            component = textFormattingParser.parse(text);
         }
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT.construct(component));

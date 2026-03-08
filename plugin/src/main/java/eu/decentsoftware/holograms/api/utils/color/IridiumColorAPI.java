@@ -140,10 +140,16 @@ public class IridiumColorAPI {
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
-        ChatColor[] colors = createGradient(start, end, string.length());
+        Color[] colors = createGradient(start, end, string.length());
         String[] characters = string.split("");
         for (int i = 0; i < string.length(); i++) {
-            stringBuilder.append(colors[i]).append(specialColors).append(characters[i]);
+            ChatColor chatColor = COLORS.get(colors[i]);
+            if (chatColor != null) {
+                stringBuilder.append(chatColor).append(specialColors).append(characters[i]);
+            } else {
+                String hex = String.format("§#%06x", (0xFFFFFF & colors[i].getRGB()));
+                stringBuilder.append(hex).append(specialColors).append(characters[i]);
+            }
         }
         return stringBuilder.toString();
     }
@@ -165,10 +171,16 @@ public class IridiumColorAPI {
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
-        ChatColor[] colors = createRainbow(string.length(), saturation);
+        Color[] colors = createRainbow(string.length(), saturation);
         String[] characters = string.split("");
         for (int i = 0; i < string.length(); i++) {
-            stringBuilder.append(colors[i]).append(specialColors).append(characters[i]);
+            ChatColor chatColor = COLORS.get(colors[i]);
+            if (chatColor != null) {
+                stringBuilder.append(chatColor).append(specialColors).append(characters[i]);
+            } else {
+                String hex = String.format("§#%06x", (0xFFFFFF & colors[i].getRGB()));
+                stringBuilder.append(hex).append(specialColors).append(characters[i]);
+            }
         }
         return stringBuilder.toString();
     }
@@ -205,15 +217,15 @@ public class IridiumColorAPI {
      * @since 1.0.3
      */
     @Nonnull
-    private static ChatColor[] createRainbow(int step, float saturation) {
-        ChatColor[] colors = new ChatColor[step];
+    private static Color[] createRainbow(int step, float saturation) {
+        Color[] colors = new Color[step];
         double colorStep = (1.00 / step);
         for (int i = 0; i < step; i++) {
             Color color = Color.getHSBColor((float) (colorStep * i), saturation, saturation);
             if (Version.supportsHex()) {
-                colors[i] = METHOD_OF.invokeStatic(color);
+                colors[i] = color;
             } else {
-                colors[i] = getClosestColor(color);
+                colors[i] = getNearestColor(color);
             }
         }
         return colors;
@@ -229,13 +241,13 @@ public class IridiumColorAPI {
      * @since 1.0.0
      */
     @Nonnull
-    private static ChatColor[] createGradient(@Nonnull Color start, @Nonnull Color end, int step) {
+    private static Color[] createGradient(@Nonnull Color start, @Nonnull Color end, int step) {
         // Return just white if step is 1 or less. Prevents possible "/ by zero" exception.
         if (step <= 1) {
-            return new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE};
+            return new Color[]{Color.WHITE, Color.WHITE, Color.WHITE};
         }
 
-        ChatColor[] colors = new ChatColor[step];
+        Color[] colors = new Color[step];
         int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
         int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
         int stepB = Math.abs(start.getBlue() - end.getBlue()) / (step - 1);
@@ -248,9 +260,9 @@ public class IridiumColorAPI {
         for (int i = 0; i < step; i++) {
             Color color = new Color(start.getRed() + ((stepR * i) * direction[0]), start.getGreen() + ((stepG * i) * direction[1]), start.getBlue() + ((stepB * i) * direction[2]));
             if (Version.supportsHex()) {
-                colors[i] = METHOD_OF.invokeStatic(color);
+                colors[i] = color;
             } else {
-                colors[i] = getClosestColor(color);
+                colors[i] = getNearestColor(color);
             }
         }
         return colors;
@@ -264,7 +276,11 @@ public class IridiumColorAPI {
      * @since 1.0.0
      */
     @Nonnull
-    private static ChatColor getClosestColor(Color color) {
+    public static ChatColor getClosestColor(Color color) {
+        return COLORS.get(getNearestColor(color));
+    }
+
+    public static Color getNearestColor(Color color) {
         Color nearestColor = null;
         double nearestDistance = Integer.MAX_VALUE;
 
@@ -275,7 +291,7 @@ public class IridiumColorAPI {
                 nearestDistance = distance;
             }
         }
-        return COLORS.get(nearestColor);
+        return nearestColor;
     }
 
 }
