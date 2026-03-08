@@ -30,7 +30,7 @@ package eu.decentsoftware.holograms.nms.api.text;
  */
 public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingParser<C, F> {
 
-    private final ThreadLocal<ComponentFormat> formatThreadLocal = ThreadLocal.withInitial(this::createComponentFormat);
+    private final ThreadLocal<ComponentFormat> formatThreadLocal = ThreadLocal.withInitial(ComponentFormat::new);
     private final ThreadLocal<StringBuilder> stringBuilderThreadLocal = ThreadLocal.withInitial(StringBuilder::new);
 
     @Override

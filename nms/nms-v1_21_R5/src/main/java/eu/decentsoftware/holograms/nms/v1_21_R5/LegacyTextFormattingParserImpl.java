@@ -67,11 +67,6 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
     }
 
     @Override
-    protected ComponentFormat createComponentFormat() {
-        return new ComponentFormat();
-    }
-
-    @Override
     protected IChatMutableComponent createEmptyComponent() {
         ComponentContents contents = LiteralContents.c;
         return IChatMutableComponent.a(contents);
