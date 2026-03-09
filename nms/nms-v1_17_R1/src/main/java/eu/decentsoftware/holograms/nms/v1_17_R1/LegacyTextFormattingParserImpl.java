@@ -16,18 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.nms.v1_21_R5;
+package eu.decentsoftware.holograms.nms.v1_17_R1;
 
 import eu.decentsoftware.holograms.nms.api.text.ComponentFormat;
 import eu.decentsoftware.holograms.nms.api.text.LegacyTextFormattingParser;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.EnumChatFormat;
+import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.ChatHexColor;
 import net.minecraft.network.chat.ChatModifier;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.IChatMutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,20 +67,17 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
 
     @Override
     protected IChatMutableComponent createEmptyComponent() {
-        ComponentContents contents = LiteralContents.c;
-        return IChatMutableComponent.a(contents);
+        return new ChatComponentText("");
     }
 
     @Override
     protected IChatMutableComponent createTextComponent(String text) {
-        ComponentContents contents = LiteralContents.a(text);
-        return IChatMutableComponent.a(contents);
+        return new ChatComponentText(text);
     }
 
     @Override
     protected IChatMutableComponent createFormattedComponent(String text, ComponentFormat format) {
-        ComponentContents contents = LiteralContents.a(text);
-        IChatMutableComponent component = IChatMutableComponent.a(contents);
+        IChatMutableComponent component = new ChatComponentText(text);
 
         ChatModifier modifier = getChatModifier(format);
         component.c(modifier);
@@ -102,14 +98,14 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
         EnumChatFormat[] formats = FORMATS_BY_FLAGS[format.getFlags()];
         ChatModifier modifier = ChatModifier.a.a(formats);
         if (format.getColor() != -1) {
-            modifier = modifier.a(ChatHexColor.a(format.getColor()));
+            modifier = modifier.setColor(ChatHexColor.a(format.getColor()));
         }
         return modifier;
     }
 
     @Override
     protected void addSibling(IChatMutableComponent parent, IChatMutableComponent child) {
-        parent.b(child);
+        parent.addSibling(child);
     }
 
     @Override
@@ -122,8 +118,8 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
 
     @Override
     protected void applyFormat(ComponentFormat currentFormat, EnumChatFormat format) {
-        if (format.f() != null) {
-            currentFormat.setColor(format.f());
+        if (format.e() != null) {
+            currentFormat.setColor(format.e());
             return;
         }
         if (format == EnumChatFormat.v) {
