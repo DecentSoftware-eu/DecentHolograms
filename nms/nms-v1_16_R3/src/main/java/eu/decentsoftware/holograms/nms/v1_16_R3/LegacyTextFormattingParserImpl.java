@@ -35,7 +35,7 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
 
     private static final EnumChatFormat[] FORMATS_BY_CHAR = new EnumChatFormat[128];
     private static final EnumChatFormat[][] FORMATS_BY_FLAGS = new EnumChatFormat[32][];
-    private final Int2ObjectMap<ChatModifier> modifierCache = new Int2ObjectOpenHashMap<>(256);
+    private final Int2ObjectMap<ChatModifier> modifierCache = new Int2ObjectOpenHashMap<>(1024);
 
     static {
         String formattingChars = "0123456789ABCDEFKLMNORabcdefklmnor";
