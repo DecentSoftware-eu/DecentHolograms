@@ -34,7 +34,22 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
     private final ThreadLocal<StringBuilder> stringBuilderThreadLocal = ThreadLocal.withInitial(StringBuilder::new);
 
     @Override
+    public C parseNullable(String text) {
+        if (text == null || text.isEmpty()) {
+            return null;
+        }
+        return parseNotNull(text);
+    }
+
+    @Override
     public C parse(String text) {
+        if (text == null || text.isEmpty()) {
+            return createEmptyComponent();
+        }
+        return parseNotNull(text);
+    }
+
+    private C parseNotNull(String text) {
         if (text.indexOf('§') == -1) {
             return createTextComponent(text);
         }

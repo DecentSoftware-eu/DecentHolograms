@@ -22,6 +22,8 @@ public abstract class TextFormattingParser<C, F> {
 
     public abstract C parse(String text);
 
+    public abstract C parseNullable(String text);
+
     protected abstract C createEmptyComponent();
 
     protected abstract C createTextComponent(String text);

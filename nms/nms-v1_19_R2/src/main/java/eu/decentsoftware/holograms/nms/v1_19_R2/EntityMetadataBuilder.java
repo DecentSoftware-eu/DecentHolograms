@@ -62,7 +62,7 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withCustomName(String customName) {
-        IChatBaseComponent iChatBaseComponent = textFormattingParser.parse(customName);
+        IChatBaseComponent iChatBaseComponent = textFormattingParser.parseNullable(customName);
         Optional<IChatBaseComponent> optionalIChatBaseComponent = Optional.ofNullable(iChatBaseComponent);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalIChatBaseComponent));
         boolean visible = !Strings.isNullOrEmpty(customName);
