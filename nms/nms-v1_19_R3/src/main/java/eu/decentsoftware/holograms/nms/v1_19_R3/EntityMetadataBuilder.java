@@ -179,12 +179,7 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withTextDisplayText(String text) {
-        IChatBaseComponent component;
-        if (text == null) {
-            component = null;
-        } else {
-            component = textFormattingParser.parse(text);
-        }
+        IChatBaseComponent component = textFormattingParser.parse(text);
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT.construct(component));
         return this;
