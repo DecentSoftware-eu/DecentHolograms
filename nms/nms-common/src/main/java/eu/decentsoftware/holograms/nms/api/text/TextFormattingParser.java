@@ -18,11 +18,13 @@
 
 package eu.decentsoftware.holograms.nms.api.text;
 
+import java.util.List;
+
 public abstract class TextFormattingParser<C, F> {
 
-    public abstract C parse(String text);
+    public abstract C parse(List<String> text);
 
-    public abstract C parseNullable(String text);
+    public abstract C parseLine(String text);
 
     protected abstract C createEmptyComponent();
 

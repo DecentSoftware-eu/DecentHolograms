@@ -18,5 +18,7 @@
 
 package eu.decentsoftware.holograms.nms.api.display;
 
-public interface NmsTextDisplayRenderer extends NmsDisplayRenderer<String> {
+import java.util.List;
+
+public interface NmsTextDisplayRenderer extends NmsDisplayRenderer<List<String>> {
 }

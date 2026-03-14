@@ -24,14 +24,16 @@ import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-class TextDisplayRenderer extends AbstractDisplayRenderer<String> implements NmsTextDisplayRenderer {
+import java.util.List;
+
+class TextDisplayRenderer extends AbstractDisplayRenderer<List<String>> implements NmsTextDisplayRenderer {
 
     TextDisplayRenderer(int entityId) {
         super(entityId);
     }
 
     @Override
-    public void spawn(Player player, NmsSpawnDisplayData<String> data) {
+    public void spawn(Player player, NmsSpawnDisplayData<List<String>> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create();
         applyMetadata(data.getMetadata(), metadataBuilder);
         metadataBuilder.withTextDisplayText(data.getContent());
@@ -43,7 +45,7 @@ class TextDisplayRenderer extends AbstractDisplayRenderer<String> implements Nms
     }
 
     @Override
-    public void updateContent(Player player, NmsUpdateDisplayContentData<String> data) {
+    public void updateContent(Player player, NmsUpdateDisplayContentData<List<String>> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create()
                 .withTextDisplayText(data.getContent());
 

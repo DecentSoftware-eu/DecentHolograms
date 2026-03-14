@@ -18,6 +18,12 @@
 
 package eu.decentsoftware.holograms.nms.api.text;
 
+import org.bukkit.ChatColor;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A fast implementation of String -> IChatBaseComponent conversion.
  *
@@ -30,11 +36,23 @@ package eu.decentsoftware.holograms.nms.api.text;
  */
 public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingParser<C, F> {
 
+    private static final int MAX_CACHE_SIZE = 2048;
     private final ThreadLocal<ComponentFormat> formatThreadLocal = ThreadLocal.withInitial(ComponentFormat::new);
     private final ThreadLocal<StringBuilder> stringBuilderThreadLocal = ThreadLocal.withInitial(StringBuilder::new);
+    private final Map<String, C> cache;
+    private C newLineComponent;
+
+    protected LegacyTextFormattingParser() {
+        cache = new LinkedHashMap<String, C>(MAX_CACHE_SIZE, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                return size() > MAX_CACHE_SIZE;
+            }
+        };
+    }
 
     @Override
-    public C parseNullable(String text) {
+    public C parseLine(String text) {
         if (text == null || text.isEmpty()) {
             return null;
         }
@@ -42,11 +60,42 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
     }
 
     @Override
-    public C parse(String text) {
+    public C parse(List<String> text) {
         if (text == null || text.isEmpty()) {
             return createEmptyComponent();
         }
         return parseNotNull(text);
+    }
+
+    private C parseNotNull(List<String> lines) {
+        C root = createEmptyComponent();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            C component = cachedParseNotNull(line);
+
+            if (i > 0) {
+                addSibling(root, getNewLineComponent());
+            }
+            addSibling(root, component);
+        }
+        return root;
+    }
+
+    private C getNewLineComponent() {
+        if (newLineComponent == null) {
+            newLineComponent = parseNotNull(ChatColor.RESET + "\n");
+        }
+        return newLineComponent;
+    }
+
+    private C cachedParseNotNull(String text) {
+        C component = cache.get(text);
+        if (component != null) {
+            return component;
+        }
+        component = parseNotNull(text);
+        cache.put(text, component);
+        return component;
     }
 
     private C parseNotNull(String text) {

@@ -27,48 +27,33 @@ import eu.decentsoftware.holograms.platform.api.data.display.TextDisplayContent;
 import eu.decentsoftware.holograms.platform.api.render.intent.SpawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayContentRenderIntent;
 import eu.decentsoftware.holograms.shared.DecentPosition;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 
-public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService<String> {
-
-    private static final String LINE_SEPARATOR = ChatColor.RESET + "\n";
+public class BukkitTextDisplayRenderService extends BukkitDisplayRenderService<List<String>> {
 
     public BukkitTextDisplayRenderService(NmsTextDisplayRenderer renderer) {
         super(renderer);
     }
 
     @Override
-    protected NmsSpawnDisplayData<String> createNmsSpawnDisplayData(SpawnDisplayRenderIntent intent,
-                                                                    DecentPosition position,
-                                                                    List<NmsDisplayMetadata<?>> metadata) {
-        String text = getTextFromContent(intent.getContent());
+    protected NmsSpawnDisplayData<List<String>> createNmsSpawnDisplayData(SpawnDisplayRenderIntent intent,
+                                                                          DecentPosition position,
+                                                                          List<NmsDisplayMetadata<?>> metadata) {
+        List<String> text = getTextFromContent(intent.getContent());
         return new NmsSpawnDisplayData<>(position, metadata, text);
     }
 
     @Override
-    protected NmsUpdateDisplayContentData<String> createNmsUpdateDisplayContentData(UpdateDisplayContentRenderIntent intent) {
-        String text = getTextFromContent(intent.getContent());
+    protected NmsUpdateDisplayContentData<List<String>> createNmsUpdateDisplayContentData(UpdateDisplayContentRenderIntent intent) {
+        List<String> text = getTextFromContent(intent.getContent());
         return new NmsUpdateDisplayContentData<>(text);
     }
 
-    private String getTextFromContent(DisplayContent<?> content) {
+    private List<String> getTextFromContent(DisplayContent<?> content) {
         if (!(content instanceof TextDisplayContent)) {
             throw new IllegalArgumentException("Unsupported content type for Text display: " + content.getClass().getName());
         }
-
-        List<String> lines = ((TextDisplayContent) content).getContent();
-        boolean firstLine = true;
-        StringBuilder textBuilder = new StringBuilder();
-        for (String line : lines) {
-            if (firstLine) {
-                firstLine = false;
-            } else {
-                textBuilder.append(LINE_SEPARATOR);
-            }
-            textBuilder.append(line);
-        }
-        return textBuilder.toString();
+        return ((TextDisplayContent) content).getContent();
     }
 }

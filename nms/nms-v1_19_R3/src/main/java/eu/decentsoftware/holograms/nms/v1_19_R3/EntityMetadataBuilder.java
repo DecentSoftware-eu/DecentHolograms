@@ -80,7 +80,7 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withCustomName(String customName) {
-        IChatBaseComponent iChatBaseComponent = textFormattingParser.parseNullable(customName);
+        IChatBaseComponent iChatBaseComponent = textFormattingParser.parseLine(customName);
         Optional<IChatBaseComponent> optionalIChatBaseComponent = Optional.ofNullable(iChatBaseComponent);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalIChatBaseComponent));
         boolean visible = !Strings.isNullOrEmpty(customName);
@@ -178,7 +178,7 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withTextDisplayText(String text) {
+    EntityMetadataBuilder withTextDisplayText(List<String> text) {
         IChatBaseComponent component = textFormattingParser.parse(text);
 
         watchableObjects.add(EntityMetadataType.TEXT_DISPLAY_TEXT.construct(component));
