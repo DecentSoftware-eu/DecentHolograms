@@ -52,8 +52,8 @@ import java.util.stream.Collectors;
 public class BukkitMaterialService implements PlatformMaterialService {
 
     private static final String MINECRAFT_NAMESPACE = "minecraft:";
-    private static List<String> itemMaterialNames;
-    private static List<String> blockMaterialNames;
+    private List<String> itemMaterialNames;
+    private List<String> blockMaterialNames;
 
     /**
      * Converts a Bukkit material identifier into a Mojang namespaced key.

@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
@@ -26,6 +27,7 @@ import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -36,11 +38,18 @@ public abstract class DisplayBase {
     protected DisplaySettings settings;
     protected Map<AttributeKey<?>, DisplayAttribute<?>> attributes = new ConcurrentHashMap<>();
 
-    private transient final AtomicLong lastLogicalUpdateMs = new AtomicLong(0);
-    private transient volatile boolean configDirty = true;
-    private transient volatile boolean contentDirty = true;
+    private final AtomicLong lastLogicalUpdateMs = new AtomicLong(0);
+    private volatile boolean configDirty = true;
+    private volatile boolean contentDirty = true;
 
     protected DisplayBase(String name, DecentLocation location, DisplaySettings settings) {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(location, "location cannot be null");
+        Objects.requireNonNull(settings, "settings cannot be null");
+        if (!name.matches(Common.NAME_REGEX)) {
+            throw new IllegalArgumentException("Display name '" + name + "' does not match the regex " + Common.NAME_REGEX + ".");
+        }
+
         this.name = name;
         this.location = location;
         this.settings = settings;
