@@ -107,11 +107,10 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
         ComponentFormat currentFormat = formatThreadLocal.get();
         C root = createEmptyComponent();
 
-        char[] chars = text.toCharArray();
-        int length = chars.length;
+        int length = text.length();
         int i = 0;
         while (i < length) {
-            char c = chars[i];
+            char c = text.charAt(i);
             if (c != '§' || i + 1 >= length) {
                 // Regular character - add to content
                 currentText.append(c);
@@ -119,11 +118,11 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
                 continue;
             }
 
-            char nextChar = chars[i + 1];
+            char nextChar = text.charAt(i + 1);
             if (nextChar != '#' || i + 7 >= length) {
                 i = tryParseLegacyFormat(nextChar, root, currentText, currentFormat, i);
             } else {
-                i = tryParseHexColor(chars, root, currentText, currentFormat, i);
+                i = tryParseHexColor(text, root, currentText, currentFormat, i);
             }
         }
 
@@ -147,9 +146,9 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
     }
 
     private int tryParseHexColor(
-            char[] chars, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
+            String text, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
         // Try to parse hex color (§#RRGGBB)
-        int rgb = getRgb(chars, i + 2);
+        int rgb = getRgb(text, i + 2);
         if (rgb >= 0 && rgb <= 0xffffff) {
             flushText(root, currentText, currentFormat);
             currentFormat.setColor(rgb);
@@ -160,13 +159,20 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
         return i;
     }
 
-    private static int getRgb(char[] chars, int startIndex) {
-        return (Character.digit(chars[startIndex], 16) << 20)
-                | (Character.digit(chars[startIndex + 1], 16) << 16)
-                | (Character.digit(chars[startIndex + 2], 16) << 12)
-                | (Character.digit(chars[startIndex + 3], 16) << 8)
-                | (Character.digit(chars[startIndex + 4], 16) << 4)
-                | Character.digit(chars[startIndex + 5], 16);
+    private static int getRgb(String text, int startIndex) {
+        return (hexDigit(text.charAt(startIndex)) << 20)
+                | (hexDigit(text.charAt(startIndex + 1)) << 16)
+                | (hexDigit(text.charAt(startIndex + 2)) << 12)
+                | (hexDigit(text.charAt(startIndex + 3)) << 8)
+                | (hexDigit(text.charAt(startIndex + 4)) << 4)
+                | hexDigit(text.charAt(startIndex + 5));
+    }
+
+    private static int hexDigit(char c) {
+        if (c >= '0' && c <= '9') return c - '0';
+        if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+        if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+        return -1;
     }
 
     private void flushText(C root, StringBuilder text, ComponentFormat format) {
