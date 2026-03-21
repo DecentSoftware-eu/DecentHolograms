@@ -37,6 +37,7 @@ import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultShad
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultSkullTextureHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultTranslationHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.DefaultYawHandler;
+import eu.decentsoftware.holograms.display.attribute.command.handler.ChromaHandler;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultRegistry;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultRepository;
 import eu.decentsoftware.holograms.display.attribute.defaults.AttributeDefaultService;
@@ -62,6 +63,7 @@ import eu.decentsoftware.holograms.display.attribute.definition.TranslationAttri
 import eu.decentsoftware.holograms.display.attribute.definition.YawAttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValueSerializer;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValueTypeRegistry;
+import eu.decentsoftware.holograms.display.attribute.value.color.ChromaValueType;
 import eu.decentsoftware.holograms.display.attribute.value.color.RgbaValueType;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValue;
 import eu.decentsoftware.holograms.display.attribute.value.display.BillboardConstraintsValueType;
@@ -89,15 +91,15 @@ import eu.decentsoftware.holograms.display.config.serializer.DecentLocationSeria
 import eu.decentsoftware.holograms.display.config.serializer.DisplayBrightnessSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayColorSerializer;
 import eu.decentsoftware.holograms.display.config.serializer.DisplayVector3fSerializer;
+import eu.decentsoftware.holograms.display.render.DisplayPostProcessor;
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 import eu.decentsoftware.holograms.display.render.DisplayRenderIntentMaterializer;
 import eu.decentsoftware.holograms.display.render.DisplayRenderService;
 import eu.decentsoftware.holograms.display.render.DisplayVisibilityService;
 import eu.decentsoftware.holograms.display.render.TextPostProcessor;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
-import eu.decentsoftware.holograms.display.render.DisplayPostProcessor;
-import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
+import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderStateManager;
 import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
@@ -181,17 +183,18 @@ public class DisplayModule {
         registry.register(BillboardAttributeDefinition.KEY, new DefaultEnumHandler<>(DisplayBillboardConstraints.class, BillboardConstraintsValue::new));
         registry.register(BrightnessAttributeDefinition.KEY, new DefaultBrightnessHandler());
         DefaultColorHandler defaultColorHandler = new DefaultColorHandler();
-        registry.register(GlowColorAttributeDefinition.KEY, defaultColorHandler);
+        ChromaHandler chromaHandler = new ChromaHandler();
+        registry.register(GlowColorAttributeDefinition.KEY, defaultColorHandler, chromaHandler);
         registry.register(ItemDisplayTypeAttributeDefinition.KEY, new DefaultEnumHandler<>(ItemDisplayType.class, ItemDisplayTypeValue::new));
         registry.register(ItemEnchantedAttributeDefinition.KEY, new DefaultBooleanHandler());
-        registry.register(ItemLeatherColorAttributeDefinition.KEY, defaultColorHandler);
+        registry.register(ItemLeatherColorAttributeDefinition.KEY, defaultColorHandler, chromaHandler);
         registry.register(ItemSkullTextureAttributeDefinition.KEY, new DefaultSkullTextureHandler(new StringValueFactory(placeholderService)));
         registry.register(PitchAttributeDefinition.KEY, new DefaultPitchHandler());
         registry.register(ScaleAttributeDefinition.KEY, new DefaultScaleHandler());
         registry.register(ShadowRadiusAttributeDefinition.KEY, new DefaultShadowRadiusHandler());
         registry.register(ShadowStrengthAttributeDefinition.KEY, new DefaultShadowStrengthHandler());
         registry.register(TextAlignmentAttributeDefinition.KEY, new DefaultEnumHandler<>(TextDisplayAlignment.class, TextAlignmentValue::new));
-        registry.register(TextBackgroundColorAttributeDefinition.KEY, defaultColorHandler);
+        registry.register(TextBackgroundColorAttributeDefinition.KEY, defaultColorHandler, chromaHandler);
         registry.register(TextLineWidthAttributeDefinition.KEY, new DefaultLineWidthHandler());
         registry.register(TextOpacityAttributeDefinition.KEY, new DefaultOpacityHandler());
         registry.register(TextSeeThroughAttributeDefinition.KEY, new DefaultBooleanHandler());
@@ -213,6 +216,7 @@ public class DisplayModule {
         registry.register(new ItemDisplayTypeValueType());
         registry.register(new TextAlignmentValueType());
         registry.register(new RgbaValueType());
+        registry.register(new ChromaValueType());
         return registry;
     }
 
