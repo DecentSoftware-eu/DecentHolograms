@@ -31,6 +31,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d update-interval <name> <interval>",
         description = "Set the update interval of a display.",
+        aliases = {"updateinterval"},
         permissions = "dh.command.displays.updateinterval",
         minArgs = 2
 )

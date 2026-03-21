@@ -36,6 +36,7 @@ import java.util.List;
 @CommandInfo(
         usage = "/dh d list-attributes <display>",
         description = "Lists all configured attributes on a display.",
+        aliases = {"listattributes"},
         permissions = {"dh.command.displays.listattributes"},
         minArgs = 1
 )

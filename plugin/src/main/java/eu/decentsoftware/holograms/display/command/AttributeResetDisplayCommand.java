@@ -32,7 +32,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d reset-attribute <name> <attribute>",
         description = "Reset a display attribute to the default value.",
-        aliases = {"resetattribute", "unset-attribute", "unsetattribute"},
+        aliases = {"resetattribute"},
         permissions = {"dh.command.displays.resetattribute"},
         minArgs = 2
 )

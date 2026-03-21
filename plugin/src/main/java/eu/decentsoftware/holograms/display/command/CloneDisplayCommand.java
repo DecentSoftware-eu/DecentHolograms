@@ -37,7 +37,6 @@ import org.bukkit.entity.Player;
         description = "Clone an existing display.",
         permissions = "dh.command.displays.clone",
         playerOnly = true,
-        aliases = {"cp", "copy"},
         minArgs = 2
 )
 class CloneDisplayCommand extends DecentCommand {

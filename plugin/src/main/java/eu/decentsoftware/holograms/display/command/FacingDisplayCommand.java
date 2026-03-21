@@ -32,7 +32,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d set-facing <name> <yaw> [pitch]",
         description = "Set the facing direction of a display.",
         permissions = {"dh.command.displays.facing"},
-        aliases = {"setfacing", "facing", "setface", "face"},
+        aliases = {"setfacing", "facing", "face"},
         minArgs = 2
 )
 class FacingDisplayCommand extends DecentCommand {

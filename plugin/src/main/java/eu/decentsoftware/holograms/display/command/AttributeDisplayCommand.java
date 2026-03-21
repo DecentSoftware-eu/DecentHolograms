@@ -35,7 +35,6 @@ import java.util.List;
 @CommandInfo(
         usage = "/dh d attribute <name> <attribute> [value]",
         description = "Get or set a display attribute.",
-        aliases = {"attr"},
         permissions = {"dh.command.displays.attribute"},
         minArgs = 2
 )
