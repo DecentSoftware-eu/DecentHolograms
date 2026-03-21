@@ -27,6 +27,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
+
 public class BukkitItemFactory {
 
     public ItemStack createItemStack(ItemDescriptor descriptor) {
@@ -40,7 +42,11 @@ public class BukkitItemFactory {
     }
 
     private static Material resolveMaterial(String materialName) {
-        return Material.matchMaterial(materialName);
+        int colonIndex = materialName.indexOf(':');
+        if (colonIndex != -1) {
+            materialName = materialName.substring(colonIndex + 1);
+        }
+        return Material.getMaterial(materialName.toUpperCase(Locale.ENGLISH));
     }
 
     private static void applyEnchantGlint(ItemDescriptor descriptor, ItemBuilder itemBuilder) {
