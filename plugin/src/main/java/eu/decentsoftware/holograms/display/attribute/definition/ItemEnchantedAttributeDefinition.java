@@ -53,5 +53,6 @@ public class ItemEnchantedAttributeDefinition implements AttributeDefinition<Boo
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
         itemDisplayContent.getContent().setEnchanted(value.evaluate());
+        state.setContent(itemDisplayContent); // set to mark dirty
     }
 }

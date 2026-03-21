@@ -53,5 +53,6 @@ public class ItemSkullTextureAttributeDefinition implements AttributeDefinition<
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
         itemDisplayContent.getContent().setSkullTexture(value.evaluate());
+        state.setContent(itemDisplayContent); // set to mark dirty
     }
 }

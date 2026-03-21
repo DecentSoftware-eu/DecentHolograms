@@ -49,6 +49,7 @@ public class ItemLeatherColorAttributeDefinition implements AttributeDefinition<
         }
         ItemDisplayContent itemDisplayContent = (ItemDisplayContent) state.getContent();
         itemDisplayContent.getContent().setLeatherColor(value.evaluate());
+        state.setContent(itemDisplayContent); // set to mark dirty
     }
 
     @Override
