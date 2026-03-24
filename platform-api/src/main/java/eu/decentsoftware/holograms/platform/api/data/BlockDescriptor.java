@@ -36,10 +36,6 @@ public final class BlockDescriptor {
         this.type = type;
     }
 
-    public BlockDescriptor copy() {
-        return new BlockDescriptor(type);
-    }
-
     @Override
     public String toString() {
         return "BlockDescriptor{" +
