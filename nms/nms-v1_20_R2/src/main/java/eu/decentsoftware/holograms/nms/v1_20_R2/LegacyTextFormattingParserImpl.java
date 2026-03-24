@@ -107,7 +107,7 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
 
     @Override
     protected void addSibling(IChatMutableComponent parent, IChatMutableComponent child) {
-        parent.a(child);
+        parent.b(child);
     }
 
     @Override
