@@ -50,13 +50,6 @@ class EntityMetadataBuilder {
         return this;
     }
 
-    EntityMetadataBuilder withGlowing(boolean glowing) {
-        byte data = (byte) (glowing ? 0x40 : 0x00);
-
-        watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct(data));
-        return this;
-    }
-
     EntityMetadataBuilder withArmorStandProperties(boolean small, boolean marker) {
         /*
          * Armor Stand Properties:
@@ -100,6 +93,13 @@ class EntityMetadataBuilder {
 
     EntityMetadataBuilder withNoGravity() {
         watchableObjects.add(EntityMetadataType.ENTITY_HAS_NO_GRAVITY.construct(true));
+        return this;
+    }
+
+    EntityMetadataBuilder withGlowing(boolean glowing) {
+        byte data = (byte) (glowing ? 0x40 : 0x00);
+
+        watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct(data));
         return this;
     }
 
