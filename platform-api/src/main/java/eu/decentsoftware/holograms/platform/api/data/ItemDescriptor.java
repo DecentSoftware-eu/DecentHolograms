@@ -33,7 +33,6 @@ public final class ItemDescriptor {
 
     private String material;
     private boolean enchanted;
-    private Integer damage;
     private Integer customModelData;
     private String skullTexture;
     private DecentColor leatherColor;
@@ -56,14 +55,6 @@ public final class ItemDescriptor {
 
     public void setEnchanted(boolean enchanted) {
         this.enchanted = enchanted;
-    }
-
-    public Integer getDamage() {
-        return damage;
-    }
-
-    public void setDamage(Integer damage) {
-        this.damage = damage;
     }
 
     public Integer getCustomModelData() {
@@ -90,22 +81,11 @@ public final class ItemDescriptor {
         this.leatherColor = leatherColor;
     }
 
-    public ItemDescriptor copy() {
-        ItemDescriptor copy = new ItemDescriptor(material);
-        copy.setEnchanted(enchanted);
-        copy.setDamage(damage);
-        copy.setCustomModelData(customModelData);
-        copy.setSkullTexture(skullTexture);
-        copy.setLeatherColor(leatherColor);
-        return copy;
-    }
-
     @Override
     public String toString() {
         return "ItemDescriptor{" +
                 "type='" + material + '\'' +
                 ", enchanted=" + enchanted +
-                ", damage=" + damage +
                 ", customModelData=" + customModelData +
                 ", skullTexture='" + skullTexture + '\'' +
                 ", leatherColor=" + leatherColor +
@@ -119,7 +99,6 @@ public final class ItemDescriptor {
         }
         ItemDescriptor that = (ItemDescriptor) o;
         return isEnchanted() == that.isEnchanted()
-                && Objects.equals(getDamage(), that.getDamage())
                 && Objects.equals(getCustomModelData(), that.getCustomModelData())
                 && Objects.equals(getMaterial(), that.getMaterial())
                 && Objects.equals(getSkullTexture(), that.getSkullTexture())
@@ -128,6 +107,6 @@ public final class ItemDescriptor {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getMaterial(), isEnchanted(), getDamage(), getCustomModelData(), getSkullTexture(), getLeatherColor());
+        return Objects.hash(getMaterial(), isEnchanted(), getCustomModelData(), getSkullTexture(), getLeatherColor());
     }
 }
