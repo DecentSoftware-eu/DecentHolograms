@@ -12,7 +12,7 @@ junit = "5.13.1"
 junit-platform-launcher = "1.13.1"
 mockito = "4.11.0" # Has to be 4.x for Java 8 compatibility
 # Plugins
-shadow = "8.3.6"
+shadow = "9.4.0"
 
 [libraries]
 spigot = { module = "org.spigotmc:spigot", version.ref = "spigot" }
