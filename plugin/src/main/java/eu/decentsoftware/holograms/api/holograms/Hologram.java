@@ -168,11 +168,12 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 }
 
                 // Load click actions
-                if (map.containsKey("actions")) {
-                    Map<String, List<String>> actionsMap = (Map<String, List<String>>) map.get("actions");
+                Object actionsObj = map.get("actions");
+                if (actionsObj != null) {
+                    Map<String, List<String>> actionsMap = (Map<String, List<String>>) actionsObj;
                     for (ClickType clickType : ClickType.values()) {
-                        if (actionsMap.containsKey(clickType.name())) {
-                            List<String> clickTypeActions = actionsMap.get(clickType.name());
+                        List<String> clickTypeActions = actionsMap.get(clickType.name());
+                        if (clickTypeActions != null) {
                             for (String clickTypeAction : clickTypeActions) {
                                 try {
                                     page.addAction(clickType, new Action(clickTypeAction));
@@ -186,8 +187,10 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 }
 
                 // Load lines
-                if (map.containsKey("lines")) {
-                    for (Map<?, ?> lineMap : (List<Map<?, ?>>) map.get("lines")) {
+                Object linesObj = map.get("lines");
+                if (linesObj != null) {
+                    List<Map<?, ?>> linesList = (List<Map<?, ?>>) linesObj;
+                    for (Map<?, ?> lineMap : linesList) {
                         Map<String, Object> values = null;
                         try {
                             values = (Map<String, Object>) lineMap;

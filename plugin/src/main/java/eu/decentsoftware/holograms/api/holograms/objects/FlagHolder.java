@@ -6,13 +6,13 @@ import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 @Getter
 public abstract class FlagHolder {
 
-    protected final Set<EnumFlag> flags = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<EnumFlag> flags = Collections.synchronizedSet(EnumSet.noneOf(EnumFlag.class));
 
     public void addFlags(EnumFlag @NonNull ... flags) {
         this.flags.addAll(Arrays.asList(flags));

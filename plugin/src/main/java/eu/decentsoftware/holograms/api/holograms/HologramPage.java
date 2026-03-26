@@ -327,8 +327,9 @@ public class HologramPage extends FlagHolder {
     }
 
     public void executeActions(@NonNull Player player, @NonNull ClickType clickType) {
-        if (!actions.containsKey(clickType)) return;
-        for (Action action : actions.get(clickType)) {
+        List<Action> actionsList = actions.get(clickType);
+        if (actionsList == null) return;
+        for (Action action : actionsList) {
             String actionName = action.getType().getName();
             String actionData = action.getData();
             if (actionName.contains("_PAGE") && actionData == null) {
@@ -354,10 +355,8 @@ public class HologramPage extends FlagHolder {
     }
 
     public List<Action> getActions(@NonNull ClickType clickType) {
-        if (!actions.containsKey(clickType)) {
-            return new ArrayList<>();
-        }
-        return actions.get(clickType);
+        List<Action> actionList = actions.get(clickType);
+        return actionList != null ? actionList : Collections.emptyList();
     }
 
     /**

@@ -81,46 +81,43 @@ public class HologramLine extends HologramObject {
     public static HologramLine fromMap(@NonNull Map<String, Object> map, @Nullable HologramPage parent, @NonNull Location location) {
         String content = (String) map.getOrDefault("content", Settings.DEFAULT_TEXT);
         HologramLine line = new HologramLine(parent, location, content);
-        if (map.containsKey("height")) {
-            Object height = map.get("height");
-            if (height instanceof Double) {
-                line.setHeight((Double) height);
+
+        Object height = map.get("height");
+        if (height instanceof Double) {
+            line.setHeight((Double) height);
+        }
+
+        Object flags = map.get("flags");
+        if (flags instanceof List) {
+            try {
+                line.addFlags(((List<String>) flags).stream()
+                        .map(EnumFlag::valueOf)
+                        .toArray(EnumFlag[]::new));
+            } catch (Exception e) {
+                Log.warn("Flags for line %s seem to be invalid!", content);
             }
         }
-        if (map.containsKey("flags")) {
-            Object flags = map.get("flags");
-            if (flags instanceof List) {
-                try {
-                    line.addFlags(((List<String>) flags).stream().map(EnumFlag::valueOf).toArray(EnumFlag[]::new));
-                } catch (Exception e) {
-                    Log.warn("Flags for line %s seem to be invalid!", content);
-                }
-            }
+
+        Object permission = map.get("permission");
+        if (permission instanceof String) {
+            line.setPermission((String) permission);
         }
-        if (map.containsKey("permission")) {
-            Object permission = map.get("permission");
-            if (permission instanceof String) {
-                line.setPermission((String) permission);
-            }
+
+        Object offsetX = map.get("offsetX");
+        if (offsetX instanceof Double) {
+            line.setOffsetX((Double) offsetX);
         }
-        if (map.containsKey("offsetX")) {
-            Object offsetX = map.get("offsetX");
-            if (offsetX instanceof Double) {
-                line.setOffsetX((Double) offsetX);
-            }
+
+        Object offsetZ = map.get("offsetZ");
+        if (offsetZ instanceof Double) {
+            line.setOffsetZ((Double) offsetZ);
         }
-        if (map.containsKey("offsetZ")) {
-            Object offsetZ = map.get("offsetZ");
-            if (offsetZ instanceof Double) {
-                line.setOffsetZ((Double) offsetZ);
-            }
+
+        Object facing = map.get("facing");
+        if (facing instanceof Double) {
+            line.setFacing(((Double) facing).floatValue());
         }
-        if (map.containsKey("facing")) {
-            Object facing = map.get("facing");
-            if (facing instanceof Double) {
-                line.setFacing(((Double) facing).floatValue());
-            }
-        }
+
         return line;
     }
 
