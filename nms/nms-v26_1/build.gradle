@@ -1,0 +1,18 @@
+repositories {
+    maven { url = "https://libraries.minecraft.net/" }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot:26.1-R0.1-SNAPSHOT"
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
