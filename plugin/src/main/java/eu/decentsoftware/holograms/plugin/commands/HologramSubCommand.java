@@ -1196,6 +1196,11 @@ public class HologramSubCommand extends DecentCommand {
 				String oldName = oldHologram.getName();
 				String newName = args[1];
 
+				if (!newName.matches(Common.NAME_REGEX)) {
+					Lang.HOLOGRAM_INVALID_NAME.send(sender, newName);
+					return true;
+				}
+
 				if (Hologram.getCachedHologramNames().contains(newName)) {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, newName);
 					return false;

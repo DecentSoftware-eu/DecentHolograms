@@ -17,7 +17,7 @@ pluginManagement {
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 rootProject.name = 'DecentHolograms'
@@ -61,3 +61,4 @@ include ':nms:nms-v1_21_R6'
 include ':nms:nms-paper_v1_21_R6'
 include ':nms:nms-v1_21_R7'
 include ':nms:nms-paper_v1_21_R7'
+include ':nms:nms-v26_1'
