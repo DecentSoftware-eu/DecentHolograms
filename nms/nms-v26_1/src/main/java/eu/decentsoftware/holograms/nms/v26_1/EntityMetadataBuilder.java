@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 class EntityMetadataBuilder {
 
+    private static final LegacyTextFormattingParserImpl textFormattingParser = new LegacyTextFormattingParserImpl();
     private final List<SynchedEntityData.DataItem<?>> watchableObjects;
 
     private EntityMetadataBuilder() {
@@ -62,10 +62,9 @@ class EntityMetadataBuilder {
     }
 
     EntityMetadataBuilder withCustomName(String customName) {
-
-        Component iChatBaseComponent = CraftChatMessage.fromStringOrNull(customName);
-        Optional<Component> optionalIChatBaseComponent = Optional.ofNullable(iChatBaseComponent);
-        watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalIChatBaseComponent));
+        Component component = textFormattingParser.parseLine(customName);
+        Optional<Component> optionalComponent = Optional.ofNullable(component);
+        watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME.construct(optionalComponent));
         boolean visible = !Strings.isNullOrEmpty(customName);
         watchableObjects.add(EntityMetadataType.ENTITY_CUSTOM_NAME_VISIBLE.construct(visible));
         return this;
