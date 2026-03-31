@@ -30,6 +30,10 @@ class EntityMetadataBuilder {
         this.watchableObjects = new ArrayList<>();
     }
 
+    static EntityMetadataBuilder create() {
+        return new EntityMetadataBuilder();
+    }
+
     List<DataWatcher.Item<?>> toWatchableObjects() {
         return watchableObjects;
     }
@@ -47,13 +51,6 @@ class EntityMetadataBuilder {
          */
 
         watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct((byte) 0x20));
-        return this;
-    }
-
-    EntityMetadataBuilder withGlowing(boolean glowing) {
-        byte data = (byte) (glowing ? 0x40 : 0x00);
-
-        watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct(data));
         return this;
     }
 
@@ -100,6 +97,13 @@ class EntityMetadataBuilder {
 
     EntityMetadataBuilder withNoGravity() {
         watchableObjects.add(EntityMetadataType.ENTITY_HAS_NO_GRAVITY.construct(true));
+        return this;
+    }
+
+    EntityMetadataBuilder withGlowing(boolean glowing) {
+        byte data = (byte) (glowing ? 0x40 : 0x00);
+
+        watchableObjects.add(EntityMetadataType.ENTITY_PROPERTIES.construct(data));
         return this;
     }
 
@@ -282,9 +286,5 @@ class EntityMetadataBuilder {
 
         watchableObjects.add(EntityMetadataType.BLOCK_DISPLAY_BLOCK_PROPERTIES.construct(block.o()));
         return this;
-    }
-
-    static EntityMetadataBuilder create() {
-        return new EntityMetadataBuilder();
     }
 }

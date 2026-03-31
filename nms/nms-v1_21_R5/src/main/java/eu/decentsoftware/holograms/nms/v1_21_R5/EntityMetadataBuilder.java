@@ -30,6 +30,10 @@ class EntityMetadataBuilder {
         this.watchableObjects = new ArrayList<>();
     }
 
+    static EntityMetadataBuilder create() {
+        return new EntityMetadataBuilder();
+    }
+
     List<DataWatcher.Item<?>> toWatchableObjects() {
         return watchableObjects;
     }
@@ -283,9 +287,4 @@ class EntityMetadataBuilder {
         watchableObjects.add(EntityMetadataType.BLOCK_DISPLAY_BLOCK_PROPERTIES.construct(block.m()));
         return this;
     }
-
-    static EntityMetadataBuilder create() {
-        return new EntityMetadataBuilder();
-    }
-
 }
