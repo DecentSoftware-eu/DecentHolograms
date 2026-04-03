@@ -152,6 +152,13 @@ public final class DecentHolograms {
     private void setupMetrics() {
         Metrics metrics = new Metrics(this.plugin, 12797);
         metrics.addCustomChart(new SingleLineChart("holograms", () -> Hologram.getCachedHolograms().size()));
+        if (displayModule != null) {
+            metrics.addCustomChart(new SingleLineChart("total_displays", this::getTotalDisplays));
+        }
+    }
+
+    private int getTotalDisplays() {
+        return displayModule.getDisplayService().getRegisteredDisplays().size();
     }
 
     private void checkForUpdates() {
