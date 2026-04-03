@@ -39,12 +39,10 @@ class EntityMetadataType<T> {
             = ReflectUtil.getFieldValue(Display.class, "aO");
     private static final DataWatcherObject<Integer> DISPLAY_BRIGHTNESS_OBJECT
             = ReflectUtil.getFieldValue(Display.class, "aP");
-    private static final DataWatcherObject<Float> DISPLAY_VIEW_RANGE_OBJECT
-            = ReflectUtil.getFieldValue(Display.class, "aQ");
     private static final DataWatcherObject<Float> DISPLAY_SHADOW_RADIUS_OBJECT
             = ReflectUtil.getFieldValue(Display.class, "aR");
     private static final DataWatcherObject<Float> DISPLAY_SHADOW_STRENGTH_OBJECT
-            = ReflectUtil.getFieldValue(Display.class, "aU");
+            = ReflectUtil.getFieldValue(Display.class, "aS");
     private static final DataWatcherObject<Integer> DISPLAY_GLOW_COLOR_OVERRIDE_OBJECT
             = ReflectUtil.getFieldValue(Display.class, "aV");
     // Text Display
@@ -79,7 +77,6 @@ class EntityMetadataType<T> {
     static final EntityMetadataType<Vector3f> DISPLAY_SCALE = new EntityMetadataType<>(DISPLAY_SCALE_OBJECT);
     static final EntityMetadataType<Byte> DISPLAY_BILLBOARD_CONSTRAINTS = new EntityMetadataType<>(DISPLAY_BILLBOARD_CONSTRAINTS_OBJECT);
     static final EntityMetadataType<Integer> DISPLAY_BRIGHTNESS = new EntityMetadataType<>(DISPLAY_BRIGHTNESS_OBJECT);
-    static final EntityMetadataType<Float> DISPLAY_VIEW_RANGE = new EntityMetadataType<>(DISPLAY_VIEW_RANGE_OBJECT);
     static final EntityMetadataType<Float> DISPLAY_SHADOW_RADIUS = new EntityMetadataType<>(DISPLAY_SHADOW_RADIUS_OBJECT);
     static final EntityMetadataType<Float> DISPLAY_SHADOW_STRENGTH = new EntityMetadataType<>(DISPLAY_SHADOW_STRENGTH_OBJECT);
     static final EntityMetadataType<Integer> DISPLAY_GLOW_COLOR_OVERRIDE = new EntityMetadataType<>(DISPLAY_GLOW_COLOR_OVERRIDE_OBJECT);
