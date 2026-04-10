@@ -5,6 +5,9 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Enum of supported NMS versions.
@@ -45,7 +48,7 @@ public enum Version {
     paper_v1_21_R6(21, Platform.PAPER, "1.21.9", "1.21.10"),
     v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
     paper_v1_21_R7(21, Platform.PAPER, "1.21.11"),
-    v26_1(26, Platform.SPIGOT, "26.1"),
+    v26_1(26, Platform.ALL, "26.1", "26.1.1"),
     ;
 
     /*
@@ -71,9 +74,14 @@ public enum Version {
     }
 
     private static String getCurrentMinecraftVersion() {
-        // Bukkit version (e.g., 1.20.6-R0.1-SNAPSHOT)
         String bukkitVersion = Bukkit.getServer().getBukkitVersion();
-        // Minecraft version (e.g., 1.20.6)
+        // Try to extract a leading numeric Minecraft version like "26.1.1" or "1.20.6"
+        Pattern pattern = Pattern.compile("^(\\d+(?:\\.\\d+)+)");
+        Matcher matcher = pattern.matcher(bukkitVersion);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        // Fallback to legacy behavior (e.g., "1.20.6-R0.1-SNAPSHOT")
         return bukkitVersion.split("-", 2)[0];
     }
 
@@ -177,4 +185,12 @@ public enum Version {
         return minecraftVersions;
     }
 
+    @Override
+    public String toString() {
+        return "Version{" +
+                "minor=" + minor +
+                ", platform=" + platform +
+                ", minecraftVersions=" + Arrays.toString(minecraftVersions) +
+                '}';
+    }
 }
