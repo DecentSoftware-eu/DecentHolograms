@@ -93,18 +93,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " All page commands.");
                 sender.sendMessage("");
                 CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
-                List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-                for (CommandBase subCommand : subCommands) {
-                    Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-                }
-                sender.sendMessage("");
-                Common.tell(sender, " &7Aliases: &b%s%s",
-                        command.getName(),
-                        command.getAliases().size() > 1
-                                ? ", " + String.join(", ", command.getAliases())
-                                : ""
-                );
-                sender.sendMessage("");
+                printHelpSubCommandsAndAliases(sender, command);
                 return true;
             };
         }

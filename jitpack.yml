@@ -1,8 +1,8 @@
-jdk: openjdk8
+jdk: openjdk21
 before_install:
+  - sdk install java 8.0.472-tem
   - sdk install java 16-open
   - sdk install java 17-open
-  - sdk install java 21.0.2-open
 install:
   - ./gradlew shadowJar publishToMavenLocal
 env:

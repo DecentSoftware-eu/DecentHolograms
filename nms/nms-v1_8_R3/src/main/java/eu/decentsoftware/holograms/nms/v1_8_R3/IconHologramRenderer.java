@@ -34,7 +34,7 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
                         .withItemStack(content)
                         .toWatchableObjects())
                 .withTeleportEntity(itemEntityId, position)
-                .withPassenger(armorStandEntityId, itemEntityId)
+                .attachEntity(itemEntityId, armorStandEntityId)
                 .sendTo(player);
     }
 
@@ -57,7 +57,7 @@ class IconHologramRenderer implements NmsIconHologramRenderer {
     @Override
     public void hide(Player player) {
         EntityPacketsBuilder.create()
-                .withRemovePassenger(armorStandEntityId)
+                .unattachEntity(itemEntityId)
                 .withRemoveEntity(itemEntityId)
                 .withRemoveEntity(armorStandEntityId)
                 .sendTo(player);

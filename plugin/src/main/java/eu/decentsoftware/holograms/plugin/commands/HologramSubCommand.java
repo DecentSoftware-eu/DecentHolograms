@@ -737,18 +737,7 @@ public class HologramSubCommand extends DecentCommand {
 				Common.tell(sender, " All commands for editing holograms.");
 				sender.sendMessage("");
 				CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("holograms");
-				List<CommandBase> subCommands = Lists.newArrayList(command.getSubCommands());
-				for (CommandBase subCommand : subCommands) {
-					Common.tell(sender, " &8• &b%s &8- &7%s", subCommand.getUsage(), subCommand.getDescription());
-				}
-				sender.sendMessage("");
-				Common.tell(sender, " &7Aliases: &b%s%s",
-						command.getName(),
-						command.getAliases().size() > 1
-								? ", " + String.join(", ", command.getAliases())
-								: ""
-				);
-				sender.sendMessage("");
+				printHelpSubCommandsAndAliases(sender, command);
 				return true;
 			};
 		}
@@ -1206,6 +1195,11 @@ public class HologramSubCommand extends DecentCommand {
 
 				String oldName = oldHologram.getName();
 				String newName = args[1];
+
+				if (!newName.matches(Common.NAME_REGEX)) {
+					Lang.HOLOGRAM_INVALID_NAME.send(sender, newName);
+					return true;
+				}
 
 				if (Hologram.getCachedHologramNames().contains(newName)) {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, newName);
