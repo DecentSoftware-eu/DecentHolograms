@@ -48,7 +48,7 @@ public enum Version {
     paper_v1_21_R6(21, Platform.PAPER, "1.21.9", "1.21.10"),
     v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
     paper_v1_21_R7(21, Platform.PAPER, "1.21.11"),
-    v26_1(26, Platform.ALL, "26.1", "26.1.1"),
+    v26_1(26, Platform.ALL, "26.1", "26.1.1", "26.1.2"),
     ;
 
     /*
@@ -74,7 +74,8 @@ public enum Version {
     }
 
     private static String getCurrentMinecraftVersion() {
-        String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        // '-' never appears but after patch number
+        String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
         // Try to extract a leading numeric Minecraft version like "26.1.1" or "1.20.6"
         Pattern pattern = Pattern.compile("^(\\d+(?:\\.\\d+)+)");
         Matcher matcher = pattern.matcher(bukkitVersion);
@@ -82,7 +83,7 @@ public enum Version {
             return matcher.group(1);
         }
         // Fallback to legacy behavior (e.g., "1.20.6-R0.1-SNAPSHOT")
-        return bukkitVersion.split("-", 2)[0];
+        return bukkitVersion;
     }
 
     /**
