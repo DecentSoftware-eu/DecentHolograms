@@ -158,7 +158,7 @@ public class DisplayModule {
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
         YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));
-        DisplayRepository configService = new DisplayRepository(plugin, yamlConfigurationLoaderFactory);
+        DisplayRepository configService = new DisplayRepository(plugin.getDataFolder().toPath(), yamlConfigurationLoaderFactory);
         AttributeConfigMapper attributeConfigMapper = new AttributeConfigMapper(attributeDefinitionRegistry, attributeValueTypeRegistry);
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper, platformAdapter.getMaterialService());
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);

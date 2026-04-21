@@ -21,7 +21,6 @@ package eu.decentsoftware.holograms.display.config;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDisplay;
 import eu.decentsoftware.holograms.display.config.serializer.ConfigAttributeSerializer;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
@@ -41,8 +40,8 @@ public class DisplayRepository {
     private final Path displaysDirectory;
     private final YamlConfigurationLoaderFactory loaderFactory;
 
-    public DisplayRepository(JavaPlugin plugin, YamlConfigurationLoaderFactory loaderFactory) {
-        this.displaysDirectory = plugin.getDataFolder().toPath().resolve(DISPLAYS_DIR);
+    public DisplayRepository(Path dataFolder, YamlConfigurationLoaderFactory loaderFactory) {
+        this.displaysDirectory = dataFolder.resolve(DISPLAYS_DIR);
         this.loaderFactory = loaderFactory;
     }
 
