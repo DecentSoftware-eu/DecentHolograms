@@ -1,0 +1,38 @@
+subprojects {
+    dependencies {
+        if (!project.path.endsWith(":nms-common")) {
+            implementation project(":nms:nms-common")
+        }
+    }
+}
+
+dependencies {
+    childProjects.values().collect { child ->
+        implementation files("$rootDir/nms/${child.project.name}/build/libs/${child.project.name}.jar")
+    }
+}
+
+compileJava {
+    dependsOn childProjects.values().collect { child ->
+        child.tasks.named("jar")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            setSrcDirs([])
+        }
+        resources {
+            setSrcDirs([])
+        }
+    }
+    test {
+        java {
+            setSrcDirs([])
+        }
+        resources {
+            setSrcDirs([])
+        }
+    }
+}

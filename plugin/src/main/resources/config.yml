@@ -1,0 +1,158 @@
+# # # # # # # # # # # # # # # # #
+#
+# Welcome to DecentHolograms config.yml.
+#
+# - We recommend you to visit our wiki for
+# detailed explanation of all features and
+# configuration options as this plugin has
+# a ton of them.
+#
+# - You should also join our discord server for
+# more information, support and updates. Our
+# discord server is the main way of reporting
+# bugs or ideas for possible improvements.
+#
+# - Web: www.decentholograms.eu
+# - Wiki: wiki.decentholograms.eu
+# - Discord: discord.decentsoftware.eu
+# - GitHub: github.decentsoftware.eu
+#
+# # # # # # # # # #
+
+defaults:
+  # Default line
+  text: Blank Line
+  # Default Hologram display range in blocks.
+  display-range: 48
+  # Default Hologram update range in blocks.
+  update-range: 48
+  # Default Hologram update interval in ticks.
+  update-interval: 20
+  # Maximum amount of cached pattern processing results
+  # Do not change if you do not know what it means
+  # Increasing this number will result in higher memory usage
+  # Range: 5 - 10000
+  # Default: 500
+  lru-cache-size: 500
+  # Default heights of different hologram line types.
+  height:
+    text: 0.3
+    icon: 0.6
+    head: 0.75
+    smallhead: 0.6
+  # Default value of Down Origin
+  down-origin: false
+
+# Check for updates on plugin startup? [true/false]
+update-checker: true
+
+# Click cooldown in ticks
+click-cooldown: 1
+
+# Do we want to replace placeholders inside animation frames?
+#
+# WARNING! Setting this to true will have a negative impact
+# on CPU usage, so if you don't NEED to use placeholders inside
+# animation frames, keep this disabled.
+allow-placeholders-inside-animations: false
+
+# If true, the visibility of holograms will be updated when a player gets teleported or respawned.
+#
+# By default, this is disabled because it causes visual glitches where even if a player gets teleported
+# by a fraction of a block, the holograms still disappear and reappear for them.
+#
+# Some clients (or client versions?) need this though, so if you are experiencing issues with holograms
+# not showing up after a player gets teleported or respawned, you can enable this.
+update-visibility-on-teleport: false
+
+# Set this to true if you want holograms to appear at the player's eye level.
+# When enabled, holograms will be positioned at the player's eye height when created or moved.
+# When disabled, holograms will be positioned at the player's feet height when created or moved (default).
+holograms-eye-level-positioning: false
+
+#
+# Sets the time in seconds that DecentHolograms should have when trying to fetch Skin data for players both
+# by name and UUID.
+# Value can go as low as 1 second and as high as 60 seconds.
+#
+# Note: Increasing this value can have a negative impact on your server's performance, especially on bad
+#       internet connections.
+#       You should only ever change this if you encounter the following warning:
+#
+#       Failed to fetch UUID for player <player>
+#       Cause: Connect|Read timed out
+player-skin-connection-timeout: 5
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+# Damage Display
+#
+# Temporary damage display that shows up on every successful hit
+#
+# # # # # # # # # #
+
+damage-display:
+  # Do you want this feature enabled? [true/false]
+  enabled: false
+  # Do you want to display damage for players? [true/false]
+  players: true
+  # Do you want to display damage for mobs? [true/false]
+  mobs: true
+  # Do you want to display 0 (or less) damage? [true/false]
+  zero-damage: false
+  # How long will the hologram stay in ticks
+  duration: 40
+  # Damage placeholder: {damage}
+  # Animations and Placeholders DO work here
+  appearance: '&c{damage}'
+  # Appearance of the damage, if the damage is critical
+  critical-appearance: '&4&lCrit!&4 {damage}'
+  # Height offset
+  height: 0
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+# Healing Display
+#
+# Temporary damage display that shows up on every health increase
+#
+# # # # # # # # # #
+
+healing-display:
+  # Do you want this feature enabled? [true/false]
+  enabled: false
+  # Do you want to display healing for players? [true/false]
+  players: true
+  # Do you want to display healing for mobs? [true/false]
+  mobs: true
+  # How long will the hologram stay in ticks
+  duration: 40
+  # Heal placeholder: {heal}
+  # Animations and Placeholders DO work here
+  appearance: '&a+ {heal}'
+  # Height offset
+  height: 0
+
+
+# # # # # # # # # # # # # # # # #
+#
+# Custom text replacements
+#
+# Replace specific patterns in Holograms with custom replacements, similar to HolographicDisplays
+#
+# # # # # # # # # #
+
+custom-replacements:
+  '[x]': '█'
+  '[X]': '█'
+  '[/]': '▌'
+  '[,]': '░'
+  '[,,]': '▒'
+  '[,,,]': '▓'
+  '[p]': '•'
+  '[P]': '•'
+  '[|]': '⎹'
