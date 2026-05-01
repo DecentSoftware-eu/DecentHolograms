@@ -27,7 +27,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 @CommandInfo(
         usage = "/dh d help",
         description = "Show general displays help.",
-        permissions = {"dh.display.command.help"},
+        permissions = {"dh.command.displays.help"},
         aliases = {"?"}
 )
 class DisplaysHelpCommand extends DecentCommand {
