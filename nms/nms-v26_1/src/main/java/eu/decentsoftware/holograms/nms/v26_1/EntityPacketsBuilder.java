@@ -120,7 +120,8 @@ class EntityPacketsBuilder {
     }
 
     private void sendPacket(Player player, Packet<?> packet) {
-        ((CraftPlayer) player).getHandle().connection.sendPacket(packet);
+        // #sendPacket also exists, but Paper doesn't have that method
+        ((CraftPlayer) player).getHandle().connection.send(packet);
     }
 
     private net.minecraft.world.item.ItemStack itemStackToNms(ItemStack itemStack) {
