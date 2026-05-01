@@ -114,11 +114,11 @@ public abstract class DisplayBase {
         this.lastLogicalUpdateMs.set(lastLogicalUpdateMs);
     }
 
-    public void markContentDirty() {
+    protected void markContentDirty() {
         contentDirty = true;
     }
 
-    public void markConfigDirty() {
+    protected void markConfigDirty() {
         configDirty = true;
     }
 
