@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DisplayUpdateScheduler {
 
-    private static final long LOGICAL_STATE_BASE_INTERVAL_MS = 1000;
+    private static final long LOGICAL_STATE_BASE_INTERVAL_MS = 50;
     private static final long VISIBILITY_BASE_INTERVAL_MS = 1000;
     private static final long POST_PROCESSING_BASE_INTERVAL_MS = 50;
 
