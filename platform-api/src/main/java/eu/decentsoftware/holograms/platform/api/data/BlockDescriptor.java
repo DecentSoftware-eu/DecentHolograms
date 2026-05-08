@@ -1,0 +1,59 @@
+/*
+ * This file is part of DecentHolograms, licensed under the GNU GPL v3.0 License.
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package eu.decentsoftware.holograms.platform.api.data;
+
+import java.util.Objects;
+
+public final class BlockDescriptor {
+
+    private String type;
+
+    public BlockDescriptor(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockDescriptor{" +
+                "type='" + type + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BlockDescriptor)) {
+            return false;
+        }
+        BlockDescriptor that = (BlockDescriptor) o;
+        return Objects.equals(getType(), that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getType());
+    }
+}

@@ -12,9 +12,12 @@ import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
+import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.plugin.Validator;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
+import eu.decentsoftware.holograms.profiler.DecentProfiler;
+import eu.decentsoftware.holograms.profiler.command.ProfilerCommand;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,19 +37,22 @@ import java.util.stream.Collectors;
 )
 public class HologramsCommand extends DecentCommand {
 
-	public HologramsCommand() {
+	public HologramsCommand(DisplaysCommand displaysCommand) {
 		super("decentholograms");
 
+        addSubCommand(new ProfilerCommand(DecentProfiler.getInstance()));
 		addSubCommand(new HelpSubCommand());
 		addSubCommand(new ReloadSubCommand());
 		addSubCommand(new ListSubCommand());
 		addSubCommand(new HologramSubCommand());
+        if (displaysCommand != null) {
+            addSubCommand(displaysCommand);
+        }
 		addSubCommand(new LineSubCommand());
 		addSubCommand(new FeatureSubCommand());
 		addSubCommand(new PageSubCommand());
 		addSubCommand(new ConvertSubCommand());
         addSubCommand(new VersionSubCommand());
-//        addSubCommand(new TestSubCommand());
 
         // Shortcuts
         addSubCommand(new HologramSubCommand.HologramCreateSub());
@@ -88,76 +94,6 @@ public class HologramsCommand extends DecentCommand {
     /*
      *  SubCommands
      */
-
-//    @CommandInfo(
-//            permissions = "dh.command.test",
-//            usage = "/dh test",
-//            playerOnly = true,
-//            minArgs = 1,
-//            description = "Test command."
-//    )
-//    public static class TestSubCommand extends DecentCommand {
-//
-//        public TestSubCommand() {
-//            super("test");
-//        }
-//
-//        @Override
-//        public CommandHandler getCommandHandler() {
-//            return (sender, args) -> {
-//                if (!(sender instanceof Player)) {
-//                    Lang.ONLY_PLAYER.send(sender);
-//                    return true;
-//                }
-//                if (args.length < 2) {
-//                    Lang.USE_HELP.send(sender);
-//                    return true;
-//                }
-//                Player player = (Player) sender;
-//                DecentPosition position = DecentPosition.fromBukkitLocation(player.getLocation());
-//                NmsHologramRendererFactory componentFactory = PLUGIN.getNmsAdapter().getHologramComponentFactory();
-//                switch (args[0].toUpperCase()) {
-//                    case "TEXT":
-//                        NmsTextHologramRenderer textComponent = componentFactory.createTextRenderer();
-//                        textComponent.display(player, position, args[1]);
-//                        break;
-//                    case "ENTITY":
-//                        NmsEntityHologramRenderer entityComponent = componentFactory.createEntityRenderer();
-//                        EntityType entityType = XEntityType.of(args[1]).orElse(XEntityType.PIG).get();
-//                        entityComponent.display(player, position, entityType);
-//                        break;
-//                    case "ICON":
-//                        NmsIconHologramRenderer iconComponent = componentFactory.createIconRenderer();
-//                        iconComponent.display(player, position, getItemStack(args));
-//                        break;
-//                    case "HEAD":
-//                        NmsHeadHologramRenderer headComponent = componentFactory.createHeadRenderer();
-//                        headComponent.display(player, position, getItemStack(args));
-//                        break;
-//                    case "SMALLHEAD":
-//                    case "SMALL_HEAD":
-//                        NmsHeadHologramRenderer smallHeadComponent = componentFactory.createSmallHeadRenderer();
-//                        smallHeadComponent.display(player, position, getItemStack(args));
-//                        break;
-//                    default:
-//                        Lang.USE_HELP.send(sender);
-//                        return true;
-//                }
-//
-//                return true;
-//            };
-//        }
-//
-//        private ItemStack getItemStack(String[] args) {
-//            Material material = XMaterial.valueOf(args[1]).or(XMaterial.STONE).get();
-//            return new ItemStack(material);
-//        }
-//
-//        @Override
-//        public TabCompleteHandler getTabCompleteHandler() {
-//            return null;
-//        }
-//    }
 
     @CommandInfo(
             permissions = {"dh.default", "dh.command.version"},

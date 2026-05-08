@@ -67,7 +67,7 @@ public class FileConfig extends YamlConfiguration {
      */
     public void createFile() {
         if (!file.exists()) {
-            plugin.getDataFolder().mkdirs();
+            file.getParentFile().mkdirs();
 
             // If file isn't a resource, create from scratch
             if (plugin.getResource(this.path) == null) {

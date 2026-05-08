@@ -1,0 +1,8 @@
+dependencies {
+    compileOnly(libs.annotations)
+    annotationProcessor(libs.annotations)
+}
+
+test {
+    useJUnitPlatform()
+}

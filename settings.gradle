@@ -23,6 +23,7 @@ plugins {
 rootProject.name = 'DecentHolograms'
 
 include ':shared'
+include ':platform-api'
 include ':plugin'
 include ':nms'
 include ':nms:nms-common'

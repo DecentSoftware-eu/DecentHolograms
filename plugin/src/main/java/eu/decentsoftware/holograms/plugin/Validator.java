@@ -11,6 +11,9 @@ import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.items.HologramItem;
+import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
@@ -316,4 +319,26 @@ public final class Validator {
         return number;
     }
 
+    public static void validateArgsCount(int requiredArgsCount, String[] args) {
+        if (args.length < requiredArgsCount) {
+            throw new DecentCommandException(Lang.USE_HELP.getValue());
+        }
+    }
+
+    public static DisplayBase getDisplay(DisplayService displayService, String name) {
+        DisplayBase display = displayService.getDisplay(name);
+        if (display == null) {
+            throw new DecentCommandException(Lang.DISPLAY_DOES_NOT_EXIST.getValue(), name);
+        }
+        return display;
+    }
+
+    public static DisplayBase getDisplayOfType(DisplayService displayService, String name, DisplayType requiredType) {
+        DisplayBase display = getDisplay(displayService, name);
+        DisplayType displayType = display.getType();
+        if (displayType != requiredType) {
+            throw new DecentCommandException(Lang.DISPLAY_WRONG_TYPE.getValue(), requiredType);
+        }
+        return display;
+    }
 }

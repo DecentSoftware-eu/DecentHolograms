@@ -29,10 +29,6 @@ class PacketDataSerializerWrapper {
         serializer.writeVarInt(value);
     }
 
-    int readVarInt() {
-        return serializer.readVarInt();
-    }
-
     static PacketDataSerializerWrapper getInstance() {
         PacketDataSerializerWrapper instance = LOCAL_INSTANCE.get();
         instance.clear();

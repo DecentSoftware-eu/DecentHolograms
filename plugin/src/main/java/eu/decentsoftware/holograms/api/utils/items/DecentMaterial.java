@@ -49,4 +49,18 @@ public final class DecentMaterial {
         }
     }
 
+    public static boolean isSkull(Material material) {
+        XMaterial xMaterial = XMaterial.matchXMaterial(material);
+        // XMaterial also handles legacy skull materials: SKULL, SKULL_ITEM
+        return xMaterial == XMaterial.PLAYER_HEAD || xMaterial == XMaterial.PLAYER_WALL_HEAD;
+    }
+
+    public static boolean isLeatherArmor(Material material) {
+        XMaterial xMaterial = XMaterial.matchXMaterial(material);
+        return xMaterial == XMaterial.LEATHER_HELMET
+                || xMaterial == XMaterial.LEATHER_CHESTPLATE
+                || xMaterial == XMaterial.LEATHER_LEGGINGS
+                || xMaterial == XMaterial.LEATHER_BOOTS
+                || xMaterial == XMaterial.LEATHER_HORSE_ARMOR;
+    }
 }

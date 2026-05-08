@@ -1,0 +1,58 @@
+/*
+ * This file is part of DecentHolograms, licensed under the GNU GPL v3.0 License.
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package eu.decentsoftware.holograms.display.attribute.value.primitives;
+
+import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
+import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttributeValue;
+import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
+
+public final class BooleanValue implements AttributeValue<Boolean> {
+
+    public static final BooleanValue TRUE = new BooleanValue(true);
+    public static final BooleanValue FALSE = new BooleanValue(false);
+    private final boolean value;
+
+    private BooleanValue(boolean value) {
+        this.value = value;
+    }
+
+    @Override
+    public String getTypeKey() {
+        return BooleanValueType.TYPE_ID;
+    }
+
+    @Override
+    public CompiledAttributeValue<Boolean> compile(DisplayRenderContext context) {
+        return new StaticCompiledAttributeValue<>(value);
+    }
+
+    @Override
+    public String toHumanReadableString() {
+        return Boolean.toString(value);
+    }
+
+    public boolean getValue() {
+        return value;
+    }
+
+    public static BooleanValue of(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+}
