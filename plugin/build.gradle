@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = "2.10.0-SNAPSHOT"
+version = "2.10.0"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
 repositories {
