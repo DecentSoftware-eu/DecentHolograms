@@ -150,8 +150,10 @@ public class Lang {
     public static final Phrase DISPLAY_NEARBY_NO_DISPLAYS = new Phrase("display.nearby.no_displays", "{prefix}There are no displays nearby.");
     public static final Phrase DISPLAY_WRONG_TYPE = new Phrase("display.wrong_type", "{prefix}&cDisplay is not of type '%1$s'.");
     public static final Phrase DISPLAY_INVALID_BLOCK_TYPE = new Phrase("display.invalid_block_type", "{prefix}&cInvalid block type: '%1$s'");
+    public static final Phrase DISPLAY_MISSING_BLOCK_CONTENT = new Phrase("display.missing_block_content", "{prefix}&cContent is mandatory for block displays.");
     public static final Phrase DISPLAY_BLOCK_SET = new Phrase("display.block_set", "{prefix}Set block of display &b'%1$s'&7 to &b'%2$s'&7.");
     public static final Phrase DISPLAY_INVALID_ITEM_TYPE = new Phrase("display.invalid_item_type", "{prefix}&cInvalid item type: '%1$s'");
+    public static final Phrase DISPLAY_MISSING_ITEM_CONTENT = new Phrase("display.missing_item_content", "{prefix}&cContent is mandatory for item displays.");
     public static final Phrase DISPLAY_ITEM_SET = new Phrase("display.item_set", "{prefix}Set item of display &b'%1$s'&7 to &b'%2$s'&7.");
     public static final Phrase DISPLAY_TEXT_LINE_ADDED = new Phrase("display.text.line.added", "{prefix}Added line to display &b'%1$s'&7.");
     public static final Phrase DISPLAY_TEXT_LINE_SET = new Phrase("display.text.line.set", "{prefix}Set line &b%2$d&7 of display &b'%1$s'&7.");

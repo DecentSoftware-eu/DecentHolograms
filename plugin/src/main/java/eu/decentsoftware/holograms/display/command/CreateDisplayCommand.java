@@ -117,6 +117,9 @@ class CreateDisplayCommand extends DecentCommand {
                 textDisplay.setLines(Arrays.asList(text.split("\\\\n")));
                 return textDisplay;
             case ITEM:
+                if (args.length == 2) {
+                    throw new DecentCommandException(Lang.DISPLAY_MISSING_ITEM_CONTENT.getValue());
+                }
                 materialNamespacedKey = materialService.toMojangNamespacedKey(args[2]);
                 if (materialNamespacedKey == null || !materialService.isItem(materialNamespacedKey)) {
                     throw new DecentCommandException(Lang.DISPLAY_INVALID_ITEM_TYPE.getValue(), materialNamespacedKey);
@@ -126,6 +129,9 @@ class CreateDisplayCommand extends DecentCommand {
                 itemDisplay.setMaterial(materialNamespacedKey);
                 return itemDisplay;
             case BLOCK:
+                if (args.length == 2) {
+                    throw new DecentCommandException(Lang.DISPLAY_MISSING_BLOCK_CONTENT.getValue());
+                }
                 materialNamespacedKey = materialService.toMojangNamespacedKey(args[2]);
                 if (materialNamespacedKey == null || !materialService.isBlock(materialNamespacedKey)) {
                     throw new DecentCommandException(Lang.DISPLAY_INVALID_BLOCK_TYPE.getValue(), materialNamespacedKey);
