@@ -71,6 +71,9 @@ public final class DecentHolograms {
         Settings.reload();
         Lang.reload();
 
+        // Save the default display attribute configuration if it does not exist.
+        saveDefaultAttributeDefaults();
+
         PluginManager pluginManager = Bukkit.getPluginManager();
         this.integrationAvailabilityService = new IntegrationAvailabilityService(plugin, pluginManager);
         this.integrationAvailabilityService.initialize();
@@ -94,7 +97,6 @@ public final class DecentHolograms {
 
         setupMetrics();
         checkForUpdates();
-
         BungeeUtils.init();
     }
 
@@ -125,6 +127,8 @@ public final class DecentHolograms {
         Settings.reload();
         Lang.reload();
 
+        // Save the default display attribute configuration if it was deleted or is missing.
+        saveDefaultAttributeDefaults();
         this.animationManager.reload();
         this.hologramManager.reload();
         this.featureManager.reload();
@@ -133,6 +137,27 @@ public final class DecentHolograms {
         }
 
         EventFactory.fireReloadEvent();
+    }
+
+    /**
+     * Saves attribute-defaults.yml from the plugin jar to the plugin data folder
+     * if the file does not already exist.
+     * This prevents the warning:
+     * "No attribute defaults file found. Skipping."
+     */
+    private void saveDefaultAttributeDefaults() {
+        File file = new File(plugin.getDataFolder(), "attribute-defaults.yml");
+
+        if (file.exists()) {
+            return;
+        }
+
+        try {
+            plugin.saveResource("attribute-defaults.yml", false);
+            Log.info("Saved default attribute-defaults.yml.");
+        } catch (IllegalArgumentException e) {
+            Log.warn("Could not save attribute-defaults.yml because it was not found inside the plugin jar.");
+        }
     }
 
     private void initializeNmsAdapter() {
@@ -185,5 +210,4 @@ public final class DecentHolograms {
     public Logger getLogger() {
         return plugin.getLogger();
     }
-
 }
