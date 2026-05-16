@@ -1096,7 +1096,7 @@ public class HologramSubCommand extends DecentCommand {
 			return (sender, args) -> {
 				Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
 				Player player = Validator.getPlayer(sender);
-				player.teleport(hologram.getLocation());
+				io.papermc.lib.PaperLib.teleportAsync(player, hologram.getLocation());
 
 				Lang.HOLOGRAM_TELEPORTED.send(sender);
 				return true;
