@@ -117,6 +117,61 @@ public class Lang {
     public static final Phrase FEATURE_ALREADY_DISABLED = new Phrase("feature.already_disabled", "{prefix}&cFeature \"%1$s\" is already disabled!");
     public static final Phrase FEATURE_RELOADED = new Phrase("feature.reloaded", "{prefix}Feature &b\"%1$s\"&7 has been reloaded!");
 
+    // Displays
+    public static final Phrase DISPLAY_DOES_NOT_EXIST = new Phrase("display.does_not_exist", "{prefix}&cDisplay with that name doesn't exist.");
+    public static final Phrase DISPLAY_ALREADY_EXISTS = new Phrase("display.already_exists", "{prefix}&cDisplay with that name already exists.");
+    public static final Phrase DISPLAY_INVALID_TYPE = new Phrase("display.invalid_type", "{prefix}&cInvalid display type '%1$s'. Valid types are: &b%2$s&7.");
+    public static final Phrase DISPLAY_INVALID_NAME = new Phrase("display.invalid_name", "{prefix}&cInvalid name '%1$s', only use alphanumerical characters, underscore and dash.");
+    public static final Phrase DISPLAY_CREATED = new Phrase("display.created", "{prefix}Display &b'%1$s'&7 has been created!");
+    public static final Phrase DISPLAY_DELETED = new Phrase("display.deleted", "{prefix}Display has been deleted!");
+    public static final Phrase DISPLAY_MOVED = new Phrase("display.moved", "{prefix}Display has been moved!");
+    public static final Phrase DISPLAY_RENAMED = new Phrase("display.renamed", "{prefix}Display has been renamed!");
+    public static final Phrase DISPLAY_CLONED = new Phrase("display.cloned", "{prefix}Display has been cloned!");
+    public static final Phrase DISPLAY_ENABLED = new Phrase("display.enabled", "{prefix}Display has been enabled!");
+    public static final Phrase DISPLAY_DISABLED = new Phrase("display.disabled", "{prefix}Display has been disabled!");
+    public static final Phrase DISPLAY_DISPLAY_RANGE_SET = new Phrase("display.display_range_set", "{prefix}Display range has been set!");
+    public static final Phrase DISPLAY_UPDATE_INTERVAL_SET = new Phrase("display.update_interval_set", "{prefix}Update interval has been set!");
+    public static final Phrase DISPLAY_FACING_SET = new Phrase("display.facing.set", "{prefix}Facing has been set!");
+    public static final Phrase DISPLAY_FACING_INVALID_YAW = new Phrase("display.facing.invalid_yaw", "{prefix}&cYaw must be a valid number between -180 and 180 degrees.");
+    public static final Phrase DISPLAY_FACING_INVALID_PITCH = new Phrase("display.facing.invalid_pitch", "{prefix}&cPitch must be a valid number between -90 and 90 degrees.");
+    public static final Phrase DISPLAY_ATTRIBUTE_DOES_NOT_EXIST = new Phrase("display.attribute.does_not_exist", "{prefix}Attribute &b'%1$s'&7 does not exist for that display.");
+    public static final Phrase DISPLAY_ATTRIBUTE_INVALID_VALUE = new Phrase("display.attribute.invalid_value", "{prefix}&cInvalid value for attribute '%1$s'&c: %2$s");
+    public static final Phrase DISPLAY_ATTRIBUTE_SET = new Phrase("display.attribute.set", "{prefix}Set attribute &b'%1$s'&7 to &b'%2$s&b'&7.");
+    public static final Phrase DISPLAY_ATTRIBUTE_RESET = new Phrase("display.attribute.reset", "{prefix}Reset attribute &b'%1$s'&7.");
+    public static final Phrase DISPLAY_ATTRIBUTE_GET = new Phrase("display.attribute.get", "{prefix}Attribute &b'%1$s'&7 is set to value: &b'%2$s&b'&7.");
+    public static final Phrase DISPLAY_ATTRIBUTE_GET_NOT_SET = new Phrase("display.attribute.get_not_set", "{prefix}Attribute &b'%1$s'&7 is not set.");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_HEADER = new Phrase("display.attribute.list.header", "&r\n&3&lDISPLAY ATTRIBUTES\n&fAll attributes of display '%s'.\n&r");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_ENTRY = new Phrase("display.attribute.list.entry", " &8• &7%s: &b%s");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_FOOTER = new Phrase("display.attribute.list.footer", "\n");
+    public static final Phrase DISPLAY_ATTRIBUTE_LIST_EMPTY = new Phrase("display.attribute.list.empty", "{prefix}There are no attributes set on that display.");
+    public static final Phrase DISPLAY_TELEPORTED = new Phrase("display.teleported", "{prefix}&aTeleported!");
+    public static final Phrase DISPLAY_WORLD_DOES_NOT_EXIST = new Phrase("display.world_does_not_exist", "{prefix}&cWorld of display '%1$s' doesn't exist!");
+    public static final Phrase DISPLAY_LIST_NO_DISPLAYS = new Phrase("display.list.no_displays", "{prefix}There are currently no displays.");
+    public static final Phrase DISPLAY_NEARBY_NO_DISPLAYS = new Phrase("display.nearby.no_displays", "{prefix}There are no displays nearby.");
+    public static final Phrase DISPLAY_WRONG_TYPE = new Phrase("display.wrong_type", "{prefix}&cDisplay is not of type '%1$s'.");
+    public static final Phrase DISPLAY_INVALID_BLOCK_TYPE = new Phrase("display.invalid_block_type", "{prefix}&cInvalid block type: '%1$s'");
+    public static final Phrase DISPLAY_MISSING_BLOCK_CONTENT = new Phrase("display.missing_block_content", "{prefix}&cContent is mandatory for block displays.");
+    public static final Phrase DISPLAY_BLOCK_SET = new Phrase("display.block_set", "{prefix}Set block of display &b'%1$s'&7 to &b'%2$s'&7.");
+    public static final Phrase DISPLAY_INVALID_ITEM_TYPE = new Phrase("display.invalid_item_type", "{prefix}&cInvalid item type: '%1$s'");
+    public static final Phrase DISPLAY_MISSING_ITEM_CONTENT = new Phrase("display.missing_item_content", "{prefix}&cContent is mandatory for item displays.");
+    public static final Phrase DISPLAY_ITEM_SET = new Phrase("display.item_set", "{prefix}Set item of display &b'%1$s'&7 to &b'%2$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_ADDED = new Phrase("display.text.line.added", "{prefix}Added line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SET = new Phrase("display.text.line.set", "{prefix}Set line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_REMOVED = new Phrase("display.text.line.removed", "{prefix}Removed line &b%2$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_INSERTED = new Phrase("display.text.line.inserted", "{prefix}Inserted line to display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_SWAPPED = new Phrase("display.text.line.swapped", "{prefix}Swapped lines &b%2$d&7 and &b%3$d&7 of display &b'%1$s'&7.");
+    public static final Phrase DISPLAY_TEXT_LINE_CANNOT_SWAP_SELF = new Phrase("display.text.line.cannot_swap_self", "{prefix}&cCannot swap a line with itself!");
+
+    // Profiler
+    public static final Phrase PROFILER_STARTED = new Phrase("profiler.started", "{prefix}Profiler has been started!");
+    public static final Phrase PROFILER_ALREADY_RUNNING = new Phrase("profiler.already_running", "{prefix}Profiler is already running!");
+    public static final Phrase PROFILER_STOPPED = new Phrase("profiler.disabled", "{prefix}Profiler has been disabled!");
+    public static final Phrase PROFILER_NOT_RUNNING = new Phrase("profiler.not_running", "{prefix}Profiler is not running!");
+    public static final Phrase PROFILER_RESET = new Phrase("profiler.reset", "{prefix}Profiler has been reset!");
+    public static final Phrase PROFILER_TIMER_RESET = new Phrase("profiler.timer_reset", "{prefix}Timer &b'%1$s'&7 has been reset!");
+    public static final Phrase PROFILER_STATS = new Phrase("profiler.stats", "{prefix}Profiler stats:&f\n%1$s");
+    public static final Phrase PROFILER_TIMER_NOT_FOUND = new Phrase("profiler.timer_not_found", "{prefix}Timer with id &b'%1$s'&7 not found!");
+
     /*
      *	General Methods
      */

@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms.api;
 
+import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import org.bukkit.entity.Player;
 
@@ -17,6 +18,15 @@ public interface NmsAdapter {
      * @return An instance of {@link NmsHologramRendererFactory}.
      */
     NmsHologramRendererFactory getHologramComponentFactory();
+
+    /**
+     * Get the factory for creating display renderers.
+     *
+     * @return An instance of {@link NmsDisplayRendererFactory}. Or {@code null} if not supported by the implementation.
+     */
+    default NmsDisplayRendererFactory getDisplayRendererFactory() {
+        return null;
+    }
 
     /**
      * Register a packet listener for a player.

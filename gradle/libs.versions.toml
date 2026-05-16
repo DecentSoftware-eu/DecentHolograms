@@ -1,19 +1,20 @@
 [versions]
 spigot = "1.13-R0.1-SNAPSHOT"
-placeholderapi = "2.11.6"
+placeholderapi = "2.12.2"
 headdatabase-api = "1.3.2"
 bstats = "3.1.0"
-item-nbt-api = "2.15.5"
-xseries = "13.6.0"
+item-nbt-api = "2.15.7"
+xseries = "13.6.0+26.1"
+lombok = "1.18.44"
+annotations = "26.1.0"
+configurate = "4.2.0"
 paperlib = "1.0.8"
-lombok = "1.18.38"
-annotations = "26.0.2"
 # Test
-junit = "5.13.1"
-junit-platform-launcher = "1.13.1"
+junit = "5.14.3"
+junit-platform-launcher = "1.14.3"
 mockito = "4.11.0" # Has to be 4.x for Java 8 compatibility
 # Plugins
-shadow = "8.3.6"
+shadow = "9.4.0"
 
 [libraries]
 spigot = { module = "org.spigotmc:spigot", version.ref = "spigot" }
@@ -21,10 +22,11 @@ placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholder
 headdatabase-api = { module = "com.arcaniax:HeadDatabase-API", version.ref = "headdatabase-api" }
 bstats-bukkit = { module = "org.bstats:bstats-bukkit", version.ref = "bstats" }
 item-nbt-api = { module = "de.tr7zw:item-nbt-api", version.ref = "item-nbt-api" }
-xseries = { module = "com.github.cryptomorin:XSeries", version.ref = "xseries" }
-paperlib = { module = "io.papermc:paperlib", version.ref = "paperlib" }
+xseries = { module = "io.github.almighty-satan:XSeries", version.ref = "xseries" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
+paperlib = { module = "io.papermc:paperlib", version.ref = "paperlib" }
 # Test
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }

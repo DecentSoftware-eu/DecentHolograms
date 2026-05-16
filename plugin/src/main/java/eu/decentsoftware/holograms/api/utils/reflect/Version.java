@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 @SuppressWarnings("java:S115") // SonarLint: Enum values naming convention
 public enum Version {
-    v1_8_R1(8, Platform.ALL,"1.8"),
+    v1_8_R1(8, Platform.ALL, "1.8"),
     v1_8_R2(8, Platform.ALL, "1.8.3"),
     v1_8_R3(8, Platform.ALL, "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8"),
     v1_9_R1(9, Platform.ALL, "1.9", "1.9.2"),
@@ -44,7 +44,8 @@ public enum Version {
     v1_21_R6(21, Platform.SPIGOT, "1.21.9", "1.21.10"),
     paper_v1_21_R6(21, Platform.PAPER, "1.21.9", "1.21.10"),
     v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
-    paper_v1_21_R7(21, Platform.PAPER, "1.21.11")
+    paper_v1_21_R7(21, Platform.PAPER, "1.21.11"),
+    v26_1(26, Platform.ALL, "26.1", "26.1.1", "26.1.2"),
     ;
 
     /*
@@ -71,7 +72,13 @@ public enum Version {
 
     private static String getCurrentMinecraftVersion() {
         // Bukkit version (e.g., 1.20.6-R0.1-SNAPSHOT)
-        String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        String bukkitVersion;
+        if (CURRENT_SERVER_PLATFORM == Platform.PAPER) {
+            // Since 26.1, Paper returns the version in a wrong format from #getBukkitVersion() (e.g.: "26.1.2.build.52-beta")
+            bukkitVersion = Bukkit.getServer().getVersion();
+        } else {
+            bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        }
         // Minecraft version (e.g., 1.20.6)
         return bukkitVersion.split("-", 2)[0];
     }
@@ -99,7 +106,7 @@ public enum Version {
     @Nullable
     public static Version fromMinecraftVersion(String minecraftVersion, Platform currentPlatform) {
         for (Version version : Version.values()) {
-            if(version.platform.equals(Platform.ALL) || version.platform.equals(currentPlatform)) {
+            if (version.platform.equals(Platform.ALL) || version.platform.equals(currentPlatform)) {
                 for (String candidateMinecraftVersion : version.getMinecraftVersions()) {
                     if (candidateMinecraftVersion.equals(minecraftVersion)) {
                         return version;

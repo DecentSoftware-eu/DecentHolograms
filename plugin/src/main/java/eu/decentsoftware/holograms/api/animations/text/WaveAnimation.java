@@ -1,8 +1,7 @@
 package eu.decentsoftware.holograms.api.animations.text;
 
 import eu.decentsoftware.holograms.api.animations.TextAnimation;
-import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
+import eu.decentsoftware.holograms.api.utils.color.StripColorUtil;
 import lombok.NonNull;
 
 public class WaveAnimation extends TextAnimation {
@@ -13,14 +12,9 @@ public class WaveAnimation extends TextAnimation {
 
     @Override
     public String animate(@NonNull String string, long step, String... args) {
-        StringBuilder specialColors = new StringBuilder();
-        for (String color : IridiumColorAPI.SPECIAL_COLORS) {
-            if (string.contains(color)) {
-                specialColors.append(color);
-                string = string.replace(color, "");
-            }
-        }
-        String stripped = Common.stripColors(string);
+        String specialColors = StripColorUtil.extractSpecialColorsFormatting(string);
+        String stripped = StripColorUtil.stripLegacyColorCodes(string);
+
         int length = stripped.length();
         int size = length / 4;
         int currentStep = getCurrentStep(step, length + size);

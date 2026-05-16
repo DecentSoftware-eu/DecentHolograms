@@ -20,7 +20,7 @@ permissions:
   # Main permissions
   dh.admin:
     description: "Allows player to use DecentHolograms."
-    children: 
+    children:
       dh.command: true
   dh.default:
     default: true
@@ -44,6 +44,7 @@ permissions:
       dh.command.holograms: true
       dh.command.lines: true
       dh.command.pages: true
+      dh.command.displays: true
   #
   # Main Command permissions
   dh.command.decentholograms:
@@ -64,11 +65,37 @@ permissions:
     description: "Allows player to use the command '/dh convert <plugin>'"
     default: op
   #
+  # Profiler Sub-command permissions
+  dh.command.profiler:
+    description: "Allows player to use the command '/dh profiler' and all its sub-commands"
+    default: op
+    children:
+      dh.command.profiler.help: true
+      dh.command.profiler.start: true
+      dh.command.profiler.stop: true
+      dh.command.profiler.reset: true
+      dh.command.profiler.stats: true
+  dh.command.profiler.help:
+    description: "Allows player to use the command '/dh profiler help'"
+    default: op
+  dh.command.profiler.start:
+    description: "Allows player to use the command '/dh profiler start'"
+    default: op
+  dh.command.profiler.stop:
+    description: "Allows player to use the command '/dh profiler stop'"
+    default: op
+  dh.command.profiler.reset:
+    description: "Allows player to use the command '/dh profiler reset [timer]'"
+    default: op
+  dh.command.profiler.stats:
+    description: "Allows player to use the command '/dh profiler stats [timer]'"
+    default: op
+  #
   # Feature Sub-command permissions
   dh.command.features:
     description: "Allows player to use the command '/dh features' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.features.disable: true
       dh.command.features.enable: true
       dh.command.features.help: true
@@ -98,7 +125,7 @@ permissions:
   dh.command.holograms:
     description: "Allows player to use the command '/dh holograms' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.holograms.update: true
       dh.command.holograms.align: true
       dh.command.holograms.center: true
@@ -200,7 +227,7 @@ permissions:
   dh.command.lines:
     description: "Allows player to use the command '/dh lines' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.lines.add: true
       dh.command.lines.align: true
       dh.command.lines.edit: true
@@ -270,7 +297,7 @@ permissions:
   dh.command.pages:
     description: "Allows player to use the command '/dh pages' and all its sub-commands"
     default: op
-    children: 
+    children:
       dh.command.pages.help: true
       dh.command.pages.add: true
       dh.command.pages.insert: true
@@ -310,4 +337,114 @@ permissions:
     default: op
   dh.command.pages.removeaction:
     description: "Allows player to use the command '/dh pages removeaction <hologram> <page> <clickType> <index>'"
+    default: op
+  #
+  # Display Sub-command permissions
+  dh.command.displays:
+    description: "Allows player to use the command '/dh displays' and all its sub-commands"
+    default: op
+    children:
+      dh.command.displays.help: true
+      dh.command.displays.create: true
+      dh.command.displays.delete: true
+      dh.command.displays.move: true
+      dh.command.displays.rename: true
+      dh.command.displays.clone: true
+      dh.command.displays.enable: true
+      dh.command.displays.disable: true
+      dh.command.displays.displayrange: true
+      dh.command.displays.updateinterval: true
+      dh.command.displays.attribute: true
+      dh.command.displays.resetattribute: true
+      dh.command.displays.listattributes: true
+      dh.command.displays.center: true
+      dh.command.displays.movehere: true
+      dh.command.displays.teleport: true
+      dh.command.displays.facing: true
+      dh.command.displays.list: true
+      dh.command.displays.nearby: true
+      dh.command.displays.setblock: true
+      dh.command.displays.setitem: true
+      dh.command.displays.text.addline: true
+      dh.command.displays.text.insertline: true
+      dh.command.displays.text.removeline: true
+      dh.command.displays.text.setline: true
+      dh.command.displays.text.swaplines: true
+  dh.command.displays.help:
+    description: "Allows player to use the command '/dh displays help'"
+    default: op
+  dh.command.displays.create:
+    description: "Allows player to use the command '/dh displays create <type> <name> [content]'"
+    default: op
+  dh.command.displays.delete:
+    description: "Allows player to use the command '/dh displays delete <display>'"
+    default: op
+  dh.command.displays.move:
+    description: "Allows player to use the command '/dh displays move <display> <x> <y> <z>'"
+    default: op
+  dh.command.displays.rename:
+    description: "Allows player to use the command '/dh displays rename <display> <new_name>'"
+    default: op
+  dh.command.displays.clone:
+    description: "Allows player to use the command '/dh displays clone <display> <new_name>'"
+    default: op
+  dh.command.displays.enable:
+    description: "Allows player to use the command '/dh displays enable <display>'"
+    default: op
+  dh.command.displays.disable:
+    description: "Allows player to use the command '/dh displays disable <display>'"
+    default: op
+  dh.command.displays.displayrange:
+    description: "Allows player to use the command '/dh displays display-range <display> <range>'"
+    default: op
+  dh.command.displays.updateinterval:
+    description: "Allows player to use the command '/dh displays update-interval <display> <interval>'"
+    default: op
+  dh.command.displays.attribute:
+    description: "Allows player to use the command '/dh displays attribute <display> <attribute> [value]'"
+    default: op
+  dh.command.displays.resetattribute:
+    description: "Allows player to use the command '/dh displays reset-attribute <display> <attribute>'"
+    default: op
+  dh.command.displays.listattributes:
+    description: "Allows player to use the command '/dh displays list-attributes <display>'"
+    default: op
+  dh.command.displays.center:
+    description: "Allows player to use the command '/dh displays center <display>'"
+    default: op
+  dh.command.displays.movehere:
+    description: "Allows player to use the command '/dh displays movehere <display>'"
+    default: op
+  dh.command.displays.teleport:
+    description: "Allows player to use the command '/dh displays teleport <display>'"
+    default: op
+  dh.command.displays.facing:
+    description: "Allows player to use the command '/dh displays set-facing <display> <yaw> [pitch]'"
+    default: op
+  dh.command.displays.list:
+    description: "Allows player to use the command '/dh displays list [page]'"
+    default: op
+  dh.command.displays.nearby:
+    description: "Allows player to use the command '/dh displays nearby <range> [page]'"
+    default: op
+  dh.command.displays.setblock:
+    description: "Allows player to use the command '/dh displays set-block <display> <block_type>'"
+    default: op
+  dh.command.displays.setitem:
+    description: "Allows player to use the command '/dh displays set-item <display> <item>'"
+    default: op
+  dh.command.displays.text.addline:
+    description: "Allows player to use the command '/dh displays add-line <display> <text>'"
+    default: op
+  dh.command.displays.text.insertline:
+    description: "Allows player to use the command '/dh displays insert-line <display> <index> <text>'"
+    default: op
+  dh.command.displays.text.removeline:
+    description: "Allows player to use the command '/dh displays remove-line <display> <index>'"
+    default: op
+  dh.command.displays.text.setline:
+    description: "Allows player to use the command '/dh displays set-line <display> <index> <text>'"
+    default: op
+  dh.command.displays.text.swaplines:
+    description: "Allows player to use the command '/dh displays swap-lines <display> <index1> <index2>'"
     default: op

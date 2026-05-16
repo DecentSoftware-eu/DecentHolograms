@@ -63,7 +63,7 @@ public abstract class DecentCommand extends Command implements CommandBase {
 		try {
 			return this.handle(sender, args);
 		} catch (DecentCommandException e) {
-			Common.tell(sender, e.getMessage());
+			Common.tell(sender, e.getMessage(), e.getMessageArgs());
 			return true;
 		}
 	}
