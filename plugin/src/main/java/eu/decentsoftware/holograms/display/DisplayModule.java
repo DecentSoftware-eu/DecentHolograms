@@ -168,7 +168,7 @@ public class DisplayModule {
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
         AttributeDefaultRepository attributeDefaultRepository = new AttributeDefaultRepository(
-                yamlConfigurationLoaderFactory, attributeDefinitionRegistry, attributeValueTypeRegistry, plugin.getDataFolder().toPath());
+                yamlConfigurationLoaderFactory, platformAdapter.getSaveResourceService(), attributeDefinitionRegistry, attributeValueTypeRegistry, plugin.getDataFolder().toPath());
         this.attributeDefaultService = new AttributeDefaultService(attributeDefaultRegistry, attributeDefinitionRegistry, attributeDefaultRepository);
         AttributeCommandService attributeCommandService = new AttributeCommandService(
                 attributeDefinitionRegistry, commandHandlerRegistry, attributeDefaultService);

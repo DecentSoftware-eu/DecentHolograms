@@ -28,7 +28,9 @@ import eu.decentsoftware.holograms.display.attribute.value.AttributeValueTypeReg
 import eu.decentsoftware.holograms.display.config.YamlConfigurationLoaderFactory;
 import eu.decentsoftware.holograms.display.config.dto.ConfigDefaultAttribute;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
 import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
@@ -51,15 +53,18 @@ public class AttributeDefaultRepository {
     private static final String DEFAULTS_FILE_NAME = "attribute-defaults.yml";
 
     private final YamlConfigurationLoaderFactory loaderFactory;
+    private final SaveResourceService saveResourceService;
     private final AttributeDefinitionRegistry definitionRegistry;
     private final AttributeValueTypeRegistry valueTypeRegistry;
     private final Path pluginDirectory;
 
     public AttributeDefaultRepository(YamlConfigurationLoaderFactory loaderFactory,
+                                      SaveResourceService saveResourceService,
                                       AttributeDefinitionRegistry definitionRegistry,
                                       AttributeValueTypeRegistry valueTypeRegistry,
                                       Path pluginDirectory) {
         this.loaderFactory = loaderFactory;
+        this.saveResourceService = saveResourceService;
         this.definitionRegistry = definitionRegistry;
         this.valueTypeRegistry = valueTypeRegistry;
         this.pluginDirectory = pluginDirectory;
@@ -79,8 +84,12 @@ public class AttributeDefaultRepository {
     public Map<AttributeKey<?>, AttributeValue<?>> loadDefaults(DisplayType displayType) {
         Path file = resolveDefaultsFile();
         if (Files.notExists(file)) {
-            Log.warn("No attribute defaults file found. Skipping.");
-            return Collections.emptyMap();
+            Log.info("Attribute defaults file not found. Creating default file: %s", file);
+            saveResourceService.saveResource(DEFAULTS_FILE_NAME, false);
+            if (Files.notExists(file)) {
+                Log.error("Failed to create default attribute defaults file: %s", file);
+                return Collections.emptyMap();
+            }
         }
 
         try {
@@ -106,7 +115,7 @@ public class AttributeDefaultRepository {
         }
     }
 
-    private CommentedConfigurationNode loadDisplayNode(Path file, DisplayType displayType) throws Exception {
+    private CommentedConfigurationNode loadDisplayNode(Path file, DisplayType displayType) throws ConfigurateException {
         YamlConfigurationLoader loader = loaderFactory.createLoader(file);
         CommentedConfigurationNode root = loader.load();
         return root.node("display").node(displayType.name());

@@ -26,10 +26,12 @@ import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialServi
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
+import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -43,8 +45,9 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     private final BukkitRenderService renderService;
     private final BukkitEventListener eventListener;
     private final List<PlaceholderProvider> placeholderProviders;
+    private final BukkitSaveResourceService saveResourceService;
 
-    public BukkitPlatformAdapter(NmsDisplayRendererFactory rendererFactory) {
+    public BukkitPlatformAdapter(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory) {
         capabilities = new BukkitPlatformCapabilities();
         materialService = new BukkitMaterialService();
         playerService = new BukkitPlayerService();
@@ -53,6 +56,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         placeholderProviders = Collections.singletonList(
                 new BukkitPlaceholderApiProvider()
         );
+        saveResourceService = new BukkitSaveResourceService(plugin);
     }
 
     @NotNull
@@ -89,5 +93,11 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     @Override
     public List<PlaceholderProvider> getPlaceholderProviders() {
         return placeholderProviders;
+    }
+
+    @NotNull
+    @Override
+    public SaveResourceService getSaveResourceService() {
+        return saveResourceService;
     }
 }

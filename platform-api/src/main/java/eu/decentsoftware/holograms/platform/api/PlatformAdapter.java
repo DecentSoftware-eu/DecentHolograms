@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.platform.api.capability.PlatformMaterialServi
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
+import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -107,4 +108,17 @@ public interface PlatformAdapter {
      */
     @NotNull
     List<PlaceholderProvider> getPlaceholderProviders();
+
+    /**
+     * Get the save resource service of this platform adapter.
+     *
+     * <p>This service allows saving resources to the plugin's data folder. It can be used by the core or by other services
+     * to save default configuration files or other resources bundled with the plugin.</p>
+     *
+     * @return The save resource service.
+     * @see SaveResourceService
+     * @since 2.10.1
+     */
+    @NotNull
+    SaveResourceService getSaveResourceService();
 }

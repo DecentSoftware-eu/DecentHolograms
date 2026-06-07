@@ -81,7 +81,7 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(nmsAdapter.getDisplayRendererFactory());
+        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
         if (platformAdapter.getCapabilities().supports(MinecraftFeature.DISPLAY_ENTITIES)) {
             this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
             this.displayModule.initialize();
