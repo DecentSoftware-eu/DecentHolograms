@@ -79,6 +79,16 @@ public class Settings {
             .put("[P]", "\u2022")
             .put("[|]", "\u23B9")
             .build();
+    
+    /**
+     * Set this to true if you want Display Holograms to appear at the player's eye level.
+     *
+     * <p>When enabled, Display Holograms will be positioned at the player's eye height when created or moved.</p>
+     *
+     * <p>When disabled, Display holograms will be positioned at the player's feet height when created or moved (default).</p>
+     */
+    @Key("displays-eye-level-positioning")
+    public static boolean DISPLAYS_EYE_LEVEL_POSITIONING = false;
 
     // ========================================= //
 
