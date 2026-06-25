@@ -29,15 +29,17 @@ public class CommandManager {
     }
 
     public void registerCommand(DecentCommand decentCommand) {
-        if (commands.containsKey(decentCommand.getName())) return;
-        commands.put(decentCommand.getName(), decentCommand);
-        CommandManager.register(decentCommand);
+        DecentCommand previous = commands.putIfAbsent(decentCommand.getName(), decentCommand);
+        if (previous == null) {
+            CommandManager.register(decentCommand);
+        }
     }
 
     public void unregisterCommand(String name) {
-        if (!commands.containsKey(name)) return;
         DecentCommand decentCommand = commands.remove(name);
-        CommandManager.unregister(decentCommand);
+        if (decentCommand != null) {
+            CommandManager.unregister(decentCommand);
+        }
     }
 
     public void setMainCommand(DecentCommand decentCommand) {
