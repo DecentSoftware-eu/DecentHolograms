@@ -1,10 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.color.patterns;
 
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
-import net.md_5.bungee.api.ChatColor;
 
-import java.awt.*;
 import java.util.regex.Matcher;
 
 public class SolidPattern implements Pattern {
@@ -30,12 +27,7 @@ public class SolidPattern implements Pattern {
                 color = matcher.group(2);
             }
 
-            if (Version.supportsHex()) {
-                string = string.replace(matcher.group(), "§#" + color);
-            } else {
-                ChatColor closestColor = IridiumColorAPI.getClosestColor(new Color(Integer.parseInt(string, 16)));
-                string = string.replace(matcher.group(), closestColor.toString());
-            }
+            string = string.replace(matcher.group(), IridiumColorAPI.getColor(color).toString());
         }
         return string;
     }

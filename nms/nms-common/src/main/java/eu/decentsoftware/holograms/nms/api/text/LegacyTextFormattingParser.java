@@ -119,7 +119,7 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
             }
 
             char nextChar = text.charAt(i + 1);
-            if (nextChar != '#' || i + 7 >= length) {
+            if ((nextChar != 'x' && nextChar != 'X') || i + 13 >= length) {
                 i = tryParseLegacyFormat(nextChar, root, currentText, currentFormat, i);
             } else {
                 i = tryParseHexColor(text, root, currentText, currentFormat, i);
@@ -131,8 +131,7 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
         return root;
     }
 
-    private int tryParseLegacyFormat(
-            char nextChar, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
+    private int tryParseLegacyFormat(char nextChar, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
         // Try to parse legacy color/format code (§a, §l, etc.)
         F format = parseFormat(nextChar);
         if (format != null) {
@@ -145,14 +144,13 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
         return i;
     }
 
-    private int tryParseHexColor(
-            String text, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
-        // Try to parse hex color (§#RRGGBB)
-        int rgb = getRgb(text, i + 2);
+    private int tryParseHexColor(String text, C root, StringBuilder currentText, ComponentFormat currentFormat, int i) {
+        // Try to parse hex color (&x&R&R&G&G&B&B)
+        int rgb = getRgb(text, i + 3);
         if (rgb >= 0 && rgb <= 0xffffff) {
             flushText(root, currentText, currentFormat);
             currentFormat.setColor(rgb);
-            i += 8;
+            i += 14;
         } else {
             i++;
         }
@@ -161,11 +159,11 @@ public abstract class LegacyTextFormattingParser<C, F> extends TextFormattingPar
 
     private static int getRgb(String text, int startIndex) {
         return (hexDigit(text.charAt(startIndex)) << 20)
-                | (hexDigit(text.charAt(startIndex + 1)) << 16)
-                | (hexDigit(text.charAt(startIndex + 2)) << 12)
-                | (hexDigit(text.charAt(startIndex + 3)) << 8)
-                | (hexDigit(text.charAt(startIndex + 4)) << 4)
-                | hexDigit(text.charAt(startIndex + 5));
+                | (hexDigit(text.charAt(startIndex + 2)) << 16)
+                | (hexDigit(text.charAt(startIndex + 4)) << 12)
+                | (hexDigit(text.charAt(startIndex + 6)) << 8)
+                | (hexDigit(text.charAt(startIndex + 8)) << 4)
+                | hexDigit(text.charAt(startIndex + 10));
     }
 
     private static int hexDigit(char c) {
