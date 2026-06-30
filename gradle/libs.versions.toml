@@ -8,6 +8,7 @@ xseries = "13.7.1"
 lombok = "1.18.46"
 annotations = "26.1.0"
 configurate = "4.2.0"
+paperlib = "1.0.8"
 # Test
 junit = "5.14.3"
 junit-platform-launcher = "1.14.3"
@@ -25,6 +26,7 @@ xseries = { module = "com.github.cryptomorin:XSeries", version.ref = "xseries" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
 configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
+paperlib = { module = "io.papermc:paperlib", version.ref = "paperlib" }
 # Test
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
