@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
 import eu.decentsoftware.holograms.api.utils.Log;
@@ -14,6 +15,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,6 +59,9 @@ public class NbtApiHook {
         }
 
         try {
+            if (nbt.getFullItemNbt() != null) {
+                return NBT.itemStackFromNBT(nbt.getFullItemNbt());
+            }
             ItemStack toModify = itemStack.clone();
             // item_model was present in 1.21.2+
             ItemMeta meta = toModify.getItemMeta();
@@ -81,7 +86,7 @@ public class NbtApiHook {
         }
 
         ReadWriteNBT nbt = NBT.itemStackToNBT(itemStack);
-        return new ItemNbtData(extractItemModel(nbt), extractCustomModelData(nbt));
+        return new ItemNbtData(nbt);
     }
 
     private static String extractItemModel(ReadWriteNBT nbtItem) {
@@ -209,11 +214,20 @@ public class NbtApiHook {
 
         private final String itemModel;
         private final float customModelData;
+        private final ReadWriteNBT fullItemNbt;
         private String json;
 
         public ItemNbtData(String itemModel, float customModelData) {
             this.itemModel = itemModel;
             this.customModelData = customModelData;
+            this.fullItemNbt = null;
+            this.json = toJson();
+        }
+
+        public ItemNbtData(ReadWriteNBT fullItemNbt) {
+            this.itemModel = null;
+            this.customModelData = 0F;
+            this.fullItemNbt = fullItemNbt;
             this.json = toJson();
         }
 
@@ -223,6 +237,10 @@ public class NbtApiHook {
          * @return the json.
          */
         private String toJson() {
+            if (this.fullItemNbt != null) {
+                return this.fullItemNbt.toString();
+            }
+
             if ((this.itemModel == null || this.itemModel.isEmpty()) && this.customModelData == 0f)
                 return "";
 
@@ -239,10 +257,14 @@ public class NbtApiHook {
             if (json == null || json.isEmpty())
                 return EMPTY;
 
-            JsonObject object = new JsonParser().parse(json).getAsJsonObject();
-            String itemModel = object.has("minecraft:item_model") ? object.get("minecraft:item_model").getAsString() : null;
-            float customModelData = object.has("CustomModelData") ? object.get("CustomModelData").getAsFloat() : 0f;
-            return new ItemNbtData(itemModel, customModelData);
+            try {
+                return new ItemNbtData(NBT.parseNBT(json));
+            } catch (NbtApiException exception) {
+                JsonObject object = new JsonParser().parse(json).getAsJsonObject();
+                String itemModel = object.has("minecraft:item_model") ? object.get("minecraft:item_model").getAsString() : null;
+                float customModelData = object.has("CustomModelData") ? object.get("CustomModelData").getAsFloat() : 0f;
+                return new ItemNbtData(itemModel, customModelData);
+            }
         }
     }
 }
