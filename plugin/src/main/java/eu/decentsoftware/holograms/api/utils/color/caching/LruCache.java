@@ -26,8 +26,8 @@ public class LruCache {
     }
 
     public String getResult(String input) {
-        if (input != null && MAP.containsKey(input)) {
-            LruElement curr = MAP.get(input);
+        LruElement curr;
+        if (input != null && (curr = MAP.get(input)) != null) {
             synchronized (QUE) {
                 QUE.remove(input);
                 QUE.addFirst(input);

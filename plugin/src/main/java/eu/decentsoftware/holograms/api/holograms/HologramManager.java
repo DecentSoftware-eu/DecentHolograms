@@ -132,7 +132,8 @@ public class HologramManager extends Ticked {
         final UUID uid = player.getUniqueId();
 
         // Check if the player is on cooldown.
-        if (clickCooldowns.containsKey(uid) && System.currentTimeMillis() - clickCooldowns.get(uid) < Settings.CLICK_COOLDOWN * 50L) {
+        Long playerCooldown = clickCooldowns.get(uid);
+        if (playerCooldown != null && System.currentTimeMillis() - playerCooldown < Settings.CLICK_COOLDOWN * 50L) {
             return false;
         }
 
@@ -196,10 +197,7 @@ public class HologramManager extends Ticked {
             } catch (LocationParseException e) {
                 // This hologram will load when its world loads.
                 String worldName = e.getWorldName();
-                if (!toLoad.containsKey(worldName)) {
-                    toLoad.put(worldName, new HashSet<>());
-                }
-                toLoad.get(worldName).add(filePath);
+                toLoad.computeIfAbsent(worldName, k -> new HashSet<>()).add(filePath);
                 counter++;
             } catch (Exception e) {
                 Log.warn("Failed to load hologram from file '%s'!", e, filePath);
