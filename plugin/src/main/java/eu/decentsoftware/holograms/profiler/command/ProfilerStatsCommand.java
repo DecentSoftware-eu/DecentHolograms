@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.profiler.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -31,7 +32,7 @@ import java.util.Collections;
 @CommandInfo(
         usage = "/dh profiler stats [timer]",
         description = "View stats for a specific profiler timer",
-        permissions = "dh.command.profiler.stats"
+        permissions = {Permissions.COMMAND_PROFILER_STATS}
 )
 class ProfilerStatsCommand extends DecentCommand {
 

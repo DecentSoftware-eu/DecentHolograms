@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -33,7 +34,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d set-item <name> <item>",
         description = "Set the displayed item in an Item Display.",
-        permissions = {"dh.command.displays.setitem"},
+        permissions = {Permissions.COMMAND_DISPLAYS_SET_ITEM},
         aliases = {"setitem", "item"},
         minArgs = 2
 )

@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 @CommandInfo(
 		aliases = {"holograms", "hologram", "dh", "holo"},
-		permissions = {"dh.default", "dh.command.decentholograms"},
+		permissions = {Permissions.DEFAULT, Permissions.COMMAND_DECENT_HOLOGRAMS},
 		usage = "/dh <args>",
 		description = "The main DecentHolograms Command."
 )
@@ -72,7 +73,7 @@ public class HologramsCommand extends DecentCommand {
 	@Override
 	public CommandHandler getCommandHandler() {
 		return (sender, args) -> {
-			if (sender.hasPermission("dh.admin")) {
+			if (sender.hasPermission(Permissions.ADMIN)) {
 				if (args.length == 0) {
 					Lang.USE_HELP.send(sender);
 					return true;
@@ -96,7 +97,7 @@ public class HologramsCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permissions = {"dh.default", "dh.command.version"},
+            permissions = {Permissions.DEFAULT, Permissions.COMMAND_VERSION},
             usage = "/dh version",
             aliases = {"ver", "about"},
             description = "Shows some info about your current DecentHolograms version."
@@ -122,7 +123,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.reload",
+            permissions = Permissions.COMMAND_RELOAD,
             usage = "/dh reload",
             description = "Reload the plugin."
     )
@@ -153,7 +154,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.list",
+            permissions = Permissions.COMMAND_HOLOGRAMS_LIST,
             usage = "/dh list [page]",
             description = "Show list of all Holograms.",
             playerOnly = true
@@ -211,7 +212,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.help",
+            permissions = Permissions.COMMAND_HELP,
             usage = "/dh help",
             description = "Show general help.",
             aliases = {"?"}
@@ -244,7 +245,7 @@ public class HologramsCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.convert",
+            permissions = Permissions.COMMAND_HOLOGRAMS_CONVERT,
             usage = "/dh convert <plugin> [file]",
             description = "Convert holograms from given plugin.",
             minArgs = 1
