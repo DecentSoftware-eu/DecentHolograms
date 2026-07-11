@@ -8,7 +8,6 @@ public class ReflectField<T> {
 
 	private final Class<?> clazz;
 	private final String name;
-
 	private Field field;
 
 	public ReflectField(Class<?> clazz, String name) {
@@ -16,19 +15,11 @@ public class ReflectField<T> {
 		this.name = name;
 	}
 
-	public ReflectField(Field field) {
-		this.field = field;
-		this.clazz = field.getDeclaringClass();
-		this.name = field.getName();
-
-		this.field.setAccessible(true);
-	}
-
-	private void init() throws Exception {
+	private void init() throws NoSuchFieldException {
 		if (field == null) {
 			try {
 				field = clazz.getDeclaredField(name);
-			} catch (Exception e) {
+			} catch (NoSuchFieldException e) {
 				field = clazz.getField(name);
 			}
 			field.setAccessible(true);
@@ -45,14 +36,4 @@ public class ReflectField<T> {
 			return null;
 		}
 	}
-
-	public void setValue(Object object, Object value) {
-		try {
-			this.init();
-			field.set(object, value);
-		} catch (Exception e) {
-			Log.error("Failed to set field value: %s", e, name);
-		}
-	}
-
 }
