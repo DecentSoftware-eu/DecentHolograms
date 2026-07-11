@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @CommandInfo(
-		permissions = "dh.command.lines",
+		permissions = {Permissions.COMMAND_LINES},
 		usage = "/dh lines help",
 		description = "All commands for editing hologram lines.",
 		aliases = {"line", "l"}
@@ -86,7 +87,7 @@ public class LineSubCommand extends DecentCommand {
 	 */
 
 	@CommandInfo(
-			permissions = "dh.command.lines.add",
+			permissions = {Permissions.COMMAND_LINES_ADD},
 			usage = "/dh line add <hologram> <page> [content]",
 			description = "Add a line to Hologram.",
 			aliases = {"append"},
@@ -128,7 +129,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.align",
+			permissions = {Permissions.COMMAND_LINES_ALIGN},
 			usage = "/dh line align <hologram> <page> <line1> <line2> <X|Z|XZ|FACE>",
 			description = "Align two lines in hologram on a specified axis or its facing angle.",
 			minArgs = 5
@@ -198,7 +199,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.edit",
+			permissions = {Permissions.COMMAND_LINES_EDIT},
 			usage = "/dh line edit <hologram> <page> <line>",
 			description = "Edit a line.",
 			aliases = {"e"},
@@ -237,7 +238,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.addflag",
+			permissions = {Permissions.COMMAND_LINES_ADD_FLAG},
 			usage = "/dh line addflag <hologram> <page> <line> <flag>",
 			description = "Add a flag to line.",
 			minArgs = 4
@@ -281,7 +282,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.removeflag",
+			permissions = {Permissions.COMMAND_LINES_REMOVE_FLAG},
 			usage = "/dh line removeflag <hologram> <page> <line> <flag>",
 			description = "Remove a flag from line.",
 			minArgs = 4
@@ -325,7 +326,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.height",
+			permissions = {Permissions.COMMAND_LINES_HEIGHT},
 			usage = "/dh line height <hologram> <page> <line> <height>",
 			description = "Set height of a line.",
 			aliases = {"setheight"},
@@ -372,7 +373,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.help",
+			permissions = {Permissions.COMMAND_LINES_HELP},
 			usage = "/dh line help",
 			description = "Show help for lines.",
 			aliases = {"?"}
@@ -404,7 +405,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.info",
+			permissions = {Permissions.COMMAND_LINES_INFO},
 			usage = "/dh line info <hologram> <page> <line>",
 			description = "Show info about line.",
 			minArgs = 3
@@ -451,7 +452,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.insert",
+			permissions = {Permissions.COMMAND_LINES_INSERT},
 			usage = "/dh line insert <hologram> <page> <line> [content]",
 			description = "Insert a line into Hologram.",
 			minArgs = 3
@@ -496,7 +497,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.offsetx",
+			permissions = {Permissions.COMMAND_LINES_OFFSET_X},
 			usage = "/dh line offsetX <hologram> <page> <line> <offset>",
 			description = "Set an X offset of a line.",
 			aliases = {"xoffset", "offx", "xoff"},
@@ -536,7 +537,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.offsetz",
+			permissions = {Permissions.COMMAND_LINES_OFFSET_Z},
 			usage = "/dh line offsetZ <hologram> <page> <line> <offset>",
 			description = "Set an Z offset of a line.",
 			aliases = {"zoffset", "offz", "zoff"},
@@ -576,7 +577,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.setpermission",
+			permissions = {Permissions.COMMAND_LINES_SET_PERMISSION},
 			usage = "/dh line setpermission <hologram> <page> <line> [permission]",
 			description = "Set line permission.",
 			aliases = {"permission", "setperm", "perm"},
@@ -618,7 +619,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.remove",
+			permissions = {Permissions.COMMAND_LINES_REMOVE},
 			usage = "/dh line remove <hologram> <page> <line>",
 			description = "Remove a line from Hologram.",
 			aliases = {"rm", "rem", "del", "delete"},
@@ -658,7 +659,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.set",
+			permissions = {Permissions.COMMAND_LINES_SET},
 			usage = "/dh line set <hologram> <page> <line> <content>",
 			description = "Set a line in Hologram.",
 			minArgs = 4
@@ -701,7 +702,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.swap",
+			permissions = {Permissions.COMMAND_LINES_SWAP},
 			usage = "/dh line swap <hologram> <page> <line1> <line2>",
 			description = "Swap two lines in a Hologram.",
 			minArgs = 4
@@ -746,7 +747,7 @@ public class LineSubCommand extends DecentCommand {
 	}
 
 	@CommandInfo(
-			permissions = "dh.command.lines.setfacing",
+			permissions = {Permissions.COMMAND_LINES_FACING},
 			usage = "/dh line setfacing <hologram> <page> <line> <facing>",
 			description = "Set facing direction of a line.",
 			aliases = {"facing", "setface", "face"},

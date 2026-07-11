@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -32,7 +33,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d update-interval <name> <interval>",
         description = "Set the update interval of a display.",
         aliases = {"updateinterval"},
-        permissions = "dh.command.displays.updateinterval",
+        permissions = {Permissions.COMMAND_DISPLAYS_UPDATE_INTERVAL},
         minArgs = 2
 )
 class UpdateIntervalDisplayCommand extends DecentCommand {

@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.profiler.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -31,7 +32,7 @@ import java.util.Collections;
 @CommandInfo(
         usage = "/dh profiler reset [timer]",
         description = "Resets all profiler data or a specific timer",
-        permissions = "dh.command.profiler.reset"
+        permissions = {Permissions.COMMAND_PROFILER_RESET}
 )
 class ProfilerResetCommand extends DecentCommand {
 

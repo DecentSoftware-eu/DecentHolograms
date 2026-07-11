@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -32,7 +33,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d swap-lines <display> <line1> <line2>",
         description = "Swaps the positions of two lines in a text display.",
-        permissions = {"dh.command.displays.text.swaplines"},
+        permissions = {Permissions.COMMAND_DISPLAYS_TEXT_SWAP_LINES},
         aliases = {"swaplines"},
         minArgs = 3
 )

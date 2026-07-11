@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -37,7 +38,7 @@ import java.util.List;
         usage = "/dh d list-attributes <display>",
         description = "Lists all configured attributes on a display.",
         aliases = {"listattributes"},
-        permissions = {"dh.command.displays.listattributes"},
+        permissions = {Permissions.COMMAND_DISPLAYS_LIST_ATTRIBUTES},
         minArgs = 1
 )
 class AttributeListDisplayCommand extends DecentCommand {
