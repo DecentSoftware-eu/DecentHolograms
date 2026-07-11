@@ -23,7 +23,7 @@ public class UpdateChecker {
     }
 
     public void getVersion(Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        /*Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream();
                  Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext() && consumer != null) {
@@ -32,6 +32,6 @@ public class UpdateChecker {
             } catch (IOException exception) {
                 Log.info("Unable to check for updates: " + exception.getMessage());
             }
-        });
+        });*/
     }
 }
