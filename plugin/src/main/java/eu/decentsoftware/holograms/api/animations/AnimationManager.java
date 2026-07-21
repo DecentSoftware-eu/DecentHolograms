@@ -2,16 +2,11 @@ package eu.decentsoftware.holograms.api.animations;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
-import eu.decentsoftware.holograms.api.animations.text.BurnAnimation;
-import eu.decentsoftware.holograms.api.animations.text.ColorsAnimation;
-import eu.decentsoftware.holograms.api.animations.text.ScrollAnimation;
-import eu.decentsoftware.holograms.api.animations.text.TypewriterAnimation;
-import eu.decentsoftware.holograms.api.animations.text.WaveAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
+import eu.decentsoftware.holograms.display.render.content.CompiledAnimation;
 import lombok.NonNull;
 
 import java.io.File;
@@ -24,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class AnimationManager extends Ticked {
 
-    private static final Pattern ANIMATION_PATTERN = Pattern.compile("[<{]#?ANIM:(\\w+)(:\\S+)?[}>](.*?)[<{]/#?ANIM[}>]");
+    public static final Pattern ANIMATION_PATTERN = Pattern.compile("[<{]#?ANIM:(\\w+)(:\\S+)?[}>](.*?)[<{]/#?ANIM[}>]");
     private final DecentHolograms decentHolograms;
     private final Map<String, TextAnimation> animationMap = new HashMap<>();
     private final AtomicLong step;
@@ -48,16 +43,15 @@ public class AnimationManager extends Ticked {
 
     public synchronized void reload() {
         this.animationMap.clear();
-        this.registerAnimation(new TypewriterAnimation());
-        this.registerAnimation(new WaveAnimation());
-        this.registerAnimation(new BurnAnimation());
-        this.registerAnimation(new ScrollAnimation());
-        this.registerAnimation(new ColorsAnimation());
+        this.registerAnimation(BuiltInAnimations.TYPEWRITER);
+        this.registerAnimation(BuiltInAnimations.WAVE);
+        this.registerAnimation(BuiltInAnimations.BURN);
+        this.registerAnimation(BuiltInAnimations.SCROLL);
+        this.registerAnimation(BuiltInAnimations.COLORS);
         this.step.set(0);
         this.register();
 
-        // Load custom animations asynchronously
-        S.async(this::loadCustomAnimations);
+        this.loadCustomAnimations();
     }
 
     public long getStep() {
@@ -79,18 +73,34 @@ public class AnimationManager extends Ticked {
         }
 
         if (string.contains("&u")) {
-            TextAnimation animation = getAnimation("colors");
-            if (animation != null) {
-                string = string.replace("&u", animation.animate("", getStep()));
-            }
+            string = string.replace("&u", BuiltInAnimations.COLORS.animate("", getStep()));
         }
 
         return string;
     }
 
+    public String applyAnimations(String string, List<CompiledAnimation> animations) {
+        if (animations.isEmpty()) {
+            return string;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(string);
+        for (CompiledAnimation compiledAnimation : animations) {
+            TextAnimation animation = getAnimation(compiledAnimation.getAnimation());
+            if (animation == null) {
+                continue;
+            }
+            String body = compiledAnimation.getBody();
+            String animationFrame = animation.animate(body == null ? "" : body, getStep(), compiledAnimation.getArgs());
+            int position = compiledAnimation.getPosition();
+
+            stringBuilder.insert(position, animationFrame);
+        }
+        return stringBuilder.toString();
+    }
+
     public boolean containsAnimations(@NonNull String string) {
-        Matcher matcher = ANIMATION_PATTERN.matcher(string);
-        return matcher.find() || string.contains("&u");
+        return string.contains("&u") || ANIMATION_PATTERN.matcher(string).find();
     }
 
     public TextAnimation registerAnimation(@NonNull String name, @NonNull TextAnimation animation) {

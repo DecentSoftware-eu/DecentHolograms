@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.hook.NbtApiHook;
 import eu.decentsoftware.holograms.plugin.commands.HologramsCommand;
 import eu.decentsoftware.holograms.plugin.features.DamageDisplayFeature;
@@ -42,7 +43,8 @@ public class DecentHologramsPlugin extends JavaPlugin {
         decentHolograms.getFeatureManager().registerFeature(new HealingDisplayFeature());
 
         CommandManager commandManager = decentHolograms.getCommandManager();
-        DecentCommand mainCommand = new HologramsCommand();
+        DisplayModule displayModule = decentHolograms.getDisplayModule();
+        DecentCommand mainCommand = new HologramsCommand(displayModule == null ? null : displayModule.getDisplaysCommand());
         commandManager.setMainCommand(mainCommand);
         commandManager.registerCommand(mainCommand);
 

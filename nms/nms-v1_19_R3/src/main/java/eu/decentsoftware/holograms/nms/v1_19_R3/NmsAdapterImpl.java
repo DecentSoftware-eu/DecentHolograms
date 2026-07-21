@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.nms.v1_19_R3;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
+import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import eu.decentsoftware.holograms.shared.reflect.ReflectField;
 import io.netty.channel.ChannelPipeline;
@@ -24,14 +25,22 @@ public class NmsAdapterImpl implements NmsAdapter {
     private static final String DEFAULT_PIPELINE_TAIL = "DefaultChannelPipeline$TailContext#0";
     private static final ReflectField<NetworkManager> NETWORK_MANAGER_FIELD = new ReflectField<>(PlayerConnection.class, "h");
     private final HologramRendererFactory hologramComponentFactory;
+    private final DisplayRendererFactory displayRendererFactory;
 
     public NmsAdapterImpl() {
-        this.hologramComponentFactory = new HologramRendererFactory(new EntityIdGenerator());
+        EntityIdGenerator entityIdGenerator = new EntityIdGenerator();
+        this.hologramComponentFactory = new HologramRendererFactory(entityIdGenerator);
+        this.displayRendererFactory = new DisplayRendererFactory(entityIdGenerator);
     }
 
     @Override
     public NmsHologramRendererFactory getHologramComponentFactory() {
         return hologramComponentFactory;
+    }
+
+    @Override
+    public NmsDisplayRendererFactory getDisplayRendererFactory() {
+        return displayRendererFactory;
     }
 
     @Override

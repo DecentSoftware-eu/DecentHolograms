@@ -20,9 +20,13 @@ import java.util.Map;
 public class IridiumColorAPI {
 
     private static final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
-    public static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
+    private static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
 
     private static final LruCache LRU_CACHE = new LruCache(Settings.DEFAULT_LRU_CACHE_SIZE);
+
+    private IridiumColorAPI() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
     /**
      * Cached result of all legacy colors.
@@ -59,11 +63,14 @@ public class IridiumColorAPI {
      * Processes a string to add color to it.
      * Thanks to Distressing for helping with the regex <3
      *
+     * <p>This method implements a cache to re-use its outputs when possible.</p>
+     *
      * @param string The string we want to process
+     * @see #process(String)
      * @since 1.0.0
      */
     @Nonnull
-    public static String process(@Nonnull String string) {
+    public static String processCached(@Nonnull String string) {
         String result = LRU_CACHE.getResult(string);
         if (result != null) {
             return result;
@@ -74,6 +81,23 @@ public class IridiumColorAPI {
         }
         string = ChatColor.translateAlternateColorCodes('&', string);
         LRU_CACHE.put(input, string);
+        return string;
+    }
+
+    /**
+     * Processes a string to add color to it.
+     * Thanks to Distressing for helping with the regex <3
+     *
+     * @param string The string we want to process
+     * @see #processCached(String)
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static String process(@Nonnull String string) {
+        for (Pattern pattern : PATTERNS) {
+            string = pattern.process(string);
+        }
+        string = ChatColor.translateAlternateColorCodes('&', string);
         return string;
     }
 
@@ -167,8 +191,8 @@ public class IridiumColorAPI {
     /**
      * Removes all color codes from the provided String, including IridiumColorAPI patterns.
      *
-     * @param string    The String which should be stripped
-     * @return          The stripped string without color codes
+     * @param string The String which should be stripped
+     * @return The stripped string without color codes
      * @since 1.0.5
      */
     @Nonnull
@@ -190,11 +214,7 @@ public class IridiumColorAPI {
         double colorStep = (1.00 / step);
         for (int i = 0; i < step; i++) {
             Color color = Color.getHSBColor((float) (colorStep * i), saturation, saturation);
-            if (Version.supportsHex()) {
-                colors[i] = METHOD_OF.invokeStatic(color);
-            } else {
-                colors[i] = getClosestColor(color);
-            }
+            colors[i] = toChatColor(color);
         }
         return colors;
     }
@@ -214,7 +234,7 @@ public class IridiumColorAPI {
         if (step <= 1) {
             return new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE};
         }
-        
+
         ChatColor[] colors = new ChatColor[step];
         int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
         int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
@@ -227,15 +247,18 @@ public class IridiumColorAPI {
 
         for (int i = 0; i < step; i++) {
             Color color = new Color(start.getRed() + ((stepR * i) * direction[0]), start.getGreen() + ((stepG * i) * direction[1]), start.getBlue() + ((stepB * i) * direction[2]));
-            if (Version.supportsHex()) {
-                colors[i] = METHOD_OF.invokeStatic(color);
-            } else {
-                colors[i] = getClosestColor(color);
-            }
+            colors[i] = toChatColor(color);
         }
         return colors;
     }
 
+    private static ChatColor toChatColor(Color color) {
+        if (Version.supportsHex()) {
+            return METHOD_OF.invokeStatic(color);
+        } else {
+            return getClosestColor(color);
+        }
+    }
 
     /**
      * Returns the closest legacy color from an rgb color

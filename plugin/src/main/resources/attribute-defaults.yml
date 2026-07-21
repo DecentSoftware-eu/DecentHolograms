@@ -1,0 +1,319 @@
+# ============================================================
+# > Display Attribute Defaults Configuration
+# ============================================================
+#
+# This file defines the default attribute values for each display type.
+# When a new display is created, these defaults are automatically applied.
+#
+# Structure:
+#   display:
+#     DISPLAY_TYPE:
+#       attribute-name:
+#         enabled: true/false  # Whether this default value is used for new displays
+#         value-type: "type"   # The attribute value type
+#         value: ...           # The default value
+#
+# Notes:
+#   - enabled: false means the attribute is not set (uses Minecraft defaults)
+#   - Existing displays are not affected by changes to this file
+#   - When an attribute value is reset, it reverts to the default value defined here
+#
+# ============================================================
+
+display:
+  # ============================================================
+  # > TEXT DISPLAY DEFAULTS
+  # ============================================================
+  TEXT:
+    # Billboard constraint - how the display faces the player
+    # Options: CENTER, VERTICAL, HORIZONTAL, FIXED
+    billboard:
+      enabled: true
+      value-type: "billboard_constraints"
+      value: "CENTER"
+
+    # Scale - size of the display (1 = normal size)
+    scale:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 1
+        y: 1
+        z: 1
+
+    # Translation - offset from the display's base location
+    translation:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 0
+        y: 0
+        z: 0
+
+    # Yaw rotation override (horizontal rotation in degrees)
+    # Disabled by default
+    # Range: -180 to 180
+    yaw:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Pitch rotation override (vertical rotation in degrees)
+    # Disabled by default
+    # Range: -90 to 90
+    pitch:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Brightness override (0-15 for both block and sky light)
+    # Disabled by default - display uses natural lighting
+    brightness:
+      enabled: false
+      value-type: "brightness"
+      value:
+        block-light: 15
+        sky-light: 15
+
+    # Shadow radius - size of the shadow circle (0 = no shadow, 32 = max shadow)
+    shadow-radius:
+      enabled: true
+      value-type: "float"
+      value: 0
+
+    # Shadow strength - opacity of the shadow circle (1 = normal entity shadow, >7 = pitch black shadow)
+    shadow-strength:
+      enabled: true
+      value-type: "float"
+      value: 1
+
+    # Text alignment - how text is aligned
+    # Options: LEFT, CENTER, RIGHT
+    alignment:
+      enabled: true
+      value-type: "text_alignment"
+      value: "CENTER"
+
+    # Background color - color behind the text (RGBA)
+    # Default: black with 25% opacity (64/255)
+    background-color:
+      enabled: true
+      value-type: "rgba"
+      value:
+        red: 0
+        green: 0
+        blue: 0
+        alpha: 64
+
+    # Line width - maximum width before text wraps (in pixels)
+    line-width:
+      enabled: true
+      value-type: "integer"
+      value: 300
+
+    # Text opacity - transparency of the text (0-255)
+    # 255 = fully opaque, 0 = fully transparent
+    text-opacity:
+      enabled: true
+      value-type: "integer"
+      value: 255
+
+    # See-through - whether text is visible through blocks
+    see-through:
+      enabled: true
+      value-type: "boolean"
+      value: false
+
+    # Text shadow - whether text has a shadow effect
+    text-shadow:
+      enabled: true
+      value-type: "boolean"
+      value: false
+
+  # ============================================================
+  # > ITEM DISPLAY DEFAULTS
+  # ============================================================
+  ITEM:
+    # Billboard constraint - how the display faces the player
+    # Options: CENTER, VERTICAL, HORIZONTAL, FIXED
+    billboard:
+      enabled: true
+      value-type: "billboard_constraints"
+      value: "FIXED"
+
+    # Scale - size of the item (1 = normal size)
+    scale:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 1
+        y: 1
+        z: 1
+
+    # Translation - offset from the display's base location
+    translation:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 0
+        y: 0
+        z: 0
+
+    # Yaw rotation override (horizontal rotation in degrees)
+    # Disabled by default
+    # Range: -180 to 180
+    yaw:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Pitch rotation override (vertical rotation in degrees)
+    # Disabled by default
+    # Range: -90 to 90
+    pitch:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Brightness override (0-15 for both block and sky light)
+    # Disabled by default - item uses natural lighting
+    brightness:
+      enabled: false
+      value-type: "brightness"
+      value:
+        block-light: 15
+        sky-light: 15
+
+    # Shadow radius - size of the shadow circle (0 = no shadow, 32 = max shadow)
+    shadow-radius:
+      enabled: true
+      value-type: "float"
+      value: 0
+
+    # Shadow strength - opacity of the shadow circle (1 = normal entity shadow, >7 = pitch black shadow)
+    shadow-strength:
+      enabled: true
+      value-type: "float"
+      value: 1
+
+    # Glow color - color of the glowing effect
+    # Disabled by default
+    glow-color:
+      enabled: false
+      value-type: "rgba"
+      value:
+        red: 255
+        green: 128
+        blue: 255
+        alpha: 255
+
+    # Display type - how the item is rendered
+    # Options: NONE, THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND,
+    #          FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND,
+    #          HEAD, GUI, GROUND, FIXED
+    display-type:
+      enabled: true
+      value-type: "item_display_type"
+      value: "NONE"
+
+    # Enchanted - whether the item has enchantment glint
+    enchanted:
+      enabled: true
+      value-type: "boolean"
+      value: false
+
+    # Leather color - color for leather armor items
+    # Disabled by default
+    leather-color:
+      enabled: false
+      value-type: "rgba"
+      value:
+        red: 255
+        green: 128
+        blue: 255
+        alpha: 255
+
+    # Skull texture - texture for player heads
+    # Disabled by default
+    # Supports: player names, base64 textures, placeholders, HEADDATABASE_<id>
+    skull-texture:
+      enabled: false
+      value-type: "string"
+      value: "{player}"
+
+  # ============================================================
+  # > BLOCK DISPLAY DEFAULTS
+  # ============================================================
+  BLOCK:
+    # Billboard constraint - how the display faces the player
+    # Options: CENTER, VERTICAL, HORIZONTAL, FIXED
+    billboard:
+      enabled: true
+      value-type: "billboard_constraints"
+      value: "FIXED"
+
+    # Scale - size of the block (1 = normal size)
+    scale:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 1
+        y: 1
+        z: 1
+
+    # Translation - offset from the display's base location
+    translation:
+      enabled: true
+      value-type: "vector3f"
+      value:
+        x: 0
+        y: 0
+        z: 0
+
+    # Yaw rotation override (horizontal rotation in degrees)
+    # Disabled by default
+    # Range: -180 to 180
+    yaw:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Pitch rotation override (vertical rotation in degrees)
+    # Disabled by default
+    # Range: -90 to 90
+    pitch:
+      enabled: false
+      value-type: "float"
+      value: 0
+
+    # Brightness override (0-15 for both block and sky light)
+    # Disabled by default - block uses natural lighting
+    brightness:
+      enabled: false
+      value-type: "brightness"
+      value:
+        block-light: 15
+        sky-light: 15
+
+    # Shadow radius - size of the shadow circle (0 = no shadow, 32 = max shadow)
+    shadow-radius:
+      enabled: true
+      value-type: "float"
+      value: 0
+
+    # Shadow strength - opacity of the shadow circle (1 = normal entity shadow, >7 = pitch black shadow)
+    shadow-strength:
+      enabled: true
+      value-type: "float"
+      value: 1
+
+    # Glow color - color of the glowing effect (RGBA)
+    # Disabled by default
+    glow-color:
+      enabled: false
+      value-type: "rgba"
+      value:
+        red: 255
+        green: 128
+        blue: 255
+        alpha: 255

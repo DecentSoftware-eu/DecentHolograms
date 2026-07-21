@@ -45,7 +45,8 @@ public enum Version {
     paper_v1_21_R6(21, Platform.PAPER, "1.21.9", "1.21.10"),
     v1_21_R7(21, Platform.SPIGOT, "1.21.11"),
     paper_v1_21_R7(21, Platform.PAPER, "1.21.11"),
-    v26_1(26, Platform.SPIGOT, "26.1"),
+    v26_1(26, Platform.ALL, "26.1", "26.1.1", "26.1.2"),
+    v26_2(26, Platform.ALL, "26.2"),
     ;
 
     /*
@@ -72,7 +73,13 @@ public enum Version {
 
     private static String getCurrentMinecraftVersion() {
         // Bukkit version (e.g., 1.20.6-R0.1-SNAPSHOT)
-        String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        String bukkitVersion;
+        if (CURRENT_SERVER_PLATFORM == Platform.PAPER) {
+            // Since 26.1, Paper returns the version in a wrong format from #getBukkitVersion() (e.g.: "26.1.2.build.52-beta")
+            bukkitVersion = Bukkit.getServer().getVersion();
+        } else {
+            bukkitVersion = Bukkit.getServer().getBukkitVersion();
+        }
         // Minecraft version (e.g., 1.20.6)
         return bukkitVersion.split("-", 2)[0];
     }
