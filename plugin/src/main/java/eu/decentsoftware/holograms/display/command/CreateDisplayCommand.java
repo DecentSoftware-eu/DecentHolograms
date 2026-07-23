@@ -18,7 +18,9 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -47,7 +49,7 @@ import java.util.stream.Stream;
 @CommandInfo(
         usage = "/dh d create <type> <name> [content]",
         description = "Create a new display",
-        permissions = {"dh.command.displays.create"},
+        permissions = {Permissions.COMMAND_DISPLAYS_CREATE},
         aliases = {"new", "c"},
         playerOnly = true,
         minArgs = 2
@@ -87,7 +89,8 @@ class CreateDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            Location location = ((Player) sender).getLocation();
+            final Player player = (Player) sender;
+            Location location = Settings.DISPLAYS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
             DisplayBase display = createDisplay(type, name, args, fromBukkitLocation(location));
             attributeDefaultService.applyDefaultValues(display);
             displayService.saveDisplay(display);

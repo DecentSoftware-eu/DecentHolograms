@@ -18,7 +18,9 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -33,7 +35,7 @@ import org.bukkit.entity.Player;
 @CommandInfo(
         usage = "/dh d movehere <name>",
         description = "Move a display to your current location.",
-        permissions = {"dh.command.displays.movehere"},
+        permissions = {Permissions.COMMAND_DISPLAYS_MOVE_HERE},
         aliases = {"mvhr"},
         playerOnly = true,
         minArgs = 1
@@ -54,7 +56,8 @@ class MoveHereDisplayCommand extends DecentCommand {
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
 
             DecentLocation displayLocation = display.getLocation();
-            Location playerLocation = ((Player) sender).getLocation();
+            final Player player = (Player) sender;
+            Location playerLocation = Settings.DISPLAYS_EYE_LEVEL_POSITIONING ? player.getEyeLocation() : player.getLocation();
             display.setLocation(new DecentLocation(
                     playerLocation.getWorld().getName(),
                     playerLocation.getX(),

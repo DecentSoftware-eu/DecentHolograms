@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -34,7 +35,7 @@ import java.util.Arrays;
 @CommandInfo(
         usage = "/dh d addline <name> <text>",
         description = "Add a line of text to a Text Display.",
-        permissions = {"dh.command.displays.text.addline"},
+        permissions = {Permissions.COMMAND_DISPLAYS_TEXT_ADD_LINE},
         aliases = {"appendline"},
         minArgs = 2
 )

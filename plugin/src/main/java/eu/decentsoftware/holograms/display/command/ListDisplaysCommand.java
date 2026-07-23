@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -38,7 +39,7 @@ import java.util.function.Function;
 @CommandInfo(
         usage = "/dh d list [page]",
         description = "Show list of all displays.",
-        permissions = "dh.command.displays.list",
+        permissions = {Permissions.COMMAND_DISPLAYS_LIST},
         playerOnly = true
 )
 class ListDisplaysCommand extends DecentCommand {

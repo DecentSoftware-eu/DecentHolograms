@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -33,7 +34,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d display-range <name> <range>",
         description = "Set the display range of a display.",
         aliases = {"displayrange"},
-        permissions = "dh.command.displays.displayrange",
+        permissions = {Permissions.COMMAND_DISPLAYS_DISPLAY_RANGE},
         minArgs = 2
 )
 class DisplayRangeDisplayCommand extends DecentCommand {

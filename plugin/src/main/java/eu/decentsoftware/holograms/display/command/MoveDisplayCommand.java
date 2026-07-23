@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -36,7 +37,7 @@ import java.util.function.ToDoubleFunction;
 @CommandInfo(
         usage = "/dh d move <name> <x> <y> <z>",
         description = "Move an existing display",
-        permissions = {"dh.command.displays.move"},
+        permissions = {Permissions.COMMAND_DISPLAYS_MOVE},
         aliases = {"mv"},
         minArgs = 4
 )

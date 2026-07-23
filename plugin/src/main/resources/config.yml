@@ -70,6 +70,11 @@ update-visibility-on-teleport: false
 # When disabled, holograms will be positioned at the player's feet height when created or moved (default).
 holograms-eye-level-positioning: false
 
+# Set this to true if you want Display holograms to appear at the player's eye level.
+# When enabled, Display holograms will be positioned at the player's eye height when created or moved.
+# When disabled, Display holograms will be positioned at the player's feet height when created or moved (default).
+displays-eye-level-positioning: false
+
 #
 # Sets the time in seconds that DecentHolograms should have when trying to fetch Skin data for players both
 # by name and UUID.

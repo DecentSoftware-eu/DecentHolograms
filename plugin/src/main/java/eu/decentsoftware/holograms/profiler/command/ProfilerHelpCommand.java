@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.profiler.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -27,7 +28,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 @CommandInfo(
         usage = "/dh profiler help",
         description = "Show general profiler help.",
-        permissions = {"dh.profiler.command.help"},
+        permissions = {Permissions.COMMAND_PROFILER_HELP},
         aliases = {"?"}
 )
 class ProfilerHelpCommand extends DecentCommand {

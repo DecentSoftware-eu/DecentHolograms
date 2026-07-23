@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
@@ -13,7 +14,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import java.util.List;
 
 @CommandInfo(
-		permissions = "dh.command.features",
+		permissions = {Permissions.COMMAND_FEATURES},
 		usage = "/dh features help",
 		description = "All commands for managing features.",
 		aliases = {"feature", "f"}
@@ -54,7 +55,7 @@ public class FeatureSubCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permissions = "dh.command.features.disable",
+            permissions = Permissions.COMMAND_FEATURES_DISABLE,
             usage = "/dh feature disable <feature>",
             description = "Disable a Feature.",
             aliases = {"off"},
@@ -97,7 +98,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.features.enable",
+            permissions = Permissions.COMMAND_FEATURES_ENABLE,
             usage = "/dh feature enable <feature>",
             description = "Enable a Feature.",
             aliases = {"on"},
@@ -140,7 +141,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.features.help",
+            permissions = Permissions.COMMAND_FEATURES_HELP,
             usage = "/dh feature help",
             description = "Show help for features.",
             aliases = {"?"}
@@ -172,7 +173,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.features.info",
+            permissions = {Permissions.COMMAND_FEATURES_INFO},
             usage = "/dh feature info <feature>",
             description = "Info about feature.",
             minArgs = 1
@@ -216,7 +217,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.features.list",
+            permissions = {Permissions.COMMAND_FEATURES_LIST},
             usage = "/dh feature list",
             description = "List of all features"
     )
@@ -254,7 +255,7 @@ public class FeatureSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.features.reload",
+            permissions = {Permissions.COMMAND_FEATURES_RELOAD},
             usage = "/dh feature reload <feature>",
             description = "Reload a Feature.",
             minArgs = 1

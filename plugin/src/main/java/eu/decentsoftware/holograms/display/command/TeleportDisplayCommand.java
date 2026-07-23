@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -35,7 +36,7 @@ import org.bukkit.entity.Player;
 @CommandInfo(
         usage = "/dh d teleport <name>",
         description = "Teleport to the given display.",
-        permissions = {"dh.command.displays.teleport"},
+        permissions = {Permissions.COMMAND_DISPLAYS_TELEPORT},
         aliases = {"tp", "tele"},
         playerOnly = true,
         minArgs = 1
