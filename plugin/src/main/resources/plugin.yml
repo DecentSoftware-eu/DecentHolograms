@@ -1,5 +1,6 @@
 main: "eu.decentsoftware.holograms.plugin.DecentHologramsPlugin"
 api-version: 1.13
+folia-supported: true
 softdepend:
   - "PlaceholderAPI"
   - "HeadDatabase"
