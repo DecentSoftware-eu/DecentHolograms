@@ -111,28 +111,27 @@ public class DisplayPostProcessor {
         presentedState.setContent(content);
     }
 
-    private void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
-        Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
-        for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
-            CompiledAttributeValue<?> value = entry.getValue();
+    private <T> void applyDirtyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
+        Map<AttributeKey<T>, CompiledAttributeValue<T>> attributeMap = logicalState.getAttributeValues();
+        for (Map.Entry<AttributeKey<T>, CompiledAttributeValue<T>> entry : attributeMap.entrySet()) {
+            CompiledAttributeValue<T> value = entry.getValue();
             if (value.isDirty()) {
                 applyAttribute(entry.getKey(), value, presentedState);
             }
         }
     }
 
-    private void applyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
-        Map<AttributeKey<?>, CompiledAttributeValue<?>> attributeMap = logicalState.getAttributeValues();
-        for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : attributeMap.entrySet()) {
+    private <T> void applyAttributes(LogicalRenderState logicalState, PresentedRenderState presentedState) {
+        Map<AttributeKey<T>, CompiledAttributeValue<T>> attributeMap = logicalState.getAttributeValues();
+        for (Map.Entry<AttributeKey<T>, CompiledAttributeValue<T>> entry : attributeMap.entrySet()) {
             applyAttribute(entry.getKey(), entry.getValue(), presentedState);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<?> attributeValue, PresentedRenderState presentedState) {
+    private <T> void applyAttribute(AttributeKey<T> key, CompiledAttributeValue<T> attributeValue, PresentedRenderState presentedState) {
         AttributeDefinition<T> definition = attributeDefinitionRegistry.getDefinitionByKey(key);
         if (definition != null) {
-            definition.apply((CompiledAttributeValue<T>) attributeValue, presentedState);
+            definition.apply(attributeValue, presentedState);
         }
     }
 }

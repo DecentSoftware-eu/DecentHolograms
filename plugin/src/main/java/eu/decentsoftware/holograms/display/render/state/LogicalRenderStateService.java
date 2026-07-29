@@ -72,12 +72,26 @@ public class LogicalRenderStateService {
         }
     }
 
-    private void updateDynamicAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
-        for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : state.getAttributeValues().entrySet()) {
+    private <T> void updateDynamicAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
+        Map<AttributeKey<T>, CompiledAttributeValue<T>> attributeValues = state.getAttributeValues();
+        for (Map.Entry<AttributeKey<T>, CompiledAttributeValue<T>> entry : attributeValues.entrySet()) {
             if (entry.getValue().isDynamic()) {
-                applyAttribute(entry.getKey(), display, state, context);
+                applyAttributeIfChanged(entry.getKey(), display, state, context, entry.getValue());
             }
         }
+    }
+
+    private <T> void applyAttributeIfChanged(AttributeKey<T> key,
+                                             DisplayBase display,
+                                             LogicalRenderState state,
+                                             DisplayRenderContext context,
+                                             CompiledAttributeValue<T> previous) {
+        DisplayAttribute<T> attribute = display.getAttribute(key);
+        CompiledAttributeValue<T> value = compileAttribute(attribute, context);
+        if (value.equals(previous)) {
+            return;
+        }
+        state.addAttribute(key, value);
     }
 
     private <T> void applyAttribute(AttributeKey<T> key, DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {

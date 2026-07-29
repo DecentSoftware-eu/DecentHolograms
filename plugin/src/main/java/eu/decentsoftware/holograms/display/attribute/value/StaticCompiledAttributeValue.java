@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.display.attribute.value;
 
+import java.util.Objects;
+
 /**
  * A static implementation of {@link CompiledAttributeValue} that represents
  * a precomputed or constant attribute value. This implementation holds a fixed
@@ -87,5 +89,20 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
     @SuppressWarnings("unchecked")
     public static <T> StaticCompiledAttributeValue<T> empty() {
         return (StaticCompiledAttributeValue<T>) EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StaticCompiledAttributeValue<?> that = (StaticCompiledAttributeValue<?>) o;
+        return dynamic == that.dynamic
+                && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, dynamic);
     }
 }
