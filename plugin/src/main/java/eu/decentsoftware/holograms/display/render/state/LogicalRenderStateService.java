@@ -29,6 +29,8 @@ import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 
+import java.util.Map;
+
 public class LogicalRenderStateService {
 
     private final DisplayTypeRegistry displayTypeRegistry;
@@ -49,6 +51,8 @@ public class LogicalRenderStateService {
             currentState.setLocation(display.getLocation());
             currentState.clearAttributes();
             applyAttributes(display, currentState, context);
+        } else {
+            updateDynamicAttributes(display, currentState, context);
         }
 
         return currentState;
@@ -65,6 +69,14 @@ public class LogicalRenderStateService {
     private void applyAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
         for (AttributeKey<?> attributeKey : display.getAttributesMap().keySet()) {
             applyAttribute(attributeKey, display, state, context);
+        }
+    }
+
+    private void updateDynamicAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
+        for (Map.Entry<AttributeKey<?>, CompiledAttributeValue<?>> entry : state.getAttributeValues().entrySet()) {
+            if (entry.getValue().isDynamic()) {
+                applyAttribute(entry.getKey(), display, state, context);
+            }
         }
     }
 
