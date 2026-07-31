@@ -1,5 +1,5 @@
 ### Gradle & IntelliJ ###
-/.gradle/
+.gradle/
 /.idea/
 build
 out
