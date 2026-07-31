@@ -6,6 +6,10 @@ plugins {
 version = "2.10.1"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
+java {
+    withSourcesJar()
+}
+
 repositories {
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url = "https://repo.codemc.io/repository/maven-public/" }
@@ -63,7 +67,8 @@ jar {
 }
 
 shadowJar {
-    archiveFileName.set("DecentHolograms-${version}.jar")
+    archiveBaseName = rootProject.name
+    archiveClassifier = ''
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
@@ -73,7 +78,8 @@ shadowJar {
 publishing {
     publications {
         create("shadow", MavenPublication) {
-            from(components["java"] as SoftwareComponent)
+            from(components["shadow"] as SoftwareComponent)
+            artifact(tasks.named("sourcesJar"))
             artifactId = "decentholograms"
         }
     }
