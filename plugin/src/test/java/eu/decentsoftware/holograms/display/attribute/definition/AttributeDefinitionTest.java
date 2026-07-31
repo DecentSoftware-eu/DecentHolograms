@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
 import eu.decentsoftware.holograms.display.attribute.value.primitives.StringValue;
+import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 import eu.decentsoftware.holograms.display.render.state.PresentedRenderState;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 import org.jetbrains.annotations.NotNull;
@@ -79,8 +80,11 @@ class AttributeDefinitionTest {
 
     @Test
     void testFormat() {
+        StringValue stringValue = mock(StringValue.class);
+        when(stringValue.toHumanReadableString()).thenReturn("test");
+
         AttributeDefinition<String> definition = new TestAttributeDefinition();
-        assertEquals("test", definition.format(new StringValue("test", null)));
+        assertEquals("test", definition.format(stringValue));
     }
 
     private static class TestAttributeDefinition implements AttributeDefinition<String> {
@@ -91,7 +95,7 @@ class AttributeDefinitionTest {
 
         @Override
         public @Nullable AttributeValue<String> getDefaultValue() {
-            return new StringValue("default", null);
+            return new StringValue("default", mock(DisplayPlaceholderService.class));
         }
 
         @Override
