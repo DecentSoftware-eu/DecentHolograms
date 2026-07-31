@@ -1,16 +1,10 @@
 plugins {
-    id 'dh.java-conventions'
+    id 'dh.nms-aggregator'
 }
 
 dependencies {
-    childProjects.values().collect { child ->
-        implementation files("$rootDir/nms/${child.name}/build/libs/${child.name}.jar")
-    }
-}
-
-compileJava {
-    dependsOn childProjects.values().collect { child ->
-        "${child.path}:jar"
+    childProjects.values().each { child ->
+        runtimeOnly project(child.path)
     }
 }
 
