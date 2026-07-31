@@ -89,15 +89,17 @@ processResources {
 }
 
 jar {
-    manifest {
-        attributes "Multi-Release": "true"
-    }
+    enabled = false
 }
 
 shadowJar {
     archiveBaseName = rootProject.name
     archiveVersion = displayVersion
     archiveClassifier = ''
+
+    manifest {
+        attributes "Multi-Release": "true"
+    }
 
     mergeServiceFiles()
 
