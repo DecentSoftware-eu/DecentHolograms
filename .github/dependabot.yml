@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build"
+    ignore:
+      # Each NMS module pins the Minecraft version it targets.
+      # These are not dependencies to keep current.
+      - dependency-name: "org.spigotmc:spigot"
+      # The plugin still compiles and tests against Java 8.
+      # Mockito 5 requires Java 11 and JUnit 6 requires Java 17.
+      - dependency-name: "org.mockito:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.junit.jupiter:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.junit.platform:*"
+        update-types: [ "version-update:semver-major" ]
+    groups:
+      test-dependencies:
+        patterns:
+          - "org.junit.jupiter:*"
+          - "org.junit.platform:*"
+          - "org.mockito:*"
