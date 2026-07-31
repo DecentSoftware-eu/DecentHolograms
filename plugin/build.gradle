@@ -1,3 +1,5 @@
+import java.util.zip.ZipFile
+
 plugins {
     id 'dh.nms-aggregator'
     id "maven-publish"
@@ -107,6 +109,60 @@ shadowJar {
     relocate "org.spongepowered.configurate", "eu.decentsoftware.holograms.libs.configurate"
     relocate "io.leangen.geantyref", "eu.decentsoftware.holograms.libs.geantyref"
     relocate "net.kyori.option", "eu.decentsoftware.holograms.libs.kyori.option"
+}
+
+def verifyRelocations = tasks.register("verifyRelocations") {
+    def shadowJarFile = tasks.named("shadowJar").flatMap { it.archiveFile }
+    def allowedPrefix = "eu/decentsoftware/holograms/"
+    def stampFile = layout.buildDirectory.file("tmp/verifyRelocations.stamp")
+    inputs.file(shadowJarFile).withPropertyName("shadowJar")
+    outputs.file(stampFile).withPropertyName("stamp")
+    doLast {
+        def leakedPackages = new TreeSet<String>()
+        def leakedServices = new TreeSet<String>()
+        new ZipFile(shadowJarFile.get().asFile).withCloseable { zip ->
+            for (entry in zip.entries()) {
+                def name = entry.name
+                if (name.startsWith("META-INF/versions/")) {
+                    def parts = name.split("/", 4)
+                    if (parts.length < 4) {
+                        continue
+                    }
+                    name = parts[3]
+                }
+                if (name.endsWith(".class")) {
+                    if (!name.startsWith(allowedPrefix)) {
+                        leakedPackages << name.substring(0, name.lastIndexOf("/")).replace("/", ".")
+                    }
+                } else if (name.startsWith("META-INF/services/") && !name.endsWith("/")) {
+                    def service = name.substring("META-INF/services/".length())
+                    if (!service.startsWith(allowedPrefix.replace("/", "."))) {
+                        leakedServices << service
+                    }
+                }
+            }
+        }
+        if (!leakedPackages.isEmpty() || !leakedServices.isEmpty()) {
+            def message = new StringBuilder("Shadow jar contains unrelocated entries.\n")
+            if (!leakedPackages.isEmpty()) {
+                message.append("Packages:\n")
+                leakedPackages.each { message.append("  ").append(it).append("\n") }
+            }
+            if (!leakedServices.isEmpty()) {
+                message.append("Service files:\n")
+                leakedServices.each { message.append("  META-INF/services/").append(it).append("\n") }
+            }
+            message.append("Add a relocate rule in shadowJar for each of the above.")
+            throw new GradleException(message.toString())
+        }
+        def stamp = stampFile.get().asFile
+        stamp.parentFile.mkdirs()
+        stamp.text = "ok"
+    }
+}
+
+tasks.named("check") {
+    dependsOn verifyRelocations
 }
 
 publishing {
