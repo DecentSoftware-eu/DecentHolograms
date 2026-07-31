@@ -97,9 +97,16 @@ shadowJar {
     archiveVersion = displayVersion
     archiveClassifier = ''
 
+    mergeServiceFiles()
+
+    exclude "META-INF/maven/**"
+
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+    relocate "org.spongepowered.configurate", "eu.decentsoftware.holograms.libs.configurate"
+    relocate "io.leangen.geantyref", "eu.decentsoftware.holograms.libs.geantyref"
+    relocate "net.kyori.option", "eu.decentsoftware.holograms.libs.kyori.option"
 }
 
 publishing {
