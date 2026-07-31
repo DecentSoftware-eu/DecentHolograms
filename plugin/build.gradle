@@ -1,4 +1,5 @@
 plugins {
+    id 'dh.java-conventions'
     id "maven-publish"
     alias(libs.plugins.shadow)
 }

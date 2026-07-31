@@ -1,3 +1,7 @@
+plugins {
+    id 'dh.java-conventions'
+}
+
 dependencies {
     compileOnly(libs.annotations)
     annotationProcessor(libs.annotations)

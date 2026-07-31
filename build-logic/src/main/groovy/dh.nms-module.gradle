@@ -1,0 +1,35 @@
+plugins {
+    id 'dh.java-conventions'
+}
+
+dependencies {
+    implementation project(':platform-api')
+}
+
+if (project.path != ':nms:nms-common') {
+    dependencies {
+        implementation project(':nms:nms-common')
+    }
+}
+
+ext.nmsModule = { String minecraftVersion, int javaVersion ->
+    dependencies {
+        compileOnly "org.spigotmc:spigot:${minecraftVersion}"
+    }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+}
+
+ext.paperNmsModule = { String devBundleVersion, int javaVersion ->
+    dependencies {
+        paperweight.paperDevBundle(devBundleVersion)
+    }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+}

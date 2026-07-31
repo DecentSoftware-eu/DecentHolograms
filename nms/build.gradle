@@ -1,21 +1,16 @@
-subprojects {
-    dependencies {
-        if (!project.path.endsWith(":nms-common")) {
-            implementation project(":nms:nms-common")
-        }
-        implementation project(":platform-api")
-    }
+plugins {
+    id 'dh.java-conventions'
 }
 
 dependencies {
     childProjects.values().collect { child ->
-        implementation files("$rootDir/nms/${child.project.name}/build/libs/${child.project.name}.jar")
+        implementation files("$rootDir/nms/${child.name}/build/libs/${child.name}.jar")
     }
 }
 
 compileJava {
     dependsOn childProjects.values().collect { child ->
-        child.tasks.named("jar")
+        "${child.path}:jar"
     }
 }
 

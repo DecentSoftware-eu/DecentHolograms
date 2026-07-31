@@ -1,13 +1,5 @@
-repositories {
-    maven { url = "https://libraries.minecraft.net/" }
+plugins {
+    id 'dh.nms-module'
 }
 
-dependencies {
-    compileOnly "org.spigotmc:spigot:1.19.3-R0.1-SNAPSHOT"
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+nmsModule("1.19.3-R0.1-SNAPSHOT", 17)

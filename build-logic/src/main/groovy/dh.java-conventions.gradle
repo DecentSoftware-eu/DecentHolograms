@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group = 'eu.decentsoftware.holograms'
+
+repositories {
+    mavenCentral()
+    maven { url = "https://repo.codemc.io/repository/nms/" }
+    maven { url = "https://libraries.minecraft.net/" }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+if (project.path != ':shared') {
+    dependencies {
+        implementation project(':shared')
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

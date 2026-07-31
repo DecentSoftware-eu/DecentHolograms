@@ -9,6 +9,7 @@
 
 // Fabric needs this
 pluginManagement {
+    includeBuild('build-logic')
     repositories {
         mavenCentral()
         maven { url = 'https://maven.fabricmc.net/' }
