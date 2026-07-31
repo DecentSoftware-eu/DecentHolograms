@@ -9,8 +9,8 @@ lombok = "1.18.46"
 annotations = "26.1.0"
 configurate = "4.2.0"
 # Test
-junit = "5.14.3"
-junit-platform-launcher = "1.14.3"
+junit = "5.14.4"
+junit-platform-launcher = "1.14.4"
 mockito = "4.11.0" # Has to be 4.x for Java 8 compatibility
 # Plugins
 shadow = "9.4.2"
