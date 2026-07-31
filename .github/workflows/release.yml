@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+
+      - name: Verify Tag Matches Project Version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="$(./gradlew -q :plugin:printVersion)"
+          if [ "${TAG#v}" != "$VERSION" ]; then
+            echo "::error::Release tag '$TAG' does not match project version '$VERSION'"
+            exit 1
+          fi
+          echo "Building release $VERSION"
+
+      - name: Build Release Jar
+        run: ./gradlew build -Prelease
+
+      - name: Attach Jar to Release
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" plugin/build/libs/DecentHolograms-*.jar --clobber

@@ -10,6 +10,37 @@ java {
     withSourcesJar()
 }
 
+def buildMetadata = {
+    if (project.hasProperty("release")) {
+        return ""
+    }
+    try {
+        def sha = providers.exec {
+            commandLine "git", "rev-parse", "--short=7", "HEAD"
+            ignoreExitValue = true
+        }.standardOutput.asText.get().trim()
+        if (sha.isEmpty()) {
+            return ""
+        }
+        def dirty = providers.exec {
+            commandLine "git", "status", "--porcelain"
+            ignoreExitValue = true
+        }.standardOutput.asText.get().trim()
+        return "+" + sha + (dirty.isEmpty() ? "" : ".dirty")
+    } catch (Exception ignored) {
+        return ""
+    }
+}()
+
+def displayVersion = "${project.version}${buildMetadata}"
+
+tasks.register("printVersion") {
+    def resolved = project.version.toString()
+    doLast {
+        println resolved
+    }
+}
+
 repositories {
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url = "https://repo.codemc.io/repository/maven-public/" }
@@ -52,7 +83,7 @@ dependencies {
 }
 
 processResources {
-    def props = [version: project.version, description: project.description]
+    def props = [version: displayVersion, description: project.description]
     inputs.properties(props)
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
@@ -68,6 +99,7 @@ jar {
 
 shadowJar {
     archiveBaseName = rootProject.name
+    archiveVersion = displayVersion
     archiveClassifier = ''
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
