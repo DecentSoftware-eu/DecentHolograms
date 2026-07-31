@@ -24,7 +24,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SemanticVersionTest {
 
@@ -43,6 +45,11 @@ class SemanticVersionTest {
                 {"1.0.0-SNAPSHOT-EXTRA", "Invalid version format: 1.0.0-SNAPSHOT-EXTRA"},
                 {"1.0.0-DEV", "Invalid version format: 1.0.0-DEV"},
                 {"1.0.0-", "Invalid version format: 1.0.0-"},
+                {"1.0.0+", "Invalid build metadata: "},
+                {"1.0.0+a..b", "Invalid build metadata: a..b"},
+                {"1.0.0+a+b", "Invalid build metadata: a+b"},
+                {"1.0.0+a_b", "Invalid build metadata: a_b"},
+                {"1.0.0.1+abc", "Version string must contain at most three components: major, minor, and patch"},
         };
     }
 
@@ -122,6 +129,62 @@ class SemanticVersionTest {
             assertNotEquals(version1, version2);
             assertNotEquals(version1.hashCode(), version2.hashCode());
         }
+    }
+
+    private static Object[][] provideBuildMetadataVersionStrings() {
+        return new Object[][]{
+                {"1.0.0+a1b2c3d", 1, 0, 0, false, "a1b2c3d"},
+                {"2.10.2-SNAPSHOT+a1b2c3d", 2, 10, 2, true, "a1b2c3d"},
+                {"1.2.3+a1b2c3d.dirty", 1, 2, 3, false, "a1b2c3d.dirty"},
+                {"1.2.3+build-42", 1, 2, 3, false, "build-42"},
+                {"1.2.3+20260731", 1, 2, 3, false, "20260731"},
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBuildMetadataVersionStrings")
+    void testFromString_buildMetadata(String versionString, int major, int minor, int patch, boolean isSnapshot, String metadata) {
+        SemanticVersion version = SemanticVersion.fromString(versionString);
+
+        assertEquals(major, version.getMajor());
+        assertEquals(minor, version.getMinor());
+        assertEquals(patch, version.getPatch());
+        assertEquals(isSnapshot, version.isSnapshot());
+        assertEquals(metadata, version.getBuildMetadata());
+        assertEquals(versionString, version.toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidVersionStrings")
+    void testGetBuildMetadata_absentWhenNotSpecified(String versionString, int major, int minor, int patch, boolean isSnapshot) {
+        assertNull(SemanticVersion.fromString(versionString).getBuildMetadata());
+    }
+
+    private static Object[][] provideBuildMetadataIgnoredPairs() {
+        return new Object[][]{
+                {"1.0.0+a1b2c3d", "1.0.0"},
+                {"1.0.0+a1b2c3d", "1.0.0+9876543"},
+                {"2.10.2-SNAPSHOT+a1b2c3d", "2.10.2-SNAPSHOT"},
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBuildMetadataIgnoredPairs")
+    void testBuildMetadataIgnoredForPrecedenceAndEquality(String versionString1, String versionString2) {
+        SemanticVersion version1 = SemanticVersion.fromString(versionString1);
+        SemanticVersion version2 = SemanticVersion.fromString(versionString2);
+
+        assertEquals(0, version1.compareTo(version2));
+        assertEquals(version1, version2);
+        assertEquals(version1.hashCode(), version2.hashCode());
+    }
+
+    @Test
+    void testBuildMetadataDoesNotSuppressUpdateDetection() {
+        SemanticVersion devBuild = SemanticVersion.fromString("2.10.2-SNAPSHOT+a1b2c3d");
+        SemanticVersion release = SemanticVersion.fromString("2.10.2");
+
+        assertTrue(devBuild.compareTo(release) < 0);
     }
 
     @Test
