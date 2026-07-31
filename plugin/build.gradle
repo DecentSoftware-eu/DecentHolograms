@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = "2.10.1"
+version = "2.10.2-SNAPSHOT"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
 java {
