@@ -1,6 +1,6 @@
 [versions]
 spigot = "1.13-R0.1-SNAPSHOT"
-placeholderapi = "2.12.2"
+placeholderapi = "2.12.3"
 headdatabase-api = "1.3.2"
 bstats = "3.2.1"
 item-nbt-api = "2.15.7"
