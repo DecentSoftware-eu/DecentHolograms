@@ -155,7 +155,7 @@ class NmsAdapterFactoryTest {
     }
 
     static class NoDefaultConstructorNmsAdapter implements NmsAdapter {
-        public NoDefaultConstructorNmsAdapter(String param) {
+        public NoDefaultConstructorNmsAdapter(@SuppressWarnings("unused") String param) {
         }
 
         @Override

@@ -156,7 +156,7 @@ class SemanticVersionTest {
 
     @ParameterizedTest
     @MethodSource("provideValidVersionStrings")
-    void testGetBuildMetadata_absentWhenNotSpecified(String versionString, int major, int minor, int patch, boolean isSnapshot) {
+    void testGetBuildMetadata_absentWhenNotSpecified(String versionString) {
         assertNull(SemanticVersion.fromString(versionString).getBuildMetadata());
     }
 
@@ -191,7 +191,7 @@ class SemanticVersionTest {
     void testEquals_invalidInput() {
         SemanticVersion version = SemanticVersion.fromString("1.0.0");
 
-        assertNotEquals(version, null);
-        assertNotEquals(version, new Object());
+        assertNotEquals(null, version);
+        assertNotEquals(new Object(), version);
     }
 }

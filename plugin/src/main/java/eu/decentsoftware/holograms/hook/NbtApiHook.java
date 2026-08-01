@@ -36,6 +36,9 @@ public class NbtApiHook {
     }
 
     public static ItemStack applyNbtDataToItemStack(ItemStack itemStack, String nbt, Player player) {
+        if (itemStack == null) {
+            return null;
+        }
         try {
             ReadWriteNBT originalNBT = NBT.itemStackToNBT(itemStack); // Used later for merge.
             ReadWriteNBT modifiableNBT = NBT.itemStackToNBT(itemStack);
@@ -68,6 +71,9 @@ public class NbtApiHook {
     }
 
     public static float extractCustomModelData(ItemStack itemStack) {
+        if (itemStack == null) {
+            return 0f;
+        }
         try {
             ReadWriteNBT nbtItem = NBT.itemStackToNBT(itemStack);
             float customModelData;

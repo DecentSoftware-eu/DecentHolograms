@@ -260,7 +260,7 @@ public class HologramsCommand extends DecentCommand {
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
                 final ConvertorType convertorType = ConvertorType.fromString(args[0]);
-                final String path = args.length >= 2 ? args[0] : null;
+                final String path = args.length >= 2 ? args[1] : null;
                 if (convertorType == null) {
                     Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
                     return true;

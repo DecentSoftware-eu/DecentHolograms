@@ -202,12 +202,12 @@ public class PageSubCommand extends DecentCommand {
                             .collect(Collectors.toList()));
                     }
                 } else if (args.length == 4 && (args[2].startsWith("#ICON:") || args[2].startsWith("#HEAD:") || args[2].startsWith("#SMALLHEAD:"))) {
-                    return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
+                    return TabCompleteHandler.getPartialMatches(args[3], Arrays.stream(Material.values())
                         .filter(DecentMaterial::isItem)
                         .map(Material::name)
                         .collect(Collectors.toList()));
                 } else if (args.length == 4 && args[2].startsWith("#ENTITY:")) {
-                    TabCompleteHandler.getPartialMatches(args[3], DecentEntityType.getAllowedEntityTypeNames());
+                    return TabCompleteHandler.getPartialMatches(args[3], DecentEntityType.getAllowedEntityTypeNames());
                 }
                 return null;
             };

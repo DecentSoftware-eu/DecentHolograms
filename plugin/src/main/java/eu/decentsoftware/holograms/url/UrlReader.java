@@ -52,9 +52,9 @@ public class UrlReader {
     public static String readString(@NotNull URL url) throws IOException {
         Objects.requireNonNull(url, "url cannot be null");
 
-        try (InputStream input = url.openStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(input);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        try (InputStream input = url.openStream();
+             InputStreamReader inputStreamReader = new InputStreamReader(input);
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             StringBuilder result = new StringBuilder();
             int character;
             while ((character = bufferedReader.read()) != -1) {

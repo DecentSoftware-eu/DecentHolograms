@@ -1,18 +1,11 @@
 package eu.decentsoftware.holograms.api.utils.color.caching;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Getter
-@EqualsAndHashCode
-@ToString
 @ThreadSafe
 public class LruCache {
 

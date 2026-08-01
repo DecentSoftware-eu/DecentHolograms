@@ -67,12 +67,16 @@ public class FileConfig extends YamlConfiguration {
      */
     public void createFile() {
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
+            if (file.getParentFile().mkdirs()) {
+                Log.info("Created directory %s", file.getParentFile().getPath());
+            }
 
             // If file isn't a resource, create from scratch
             if (plugin.getResource(this.path) == null) {
                 try {
-                    file.createNewFile();
+                    if (file.createNewFile()) {
+                        Log.info("Created file %s", path);
+                    }
                 } catch (IOException e) {
                     Log.warn("Failed to create config file at path '%s'.", e, path);
                 }

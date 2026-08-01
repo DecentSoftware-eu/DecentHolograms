@@ -838,7 +838,7 @@ public class HologramSubCommand extends DecentCommand {
 				}
 
 				sender.sendMessage("");
-				if (maxPage > 0) {
+				if (maxPage > 0 && Validator.isPlayer(sender)) {
 					((Player) sender).spigot().sendMessage(Message.getPagesComponents(currentPage,
 							maxPage == currentPage, "/dh h lines " + args[0] + " " + pageIndex + " %d")
 					);
@@ -1204,7 +1204,7 @@ public class HologramSubCommand extends DecentCommand {
 
 				if (Hologram.getCachedHologramNames().contains(newName)) {
 					Lang.HOLOGRAM_ALREADY_EXISTS.send(sender, newName);
-					return false;
+					return true;
 				}
 
 				// Create a new hologram, with the new name

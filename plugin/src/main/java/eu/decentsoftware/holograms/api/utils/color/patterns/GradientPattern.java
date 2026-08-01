@@ -21,6 +21,7 @@ public class GradientPattern implements Pattern {
      * @param string The String to which this pattern should be applied to
      * @return The new String with an applied pattern
      */
+    @Override
     public String process(String string) {
         if (string.indexOf('#') == -1) {
             return string;
