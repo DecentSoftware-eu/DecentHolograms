@@ -808,7 +808,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // Spawn clickable entities
         int amount = (int) (page.getHeight() / 2) + 1;
         Location location = getLocation().clone();
-        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
+        location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) - 1d);
         for (int i = 0; i < amount; i++) {
             NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
             renderer.display(player, DecentPosition.fromBukkitLocation(location));
