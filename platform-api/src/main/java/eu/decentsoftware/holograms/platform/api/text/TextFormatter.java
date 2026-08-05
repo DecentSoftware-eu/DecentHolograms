@@ -47,6 +47,10 @@ public interface TextFormatter {
     /**
      * Formats the given text according to the implementation's text format.
      *
+     * <p>Implementations must be pure functions of {@code text}: the same input must always
+     * produce the same output, independent of any external or mutable state. Callers rely on
+     * this to cache results.</p>
+     *
      * @param text the raw text to format; may contain formatting codes
      * @return the formatted text with all formatting codes processed and applied
      * @see TextFormat

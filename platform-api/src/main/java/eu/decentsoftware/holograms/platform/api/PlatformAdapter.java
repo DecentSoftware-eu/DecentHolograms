@@ -24,6 +24,8 @@ import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
+import eu.decentsoftware.holograms.platform.api.text.TextFormat;
+import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -121,4 +123,19 @@ public interface PlatformAdapter {
      */
     @NotNull
     SaveResourceService getSaveResourceService();
+
+    /**
+     * Get a text formatter for the given format.
+     *
+     * <p>The formatter is responsible for formatting text according to the specified {@link TextFormat}.</p>
+     *
+     * @param format The format for which to get a formatter.
+     * @return The formatter.
+     * @throws IllegalArgumentException If the given format is not supported by this platform.
+     * @see TextFormatter
+     * @see TextFormat
+     * @since 2.10.2
+     */
+    @NotNull
+    TextFormatter getTextFormatter(@NotNull TextFormat format);
 }

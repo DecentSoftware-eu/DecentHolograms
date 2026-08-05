@@ -52,7 +52,13 @@ public class TextPostProcessor {
 
     private String postProcessLine(CompiledTextDisplayLine line) {
         String animatedLine = animateLine(line);
-        return textFormatter.format(animatedLine);
+        return formatLine(animatedLine);
+    }
+
+    private String formatLine(String line) {
+        try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.POST_PROCESS_TEXT_FORMAT_LINE)) {
+            return textFormatter.format(line);
+        }
     }
 
     private String animateLine(CompiledTextDisplayLine line) {
