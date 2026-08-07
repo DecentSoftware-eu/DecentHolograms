@@ -811,7 +811,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
             NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.display(player, DecentPosition.fromBukkitLocation(location));
+            renderer.display(player, toDecentPosition(location));
             location.add(0, 1.8, 0);
         }
     }
@@ -850,9 +850,19 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
             NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.move(player, DecentPosition.fromBukkitLocation(location));
+            renderer.move(player, toDecentPosition(location));
             location.add(0, 1.8, 0);
         }
+    }
+
+    private DecentPosition toDecentPosition(Location bukkitLocation) {
+        return new DecentPosition(
+                bukkitLocation.getX(),
+                bukkitLocation.getY(),
+                bukkitLocation.getZ(),
+                bukkitLocation.getYaw(),
+                bukkitLocation.getPitch()
+        );
     }
 
     public void teleportClickableEntitiesAll() {

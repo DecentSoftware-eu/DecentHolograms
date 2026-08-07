@@ -556,7 +556,16 @@ public class HologramLine extends HologramObject {
     }
 
     private Supplier<DecentPosition> getPositionSupplier() {
-        return () -> DecentPosition.fromBukkitLocation(getLocation());
+        return () -> {
+            Location bukkitLocation = getLocation();
+            return new DecentPosition(
+                    bukkitLocation.getX(),
+                    bukkitLocation.getY(),
+                    bukkitLocation.getZ(),
+                    bukkitLocation.getYaw(),
+                    bukkitLocation.getPitch()
+            );
+        };
     }
 
     private NmsHologramPartData<String> getTextPartData(Player player,

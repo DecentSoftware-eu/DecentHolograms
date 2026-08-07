@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.shared.reflect;
 
-import com.google.common.reflect.TypeToken;
 import eu.decentsoftware.holograms.shared.DecentHologramsException;
 
 import java.lang.reflect.Field;
@@ -40,10 +39,8 @@ public class ReflectUtil {
             throw new DecentHologramsException("Could not access field " + fieldName + " in class "
                     + clazz.getName(), e);
         } catch (ClassCastException e) {
-            Class<?> expectedFieldType = new TypeToken<T>() {
-            }.getRawType();
             throw new DecentHologramsException("Could not cast value of field " + fieldName + " in class "
-                    + clazz.getName() + " to " + expectedFieldType.getName(), e);
+                    + clazz.getName() + " to the requested <T>", e);
         } catch (Exception e) {
             throw new DecentHologramsException("Unexpected error occurred while getting value of field " + fieldName
                     + " in class " + clazz.getName(), e);
