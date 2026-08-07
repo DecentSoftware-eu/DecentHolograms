@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
+import eu.decentsoftware.holograms.logging.Log;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeAll;

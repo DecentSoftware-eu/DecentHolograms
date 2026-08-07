@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.items;
 
 import eu.decentsoftware.holograms.api.utils.HeadDatabaseUtils;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.hook.NbtApiHook;

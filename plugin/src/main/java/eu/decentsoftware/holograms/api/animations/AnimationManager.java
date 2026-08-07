@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.api.animations;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.animations.custom.CustomTextAnimation;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.file.FileUtils;
 import eu.decentsoftware.holograms.api.utils.tick.Ticked;
 import eu.decentsoftware.holograms.display.render.content.CompiledAnimation;

@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.reflect;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 
 import java.lang.reflect.Field;
 

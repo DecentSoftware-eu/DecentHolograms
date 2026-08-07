@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.config.serializer;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.attribute.value.AttributeValueSerializer;
 import eu.decentsoftware.holograms.display.config.dto.ConfigAttribute;
 import org.jspecify.annotations.Nullable;

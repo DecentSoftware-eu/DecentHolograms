@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.utils.location;
 
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;

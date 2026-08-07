@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.skin;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

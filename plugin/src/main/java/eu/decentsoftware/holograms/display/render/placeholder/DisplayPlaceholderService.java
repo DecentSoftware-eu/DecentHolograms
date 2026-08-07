@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.render.placeholder;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderContext;

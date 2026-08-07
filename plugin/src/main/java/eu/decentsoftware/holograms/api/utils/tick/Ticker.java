@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.tick;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 
 import java.util.Map;

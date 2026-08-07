@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.skin.mojang;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.skin.SkinSource;
 import eu.decentsoftware.holograms.skin.SkinSourceException;
 import eu.decentsoftware.holograms.url.UrlReader;

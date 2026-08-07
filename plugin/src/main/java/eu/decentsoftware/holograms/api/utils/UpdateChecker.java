@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.logging.Log;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

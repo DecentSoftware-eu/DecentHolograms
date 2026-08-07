@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.skin.mojang;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.skin.SkinSourceException;
 import eu.decentsoftware.holograms.url.UrlReader;
 import org.junit.jupiter.api.BeforeAll;

@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.platform.bukkit;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
 import org.bukkit.plugin.java.JavaPlugin;
 
