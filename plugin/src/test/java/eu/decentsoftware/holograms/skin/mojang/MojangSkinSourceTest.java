@@ -18,10 +18,8 @@
 
 package eu.decentsoftware.holograms.skin.mojang;
 
-import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.skin.SkinSourceException;
 import eu.decentsoftware.holograms.url.UrlReader;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,11 +43,6 @@ import static org.mockito.Mockito.mockStatic;
 class MojangSkinSourceTest {
 
     private MojangSkinSource skinSource;
-
-    @BeforeAll
-    static void beforeAll() {
-        Log.initializeForTests();
-    }
 
     @BeforeEach
     void setUp() {

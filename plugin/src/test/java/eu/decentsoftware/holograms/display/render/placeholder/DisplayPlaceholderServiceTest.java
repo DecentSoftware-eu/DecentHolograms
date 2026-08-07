@@ -18,13 +18,11 @@
 
 package eu.decentsoftware.holograms.display.render.placeholder;
 
-import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderContext;
 import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,12 +42,6 @@ class DisplayPlaceholderServiceTest {
 
     private PlatformAdapter platformAdapter;
     private DisplayPlaceholderService service;
-
-    @BeforeAll
-    static void beforeAll() {
-        // Setup Log util for testing
-        Log.initializeForTests();
-    }
 
     @BeforeEach
     void setUp() {

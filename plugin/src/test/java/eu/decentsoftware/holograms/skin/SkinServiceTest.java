@@ -18,8 +18,6 @@
 
 package eu.decentsoftware.holograms.skin;
 
-import eu.decentsoftware.holograms.logging.Log;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,11 +40,6 @@ class SkinServiceTest {
     private SkinSource source;
     @InjectMocks
     private SkinService service;
-
-    @BeforeAll
-    static void beforeAll() {
-        Log.initializeForTests();
-    }
 
     @Test
     void testConstruction() {
