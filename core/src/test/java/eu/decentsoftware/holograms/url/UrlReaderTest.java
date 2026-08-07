@@ -18,14 +18,15 @@
 
 package eu.decentsoftware.holograms.url;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +47,7 @@ class UrlReaderTest {
     @Test
     void testReadString() throws IOException {
         String testContent = "Test content\n for URL reading.";
-        InputStream inputStream = IOUtils.toInputStream(testContent, "UTF-8");
+        InputStream inputStream = new ByteArrayInputStream(testContent.getBytes(StandardCharsets.UTF_8));
         URL url = mock(URL.class);
         when(url.openStream()).thenReturn(inputStream);
 

@@ -75,3 +75,5 @@ include ':nms:nms-v1_21_R7'
 include ':nms:nms-paper_v1_21_R7'
 include ':nms:nms-v26_1'
 include ':nms:nms-v26_2'
+
+include 'core'

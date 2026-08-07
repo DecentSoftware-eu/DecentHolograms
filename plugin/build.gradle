@@ -44,15 +44,9 @@ tasks.register("printVersion") {
     }
 }
 
-configurations {
-    // Make compileOnly dependencies available in tests
-    testImplementation {
-        extendsFrom compileOnly
-    }
-}
-
 dependencies {
     implementation project(":platform-api")
+    implementation project(":core")
     implementation project(":nms")
     implementation project(":nms:nms-common")
 
