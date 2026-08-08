@@ -27,12 +27,14 @@ import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
+import eu.decentsoftware.holograms.platform.api.scheduler.PlatformScheduler;
 import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
 import eu.decentsoftware.holograms.platform.bukkit.text.LegacyBukkitTextFormatter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +52,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     private final List<PlaceholderProvider> placeholderProviders;
     private final BukkitSaveResourceService saveResourceService;
     private final LegacyBukkitTextFormatter legacyTextFormatter;
+    private final BukkitPlatformScheduler scheduler;
 
     public BukkitPlatformAdapter(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory) {
         capabilities = new BukkitPlatformCapabilities();
@@ -62,6 +65,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         );
         saveResourceService = new BukkitSaveResourceService(plugin);
         legacyTextFormatter = new LegacyBukkitTextFormatter();
+        scheduler = new BukkitPlatformScheduler(plugin);
     }
 
     @NotNull
@@ -113,5 +117,11 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
             return legacyTextFormatter;
         }
         throw new IllegalArgumentException("Unsupported text format: " + format);
+    }
+
+    @NotNull
+    @Override
+    public PlatformScheduler getScheduler() {
+        return scheduler;
     }
 }

@@ -1,14 +1,13 @@
 package eu.decentsoftware.holograms.api.actions;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandValidator;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang.Validate;
@@ -21,8 +20,6 @@ import java.util.Collection;
 import java.util.Map;
 
 public abstract class ActionType {
-
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 
     /*
      * Cache
@@ -55,7 +52,10 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Common.tell(player, PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
+            // Actions are executed from a packet listener thread, and resolving placeholders
+            // reads the player, so it has to happen where the player is owned.
+            S.forPlayer(player, () ->
+                    Common.tell(player, PAPI.setPlaceholders(player, string.replace("{player}", player.getName()))));
             return true;
         }
     };
@@ -66,7 +66,7 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
+            S.forPlayer(player, () -> {
                 //
                 player.chat(PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
             });
@@ -80,9 +80,11 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
-                //
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
+            // Two halves, two owners: resolving placeholders reads the player, while a console
+            // command is dispatched globally.
+            S.forPlayer(player, () -> {
+                String command = PAPI.setPlaceholders(player, string.replace("{player}", player.getName()));
+                S.sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
             });
             return true;
         }
@@ -113,7 +115,7 @@ public abstract class ActionType {
             if (location == null) {
                 return false;
             }
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> player.teleport(location));
+            S.forPlayer(player, () -> player.teleport(location));
             return true;
         }
     };

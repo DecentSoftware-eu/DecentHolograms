@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
+import eu.decentsoftware.holograms.platform.api.scheduler.PlatformScheduler;
 import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import org.jetbrains.annotations.NotNull;
@@ -138,4 +139,17 @@ public interface PlatformAdapter {
      */
     @NotNull
     TextFormatter getTextFormatter(@NotNull TextFormat format);
+
+    /**
+     * Get the scheduler of this platform adapter.
+     *
+     * <p>The scheduler is responsible for scheduling tasks to run on the server. It can be used by the core or by other services
+     * to schedule tasks that need to run on the main server thread or asynchronously.</p>
+     *
+     * @return The scheduler.
+     * @see PlatformScheduler
+     * @since 2.10.2
+     */
+    @NotNull
+    PlatformScheduler getScheduler();
 }

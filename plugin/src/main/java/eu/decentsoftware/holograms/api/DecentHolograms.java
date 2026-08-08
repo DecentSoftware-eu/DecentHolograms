@@ -9,14 +9,15 @@ import eu.decentsoftware.holograms.api.listeners.PlayerListener;
 import eu.decentsoftware.holograms.api.listeners.WorldListener;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
@@ -26,6 +27,7 @@ import eu.decentsoftware.holograms.platform.api.capability.MinecraftFeature;
 import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformAdapter;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerListener;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -71,6 +73,9 @@ public final class DecentHolograms {
         Settings.reload();
         Lang.reload();
 
+        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
+        S.initialize(new BukkitPlatformScheduler(plugin), platformAdapter.getPlayerService());
+
         PluginManager pluginManager = Bukkit.getPluginManager();
         this.integrationAvailabilityService = new IntegrationAvailabilityService(plugin, pluginManager);
         this.integrationAvailabilityService.initialize();
@@ -81,7 +86,6 @@ public final class DecentHolograms {
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
         this.nmsPacketListenerService = new NmsPacketListenerService(plugin, nmsAdapter, nmsPacketListener);
-        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
         if (platformAdapter.getCapabilities().supports(MinecraftFeature.DISPLAY_ENTITIES)) {
             this.displayModule = new DisplayModule(plugin, animationManager, platformAdapter);
             this.displayModule.initialize();
@@ -166,7 +170,7 @@ public final class DecentHolograms {
             return;
         }
 
-        UpdateChecker updateChecker = new UpdateChecker(getPlugin(), 96927);
+        UpdateChecker updateChecker = new UpdateChecker(96927);
         updateChecker.getVersion(ver -> {
             String currentVersion = getPlugin().getDescription().getVersion();
             if (Common.isVersionHigher(currentVersion, ver)) {
