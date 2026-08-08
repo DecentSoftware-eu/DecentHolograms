@@ -54,7 +54,7 @@ public class SkinService {
      * Retrieves the skin texture for a given player name.
      *
      * @param playerName The name of the player whose skin texture is to be fetched.
-     * @return The skin texture as a string, or null if the texture could not be fetched.
+     * @return The skin texture as a string, or null if the player has no skin or the lookup failed.
      * @throws NullPointerException if playerName is null.
      */
     @Nullable
@@ -62,7 +62,7 @@ public class SkinService {
         Objects.requireNonNull(playerName, "playerName cannot be null");
 
         try {
-            return skinSource.fetchSkinTextureByPlayerName(playerName);
+            return skinSource.fetchSkinTextureByPlayerName(playerName).orElse(null);
         } catch (SkinSourceException e) {
             Log.warn("Error fetching skin texture: %s", e.getMessage());
         } catch (Exception e) {

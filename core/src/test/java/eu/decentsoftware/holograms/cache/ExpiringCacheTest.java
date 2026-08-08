@@ -133,6 +133,23 @@ class ExpiringCacheTest {
         }
 
         @Test
+        void customTtlOverridesTheDefault() {
+            cache.put("shortLived", "value", 10, TimeUnit.SECONDS);
+            cache.put("default", "value");
+
+            clock.set(TimeUnit.SECONDS.toMillis(10));
+
+            assertNull(cache.getIfPresent("shortLived"));
+            assertEquals("value", cache.getIfPresent("default"));
+        }
+
+        @Test
+        void customTtlIsValidated() {
+            assertThrows(NullPointerException.class, () -> cache.put("key", "value", 1, null));
+            assertThrows(IllegalArgumentException.class, () -> cache.put("key", "value", 0, TimeUnit.SECONDS));
+        }
+
+        @Test
         void writeResetsExpiry() {
             cache.put("key", "value");
             clock.set(TimeUnit.SECONDS.toMillis(59));

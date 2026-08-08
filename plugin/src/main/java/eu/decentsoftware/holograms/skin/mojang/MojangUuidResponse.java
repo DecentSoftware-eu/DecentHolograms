@@ -23,7 +23,7 @@ package eu.decentsoftware.holograms.skin.mojang;
  *
  * @author d0by
  * @see <a href="https://minecraft.wiki/w/Mojang_API#Query_player%27s_UUID">Mojang API Documentation</a>
- * @since 1.0.0
+ * @since 2.9.6
  */
 public class MojangUuidResponse {
 

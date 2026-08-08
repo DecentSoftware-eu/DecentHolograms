@@ -26,6 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,7 +62,7 @@ class SkinServiceTest {
         String playerName = "testPlayer1";
         String expectedTexture = "textureData";
 
-        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(expectedTexture);
+        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(Optional.of(expectedTexture));
 
         assertEquals(expectedTexture, service.getSkinTextureByPlayerName(playerName));
 
@@ -68,11 +70,20 @@ class SkinServiceTest {
     }
 
     @Test
+    void testGetSkinTextureByPlayerName_noSkin() {
+        String playerName = "testPlayer1";
+
+        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(Optional.empty());
+
+        assertNull(service.getSkinTextureByPlayerName(playerName));
+    }
+
+    @Test
     void testGetSkinTextureByPlayerName_delegatesEveryCall() {
         String playerName = "testPlayer1";
         String expectedTexture = "textureData";
 
-        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(expectedTexture);
+        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(Optional.of(expectedTexture));
 
         service.getSkinTextureByPlayerName(playerName);
         service.getSkinTextureByPlayerName(playerName);

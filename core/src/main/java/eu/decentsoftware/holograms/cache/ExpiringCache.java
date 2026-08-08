@@ -119,13 +119,33 @@ public class ExpiringCache<K, V> {
      * @param value The value.
      */
     public void put(@NotNull K key, @NotNull V value) {
+        put(key, value, ttlMillis);
+    }
+
+    /**
+     * Caches a value with a custom lifetime, replacing any existing entry for the key.
+     *
+     * @param key   The key.
+     * @param value The value.
+     * @param ttl   How long this entry stays valid, overriding the cache-wide default.
+     * @param unit  The time unit of {@code ttl}.
+     */
+    public void put(@NotNull K key, @NotNull V value, long ttl, @NotNull TimeUnit unit) {
+        Objects.requireNonNull(unit, "unit cannot be null");
+        if (ttl <= 0) {
+            throw new IllegalArgumentException("ttl must be positive");
+        }
+        put(key, value, unit.toMillis(ttl));
+    }
+
+    private void put(@NotNull K key, @NotNull V value, long entryTtlMillis) {
         Objects.requireNonNull(key, "key cannot be null");
         Objects.requireNonNull(value, "value cannot be null");
         long now = clock.getAsLong();
         if (!entries.containsKey(key) && entries.size() >= maxSize) {
             makeRoom(now);
         }
-        entries.put(key, new Entry<>(value, now + ttlMillis));
+        entries.put(key, new Entry<>(value, now + entryTtlMillis));
     }
 
     /**

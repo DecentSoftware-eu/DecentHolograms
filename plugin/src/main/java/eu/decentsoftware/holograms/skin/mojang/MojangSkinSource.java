@@ -32,13 +32,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Implementation of SkinSource that fetches skin textures from Mojang's session server.
  *
+ * <p>A missing player, a missing profile, or a profile without a textures property are all
+ * reported as an empty result. Anything that prevented the lookup from completing - network
+ * errors, rate limiting, unparseable responses - is reported as a {@link SkinSourceException}
+ * so that it is retried rather than remembered.</p>
+ *
  * @author d0by
  * @see <a href="https://minecraft.wiki/w/Mojang_API">Mojang API Documentation</a>
- * @since 1.0.0
+ * @since 2.9.6
  */
 public class MojangSkinSource implements SkinSource {
 
@@ -46,16 +52,23 @@ public class MojangSkinSource implements SkinSource {
 
     @NotNull
     @Override
-    public String fetchSkinTextureByPlayerName(@NotNull String playerName) {
+    public Optional<String> fetchSkinTextureByPlayerName(@NotNull String playerName) {
         Objects.requireNonNull(playerName, "playerName cannot be null");
 
-        String uuid = fetchUniqueIdByPlayerName(playerName);
+        Optional<String> uniqueId = fetchUniqueIdByPlayerName(playerName);
+        if (!uniqueId.isPresent()) {
+            return Optional.empty();
+        }
+
         try {
-            URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+            URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uniqueId.get());
             String jsonResponse = UrlReader.readString(url);
             return extractSkinTextureFromJson(playerName, jsonResponse);
         } catch (SkinSourceException e) {
             throw e;
+        } catch (FileNotFoundException e) {
+            // The profile does not exist, even though the name lookup resolved. Nothing to fetch.
+            return Optional.empty();
         } catch (IOException e) {
             Log.warn("Failed to fetch skin texture for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch skin texture for player " + playerName + ".");
@@ -65,7 +78,7 @@ public class MojangSkinSource implements SkinSource {
         }
     }
 
-    private String fetchUniqueIdByPlayerName(String playerName) {
+    private Optional<String> fetchUniqueIdByPlayerName(String playerName) {
         try {
             URL url = new URL("https://api.minecraftservices.com/minecraft/profile/lookup/name/" + playerName);
             String jsonResponse = UrlReader.readString(url);
@@ -73,7 +86,8 @@ public class MojangSkinSource implements SkinSource {
         } catch (SkinSourceException e) {
             throw e;
         } catch (FileNotFoundException e) {
-            throw new SkinSourceException("Cannot fetch skin texture for player " + playerName + ". Player not found.");
+            // No such player.
+            return Optional.empty();
         } catch (IOException e) {
             Log.warn("Failed to fetch unique ID for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch unique ID for player " + playerName + ".");
@@ -83,19 +97,26 @@ public class MojangSkinSource implements SkinSource {
         }
     }
 
-    private String extractUniqueIdFromJson(String playerName, String json) {
+    private Optional<String> extractUniqueIdFromJson(String playerName, String json) {
         try {
+            if (json == null || json.isEmpty()) {
+                throw new SkinSourceException("Received empty JSON response while fetching unique ID for player " + playerName + ".");
+            }
             MojangUuidResponse response = gson.fromJson(json, MojangUuidResponse.class);
+            if (response == null) {
+                throw new SkinSourceException("Received no usable JSON response while fetching unique ID for player " + playerName + ".");
+            }
             String errorMessage = response.getErrorMessage();
             if (errorMessage != null) {
+                // The API understood the request and refused it, e.g. unknown or malformed name.
                 Log.warn("Error fetching UUID for player: %s. Error message: %s", playerName, errorMessage);
-                throw new SkinSourceException(errorMessage);
+                return Optional.empty();
             }
             String uniqueId = response.getId();
-            if (uniqueId != null && !uniqueId.isEmpty()) {
-                return uniqueId;
+            if (uniqueId == null || uniqueId.isEmpty()) {
+                return Optional.empty();
             }
-            throw new SkinSourceException("No unique ID found in JSON response: " + json);
+            return Optional.of(uniqueId);
         } catch (SkinSourceException e) {
             throw e;
         } catch (JsonSyntaxException e) {
@@ -107,25 +128,29 @@ public class MojangSkinSource implements SkinSource {
         }
     }
 
-    private String extractSkinTextureFromJson(String playerName, String json) {
+    private Optional<String> extractSkinTextureFromJson(String playerName, String json) {
         try {
             if (json == null || json.isEmpty()) {
                 throw new SkinSourceException("Received empty JSON response while fetching skin texture for player " + playerName + ".");
             }
             MojangProfileResponse response = gson.fromJson(json, MojangProfileResponse.class);
+            if (response == null) {
+                throw new SkinSourceException("Received no usable JSON response while fetching skin texture for player " + playerName + ".");
+            }
             List<MojangProfileProperty> properties = response.getProperties();
             if (properties == null || properties.isEmpty()) {
-                throw new SkinSourceException("No profile properties found in JSON response: " + json);
+                return Optional.empty();
             }
             for (MojangProfileProperty property : properties) {
                 // There should only ever be one property, and it should be "textures",
                 // but according to the API documentation, this is "for now"
                 // so we check all properties to be safe in case more properties are added in the future.
-                if ("textures".equals(property.getName())) {
-                    return property.getValue();
+                if (property != null && "textures".equals(property.getName())) {
+                    String value = property.getValue();
+                    return value == null || value.isEmpty() ? Optional.empty() : Optional.of(value);
                 }
             }
-            throw new SkinSourceException("No skin texture found in JSON response: " + json);
+            return Optional.empty();
         } catch (SkinSourceException e) {
             throw e;
         } catch (JsonParseException e) {

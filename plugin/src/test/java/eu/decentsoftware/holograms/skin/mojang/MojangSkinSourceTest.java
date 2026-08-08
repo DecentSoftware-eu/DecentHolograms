@@ -32,8 +32,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -61,9 +63,9 @@ class MojangSkinSourceTest {
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/profile/fd8070f3d722429b9fdea09d21bf4375"))))
                     .thenReturn(textureJson);
 
-            String result = skinSource.fetchSkinTextureByPlayerName(playerName);
+            Optional<String> result = skinSource.fetchSkinTextureByPlayerName(playerName);
 
-            assertEquals("base64texture", result);
+            assertEquals(Optional.of("base64texture"), result);
         }
     }
 
@@ -88,10 +90,23 @@ class MojangSkinSourceTest {
         try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
             urlReaderMock.when(() -> UrlReader.readString(any(URL.class))).thenThrow(new FileNotFoundException("Player not found"));
 
-            SkinSourceException exception = assertThrows(SkinSourceException.class,
-                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
+            // No such player is a definitive answer, not a failure.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
+        }
+    }
 
-            assertEquals("Cannot fetch skin texture for player " + playerName + ". Player not found.", exception.getMessage());
+    @Test
+    void testFetchSkinTextureByPlayerName_textureApiFileNotFoundException() {
+        String playerName = "d0by";
+        String fakeUUIDJson = "{\"id\": \"fd8070f3d722429b9fdea09d21bf4375\"}";
+
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/lookup/name/" + playerName))))
+                    .thenReturn(fakeUUIDJson);
+            urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/profile/fd8070f3d722429b9fdea09d21bf4375"))))
+                    .thenThrow(new FileNotFoundException("Profile not found"));
+
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
         }
     }
 
@@ -123,10 +138,8 @@ class MojangSkinSourceTest {
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/lookup/name/" + playerName))))
                     .thenReturn(invalidUuidJson);
 
-            SkinSourceException exception = assertThrows(SkinSourceException.class,
-                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
-
-            assertEquals("No unique ID found in JSON response: " + invalidUuidJson, exception.getMessage());
+            // A well-formed response with no id means there is nothing to look up.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
         }
     }
 
@@ -196,10 +209,8 @@ class MojangSkinSourceTest {
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/lookup/name/" + playerName))))
                     .thenReturn(json);
 
-            SkinSourceException exception = assertThrows(SkinSourceException.class,
-                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
-
-            assertEquals("Player not found", exception.getMessage());
+            // The API understood the request and refused it, so there is no skin to find.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
         }
     }
 
@@ -218,29 +229,29 @@ class MojangSkinSourceTest {
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/profile/deadbeef"))))
                     .thenReturn(invalidTextureJson);
 
-            SkinSourceException exception = assertThrows(SkinSourceException.class,
-                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
-
-            assertEquals("No profile properties found in JSON response: " + invalidTextureJson, exception.getMessage());
+            // The profile exists but carries no properties, so the player has no skin.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
         }
     }
 
-    @Test
-    void testExtractSkinTextureFromJson_noTexturesProperty() {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "{\"properties\": [{\"name\": \"something_else\", \"value\": \"xyz\"}]}",
+            "{\"properties\": [{\"name\": \"textures\"}]}",
+            "{\"properties\": [{\"name\": \"textures\", \"value\": \"\"}]}",
+    })
+    void testExtractSkinTextureFromJson_noUsableTexture(String textureJson) {
         String playerName = "d0by";
         String uuidJson = "{\"id\": \"deadbeef\"}";
-        String invalidTextureJson = "{\"properties\": [{\"name\": \"something_else\", \"value\": \"xyz\"}]}";
 
         try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/lookup/name/" + playerName))))
                     .thenReturn(uuidJson);
             urlReaderMock.when(() -> UrlReader.readString(argThat(url -> url.toString().contains("/profile/deadbeef"))))
-                    .thenReturn(invalidTextureJson);
+                    .thenReturn(textureJson);
 
-            SkinSourceException exception = assertThrows(SkinSourceException.class,
-                    () -> skinSource.fetchSkinTextureByPlayerName(playerName));
-
-            assertEquals("No skin texture found in JSON response: " + invalidTextureJson, exception.getMessage());
+            // A missing or blank textures value means no skin, not a broken lookup.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
         }
     }
 

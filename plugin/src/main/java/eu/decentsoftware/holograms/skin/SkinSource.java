@@ -20,8 +20,14 @@ package eu.decentsoftware.holograms.skin;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * Represents a source for player skin textures.
+ *
+ * <p>Implementations must distinguish between a player having no skin and the lookup failing.
+ * An absent result is a definitive answer and may be cached; a {@link SkinSourceException}
+ * means the lookup could not be completed and should be retried.</p>
  *
  * @author d0by
  * @since 2.9.6
@@ -32,10 +38,11 @@ public interface SkinSource {
      * Fetches the skin texture for a player by their name.
      *
      * @param playerName The name of the player whose skin texture is to be fetched.
-     * @return The skin texture as a base64 encoded string.
-     * @throws SkinSourceException If an error occurs while fetching the skin texture.
+     * @return The skin texture as a base64 encoded string, or empty if the player does not
+     * exist or has no skin.
+     * @throws SkinSourceException If the skin texture could not be looked up.
      */
     @NotNull
-    String fetchSkinTextureByPlayerName(@NotNull String playerName);
+    Optional<String> fetchSkinTextureByPlayerName(@NotNull String playerName);
 
 }
