@@ -40,7 +40,7 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
     static {
         String formattingChars = "0123456789ABCDEFKLMNORabcdefklmnor";
         for (char c : formattingChars.toCharArray()) {
-            FORMATS_BY_CHAR[c] = EnumChatFormat.a(c);
+            FORMATS_BY_CHAR[c] = getByChar(c);
         }
 
         // Just cache all combinations of special format flags for O(1) lookup
@@ -63,6 +63,16 @@ final class LegacyTextFormattingParserImpl extends LegacyTextFormattingParser<IC
             }
             FORMATS_BY_FLAGS[flags] = list.toArray(new EnumChatFormat[0]);
         }
+    }
+
+    private static EnumChatFormat getByChar(char c) {
+        char lowerCaseChar = Character.toLowerCase(c);
+        for (EnumChatFormat format : EnumChatFormat.values()) {
+            if (format.character == lowerCaseChar) {
+                return format;
+            }
+        }
+        return null;
     }
 
     @Override
