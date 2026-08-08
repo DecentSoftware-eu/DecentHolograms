@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Ticker {
 
-    private final int taskId;
+    private final S.TaskHandle taskHandle;
     private final AtomicLong ticks;
     private final Map<String, ITicked> tickedObjects;
     private volatile boolean performingTick;
@@ -21,16 +21,16 @@ public class Ticker {
         this.ticks = new AtomicLong(0);
         this.tickedObjects = new ConcurrentHashMap<>();
         this.performingTick = false;
-        this.taskId = S.asyncTask(() -> {
+        this.taskHandle = S.asyncTask(() -> {
             if (!performingTick) tick();
-        }, 1L, 5L).getTaskId();
+        }, 1L, 5L);
     }
 
     /**
      * Stop the ticker and unregister all ticked objects.
      */
     public void destroy() {
-        S.stopTask(taskId);
+        S.stopTask(taskHandle);
         tickedObjects.clear();
     }
 

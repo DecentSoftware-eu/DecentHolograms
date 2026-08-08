@@ -10,11 +10,11 @@ public class Phrase extends ConfigValue<String> {
 	}
 
 	public void send(CommandSender sender) {
-		Common.tell(sender, getValue().replace("{prefix}", Common.PREFIX));
+		Common.tell(sender, getValue());
 	}
 
 	public void send(CommandSender sender, Object... args) {
-		Common.tell(sender, getValue().replace("{prefix}", Common.PREFIX), args);
+		Common.tell(sender, getValue(), args);
 	}
 
 	@Override
