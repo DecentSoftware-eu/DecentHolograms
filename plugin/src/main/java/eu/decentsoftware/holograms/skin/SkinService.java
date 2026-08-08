@@ -18,27 +18,25 @@
 
 package eu.decentsoftware.holograms.skin;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import eu.decentsoftware.holograms.logging.Log;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Service for retrieving player skins.
  * This service fetches skin textures from external sources based on player names.
  * It uses a {@link SkinSource} to retrieve the skin data.
  *
+ * <p>Failures are logged and reported as a null result. Wrap the source in a
+ * {@link CachingSkinSource} to avoid repeated lookups.</p>
+ *
  * @author d0by
  * @since 2.9.6
  */
 public class SkinService {
 
-    private static final Cache<String, String> textureCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(1, TimeUnit.HOURS)
-            .build();
     private final SkinSource skinSource;
 
     /**
@@ -59,18 +57,12 @@ public class SkinService {
      * @return The skin texture as a string, or null if the texture could not be fetched.
      * @throws NullPointerException if playerName is null.
      */
+    @Nullable
     public String getSkinTextureByPlayerName(@NotNull String playerName) {
         Objects.requireNonNull(playerName, "playerName cannot be null");
 
-        String cachedTexture = textureCache.getIfPresent(playerName);
-        if (cachedTexture != null) {
-            return cachedTexture;
-        }
-
         try {
-            String fetchedTexture = skinSource.fetchSkinTextureByPlayerName(playerName);
-            textureCache.put(playerName, fetchedTexture);
-            return fetchedTexture;
+            return skinSource.fetchSkinTextureByPlayerName(playerName);
         } catch (SkinSourceException e) {
             Log.warn("Error fetching skin texture: %s", e.getMessage());
         } catch (Exception e) {

@@ -5,9 +5,10 @@ import com.cryptomorin.xseries.profiles.objects.Profileable;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.skin.CachingSkinSource;
 import eu.decentsoftware.holograms.skin.SkinService;
 import eu.decentsoftware.holograms.skin.mojang.MojangSkinSource;
 import lombok.NonNull;
@@ -36,7 +37,7 @@ import java.util.function.Function;
 @UtilityClass
 public final class SkullUtils {
 
-    private static final SkinService skinService = new SkinService(new MojangSkinSource());
+    private static final SkinService skinService = new SkinService(new CachingSkinSource(new MojangSkinSource()));
 
     private static final String RESOLVABLE_PROFILE_CLASS_PATH = "net.minecraft.world.item.component.ResolvableProfile";
     private static Field profileField;

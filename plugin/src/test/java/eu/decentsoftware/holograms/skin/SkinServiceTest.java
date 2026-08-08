@@ -63,11 +63,23 @@ class SkinServiceTest {
         when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(expectedTexture);
 
         assertEquals(expectedTexture, service.getSkinTextureByPlayerName(playerName));
-        // Future calls should return the cached texture
-        assertEquals(expectedTexture, service.getSkinTextureByPlayerName(playerName));
-        assertEquals(expectedTexture, service.getSkinTextureByPlayerName(playerName));
 
         verify(source, times(1)).fetchSkinTextureByPlayerName(playerName);
+    }
+
+    @Test
+    void testGetSkinTextureByPlayerName_delegatesEveryCall() {
+        String playerName = "testPlayer1";
+        String expectedTexture = "textureData";
+
+        when(source.fetchSkinTextureByPlayerName(playerName)).thenReturn(expectedTexture);
+
+        service.getSkinTextureByPlayerName(playerName);
+        service.getSkinTextureByPlayerName(playerName);
+        service.getSkinTextureByPlayerName(playerName);
+
+        // Caching is the responsibility of CachingSkinSource, not of the service.
+        verify(source, times(3)).fetchSkinTextureByPlayerName(playerName);
     }
 
     private static Object[] provideExceptions() {
