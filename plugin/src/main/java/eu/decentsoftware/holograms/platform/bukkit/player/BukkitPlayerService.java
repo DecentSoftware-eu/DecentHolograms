@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,9 +36,21 @@ public class BukkitPlayerService implements PlatformPlayerService {
 
     private final List<PlatformPlayer> onlinePlayers = new CopyOnWriteArrayList<>();
     private final Map<UUID, PlatformPlayer> playerMap = new ConcurrentHashMap<>();
+    private final BukkitPlayerFactory playerFactory;
 
+    /**
+     * Creates a new instance of BukkitPlayerService.
+     *
+     * @param playerFactory Creates the platform-agnostic view of a player.
+     * @throws NullPointerException If playerFactory is null.
+     */
+    public BukkitPlayerService(@NotNull BukkitPlayerFactory playerFactory) {
+        this.playerFactory = Objects.requireNonNull(playerFactory, "playerFactory cannot be null");
+    }
+
+    @NotNull
     @Override
-    public @NotNull PlatformPlayer getPlayer(@NotNull Object platformPlayer) {
+    public PlatformPlayer getPlayer(@NotNull Object platformPlayer) {
         if (!(platformPlayer instanceof Player)) {
             throw new IllegalArgumentException("Player object must be of type " + Player.class.getName());
         }
@@ -45,28 +58,31 @@ public class BukkitPlayerService implements PlatformPlayerService {
         if (bukkitPlayer != null) {
             return bukkitPlayer;
         }
-        return new BukkitPlayer((Player) platformPlayer);
+        return playerFactory.create((Player) platformPlayer);
     }
 
+    @Nullable
     @Override
-    public @Nullable PlatformPlayer getPlayer(@NotNull UUID uniqueId) {
+    public PlatformPlayer getPlayer(@NotNull UUID uniqueId) {
         return playerMap.get(uniqueId);
     }
 
+    @NotNull
     @Override
-    public @NotNull Collection<PlatformPlayer> getOnlinePlayers() {
+    public Collection<PlatformPlayer> getOnlinePlayers() {
         return onlinePlayers;
     }
 
     public void registerPlayer(Player player) {
-        BukkitPlayer bukkitPlayer = new BukkitPlayer(player);
+        BukkitPlayer bukkitPlayer = playerFactory.create(player);
         onlinePlayers.add(bukkitPlayer);
         playerMap.put(player.getUniqueId(), bukkitPlayer);
     }
 
     public void unregisterPlayer(Player player) {
-        BukkitPlayer bukkitPlayer = new BukkitPlayer(player);
-        onlinePlayers.remove(bukkitPlayer);
-        playerMap.remove(player.getUniqueId());
+        PlatformPlayer registered = playerMap.remove(player.getUniqueId());
+        if (registered != null) {
+            onlinePlayers.remove(registered);
+        }
     }
 }

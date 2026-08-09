@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.platform.api.server.ServerPlatform;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
 import eu.decentsoftware.holograms.platform.bukkit.server.BukkitServerPlatformService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -95,7 +96,8 @@ public final class BukkitPlatformFactory {
         }
         Log.info("Detected %s, using NMS module %s.", serverPlatform, nmsVersion.get().name());
 
-        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
+        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(
+                plugin, nmsAdapter.getDisplayRendererFactory(), BukkitPlayer::new);
         return new BukkitPlatformBootstrap(serverPlatform, nmsAdapter, platformAdapter);
     }
 }

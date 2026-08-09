@@ -31,6 +31,7 @@ import eu.decentsoftware.holograms.platform.api.scheduler.PlatformScheduler;
 import eu.decentsoftware.holograms.platform.api.text.TextFormat;
 import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerFactory;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
@@ -54,10 +55,12 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     private final LegacyBukkitTextFormatter legacyTextFormatter;
     private final BukkitPlatformScheduler scheduler;
 
-    public BukkitPlatformAdapter(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory) {
+    public BukkitPlatformAdapter(JavaPlugin plugin,
+                                 NmsDisplayRendererFactory rendererFactory,
+                                 BukkitPlayerFactory playerFactory) {
         capabilities = new BukkitPlatformCapabilities();
         materialService = new BukkitMaterialService();
-        playerService = new BukkitPlayerService();
+        playerService = new BukkitPlayerService(playerFactory);
         renderService = new BukkitRenderService(rendererFactory, new BukkitItemFactory());
         eventListener = new BukkitEventListener(renderService);
         placeholderProviders = Collections.singletonList(
