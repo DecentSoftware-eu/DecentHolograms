@@ -6,8 +6,6 @@ import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
 import eu.decentsoftware.holograms.nms.api.renderer.NmsHologramRendererFactory;
 import eu.decentsoftware.holograms.shared.reflect.ReflectUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,37 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 class NmsAdapterFactoryTest {
 
-    private Version version;
+    private static final String MODULE = Version.v1_8_R3.name();
+
     private NmsAdapterFactory factory;
 
     @BeforeEach
     void setUp() {
-        // We need to mock the way Version gets the current version,
-        // because it's called when the Version class is initialized.
-        // Hopefully we will get rid of this in the future.
-        // >:(
-        Server server = mock(Server.class);
-        try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class)) {
-            mockedBukkit.when(Bukkit::getServer).thenReturn(server);
-            when(server.getBukkitVersion()).thenReturn("1.8.8-R0.1-SNAPSHOT");
-
-            version = Version.v1_8_R3; // Any version
-        }
-
         factory = new NmsAdapterFactory();
     }
 
     @Test
-    void testCreateNmsAdapter_nullVersion() {
+    void testCreateNmsAdapter_nullModuleName() {
         Exception exception = assertThrows(NullPointerException.class, () -> factory.createNmsAdapter(null));
 
-        assertEquals("version cannot be null", exception.getMessage());
+        assertEquals("moduleName cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -59,7 +44,7 @@ class NmsAdapterFactoryTest {
 
         try (MockedStatic<ReflectUtil> classMock = mockStatic(ReflectUtil.class)) {
             classMock.when(() -> ReflectUtil.getClass(className)).thenReturn(ValidNmsAdapter.class);
-            NmsAdapter adapter = factory.createNmsAdapter(version);
+            NmsAdapter adapter = factory.createNmsAdapter(version.name());
             assertNotNull(adapter);
             assertInstanceOf(ValidNmsAdapter.class, adapter);
         }
@@ -72,7 +57,7 @@ class NmsAdapterFactoryTest {
         try (MockedStatic<ReflectUtil> classMock = mockStatic(ReflectUtil.class)) {
             classMock.when(() -> ReflectUtil.getClass(className)).thenThrow(new ClassNotFoundException());
             DecentHologramsNmsException exception = assertThrows(DecentHologramsNmsException.class,
-                    () -> factory.createNmsAdapter(version));
+                    () -> factory.createNmsAdapter(MODULE));
             assertEquals("Unsupported server version: v1_8_R3", exception.getMessage());
         }
     }
@@ -84,7 +69,7 @@ class NmsAdapterFactoryTest {
         try (MockedStatic<ReflectUtil> classMock = mockStatic(ReflectUtil.class)) {
             classMock.when(() -> ReflectUtil.getClass(className)).thenReturn(NotNmsAdapter.class);
             DecentHologramsNmsException exception = assertThrows(DecentHologramsNmsException.class,
-                    () -> factory.createNmsAdapter(version));
+                    () -> factory.createNmsAdapter(MODULE));
             String expectedMessage = "Nms adapter " + className + " does not implement " + NmsAdapter.class.getName();
             assertEquals(expectedMessage, exception.getMessage());
         }
@@ -97,7 +82,7 @@ class NmsAdapterFactoryTest {
         try (MockedStatic<ReflectUtil> classMock = mockStatic(ReflectUtil.class)) {
             classMock.when(() -> ReflectUtil.getClass(className)).thenReturn(NoDefaultConstructorNmsAdapter.class);
             DecentHologramsNmsException exception = assertThrows(DecentHologramsNmsException.class,
-                    () -> factory.createNmsAdapter(version));
+                    () -> factory.createNmsAdapter(MODULE));
             String expectedMessage = "NmsAdapter implementation is missing the default constructor: " + className;
             assertEquals(expectedMessage, exception.getMessage());
         }
@@ -110,7 +95,7 @@ class NmsAdapterFactoryTest {
         try (MockedStatic<ReflectUtil> classMock = mockStatic(ReflectUtil.class)) {
             classMock.when(() -> ReflectUtil.getClass(className)).thenReturn(FailingNmsAdapter.class);
             DecentHologramsNmsException exception = assertThrows(DecentHologramsNmsException.class,
-                    () -> factory.createNmsAdapter(version));
+                    () -> factory.createNmsAdapter(MODULE));
             String expectedMessage = "Failed to construct a new instance of NmsAdapter implementation: " + className;
             assertEquals(expectedMessage, exception.getMessage());
             assertNotNull(exception.getCause());
@@ -126,7 +111,7 @@ class NmsAdapterFactoryTest {
             // this is just to simulate an unknown exception
             classMock.when(() -> ReflectUtil.getClass(className)).thenThrow(new RuntimeException("Test exception"));
             DecentHologramsNmsException exception = assertThrows(DecentHologramsNmsException.class,
-                    () -> factory.createNmsAdapter(version));
+                    () -> factory.createNmsAdapter(MODULE));
             String expectedMessage = "Unknown error occurred while initializing NmsAdapter implementation: " + className;
             assertEquals(expectedMessage, exception.getMessage());
             assertNotNull(exception.getCause());

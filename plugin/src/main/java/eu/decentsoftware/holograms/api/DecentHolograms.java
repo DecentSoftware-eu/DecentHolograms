@@ -11,23 +11,20 @@ import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.utils.tick.Ticker;
 import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
-import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.nms.DecentHologramsNmsPacketListener;
-import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.NmsPacketListenerService;
-import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.platform.api.capability.MinecraftFeature;
+import eu.decentsoftware.holograms.platform.api.server.ServerPlatform;
 import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformAdapter;
+import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformBootstrap;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerListener;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
-import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.bukkit.Metrics;
@@ -52,6 +49,7 @@ import java.util.logging.Logger;
 public final class DecentHolograms {
 
     private final JavaPlugin plugin;
+    private ServerPlatform serverPlatform;
     private NmsAdapter nmsAdapter;
     private IntegrationAvailabilityService integrationAvailabilityService;
     private NmsPacketListenerService nmsPacketListenerService;
@@ -67,15 +65,15 @@ public final class DecentHolograms {
         this.plugin = plugin;
     }
 
-    void enable() {
-        Log.setLogger(plugin.getLogger());
-        initializeNmsAdapter();
+    void enable(@NonNull BukkitPlatformBootstrap bootstrap) {
+        this.nmsAdapter = bootstrap.getNmsAdapter();
+        this.serverPlatform = bootstrap.getServerPlatform();
         Settings.reload(plugin);
         Lang.reload(plugin);
         BungeeUtils.init(plugin);
 
-        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
-        S.initialize(new BukkitPlatformScheduler(plugin), platformAdapter.getPlayerService());
+        BukkitPlatformAdapter platformAdapter = bootstrap.getPlatformAdapter();
+        S.initialize(platformAdapter.getScheduler(), platformAdapter.getPlayerService());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         this.integrationAvailabilityService = new IntegrationAvailabilityService(plugin, pluginManager);
@@ -136,20 +134,6 @@ public final class DecentHolograms {
         }
 
         EventFactory.fireReloadEvent();
-    }
-
-    private void initializeNmsAdapter() {
-        try {
-            nmsAdapter = new NmsAdapterFactory().createNmsAdapter(Version.CURRENT);
-            Log.info("Initialized NMS adapter for %s (%s).", Version.CURRENT.name(), Version.CURRENT_MINECRAFT_VERSION);
-            return;
-        } catch (DecentHologramsNmsException e) {
-            Log.error("Error loading an NMS adapter for " + Version.CURRENT + ": " + e.getMessage(), e);
-        } catch (Exception e) {
-            Log.error("Unknown error loading an NMS adapter for " + Version.CURRENT, e);
-        }
-        Log.error("The plugin will now be disabled.");
-        Bukkit.getPluginManager().disablePlugin(plugin);
     }
 
     private void setupMetrics() {

@@ -7,15 +7,6 @@ import java.lang.reflect.Field;
 // Never make this class final! (mocking)
 public class ReflectUtil {
 
-    public static boolean isPaper = false;
-
-    static {
-        try {
-            ReflectUtil.getClass("io.papermc.paper.PaperBootstrap");
-            isPaper = true;
-        } catch (ClassNotFoundException ignored) {}
-    }
-
     private ReflectUtil() {
         throw new IllegalAccessError("Utility class");
     }

@@ -5,4 +5,9 @@ plugins {
 dependencies {
     compileOnly(libs.annotations)
     annotationProcessor(libs.annotations)
+
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

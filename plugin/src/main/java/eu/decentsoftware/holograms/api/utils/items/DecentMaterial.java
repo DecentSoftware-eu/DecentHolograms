@@ -16,17 +16,26 @@ import java.util.Optional;
 public final class DecentMaterial {
 
     private static final Map<String, String> MATERIAL_ALIASES = new HashMap<>();
-    private static final ReflectMethod MATERIAL_IS_ITEM_METHOD;
 
     static {
         for (Material material : Material.values()) {
             MATERIAL_ALIASES.put(Common.removeSpacingChars(material.name()).toLowerCase(), material.name());
         }
+    }
 
-        if (Version.before(13)) {
-            MATERIAL_IS_ITEM_METHOD = new ReflectMethod(ReflectionUtil.getNMSClass("Item"), "getById", int.class);
-        } else {
-            MATERIAL_IS_ITEM_METHOD = new ReflectMethod(Material.class, "isItem");
+    /**
+     * Resolved on first use rather than in the static initializer, because it depends on the
+     * server version, which is only known once the platform has been detected. Initializing it
+     * eagerly would make merely touching this class before that point fail with an
+     * {@link ExceptionInInitializerError}, which cannot be recovered from.
+     */
+    private static final class IsItemMethodHolder {
+
+        private static final ReflectMethod METHOD = Version.before(13)
+                ? new ReflectMethod(ReflectionUtil.getNMSClass("Item"), "getById", int.class)
+                : new ReflectMethod(Material.class, "isItem");
+
+        private IsItemMethodHolder() {
         }
     }
 
@@ -43,9 +52,9 @@ public final class DecentMaterial {
     @SuppressWarnings("deprecation")
     public static boolean isItem(Material material) {
         if (Version.afterOrEqual(13)) {
-            return MATERIAL_IS_ITEM_METHOD.invoke(material);
+            return IsItemMethodHolder.METHOD.invoke(material);
         } else {
-            return MATERIAL_IS_ITEM_METHOD.invokeStatic(material.getId()) != null;
+            return IsItemMethodHolder.METHOD.invokeStatic(material.getId()) != null;
         }
     }
 

@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api;
 
+import eu.decentsoftware.holograms.platform.bukkit.BukkitPlatformBootstrap;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -42,12 +43,12 @@ public final class DecentHologramsAPI {
      * plugin when it is being enabled.
      */
     @ApiStatus.Internal
-    public static void onEnable() {
+    public static void onEnable(@NonNull BukkitPlatformBootstrap bootstrap) {
         if (implementation == null) {
             return;
         }
         enabled = true;
-        implementation.enable();
+        implementation.enable(bootstrap);
     }
 
     /**
@@ -92,7 +93,7 @@ public final class DecentHologramsAPI {
      * @see PluginEnableEvent
      */
     public static DecentHolograms get() {
-        if (implementation == null || !enabled) {
+        if (!isRunning()) {
             throw new IllegalStateException("DecentHolograms is not running (yet). Do you have DecentHolograms plugin installed?");
         }
         return implementation;
