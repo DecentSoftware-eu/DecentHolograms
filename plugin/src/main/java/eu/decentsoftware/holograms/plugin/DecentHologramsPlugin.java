@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
@@ -40,8 +41,9 @@ public class DecentHologramsPlugin extends JavaPlugin {
         DecentHologramsAPI.onEnable();
 
         DecentHolograms decentHolograms = DecentHologramsAPI.get();
-        decentHolograms.getFeatureManager().registerFeature(new DamageDisplayFeature());
-        decentHolograms.getFeatureManager().registerFeature(new HealingDisplayFeature());
+        HologramManager hologramManager = decentHolograms.getHologramManager();
+        decentHolograms.getFeatureManager().registerFeature(new DamageDisplayFeature(this, hologramManager));
+        decentHolograms.getFeatureManager().registerFeature(new HealingDisplayFeature(this, hologramManager));
 
         CommandManager commandManager = decentHolograms.getCommandManager();
         DisplayModule displayModule = decentHolograms.getDisplayModule();
