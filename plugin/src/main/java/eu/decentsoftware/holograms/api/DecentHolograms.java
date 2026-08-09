@@ -72,6 +72,7 @@ public final class DecentHolograms {
         initializeNmsAdapter();
         Settings.reload(plugin);
         Lang.reload(plugin);
+        BungeeUtils.init(plugin);
 
         BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
         S.initialize(new BukkitPlatformScheduler(plugin), platformAdapter.getPlayerService());
@@ -98,8 +99,6 @@ public final class DecentHolograms {
 
         setupMetrics();
         checkForUpdates();
-
-        BungeeUtils.init();
     }
 
     void disable() {

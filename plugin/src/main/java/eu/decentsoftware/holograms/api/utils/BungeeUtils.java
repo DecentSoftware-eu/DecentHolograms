@@ -2,42 +2,51 @@ package eu.decentsoftware.holograms.api.utils;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.logging.Log;
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-@UtilityClass
-public class BungeeUtils {
+import java.util.Objects;
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
+public final class BungeeUtils {
+
     private static final String BUNGEE_CORD_CHANNEL = "BungeeCord";
-    private static boolean initialized = false;
+    private static volatile JavaPlugin plugin;
 
-    public static void init() {
-        if (initialized) return;
+    private BungeeUtils() {
+        throw new UnsupportedOperationException("Cannot instantiate utility class");
+    }
+
+    public static void init(JavaPlugin plugin) {
+        Objects.requireNonNull(plugin, "plugin cannot be null");
+        if (BungeeUtils.plugin != null) {
+            return;
+        }
+        BungeeUtils.plugin = plugin;
         Messenger messenger = Bukkit.getServer().getMessenger();
-        messenger.registerOutgoingPluginChannel(DECENT_HOLOGRAMS.getPlugin(), BUNGEE_CORD_CHANNEL);
-        initialized = true;
+        messenger.registerOutgoingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
     }
 
     public static void destroy() {
-        if (!initialized) return;
+        if (BungeeUtils.plugin == null) {
+            return;
+        }
         Messenger messenger = Bukkit.getServer().getMessenger();
-        messenger.unregisterOutgoingPluginChannel(DECENT_HOLOGRAMS.getPlugin(), BUNGEE_CORD_CHANNEL);
-        initialized = false;
+        messenger.unregisterOutgoingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
+        BungeeUtils.plugin = null;
     }
 
     public static void connect(Player player, String server) {
-        if (!initialized) init();
+        if (BungeeUtils.plugin == null) {
+            throw new IllegalStateException("BungeeUtils is not initialized");
+        }
         try {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
             out.writeUTF(server);
-            player.sendPluginMessage(DECENT_HOLOGRAMS.getPlugin(), BUNGEE_CORD_CHANNEL, out.toByteArray());
+            player.sendPluginMessage(plugin, BUNGEE_CORD_CHANNEL, out.toByteArray());
         } catch (Exception e) {
             Log.warn("Failed to connect player %s to server %s.", e, player.getName(), server);
         }
