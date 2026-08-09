@@ -2,8 +2,6 @@ package eu.decentsoftware.holograms.api.commands;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.utils.Common;
 import org.apache.commons.lang.Validate;
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 
 public abstract class DecentCommand extends Command implements CommandBase {
 
-	protected static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
 	protected final Map<String, CommandBase> subCommands = new LinkedHashMap<>();
 	protected final CommandInfo info;
 

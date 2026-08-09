@@ -2,14 +2,17 @@ package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.Permissions;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
@@ -32,69 +35,71 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @CommandInfo(
-		aliases = {"holograms", "hologram", "dh", "holo"},
-		permissions = {Permissions.DEFAULT, Permissions.COMMAND_DECENT_HOLOGRAMS},
-		usage = "/dh <args>",
-		description = "The main DecentHolograms Command."
+        aliases = {"holograms", "hologram", "dh", "holo"},
+        permissions = {Permissions.DEFAULT, Permissions.COMMAND_DECENT_HOLOGRAMS},
+        usage = "/dh <args>",
+        description = "The main DecentHolograms Command."
 )
 public class HologramsCommand extends DecentCommand {
 
     private final JavaPlugin plugin;
 
-	public HologramsCommand(DisplaysCommand displaysCommand, JavaPlugin plugin) {
-		super("decentholograms");
-        this.plugin = plugin;
+    public HologramsCommand(DisplaysCommand displaysCommand, DecentHolograms decentHolograms) {
+        super("decentholograms");
+        this.plugin = decentHolograms.getPlugin();
 
+        CommandManager commandManager = decentHolograms.getCommandManager();
         addSubCommand(new ProfilerCommand(DecentProfiler.getInstance()));
-		addSubCommand(new HelpSubCommand());
-		addSubCommand(new ReloadSubCommand());
-		addSubCommand(new ListSubCommand());
-		addSubCommand(new HologramSubCommand());
+        addSubCommand(new HelpSubCommand(commandManager));
+        addSubCommand(new ReloadSubCommand(decentHolograms));
+        HologramManager hologramManager = decentHolograms.getHologramManager();
+        addSubCommand(new ListSubCommand(hologramManager));
+        addSubCommand(new HologramSubCommand(hologramManager, commandManager));
         if (displaysCommand != null) {
             addSubCommand(displaysCommand);
         }
-		addSubCommand(new LineSubCommand());
-		addSubCommand(new FeatureSubCommand());
-		addSubCommand(new PageSubCommand());
-		addSubCommand(new ConvertSubCommand());
+        addSubCommand(new LineSubCommand(hologramManager, commandManager));
+        addSubCommand(new FeatureSubCommand(decentHolograms.getFeatureManager(), commandManager));
+        addSubCommand(new PageSubCommand(hologramManager, commandManager));
+        addSubCommand(new ConvertSubCommand());
         addSubCommand(new VersionSubCommand(plugin));
 
         // Shortcuts
-        addSubCommand(new HologramSubCommand.HologramCreateSub());
-        addSubCommand(new HologramSubCommand.HologramDeleteSub());
-        addSubCommand(new HologramSubCommand.HologramCloneSub());
+        addSubCommand(new HologramSubCommand.HologramCreateSub(hologramManager));
+        addSubCommand(new HologramSubCommand.HologramDeleteSub(hologramManager));
+        addSubCommand(new HologramSubCommand.HologramCloneSub(hologramManager));
         addSubCommand(new HologramSubCommand.HologramEnableSub());
         addSubCommand(new HologramSubCommand.HologramDisableSub());
-        addSubCommand(new HologramSubCommand.HologramAlignSub());
+        addSubCommand(new HologramSubCommand.HologramAlignSub(hologramManager));
         addSubCommand(new HologramSubCommand.HologramCenterSub());
         addSubCommand(new HologramSubCommand.HologramInfoSub());
-        addSubCommand(new HologramSubCommand.HologramNearSub());
+        addSubCommand(new HologramSubCommand.HologramNearSub(hologramManager));
         addSubCommand(new HologramSubCommand.HologramTeleportSub());
-        addSubCommand(new HologramSubCommand.HologramMoveSub());
+        addSubCommand(new HologramSubCommand.HologramMoveSub(hologramManager));
         addSubCommand(new HologramSubCommand.HologramMovehereSub());
-	}
+    }
 
-	@Override
-	public CommandHandler getCommandHandler() {
-		return (sender, args) -> {
-			if (sender.hasPermission(Permissions.ADMIN)) {
-				if (args.length == 0) {
-					Lang.USE_HELP.send(sender);
-					return true;
-				}
-				Lang.UNKNOWN_SUB_COMMAND.send(sender);
-				Lang.USE_HELP.send(sender);
-			} else {
+    @Override
+    public CommandHandler getCommandHandler() {
+        return (sender, args) -> {
+            if (sender.hasPermission(Permissions.ADMIN)) {
+                if (args.length == 0) {
+                    Lang.USE_HELP.send(sender);
+                    return true;
+                }
+                Lang.UNKNOWN_SUB_COMMAND.send(sender);
+                Lang.USE_HELP.send(sender);
+            } else {
                 Lang.sendVersionMessage(sender, plugin.getDescription().getVersion());
             }
-			return true;
-		};
-	}
+            return true;
+        };
+    }
 
-	@Override
-	public TabCompleteHandler getTabCompleteHandler() {
-		return null;
-	}
+    @Override
+    public TabCompleteHandler getTabCompleteHandler() {
+        return null;
+    }
 
     /*
      *  SubCommands
@@ -136,8 +141,11 @@ public class HologramsCommand extends DecentCommand {
     )
     public static class ReloadSubCommand extends DecentCommand {
 
-        public ReloadSubCommand() {
+        private final DecentHolograms decentHolograms;
+
+        public ReloadSubCommand(DecentHolograms decentHolograms) {
             super("reload");
+            this.decentHolograms = decentHolograms;
         }
 
         @Override
@@ -145,7 +153,7 @@ public class HologramsCommand extends DecentCommand {
             return (sender, args) -> {
                 S.async(() -> {
                     long start = System.currentTimeMillis();
-                    PLUGIN.reload();
+                    decentHolograms.reload();
                     long end = System.currentTimeMillis();
                     Lang.RELOADED.send(sender, end - start);
                 });
@@ -168,14 +176,17 @@ public class HologramsCommand extends DecentCommand {
     )
     public static class ListSubCommand extends DecentCommand {
 
-        public ListSubCommand() {
+        private final HologramManager hologramManager;
+
+        public ListSubCommand(HologramManager hologramManager) {
             super("list");
+            this.hologramManager = hologramManager;
         }
 
         @Override
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
-                final List<Hologram> holograms = Lists.newArrayList(PLUGIN.getHologramManager().getHolograms());
+                final List<Hologram> holograms = Lists.newArrayList(hologramManager.getHolograms());
                 if (holograms.isEmpty()) {
                     Common.tell(sender, "%sThere are currently no holograms.", Common.PREFIX);
                     return true;
@@ -199,14 +210,14 @@ public class HologramsCommand extends DecentCommand {
                     return null;
                 }
 
-                int holograms = PLUGIN.getHologramManager().getHolograms().size();
+                int holograms = hologramManager.getHolograms().size();
                 if (holograms == 0) {
                     return null;
                 }
 
                 List<String> pages = new ArrayList<>();
                 int page = 0;
-                while(holograms > 0) {
+                while (holograms > 0) {
                     page++;
                     pages.add(String.valueOf(page));
                     holograms -= 15;
@@ -226,8 +237,11 @@ public class HologramsCommand extends DecentCommand {
     )
     public static class HelpSubCommand extends DecentCommand {
 
-        public HelpSubCommand() {
+        private final CommandManager commandManager;
+
+        public HelpSubCommand(CommandManager commandManager) {
             super("help");
+            this.commandManager = commandManager;
         }
 
         @Override
@@ -237,7 +251,7 @@ public class HologramsCommand extends DecentCommand {
                 Common.tell(sender, " &3&lDECENT HOLOGRAMS HELP");
                 Common.tell(sender, " All general commands.");
                 sender.sendMessage("");
-                CommandBase command = PLUGIN.getCommandManager().getMainCommand();
+                CommandBase command = commandManager.getMainCommand();
                 printHelpSubCommandsAndAliases(sender, command,
                         subCommand -> !subCommand.getClass().toString().contains("HologramSubCommand"));
                 return true;

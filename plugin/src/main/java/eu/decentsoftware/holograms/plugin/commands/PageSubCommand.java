@@ -9,10 +9,12 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
@@ -37,14 +39,14 @@ import java.util.stream.IntStream;
 )
 public class PageSubCommand extends DecentCommand {
 
-    public PageSubCommand() {
+    public PageSubCommand(HologramManager hologramManager, CommandManager commandManager) {
         super("pages");
 
-        addSubCommand(new PageHelpSub());
-        addSubCommand(new PageAddSub());
-        addSubCommand(new PageInsertSub());
+        addSubCommand(new PageHelpSub(commandManager));
+        addSubCommand(new PageAddSub(hologramManager));
+        addSubCommand(new PageInsertSub(hologramManager));
         addSubCommand(new PageRemoveSub());
-        addSubCommand(new PageSwapSub());
+        addSubCommand(new PageSwapSub(hologramManager));
         addSubCommand(new PageSwitchSub());
         addSubCommand(new PageAddActionSub());
         addSubCommand(new PageRemoveActionSub());
@@ -82,8 +84,11 @@ public class PageSubCommand extends DecentCommand {
     )
     static class PageHelpSub extends DecentCommand {
 
-        public PageHelpSub() {
+        private final CommandManager commandManager;
+
+        public PageHelpSub(CommandManager commandManager) {
             super("help");
+            this.commandManager = commandManager;
         }
 
         @Override
@@ -93,7 +98,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " &3&lHOLOGRAM PAGES HELP");
                 Common.tell(sender, " All page commands.");
                 sender.sendMessage("");
-                CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
+                CommandBase command = commandManager.getMainCommand().getSubCommand("pages");
                 printHelpSubCommandsAndAliases(sender, command);
                 return true;
             };
@@ -114,8 +119,11 @@ public class PageSubCommand extends DecentCommand {
     )
     static class PageAddSub extends DecentCommand {
 
-        public PageAddSub() {
+        private final HologramManager hologramManager;
+
+        public PageAddSub(HologramManager hologramManager) {
             super("add");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -142,12 +150,12 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 3 && (args[1].startsWith("#ICON:") || args[1].startsWith("#HEAD:") || args[1].startsWith("#SMALLHEAD:"))) {
                     return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
-                        .filter(DecentMaterial::isItem)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                            .filter(DecentMaterial::isItem)
+                            .map(Material::name)
+                            .collect(Collectors.toList()));
                 } else if (args.length == 3 && args[1].startsWith("#ENTITY:")) {
                     return TabCompleteHandler.getPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames());
                 }
@@ -164,8 +172,11 @@ public class PageSubCommand extends DecentCommand {
     )
     static class PageInsertSub extends DecentCommand {
 
-        public PageInsertSub() {
+        private final HologramManager hologramManager;
+
+        public PageInsertSub(HologramManager hologramManager) {
             super("insert");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -192,20 +203,20 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 2) {
-                    Hologram hologram = PLUGIN.getHologramManager().getHologram(args[0]);
+                    Hologram hologram = hologramManager.getHologram(args[0]);
                     if (hologram != null) {
                         return TabCompleteHandler.getPartialMatches(args[1], IntStream
-                            .rangeClosed(1, hologram.size())
-                            .boxed().map(String::valueOf)
-                            .collect(Collectors.toList()));
+                                .rangeClosed(1, hologram.size())
+                                .boxed().map(String::valueOf)
+                                .collect(Collectors.toList()));
                     }
                 } else if (args.length == 4 && (args[2].startsWith("#ICON:") || args[2].startsWith("#HEAD:") || args[2].startsWith("#SMALLHEAD:"))) {
                     return TabCompleteHandler.getPartialMatches(args[3], Arrays.stream(Material.values())
-                        .filter(DecentMaterial::isItem)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                            .filter(DecentMaterial::isItem)
+                            .map(Material::name)
+                            .collect(Collectors.toList()));
                 } else if (args.length == 4 && args[2].startsWith("#ENTITY:")) {
                     return TabCompleteHandler.getPartialMatches(args[3], DecentEntityType.getAllowedEntityTypeNames());
                 }
@@ -260,8 +271,11 @@ public class PageSubCommand extends DecentCommand {
     )
     static class PageSwapSub extends DecentCommand {
 
-        public PageSwapSub() {
+        private final HologramManager hologramManager;
+
+        public PageSwapSub(HologramManager hologramManager) {
             super("swap");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -288,9 +302,9 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 2 || args.length == 3) {
-                    Hologram hologram = PLUGIN.getHologramManager().getHologram(args[0]);
+                    Hologram hologram = hologramManager.getHologram(args[0]);
                     if (hologram != null) {
                         return TabCompleteHandler.getPartialMatches(args[1], IntStream
                                 .rangeClosed(1, hologram.size())
