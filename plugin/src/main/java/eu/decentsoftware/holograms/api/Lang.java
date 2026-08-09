@@ -47,6 +47,7 @@ public final class Lang {
     public static final Phrase HOLOGRAM_UPDATED = new Phrase("hologram.updated", "{prefix}Hologram has been updated!");
     public static final Phrase HOLOGRAM_RENAMED = new Phrase("hologram.renamed", "{prefix}Hologram has been renamed! &7(&b%1$s&7 -> &b%2$s&7)");
     public static final Phrase HOLOGRAM_TELEPORTED = new Phrase("hologram.teleported", "{prefix}Teleported!");
+    public static final Phrase HOLOGRAM_WORLD_DOES_NOT_EXIST = new Phrase("hologram.world_does_not_exist", "{prefix}&cWorld of hologram '%1$s' doesn't exist!");
     public static final Phrase HOLOGRAM_MOVED = new Phrase("hologram.moved", "{prefix}Hologram has been moved!");
     public static final Phrase HOLOGRAM_ALIGNED = new Phrase("hologram.aligned", "{prefix}Hologram has been aligned!");
     public static final Phrase HOLOGRAM_ALIGN_SELF = new Phrase("hologram.align_self", "{prefix}Cannot align a Hologram to itself!");

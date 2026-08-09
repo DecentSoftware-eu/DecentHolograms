@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.display.command;
 
 import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -29,7 +30,6 @@ import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.plugin.Validator;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -63,14 +63,9 @@ class TeleportDisplayCommand extends DecentCommand {
                 return true;
             }
 
-            ((Player) sender).teleport(new Location(
-                    world,
-                    location.getX(),
-                    location.getY(),
-                    location.getZ(),
-                    location.getYaw(),
-                    location.getPitch()
-            ));
+            // Through the platform rather than Player#teleport: a cross-region move is
+            // unsupported on region-threaded servers and has to be completed asynchronously.
+            S.forPlayer((Player) sender, platformPlayer -> platformPlayer.teleport(location));
             Lang.DISPLAY_TELEPORTED.send(sender, display.getName());
             return true;
         };

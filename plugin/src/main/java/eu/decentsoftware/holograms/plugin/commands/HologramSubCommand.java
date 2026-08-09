@@ -17,6 +17,8 @@ import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
 import eu.decentsoftware.holograms.api.utils.items.DecentMaterial;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
@@ -1140,7 +1142,24 @@ public class HologramSubCommand extends DecentCommand {
             return (sender, args) -> {
                 Hologram hologram = Validator.getHologram(args[0], Lang.HOLOGRAM_DOES_NOT_EXIST.getValue());
                 Player player = Validator.getPlayer(sender);
-                player.teleport(hologram.getLocation());
+
+                Location location = hologram.getLocation();
+                if (location.getWorld() == null) {
+                    Lang.HOLOGRAM_WORLD_DOES_NOT_EXIST.send(sender, hologram.getName());
+                    return true;
+                }
+
+                DecentLocation target = new DecentLocation(
+                        location.getWorld().getName(),
+                        location.getX(),
+                        location.getY(),
+                        location.getZ(),
+                        location.getYaw(),
+                        location.getPitch()
+                );
+                // Through the platform rather than Player#teleport: a cross-region move is
+                // unsupported on region-threaded servers and has to be completed asynchronously.
+                S.forPlayer(player, platformPlayer -> platformPlayer.teleport(target));
 
                 Lang.HOLOGRAM_TELEPORTED.send(sender);
                 return true;

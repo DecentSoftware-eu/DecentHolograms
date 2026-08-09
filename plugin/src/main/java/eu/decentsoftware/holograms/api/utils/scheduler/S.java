@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Static entry point to the platform scheduler.
@@ -48,6 +49,19 @@ public final class S {
      */
     public static TaskHandle forPlayer(Player player, Runnable runnable) {
         return scheduler().runForPlayer(platformPlayer(player), runnable);
+    }
+
+    /**
+     * Runs a task that acts on the given player, handing the task the platform-agnostic view of
+     * them so it does not have to resolve the player a second time.
+     *
+     * @param player   The player the task acts on.
+     * @param consumer The task.
+     * @return A handle to the scheduled task.
+     */
+    public static TaskHandle forPlayer(Player player, Consumer<PlatformPlayer> consumer) {
+        PlatformPlayer platformPlayer = platformPlayer(player);
+        return scheduler().runForPlayer(platformPlayer, () -> consumer.accept(platformPlayer));
     }
 
     /**
