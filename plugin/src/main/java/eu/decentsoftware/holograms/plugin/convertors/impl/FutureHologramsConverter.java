@@ -1,15 +1,15 @@
 package eu.decentsoftware.holograms.plugin.convertors.impl;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,11 +17,17 @@ import java.util.List;
 
 public class FutureHologramsConverter implements IConvertor {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
+    private final JavaPlugin plugin;
+    private final HologramManager hologramManager;
+
+    public FutureHologramsConverter(JavaPlugin plugin, HologramManager hologramManager) {
+        this.plugin = plugin;
+        this.hologramManager = hologramManager;
+    }
 
     @Override
     public ConvertorResult convert() {
-        return convert(new File(PLUGIN.getDataFolder().getParent() + "/FutureHolograms/", "holograms.yml"));
+        return convert(new File(plugin.getDataFolder().getParent() + "/FutureHolograms/", "holograms.yml"));
     }
 
     @Override
@@ -32,7 +38,7 @@ public class FutureHologramsConverter implements IConvertor {
             return ConvertorResult.createFailed();
         }
 
-        FileConfig config = new FileConfig(PLUGIN.getPlugin(), file);
+        FileConfig config = new FileConfig(plugin, file);
         ConvertorResult convertorResult = new ConvertorResult();
         for (String name : config.getKeys(false)) {
             Location loc = LocationUtils.asLocation(config.getString(name + ".location").replace(",", ":"));
@@ -56,7 +62,7 @@ public class FutureHologramsConverter implements IConvertor {
                 pages.add(lines);
             }
 
-            ConverterCommon.createHologramPages(convertorResult, name, loc, pages, PLUGIN);
+            ConverterCommon.createHologramPages(convertorResult, name, loc, pages, hologramManager);
         }
 
         return convertorResult;
@@ -69,9 +75,9 @@ public class FutureHologramsConverter implements IConvertor {
 
     private boolean isNotHologram(String name) {
         return name.equals("default")
-               || name.equals("refresh")
-               || name.equals("cooldown")
-               || name.equals("refreshRate")
-               || name.equals("location");
+                || name.equals("refresh")
+                || name.equals("cooldown")
+                || name.equals("refreshRate")
+                || name.equals("location");
     }
 }

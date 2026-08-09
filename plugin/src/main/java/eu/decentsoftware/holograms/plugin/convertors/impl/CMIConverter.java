@@ -1,14 +1,14 @@
 package eu.decentsoftware.holograms.plugin.convertors.impl;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import org.bukkit.Location;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,14 +18,20 @@ import java.util.stream.Collectors;
 
 public class CMIConverter implements IConvertor {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
+    private final JavaPlugin plugin;
+    private final HologramManager hologramManager;
+
+    public CMIConverter(JavaPlugin plugin, HologramManager hologramManager) {
+        this.plugin = plugin;
+        this.hologramManager = hologramManager;
+    }
 
     @Override
     public ConvertorResult convert() {
-        File file = new File(PLUGIN.getDataFolder().getParent() + "/CMI/Saves/", "holograms.yml");
+        File file = new File(plugin.getDataFolder().getParent() + "/CMI/Saves/", "holograms.yml");
         if (ConverterCommon.notValidFile(file, "holograms.yml")) {
             // Probably old location...
-            file = new File(PLUGIN.getDataFolder().getParent() + "/CMI/", "holograms.yml");
+            file = new File(plugin.getDataFolder().getParent() + "/CMI/", "holograms.yml");
         }
 
         return convert(file);
@@ -39,7 +45,7 @@ public class CMIConverter implements IConvertor {
             return ConvertorResult.createFailed();
         }
 
-        FileConfig config = new FileConfig(PLUGIN.getPlugin(), file);
+        FileConfig config = new FileConfig(plugin, file);
         ConvertorResult convertorResult = new ConvertorResult();
         for (String name : config.getKeys(false)) {
             // Skip Auto-generated holograms to change pages.
@@ -58,7 +64,7 @@ public class CMIConverter implements IConvertor {
 
             List<List<String>> pages = createPages(config.getStringList(name + ".Lines"));
 
-            ConverterCommon.createHologramPages(convertorResult, name, loc, pages, PLUGIN);
+            ConverterCommon.createHologramPages(convertorResult, name, loc, pages, hologramManager);
         }
         return convertorResult;
     }

@@ -1,15 +1,15 @@
 package eu.decentsoftware.holograms.plugin.convertors.impl;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.convertor.IConvertor;
-import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.plugin.convertors.ConverterCommon;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.List;
@@ -17,11 +17,17 @@ import java.util.stream.Collectors;
 
 public class HologramsConvertor implements IConvertor {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.get();
+    private final JavaPlugin plugin;
+    private final HologramManager hologramManager;
+
+    public HologramsConvertor(JavaPlugin plugin, HologramManager hologramManager) {
+        this.plugin = plugin;
+        this.hologramManager = hologramManager;
+    }
 
     @Override
     public ConvertorResult convert() {
-        return convert(new File(PLUGIN.getDataFolder().getParent() + "/Holograms/", "holograms.yml"));
+        return convert(new File(plugin.getDataFolder().getParent() + "/Holograms/", "holograms.yml"));
     }
 
     @Override
@@ -32,7 +38,7 @@ public class HologramsConvertor implements IConvertor {
             return ConvertorResult.createFailed();
         }
 
-        FileConfig config = new FileConfig(PLUGIN.getPlugin(), file);
+        FileConfig config = new FileConfig(plugin, file);
         ConvertorResult convertorResult = new ConvertorResult();
 
         ConfigurationSection hologramsSection = config.getConfigurationSection("holograms");
@@ -46,7 +52,7 @@ public class HologramsConvertor implements IConvertor {
                 }
 
                 List<String> lines = prepareLines(hologramsSection.getStringList(id + ".lines"));
-                ConverterCommon.createHologram(convertorResult, id, location, lines, PLUGIN);
+                ConverterCommon.createHologram(convertorResult, id, location, lines, hologramManager);
             }
         }
         return convertorResult;

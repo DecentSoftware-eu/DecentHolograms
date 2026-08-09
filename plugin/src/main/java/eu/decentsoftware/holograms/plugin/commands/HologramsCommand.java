@@ -18,6 +18,7 @@ import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.plugin.Validator;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorFactory;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorResult;
 import eu.decentsoftware.holograms.plugin.convertors.ConvertorType;
 import eu.decentsoftware.holograms.profiler.DecentProfiler;
@@ -44,7 +45,7 @@ public class HologramsCommand extends DecentCommand {
 
     private final JavaPlugin plugin;
 
-    public HologramsCommand(DisplaysCommand displaysCommand, DecentHolograms decentHolograms) {
+    public HologramsCommand(DisplaysCommand displaysCommand, DecentHolograms decentHolograms, ConvertorFactory convertorFactory) {
         super("decentholograms");
         this.plugin = decentHolograms.getPlugin();
 
@@ -61,7 +62,7 @@ public class HologramsCommand extends DecentCommand {
         addSubCommand(new LineSubCommand(hologramManager, commandManager));
         addSubCommand(new FeatureSubCommand(decentHolograms.getFeatureManager(), commandManager));
         addSubCommand(new PageSubCommand(hologramManager, commandManager));
-        addSubCommand(new ConvertSubCommand());
+        addSubCommand(new ConvertSubCommand(convertorFactory));
         addSubCommand(new VersionSubCommand(plugin));
 
         // Shortcuts
@@ -273,8 +274,11 @@ public class HologramsCommand extends DecentCommand {
     )
     public static class ConvertSubCommand extends DecentCommand {
 
-        public ConvertSubCommand() {
+        private final ConvertorFactory convertorFactory;
+
+        public ConvertSubCommand(ConvertorFactory convertorFactory) {
             super("convert");
+            this.convertorFactory = convertorFactory;
         }
 
         @Override
@@ -288,7 +292,7 @@ public class HologramsCommand extends DecentCommand {
                 }
 
                 long startTime = System.currentTimeMillis();
-                IConvertor convertor = convertorType.getConvertor();
+                IConvertor convertor = convertorFactory.getConvertor(convertorType);
                 if (convertor == null) {
                     Common.tell(sender, "%s&cCannot convert Holograms! Unknown plugin '%s' provided", Common.PREFIX, args[0]);
                     return true;

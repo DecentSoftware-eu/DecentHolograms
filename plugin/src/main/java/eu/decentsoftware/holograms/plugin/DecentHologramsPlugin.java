@@ -10,6 +10,7 @@ import eu.decentsoftware.holograms.display.DisplayModule;
 import eu.decentsoftware.holograms.display.command.DisplaysCommand;
 import eu.decentsoftware.holograms.hook.NbtApiHook;
 import eu.decentsoftware.holograms.plugin.commands.HologramsCommand;
+import eu.decentsoftware.holograms.plugin.convertors.ConvertorFactory;
 import eu.decentsoftware.holograms.plugin.features.DamageDisplayFeature;
 import eu.decentsoftware.holograms.plugin.features.HealingDisplayFeature;
 import org.bukkit.Bukkit;
@@ -48,7 +49,8 @@ public class DecentHologramsPlugin extends JavaPlugin {
         CommandManager commandManager = decentHolograms.getCommandManager();
         DisplayModule displayModule = decentHolograms.getDisplayModule();
         DisplaysCommand displaysCommand = displayModule == null ? null : displayModule.getDisplaysCommand();
-        DecentCommand mainCommand = new HologramsCommand(displaysCommand, decentHolograms);
+        ConvertorFactory convertorFactory = new ConvertorFactory(this, hologramManager);
+        DecentCommand mainCommand = new HologramsCommand(displaysCommand, decentHolograms, convertorFactory);
         commandManager.setMainCommand(mainCommand);
         commandManager.registerCommand(mainCommand);
 
