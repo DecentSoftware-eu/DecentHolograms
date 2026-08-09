@@ -81,7 +81,7 @@ public final class DecentHolograms {
         this.integrationAvailabilityService.initialize();
         this.ticker = new Ticker();
         this.hologramManager = new HologramManager(this);
-        this.commandManager = new CommandManager();
+        this.commandManager = new CommandManager(plugin.getServer());
         this.featureManager = new FeatureManager();
         this.animationManager = new AnimationManager(this);
         DecentHologramsNmsPacketListener nmsPacketListener = new DecentHologramsNmsPacketListener(hologramManager);
