@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.profiler.command.ProfilerCommand;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,8 +39,11 @@ import java.util.stream.Collectors;
 )
 public class HologramsCommand extends DecentCommand {
 
-	public HologramsCommand(DisplaysCommand displaysCommand) {
+    private final JavaPlugin plugin;
+
+	public HologramsCommand(DisplaysCommand displaysCommand, JavaPlugin plugin) {
 		super("decentholograms");
+        this.plugin = plugin;
 
         addSubCommand(new ProfilerCommand(DecentProfiler.getInstance()));
 		addSubCommand(new HelpSubCommand());
@@ -53,7 +57,7 @@ public class HologramsCommand extends DecentCommand {
 		addSubCommand(new FeatureSubCommand());
 		addSubCommand(new PageSubCommand());
 		addSubCommand(new ConvertSubCommand());
-        addSubCommand(new VersionSubCommand());
+        addSubCommand(new VersionSubCommand(plugin));
 
         // Shortcuts
         addSubCommand(new HologramSubCommand.HologramCreateSub());
@@ -81,7 +85,7 @@ public class HologramsCommand extends DecentCommand {
 				Lang.UNKNOWN_SUB_COMMAND.send(sender);
 				Lang.USE_HELP.send(sender);
 			} else {
-                Lang.sendVersionMessage(sender);
+                Lang.sendVersionMessage(sender, plugin.getDescription().getVersion());
             }
 			return true;
 		};
@@ -104,14 +108,17 @@ public class HologramsCommand extends DecentCommand {
     )
     public static class VersionSubCommand extends DecentCommand {
 
-        public VersionSubCommand() {
+        private final JavaPlugin plugin;
+
+        public VersionSubCommand(JavaPlugin plugin) {
             super("version");
+            this.plugin = plugin;
         }
 
         @Override
         public CommandHandler getCommandHandler() {
             return (sender, args) -> {
-                Lang.sendVersionMessage(sender);
+                Lang.sendVersionMessage(sender, plugin.getDescription().getVersion());
                 return true;
             };
         }

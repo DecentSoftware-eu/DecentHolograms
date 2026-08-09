@@ -71,7 +71,7 @@ public final class DecentHolograms {
         Log.setLogger(plugin.getLogger());
         initializeNmsAdapter();
         Settings.reload();
-        Lang.reload();
+        Lang.reload(plugin);
 
         BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(plugin, nmsAdapter.getDisplayRendererFactory());
         S.initialize(new BukkitPlatformScheduler(plugin), platformAdapter.getPlayerService());
@@ -127,7 +127,7 @@ public final class DecentHolograms {
      */
     public void reload() {
         Settings.reload();
-        Lang.reload();
+        Lang.reload(plugin);
 
         this.animationManager.reload();
         this.hologramManager.reload();
