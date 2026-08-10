@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.skin.SkinSource;
 import eu.decentsoftware.holograms.skin.SkinSourceException;
+import eu.decentsoftware.holograms.url.HttpStatusException;
 import eu.decentsoftware.holograms.url.UrlReader;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Implementation of SkinSource that fetches skin textures from Mojang's session server.
@@ -49,11 +51,22 @@ import java.util.Optional;
 public class MojangSkinSource implements SkinSource {
 
     private static final Gson gson = new Gson();
+    /**
+     * Mojang usernames are alphanumerics and underscores, at most 16 characters. Anything else is
+     * rejected by the API, so there is nothing to be gained by asking.
+     */
+    private static final Pattern VALID_USERNAME = Pattern.compile("^[A-Za-z0-9_]{1,16}$");
 
     @NotNull
     @Override
     public Optional<String> fetchSkinTextureByPlayerName(@NotNull String playerName) {
         Objects.requireNonNull(playerName, "playerName cannot be null");
+
+        if (!VALID_USERNAME.matcher(playerName).matches()) {
+            Log.warn("Cannot fetch skin texture for an invalid player name: '%s'. "
+                    + "If this looks like a placeholder, the plugin providing it may be missing.", playerName);
+            return Optional.empty();
+        }
 
         Optional<String> uniqueId = fetchUniqueIdByPlayerName(playerName);
         if (!uniqueId.isPresent()) {
@@ -69,6 +82,13 @@ public class MojangSkinSource implements SkinSource {
         } catch (FileNotFoundException e) {
             // The profile does not exist, even though the name lookup resolved. Nothing to fetch.
             return Optional.empty();
+        } catch (HttpStatusException e) {
+            if (e.isPermanentRejection()) {
+                Log.warn("Cannot fetch skin texture for player %s: %s", playerName, e.getMessage());
+                return Optional.empty();
+            }
+            Log.warn("Failed to fetch skin texture for player %s.", e, playerName);
+            throw new SkinSourceException("Failed to fetch skin texture for player " + playerName + ".");
         } catch (IOException e) {
             Log.warn("Failed to fetch skin texture for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch skin texture for player " + playerName + ".");
@@ -88,6 +108,13 @@ public class MojangSkinSource implements SkinSource {
         } catch (FileNotFoundException e) {
             // No such player.
             return Optional.empty();
+        } catch (HttpStatusException e) {
+            if (e.isPermanentRejection()) {
+                Log.warn("Cannot fetch unique ID for player %s: %s", playerName, e.getMessage());
+                return Optional.empty();
+            }
+            Log.warn("Failed to fetch unique ID for player %s.", e, playerName);
+            throw new SkinSourceException("Failed to fetch unique ID for player " + playerName + ".");
         } catch (IOException e) {
             Log.warn("Failed to fetch unique ID for player %s.", e, playerName);
             throw new SkinSourceException("Failed to fetch unique ID for player " + playerName + ".");

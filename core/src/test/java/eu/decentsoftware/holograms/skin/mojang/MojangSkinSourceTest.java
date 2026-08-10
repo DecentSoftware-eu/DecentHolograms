@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.skin.mojang;
 
 import eu.decentsoftware.holograms.skin.SkinSourceException;
+import eu.decentsoftware.holograms.url.HttpStatusException;
 import eu.decentsoftware.holograms.url.UrlReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -252,6 +253,51 @@ class MojangSkinSourceTest {
 
             // A missing or blank textures value means no skin, not a broken lookup.
             assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "%player_name%",       // unresolved PlaceholderAPI placeholder
+            "{player}",            // unresolved internal placeholder
+            "name with spaces",
+            "toolongusernameforminecraft",
+            "",
+    })
+    void testFetchSkinTextureByPlayerName_impossibleName(String playerName) {
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            // No name of this shape can exist, so Mojang answers 400. Asking anyway costs a round
+            // trip on every hologram update, which is what this avoids.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
+
+            urlReaderMock.verifyNoInteractions();
+        }
+    }
+
+    @Test
+    void testFetchSkinTextureByPlayerName_rejectedRequestIsAnAnswer() {
+        String playerName = "d0by";
+
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            urlReaderMock.when(() -> UrlReader.readString(any(URL.class)))
+                    .thenThrow(new HttpStatusException(400, "Server returned HTTP 400"));
+
+            // Empty rather than thrown, so CachingSkinSource remembers it instead of retrying
+            // every tick.
+            assertFalse(skinSource.fetchSkinTextureByPlayerName(playerName).isPresent());
+        }
+    }
+
+    @Test
+    void testFetchSkinTextureByPlayerName_rateLimitIsNotAnAnswer() {
+        String playerName = "d0by";
+
+        try (MockedStatic<UrlReader> urlReaderMock = mockStatic(UrlReader.class)) {
+            urlReaderMock.when(() -> UrlReader.readString(any(URL.class)))
+                    .thenThrow(new HttpStatusException(429, "Server returned HTTP 429"));
+
+            // Caching a rate limit as "no skin" would blank the skin for an hour.
+            assertThrows(SkinSourceException.class, () -> skinSource.fetchSkinTextureByPlayerName(playerName));
         }
     }
 

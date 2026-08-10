@@ -19,12 +19,16 @@
 package eu.decentsoftware.holograms.url;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -36,6 +40,8 @@ import java.util.Objects;
  */
 public class UrlReader {
 
+    private static final int MAX_ERROR_BODY_LENGTH = 256;
+
     private UrlReader() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated.");
     }
@@ -45,6 +51,7 @@ public class UrlReader {
      *
      * @param url The URL to read from.
      * @return The content of the URL as a String.
+     * @throws HttpStatusException  If the server responded with a failing status.
      * @throws IOException          If an I/O error occurs while reading from the URL.
      * @throws NullPointerException If the provided URL is null.
      * @since 2.9.6
@@ -52,9 +59,26 @@ public class UrlReader {
     public static String readString(@NotNull URL url) throws IOException {
         Objects.requireNonNull(url, "url cannot be null");
 
-        try (InputStream input = url.openStream();
-             InputStreamReader inputStreamReader = new InputStreamReader(input);
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+        URLConnection connection = url.openConnection();
+        if (!(connection instanceof HttpURLConnection)) {
+            try (InputStream input = connection.getInputStream()) {
+                return read(input);
+            }
+        }
+
+        HttpURLConnection httpConnection = (HttpURLConnection) connection;
+        int status = httpConnection.getResponseCode();
+        if (status < HttpURLConnection.HTTP_OK || status > 299) {
+            throw new HttpStatusException(status, describe(url, status, httpConnection.getErrorStream()));
+        }
+        try (InputStream input = httpConnection.getInputStream()) {
+            return read(input);
+        }
+    }
+
+    private static String read(InputStream input) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
             StringBuilder result = new StringBuilder();
             int character;
             while ((character = bufferedReader.read()) != -1) {
@@ -62,5 +86,26 @@ public class UrlReader {
             }
             return result.toString();
         }
+    }
+
+    private static String describe(URL url, int status, @Nullable InputStream errorStream) {
+        StringBuilder message = new StringBuilder("Server returned HTTP ")
+                .append(status)
+                .append(" for ")
+                .append(url);
+        if (errorStream == null) {
+            return message.toString();
+        }
+        try {
+            String body = read(errorStream).trim();
+            if (!body.isEmpty()) {
+                message.append(": ").append(body.length() > MAX_ERROR_BODY_LENGTH
+                        ? body.substring(0, MAX_ERROR_BODY_LENGTH) + "..."
+                        : body);
+            }
+        } catch (IOException ignored) {
+            // The status is the useful part; a body that cannot be read adds nothing.
+        }
+        return message.toString();
     }
 }
