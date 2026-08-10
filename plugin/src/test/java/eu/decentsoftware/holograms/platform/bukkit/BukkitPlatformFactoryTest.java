@@ -22,12 +22,18 @@ import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.server.MinecraftVersion;
 import eu.decentsoftware.holograms.platform.api.server.ServerPlatform;
 import eu.decentsoftware.holograms.platform.api.server.ServerPlatformType;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
+import eu.decentsoftware.holograms.platform.bukkit.player.FoliaPlayer;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.FoliaPlatformScheduler;
 import eu.decentsoftware.holograms.platform.bukkit.server.BukkitServerPlatformService;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,17 +42,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -112,6 +124,36 @@ class BukkitPlatformFactoryTest {
         }
 
         @Test
+        void buildsThePlainBukkitPlatformOffFolia() {
+            BukkitPlatformBootstrap bootstrap = factory.create(plugin);
+
+            assertInstanceOf(BukkitPlatformScheduler.class, bootstrap.getPlatformAdapter().getScheduler());
+            Player bukkitPlayer = mock(Player.class);
+            when(bukkitPlayer.getUniqueId()).thenReturn(UUID.randomUUID());
+
+            PlatformPlayer resolved = bootstrap.getPlatformAdapter().getPlayerService().getPlayer(bukkitPlayer);
+            assertInstanceOf(BukkitPlayer.class, resolved);
+            assertFalse(resolved instanceof FoliaPlayer, "a Paper server must not get the Folia player");
+        }
+
+        @Test
+        void buildsTheFoliaPlatformOnFolia() {
+            detects(ServerPlatformType.FOLIA, "26.1.2");
+
+            try (MockedConstruction<FoliaPlatformScheduler> ignored =
+                         mockConstruction(FoliaPlatformScheduler.class)) {
+                BukkitPlatformBootstrap bootstrap = factory.create(plugin);
+
+                assertInstanceOf(FoliaPlatformScheduler.class, bootstrap.getPlatformAdapter().getScheduler());
+
+                Player bukkitPlayer = mock(Player.class);
+                when(bukkitPlayer.getUniqueId()).thenReturn(UUID.randomUUID());
+                assertInstanceOf(FoliaPlayer.class,
+                        bootstrap.getPlatformAdapter().getPlayerService().getPlayer(bukkitPlayer));
+            }
+        }
+
+        @Test
         void recordsTheResolvedModuleForTheRemainingVersionChecks() {
             factory.create(plugin);
 
@@ -155,6 +197,21 @@ class BukkitPlatformFactoryTest {
 
             assertTrue(exception.getMessage().contains(Version.v1_20_R4.name()));
             assertSame(cause, exception.getCause());
+        }
+
+        @Test
+        void wrapsAFailureToAssembleThePlatform() {
+            // Detection claiming Folia on a server without the Folia API. Should be impossible,
+            // but if the probes are ever wrong it must surface as a readable message rather than
+            // an IllegalStateException escaping onEnable as a stack trace.
+            detects(ServerPlatformType.FOLIA, "1.21.9");
+            when(nmsAdapterFactory.createNmsAdapter(anyString())).thenReturn(nmsAdapter);
+
+            UnsupportedServerException exception =
+                    assertThrows(UnsupportedServerException.class, () -> factory.create(plugin));
+
+            assertTrue(exception.getMessage().contains("Failed to set up the platform"));
+            assertInstanceOf(IllegalStateException.class, exception.getCause());
         }
 
         @Test

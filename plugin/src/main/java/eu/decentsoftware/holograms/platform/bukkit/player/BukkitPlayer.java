@@ -18,16 +18,17 @@
 
 package eu.decentsoftware.holograms.platform.bukkit.player;
 
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
-import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import com.cryptomorin.xseries.XSound;
 import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -45,13 +46,15 @@ public class BukkitPlayer implements PlatformPlayer {
         return platformPlayer;
     }
 
+    @NotNull
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return platformPlayer.getName();
     }
 
+    @NotNull
     @Override
-    public @NotNull UUID getUniqueId() {
+    public UUID getUniqueId() {
         return platformPlayer.getUniqueId();
     }
 
@@ -71,15 +74,28 @@ public class BukkitPlayer implements PlatformPlayer {
     @NotNull
     @Override
     public CompletableFuture<Boolean> teleport(@NotNull DecentLocation location) {
+        Location target = toBukkitLocation(location);
+        if (target == null) {
+            return CompletableFuture.completedFuture(false);
+        }
+        return CompletableFuture.completedFuture(platformPlayer.teleport(target));
+    }
+
+    /**
+     * Resolves a location against the loaded worlds.
+     *
+     * @param location The location to resolve.
+     * @return The Bukkit location, or null if its world is not loaded. Already reported.
+     */
+    @Nullable
+    protected Location toBukkitLocation(@NotNull DecentLocation location) {
         Objects.requireNonNull(location, "location cannot be null");
         World world = Bukkit.getWorld(location.getWorldName());
         if (world == null) {
             Log.warn("Cannot teleport %s: world '%s' is not loaded.", getName(), location.getWorldName());
-            return CompletableFuture.completedFuture(false);
+            return null;
         }
-        Location bukkitLocation = new Location(world, location.getX(), location.getY(), location.getZ(),
-                location.getYaw(), location.getPitch());
-        return CompletableFuture.completedFuture(platformPlayer.teleport(bukkitLocation));
+        return new Location(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     @Override

@@ -35,12 +35,12 @@ import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerFactory;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
-import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
 import eu.decentsoftware.holograms.platform.bukkit.text.LegacyBukkitTextFormatter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.List;
 
 public class BukkitPlatformAdapter implements PlatformAdapter {
@@ -53,11 +53,12 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     private final List<PlaceholderProvider> placeholderProviders;
     private final BukkitSaveResourceService saveResourceService;
     private final LegacyBukkitTextFormatter legacyTextFormatter;
-    private final BukkitPlatformScheduler scheduler;
+    private final PlatformScheduler scheduler;
 
     public BukkitPlatformAdapter(JavaPlugin plugin,
                                  NmsDisplayRendererFactory rendererFactory,
-                                 BukkitPlayerFactory playerFactory) {
+                                 BukkitPlayerFactory playerFactory,
+                                 PlatformScheduler scheduler) {
         capabilities = new BukkitPlatformCapabilities();
         materialService = new BukkitMaterialService();
         playerService = new BukkitPlayerService(playerFactory);
@@ -68,7 +69,7 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         );
         saveResourceService = new BukkitSaveResourceService(plugin);
         legacyTextFormatter = new LegacyBukkitTextFormatter();
-        scheduler = new BukkitPlatformScheduler(plugin);
+        this.scheduler = Objects.requireNonNull(scheduler, "scheduler cannot be null");
     }
 
     @NotNull

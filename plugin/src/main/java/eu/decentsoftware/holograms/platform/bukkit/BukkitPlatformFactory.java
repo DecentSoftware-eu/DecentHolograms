@@ -23,8 +23,14 @@ import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.nms.NmsAdapterFactory;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
+import eu.decentsoftware.holograms.platform.api.scheduler.PlatformScheduler;
 import eu.decentsoftware.holograms.platform.api.server.ServerPlatform;
+import eu.decentsoftware.holograms.platform.api.server.ServerPlatformType;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerFactory;
+import eu.decentsoftware.holograms.platform.bukkit.player.FoliaPlayer;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.BukkitPlatformScheduler;
+import eu.decentsoftware.holograms.platform.bukkit.scheduler.FoliaPlatformScheduler;
 import eu.decentsoftware.holograms.platform.bukkit.server.BukkitServerPlatformService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -76,28 +82,61 @@ public final class BukkitPlatformFactory {
                 .orElseThrow(() -> new UnsupportedServerException(
                         "Could not identify this server. Version reported: " + Bukkit.getServer().getVersion()));
 
-        Optional<Version> nmsVersion = Version.resolve(serverPlatform);
-        if (!nmsVersion.isPresent()) {
+        Version nmsVersion = resolveNmsVersion(serverPlatform);
+        // Kept until the remaining version checks move onto PlatformCapabilities.
+        Version.setCurrent(nmsVersion);
+
+        NmsAdapter nmsAdapter = createNmsAdapter(nmsVersion, serverPlatform);
+        Log.info("Detected %s, using NMS module %s.", serverPlatform, nmsVersion.name());
+
+        BukkitPlatformAdapter platformAdapter = createAdapter(plugin, serverPlatform, nmsAdapter);
+        return new BukkitPlatformBootstrap(serverPlatform, nmsAdapter, platformAdapter);
+    }
+
+    private static Version resolveNmsVersion(ServerPlatform serverPlatform) {
+        Optional<Version> nmsVersionOptional = Version.resolve(serverPlatform);
+        if (!nmsVersionOptional.isPresent()) {
             throw new UnsupportedServerException("Unsupported server version: " + serverPlatform);
         }
+        return nmsVersionOptional.get();
+    }
 
-        // Kept until the remaining version checks move onto PlatformCapabilities.
-        Version.setCurrent(nmsVersion.get());
-
+    private NmsAdapter createNmsAdapter(Version nmsVersion, ServerPlatform serverPlatform) {
         NmsAdapter nmsAdapter;
         try {
-            nmsAdapter = nmsAdapterFactory.createNmsAdapter(nmsVersion.get().name());
+            nmsAdapter = nmsAdapterFactory.createNmsAdapter(nmsVersion.name());
         } catch (DecentHologramsNmsException e) {
-            throw new UnsupportedServerException("Failed to load NMS module " + nmsVersion.get().name()
+            throw new UnsupportedServerException("Failed to load NMS module " + nmsVersion.name()
                     + " for " + serverPlatform + ": " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new UnsupportedServerException("Unexpected error loading NMS module " + nmsVersion.get().name()
+            throw new UnsupportedServerException("Unexpected error loading NMS module " + nmsVersion.name()
                     + " for " + serverPlatform, e);
         }
-        Log.info("Detected %s, using NMS module %s.", serverPlatform, nmsVersion.get().name());
+        return nmsAdapter;
+    }
 
-        BukkitPlatformAdapter platformAdapter = new BukkitPlatformAdapter(
-                plugin, nmsAdapter.getDisplayRendererFactory(), BukkitPlayer::new);
-        return new BukkitPlatformBootstrap(serverPlatform, nmsAdapter, platformAdapter);
+    private static BukkitPlatformAdapter createAdapter(JavaPlugin plugin, ServerPlatform serverPlatform, NmsAdapter nmsAdapter) {
+        try {
+            boolean regionThreaded = serverPlatform.isA(ServerPlatformType.FOLIA);
+            return new BukkitPlatformAdapter(
+                    plugin,
+                    nmsAdapter.getDisplayRendererFactory(),
+                    getPlayerFactory(regionThreaded),
+                    getScheduler(plugin, regionThreaded)
+            );
+        } catch (Exception e) {
+            // Assembling the platform can fail if detection disagrees with what the server
+            // actually offers - a Folia probe matching without the Folia API, say. Reported the
+            // same way as an unsupported version, rather than escaping as a stack trace.
+            throw new UnsupportedServerException("Failed to set up the platform for " + serverPlatform, e);
+        }
+    }
+
+    private static BukkitPlayerFactory getPlayerFactory(boolean regionThreaded) {
+        return regionThreaded ? FoliaPlayer::new : BukkitPlayer::new;
+    }
+
+    private static PlatformScheduler getScheduler(JavaPlugin plugin, boolean regionThreaded) {
+        return regionThreaded ? new FoliaPlatformScheduler(plugin) : new BukkitPlatformScheduler(plugin);
     }
 }
