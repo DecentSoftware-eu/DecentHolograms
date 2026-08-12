@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.nms.api.display.NmsBlockDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRendererFactory;
 import eu.decentsoftware.holograms.nms.api.display.NmsItemDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.render.PreparedRender;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
@@ -31,6 +32,7 @@ import eu.decentsoftware.holograms.platform.bukkit.render.display.BukkitBlockDis
 import eu.decentsoftware.holograms.platform.bukkit.render.display.BukkitDisplayRenderService;
 import eu.decentsoftware.holograms.platform.bukkit.render.display.BukkitItemDisplayRenderService;
 import eu.decentsoftware.holograms.platform.bukkit.render.display.BukkitTextDisplayRenderService;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -52,7 +54,13 @@ public class BukkitRenderService implements PlatformRenderService {
     @Override
     public PreparedRender render(@NotNull RenderObjectHandle handle, @NotNull List<RenderIntent> intents) {
         BukkitDisplayRenderService<?> renderService = getRenderService(handle);
-        return player -> renderService.apply(((BukkitPlayer) player).getBukkitPlayer(), intents);
+        List<NmsPreparedRender> prepared = renderService.prepare(intents);
+        return player -> {
+            Player bukkitPlayer = ((BukkitPlayer) player).getBukkitPlayer();
+            for (NmsPreparedRender render : prepared) {
+                render.apply(bukkitPlayer);
+            }
+        };
     }
 
     public void unloadDisplay(String name) {

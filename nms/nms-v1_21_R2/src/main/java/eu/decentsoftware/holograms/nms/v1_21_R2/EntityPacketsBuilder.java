@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.nms.v1_21_R2;
 
 import com.mojang.datafixers.util.Pair;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
@@ -33,6 +34,15 @@ class EntityPacketsBuilder {
 
     private EntityPacketsBuilder() {
         this.packets = new ArrayList<>();
+    }
+
+    NmsPreparedRender build() {
+        List<Packet<?>> built = new ArrayList<>(packets);
+        return player -> {
+            for (Packet<?> packet : built) {
+                sendPacket(player, packet);
+            }
+        };
     }
 
     void sendTo(Player player) {

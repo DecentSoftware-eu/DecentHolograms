@@ -4,6 +4,9 @@ plugins {
 
 dependencies {
     implementation project(':platform-api')
+
+    compileOnly(libs.annotations)
+    annotationProcessor(libs.annotations)
 }
 
 if (project.path != ':nms:nms-common') {

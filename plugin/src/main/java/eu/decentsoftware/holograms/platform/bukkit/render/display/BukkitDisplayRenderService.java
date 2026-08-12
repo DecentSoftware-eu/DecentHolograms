@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.nms.api.display.NmsMoveDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.render.intent.DespawnDisplayRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.intent.MoveRenderIntent;
@@ -33,10 +34,10 @@ import eu.decentsoftware.holograms.platform.api.render.intent.UpdateDisplayConte
 import eu.decentsoftware.holograms.platform.api.render.intent.UpdateMetadataRenderIntent;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataValue;
 import eu.decentsoftware.holograms.shared.DecentPosition;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class BukkitDisplayRenderService<C> {
 
@@ -46,20 +47,28 @@ public abstract class BukkitDisplayRenderService<C> {
         this.renderer = renderer;
     }
 
-    public void apply(Player player, List<RenderIntent> intents) {
+    /**
+     * Works out what the given intents require, without sending anything.
+     *
+     * @param intents The intents to resolve, applied in order.
+     * @return One entry per intent that produced work, to be applied per player.
+     */
+    public List<NmsPreparedRender> prepare(List<RenderIntent> intents) {
+        List<NmsPreparedRender> prepared = new ArrayList<>(intents.size());
         for (RenderIntent intent : intents) {
             if (intent instanceof SpawnDisplayRenderIntent) {
-                handleSpawnIntent(player, (SpawnDisplayRenderIntent) intent);
+                prepared.add(handleSpawnIntent((SpawnDisplayRenderIntent) intent));
             } else if (intent instanceof UpdateDisplayContentRenderIntent) {
-                handleUpdateContentIntent(player, (UpdateDisplayContentRenderIntent) intent);
+                prepared.add(handleUpdateContentIntent((UpdateDisplayContentRenderIntent) intent));
             } else if (intent instanceof UpdateMetadataRenderIntent) {
-                handleUpdateMetadataIntent(player, (UpdateMetadataRenderIntent) intent);
+                handleUpdateMetadataIntent((UpdateMetadataRenderIntent) intent).ifPresent(prepared::add);
             } else if (intent instanceof MoveRenderIntent) {
-                handleMoveIntent(player, (MoveRenderIntent) intent);
+                prepared.add(handleMoveIntent((MoveRenderIntent) intent));
             } else if (intent instanceof DespawnDisplayRenderIntent) {
-                handleDespawnIntent(player);
+                prepared.add(renderer.despawn());
             }
         }
+        return prepared;
     }
 
     protected abstract NmsSpawnDisplayData<C> createNmsSpawnDisplayData(SpawnDisplayRenderIntent intent,
@@ -68,44 +77,36 @@ public abstract class BukkitDisplayRenderService<C> {
 
     protected abstract NmsUpdateDisplayContentData<C> createNmsUpdateDisplayContentData(UpdateDisplayContentRenderIntent intent);
 
-    private void handleSpawnIntent(Player player, SpawnDisplayRenderIntent intent) {
+    private NmsPreparedRender handleSpawnIntent(SpawnDisplayRenderIntent intent) {
         DecentPosition position = mapPosition(intent.getLocation());
         List<NmsDisplayMetadata<?>> metadata = mapMetadata(intent.getMetadataValues());
         NmsSpawnDisplayData<C> spawnDisplayData = createNmsSpawnDisplayData(intent, position, metadata);
-        renderer.spawn(player, spawnDisplayData);
+        return renderer.spawn(spawnDisplayData);
     }
 
-    private void handleUpdateContentIntent(Player player, UpdateDisplayContentRenderIntent intent) {
+    private NmsPreparedRender handleUpdateContentIntent(UpdateDisplayContentRenderIntent intent) {
         NmsUpdateDisplayContentData<C> updateDisplayData = createNmsUpdateDisplayContentData(intent);
-        renderer.updateContent(player, updateDisplayData);
+        return renderer.updateContent(updateDisplayData);
     }
 
-    private void handleUpdateMetadataIntent(Player player, UpdateMetadataRenderIntent intent) {
+    private Optional<NmsPreparedRender> handleUpdateMetadataIntent(UpdateMetadataRenderIntent intent) {
         List<MetadataValue<?>> metadataValues = intent.getMetadataValues();
         List<NmsDisplayMetadata<?>> metadataToUpdate = new ArrayList<>(metadataValues.size());
         for (MetadataValue<?> metadataValue : metadataValues) {
             NmsDisplayMetadata<?> metadatum = mapMetadatum(metadataValue);
             metadataToUpdate.add(metadatum);
         }
-        sendCollectedMetadata(player, metadataToUpdate);
-    }
-
-    private void sendCollectedMetadata(Player player, List<NmsDisplayMetadata<?>> metadataToUpdate) {
-        if (!metadataToUpdate.isEmpty()) {
-            NmsUpdateDisplayMetadataData metadataData = new NmsUpdateDisplayMetadataData(metadataToUpdate);
-            renderer.updateMetadata(player, metadataData);
+        if (metadataToUpdate.isEmpty()) {
+            return Optional.empty();
         }
+        return Optional.of(renderer.updateMetadata(new NmsUpdateDisplayMetadataData(metadataToUpdate)));
     }
 
-    private void handleMoveIntent(Player player, MoveRenderIntent intent) {
+    private NmsPreparedRender handleMoveIntent(MoveRenderIntent intent) {
         DecentPosition position = mapPosition(intent.getLocation());
 
         NmsMoveDisplayData moveDisplayData = new NmsMoveDisplayData(position);
-        renderer.move(player, moveDisplayData);
-    }
-
-    private void handleDespawnIntent(Player player) {
-        renderer.despawn(player);
+        return renderer.move(moveDisplayData);
     }
 
     private DecentPosition mapPosition(DecentLocation location) {

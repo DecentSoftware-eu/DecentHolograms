@@ -21,9 +21,10 @@ package eu.decentsoftware.holograms.nms.paper_v1_21_R7;
 import eu.decentsoftware.holograms.nms.api.display.NmsItemDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 class ItemDisplayRenderer extends AbstractDisplayRenderer<ItemStack> implements NmsItemDisplayRenderer {
 
@@ -31,25 +32,27 @@ class ItemDisplayRenderer extends AbstractDisplayRenderer<ItemStack> implements 
         super(entityId);
     }
 
+    @NotNull
     @Override
-    public void spawn(Player player, NmsSpawnDisplayData<ItemStack> data) {
+    public NmsPreparedRender spawn(@NotNull NmsSpawnDisplayData<ItemStack> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create();
         applyMetadata(data.getMetadata(), metadataBuilder);
         metadataBuilder.withItemDisplayItemStack(data.getContent());
 
-        EntityPacketsBuilder.create()
+        return EntityPacketsBuilder.create()
                 .withSpawnEntity(entityId, EntityType.ITEM_DISPLAY, data.getPosition())
                 .withEntityMetadata(entityId, metadataBuilder.toWatchableObjects())
-                .sendTo(player);
+                .build();
     }
 
+    @NotNull
     @Override
-    public void updateContent(Player player, NmsUpdateDisplayContentData<ItemStack> data) {
+    public NmsPreparedRender updateContent(@NotNull NmsUpdateDisplayContentData<ItemStack> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create()
                 .withItemDisplayItemStack(data.getContent());
 
-        EntityPacketsBuilder.create()
+        return EntityPacketsBuilder.create()
                 .withEntityMetadata(entityId, metadataBuilder.toWatchableObjects())
-                .sendTo(player);
+                .build();
     }
 }
