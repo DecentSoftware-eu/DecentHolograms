@@ -20,28 +20,32 @@ package eu.decentsoftware.holograms.display.command;
 
 import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.plugin.Validator;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @CommandInfo(
-        usage = "/dh d set-facing <name> <yaw> [pitch]",
-        description = "Set the facing direction of a display.",
-        permissions = {Permissions.COMMAND_DISPLAYS_FACING},
-        aliases = {"setfacing", "facing", "face"},
+        usage = "/dh d clearactions <display> <clickType>",
+        description = "Clear all click actions from a display.",
+        permissions = {Permissions.COMMAND_DISPLAYS_CLEAR_ACTIONS},
         minArgs = 2
 )
-class FacingDisplayCommand extends DecentCommand {
+class DisplayClearActionsCommand extends DecentCommand {
 
     private final DisplayService displayService;
 
-    FacingDisplayCommand(DisplayService displayService) {
-        super("set-facing");
+    DisplayClearActionsCommand(DisplayService displayService) {
+        super("clearactions");
         this.displayService = displayService;
     }
 
@@ -50,26 +54,20 @@ class FacingDisplayCommand extends DecentCommand {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
-
-            DecentLocation location = display.getLocation();
-            float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, Lang.DISPLAY_FACING_INVALID_YAW.getValue());
-            float pitch = args.length > 2
-                    ? Validator.getFloat(args[2], -90.0f, 90.0f, Lang.DISPLAY_FACING_INVALID_PITCH.getValue())
-                    : location.getPitch();
-            display.setLocation(new DecentLocation(
-                    location.getWorldName(),
-                    location.getX(),
-                    location.getY(),
-                    location.getZ(),
-                    yaw,
-                    pitch
-            ));
-            displayService.updateDisplay(display);
-            if (display.hasActions()) {
-                displayService.refreshClickableEntities(display);
+            ClickType clickType = ClickType.fromString(args[1]);
+            if (clickType == null) {
+                Lang.CLICK_TYPE_DOES_NOT_EXIST.send(sender, args[1]);
+                return true;
             }
+            List<Action> actions = display.getActions(clickType);
+            if (actions == null || actions.isEmpty()) {
+                Lang.ACTION_NO_ACTIONS.send(sender);
+                return true;
+            }
+            display.clearActions(clickType);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_FACING_SET.send(sender, display.getName());
+            displayService.refreshClickableEntities(display);
+            Lang.ACTION_CLEARED.send(sender);
             return true;
         };
     }
@@ -80,9 +78,9 @@ class FacingDisplayCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], "0", "45", "90", "135", "180", "-45", "-90", "-135");
-            } else if (args.length == 3) {
-                return TabCompleteHandler.getPartialMatches(args[2], "0", "45", "90", "-45", "-90");
+                return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(ClickType.values())
+                        .map(ClickType::name)
+                        .collect(Collectors.toList()));
             }
             return null;
         };
