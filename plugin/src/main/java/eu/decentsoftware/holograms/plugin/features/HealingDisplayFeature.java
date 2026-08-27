@@ -5,6 +5,8 @@ import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.event.TemporaryHealHologramSpawnEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -105,7 +107,13 @@ public class HealingDisplayFeature extends AbstractFeature implements Listener {
 
         Location location = LocationUtils.randomizeLocation(entity.getLocation().clone().add(0, 1 + heightOffset, 0));
         String text = appearance.replace("{heal}", FeatureCommons.formatNumber(heal));
-        hologramManager.spawnTemporaryHologramLine(location, text, duration);
+
+        // Propagate event to allow other plugins to modify or cancel the hologram spawn
+        TemporaryHealHologramSpawnEvent event = new TemporaryHealHologramSpawnEvent(livingEntity, text, heal, location);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( ! event.isCancelled()) {
+            hologramManager.spawnTemporaryHologramLine(event.getLocation(), event.getText(), duration);
+        }
     }
 
 }

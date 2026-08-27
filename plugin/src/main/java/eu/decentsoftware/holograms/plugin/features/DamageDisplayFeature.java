@@ -5,7 +5,9 @@ import eu.decentsoftware.holograms.api.features.AbstractFeature;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.event.TemporaryDamageHologramSpawnEvent;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -116,7 +118,13 @@ public class DamageDisplayFeature extends AbstractFeature implements Listener {
             currentAppearance = this.appearance;
         }
         String text = currentAppearance.replace("{damage}", FeatureCommons.formatNumber(damage));
-        hologramManager.spawnTemporaryHologramLine(location, text, duration);
+
+        // Propagate event to allow other plugins to modify or cancel the hologram spawn
+        TemporaryDamageHologramSpawnEvent event = new TemporaryDamageHologramSpawnEvent(entity, text, location, damage, damager);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( ! event.isCancelled()) {
+            hologramManager.spawnTemporaryHologramLine(event.getLocation(), event.getText(), duration);
+        }
     }
 
     /**
