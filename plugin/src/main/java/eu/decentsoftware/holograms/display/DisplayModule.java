@@ -105,6 +105,7 @@ import eu.decentsoftware.holograms.display.type.BlockDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 import eu.decentsoftware.holograms.display.type.ItemDisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.TextDisplayTypeDefinition;
+import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.platform.api.PlatformAdapter;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
@@ -134,13 +135,17 @@ public class DisplayModule {
     private final DisplayService displayService;
     private final DisplayUpdateScheduler displayUpdateScheduler;
     private final DisplayListener displayListener;
+    private final DisplayClickService displayClickService;
     private final DisplaysCommand displaysCommand;
     private final AttributeDefaultService attributeDefaultService;
     private final CachingTextFormatter textFormatter;
 
-    public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter) {
+    public DisplayModule(JavaPlugin plugin, AnimationManager animationManager, PlatformAdapter platformAdapter,
+                         DisplayEntityRegistry entityRegistry, NmsAdapter nmsAdapter) {
         this.plugin = plugin;
         DisplayVisibilityService visibilityService = new DisplayVisibilityService();
+        DisplayClickableService clickableService = new DisplayClickableService(
+                nmsAdapter.getHologramComponentFactory(), entityRegistry);
         DisplayRenderIntentMaterializer renderDiffService = new DisplayRenderIntentMaterializer();
         PresentedRenderStateManager renderStateManager = new PresentedRenderStateManager();
         DisplayPlaceholderService displayPlaceholderService = new DisplayPlaceholderService(platformAdapter);
@@ -155,7 +160,7 @@ public class DisplayModule {
         LogicalRenderStateManager logicalRenderStateManager = new LogicalRenderStateManager();
         PlatformPlayerService playerService = platformAdapter.getPlayerService();
         DisplayRenderCoordinator renderCoordinator = new DisplayRenderCoordinator(
-                visibilityService, playerService, stateService, renderService, logicalRenderStateManager);
+                visibilityService, playerService, stateService, renderService, logicalRenderStateManager, clickableService);
         AttributeValueTypeRegistry attributeValueTypeRegistry = createAttributeValueTypeRegistry(displayPlaceholderService);
         AttributeValueSerializer attributeValueSerializer = new AttributeValueSerializer(attributeValueTypeRegistry);
         YamlConfigurationLoaderFactory yamlConfigurationLoaderFactory = new YamlConfigurationLoaderFactory(createTypeSerializers(attributeValueSerializer));
@@ -164,8 +169,10 @@ public class DisplayModule {
         DisplayConfigMapper configMapper = new DisplayConfigMapper(attributeConfigMapper, platformAdapter.getMaterialService());
         DisplayPersistenceService persistenceService = new DisplayPersistenceService(configService, configMapper);
         DisplayCloneService displayCloneService = new DisplayCloneService();
-        this.displayService = new DisplayService(persistenceService, renderCoordinator, platformAdapter.getEventListener());
-        this.displayListener = new DisplayListener(displayService, playerService);
+        this.displayService = new DisplayService(persistenceService, renderCoordinator, platformAdapter.getEventListener(), clickableService);
+        this.displayClickService = new DisplayClickService(
+                displayService, entityRegistry, visibilityService, renderCoordinator, playerService);
+        this.displayListener = new DisplayListener(displayService, displayClickService, playerService);
         AttributeCommandHandlerRegistry commandHandlerRegistry = createCommandHandlerRegistry(displayPlaceholderService);
         AttributeDefaultRegistry attributeDefaultRegistry = new AttributeDefaultRegistry();
         AttributeDefaultRepository attributeDefaultRepository = new AttributeDefaultRepository(
@@ -268,6 +275,10 @@ public class DisplayModule {
 
     public DisplayService getDisplayService() {
         return displayService;
+    }
+
+    public DisplayClickService getDisplayClickService() {
+        return displayClickService;
     }
 
     public DisplaysCommand getDisplaysCommand() {

@@ -27,10 +27,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 class DisplayListener implements Listener {
 
     private final DisplayService service;
+    private final DisplayClickService clickService;
     private final PlatformPlayerService playerService;
 
-    DisplayListener(DisplayService service, PlatformPlayerService playerService) {
+    DisplayListener(DisplayService service, DisplayClickService clickService, PlatformPlayerService playerService) {
         this.service = service;
+        this.clickService = clickService;
         this.playerService = playerService;
     }
 
@@ -38,5 +40,6 @@ class DisplayListener implements Listener {
     void onPlayerQuit(PlayerQuitEvent event) {
         PlatformPlayer platformPlayer = playerService.getPlayer(event.getPlayer());
         service.hideDisplaysForPlayer(platformPlayer);
+        clickService.onQuit(event.getPlayer());
     }
 }

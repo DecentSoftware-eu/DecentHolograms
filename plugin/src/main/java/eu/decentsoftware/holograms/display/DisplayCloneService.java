@@ -18,10 +18,15 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,6 +53,7 @@ public class DisplayCloneService {
         }
         Map<AttributeKey<?>, DisplayAttribute<?>> clonedAttributes = cloneAttributes(display.getAttributesMap());
         clone.setAttributes(clonedAttributes);
+        clone.setActions(cloneActions(display.getActionsMap()));
         return clone;
     }
 
@@ -78,6 +84,7 @@ public class DisplayCloneService {
         settings.setEnabled(sourceSettings.isEnabled());
         settings.setDisplayRange(sourceSettings.getDisplayRange());
         settings.setUpdateInterval(sourceSettings.getUpdateInterval());
+        settings.setPermission(sourceSettings.getPermission());
         return settings;
     }
 
@@ -87,5 +94,13 @@ public class DisplayCloneService {
                         Map.Entry::getKey,
                         entry -> entry.getValue().copy()
                 ));
+    }
+
+    private Map<ClickType, List<Action>> cloneActions(Map<ClickType, List<Action>> actions) {
+        Map<ClickType, List<Action>> clonedActions = new EnumMap<>(ClickType.class);
+        for (Map.Entry<ClickType, List<Action>> entry : actions.entrySet()) {
+            clonedActions.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return clonedActions;
     }
 }
