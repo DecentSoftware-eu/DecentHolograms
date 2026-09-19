@@ -59,7 +59,7 @@ public enum Version {
     v1_21_R7(21, ServerPlatformType.BUKKIT, "1.21.11"),
     paper_v1_21_R7(21, ServerPlatformType.PAPER, "1.21.11"),
     v26_1(26, ServerPlatformType.BUKKIT, "26.1", "26.1.1", "26.1.2"),
-    v26_2(26, ServerPlatformType.BUKKIT, "26.2"),
+    v26_2(26, ServerPlatformType.BUKKIT, "26.2", "26.3"),
     ;
 
     /*
