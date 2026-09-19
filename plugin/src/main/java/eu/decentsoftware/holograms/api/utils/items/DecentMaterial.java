@@ -59,17 +59,36 @@ public final class DecentMaterial {
     }
 
     public static boolean isSkull(Material material) {
-        XMaterial xMaterial = XMaterial.matchXMaterial(material);
+        XMaterial xMaterial = matchXMaterial(material);
         // XMaterial also handles legacy skull materials: SKULL, SKULL_ITEM
         return xMaterial == XMaterial.PLAYER_HEAD || xMaterial == XMaterial.PLAYER_WALL_HEAD;
     }
 
     public static boolean isLeatherArmor(Material material) {
-        XMaterial xMaterial = XMaterial.matchXMaterial(material);
+        XMaterial xMaterial = matchXMaterial(material);
         return xMaterial == XMaterial.LEATHER_HELMET
                 || xMaterial == XMaterial.LEATHER_CHESTPLATE
                 || xMaterial == XMaterial.LEATHER_LEGGINGS
                 || xMaterial == XMaterial.LEATHER_BOOTS
                 || xMaterial == XMaterial.LEATHER_HORSE_ARMOR;
+    }
+
+    /**
+     * Match the given material to an XMaterial.
+     *
+     * @param material The material.
+     * @return The matching XMaterial, or null if XSeries does not know this material.
+     * @since 2.10.2
+     */
+    private static XMaterial matchXMaterial(Material material) {
+        try {
+            return XMaterial.matchXMaterial(material);
+        } catch (IllegalArgumentException e) {
+            // XSeries throws for unknown materials. This can happen when the bundled version of XSeries
+            // doesn't support the current server version. Since we only need to check for leather armor
+            // and player head materials here, we don't need those new materials anyway, so it's safe to
+            // return null in this case.
+            return null;
+        }
     }
 }

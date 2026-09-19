@@ -49,6 +49,15 @@ public final class SkullUtils {
 
     private static Function<Property, String> valueResolver;
 
+    /**
+     * Set when XSeries fails to handle profiles on the current server.
+     *
+     * <p>This can happen when the bundled XSeries version is outdated and incompatible with the current server.</p>
+     *
+     * @since 2.10.2
+     */
+    private static volatile boolean xSeriesProfilesBroken = false;
+
     static {
         try {
             if (ReflectionUtil.checkClassExists(RESOLVABLE_PROFILE_CLASS_PATH)) {
@@ -64,6 +73,17 @@ public final class SkullUtils {
     }
 
     /**
+     * Remember that XSeries cannot handle profiles here, and log once.
+     *
+     * @param throwable The exception or error that caused XSeries to fail.
+     * @since 2.10.2
+     */
+    private static void reportXSeriesProfilesBroken(Throwable throwable) {
+        xSeriesProfilesBroken = true;
+        Log.warn("XSeries cannot handle skull profiles on this server version, skulls will have no texture.", throwable);
+    }
+
+    /**
      * Get the Base64 texture of the given skull ItemStack.
      *
      * @param itemStack The ItemStack.
@@ -76,7 +96,14 @@ public final class SkullUtils {
         }
 
         if (Version.after(Version.v1_21_R5)) {
-            return XSkull.of(itemStack).getProfileValue();
+            if (!xSeriesProfilesBroken) {
+                try {
+                    return XSkull.of(itemStack).getProfileValue();
+                } catch (Throwable t) { // Catching Throwable to also catch NoClassDefFoundError
+                    reportXSeriesProfilesBroken(t);
+                }
+            }
+            return null;
         }
 
         Method propertyValueMethod;
@@ -156,7 +183,14 @@ public final class SkullUtils {
         }
 
         if (Version.after(Version.v1_21_R5)) {
-            XSkull.of(itemStack).profile(Profileable.detect(texture)).apply();
+            if (!xSeriesProfilesBroken) {
+                try {
+                    XSkull.of(itemStack).profile(Profileable.detect(texture)).apply();
+                    return;
+                } catch (Throwable t) { // Catching Throwable to also catch NoClassDefFoundError
+                    reportXSeriesProfilesBroken(t);
+                }
+            }
             return;
         }
 

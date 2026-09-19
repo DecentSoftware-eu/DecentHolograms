@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -86,13 +87,41 @@ public class BukkitMaterialService implements PlatformMaterialService {
         if (materialName.startsWith(MINECRAFT_NAMESPACE)) {
             return materialName;
         }
-        return XMaterial.matchXMaterial(materialName)
-                .map(this::toMojangNamespacedKey)
-                .orElse(null);
+        Optional<XMaterial> matched = XMaterial.matchXMaterial(materialName);
+        if (matched.isPresent()) {
+            return toMojangNamespacedKey(matched.get());
+        }
+
+        // XSeries does not know this name. It may still be a material this server has, if the
+        // server runs a Minecraft version newer than the bundled XSeries supports.
+        Material material = Material.matchMaterial(materialName);
+        return material == null ? null : toMojangNamespacedKey(material);
     }
 
     private String toMojangNamespacedKey(Material material) {
-        return toMojangNamespacedKey(XMaterial.matchXMaterial(material));
+        XMaterial xMaterial = matchXMaterial(material);
+        if (xMaterial != null) {
+            return toMojangNamespacedKey(xMaterial);
+        }
+        return MINECRAFT_NAMESPACE + material.name().toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * Match the given material to an XMaterial, if XSeries knows it.
+     *
+     * @param material The material.
+     * @return The matching XMaterial, or null if XSeries does not know this material.
+     * @since 2.10.2
+     */
+    private static XMaterial matchXMaterial(Material material) {
+        try {
+            return XMaterial.matchXMaterial(material);
+        } catch (IllegalArgumentException e) {
+            // XSeries throws for unknown materials. This can happen when the bundled version of XSeries
+            // doesn't support the current server version. Since we have a fallback for unknown materials,
+            // it's safe to return null in this case.
+            return null;
+        }
     }
 
     private String toMojangNamespacedKey(XMaterial xMaterial) {
