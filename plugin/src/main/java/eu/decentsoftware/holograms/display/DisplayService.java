@@ -117,6 +117,7 @@ public class DisplayService {
 
     public Collection<DisplayBase> getRegisteredDisplaysInRadius(DecentLocation location, double radius) {
         return displays.values().stream()
+                .filter(display -> display.getLocation().isSameWorld(location))
                 .filter(display -> display.getLocation().distanceSquared(location) <= radius * radius)
                 .collect(Collectors.toList());
     }
