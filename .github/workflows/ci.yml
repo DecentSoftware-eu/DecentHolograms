@@ -36,6 +36,29 @@ jobs:
       - name: Build and Run Unit Tests
         run: ./gradlew build
 
+      - name: Verify NMS interaction classes are packaged
+        shell: bash
+        run: |
+          JAR="$(find plugin/build/libs -maxdepth 1 -type f -name 'DecentHolograms-*.jar' ! -name '*-sources.jar' -print -quit)"
+          if [ -z "$JAR" ]; then
+            echo "No distributable DecentHolograms jar was produced."
+            exit 1
+          fi
+
+          REQUIRED_CLASSES=(
+            "eu/decentsoftware/holograms/nms/api/event/NmsEntityInteractAction.class"
+            "eu/decentsoftware/holograms/nms/api/event/NmsEntityInteractEvent.class"
+            "eu/decentsoftware/holograms/nms/v26_2/InboundPacketHandler.class"
+          )
+
+          JAR_CONTENTS="$(jar tf "$JAR")"
+          for required_class in "${REQUIRED_CLASSES[@]}"; do
+            if ! grep -Fxq "$required_class" <<< "$JAR_CONTENTS"; then
+              echo "Missing required runtime class from $JAR: $required_class"
+              exit 1
+            fi
+          done
+
       - name: Verify Publishing
         run: ./gradlew publishToMavenLocal
 
