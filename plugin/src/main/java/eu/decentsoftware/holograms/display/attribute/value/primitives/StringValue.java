@@ -24,14 +24,19 @@ import eu.decentsoftware.holograms.display.attribute.value.StaticCompiledAttribu
 import eu.decentsoftware.holograms.display.render.DisplayRenderContext;
 import eu.decentsoftware.holograms.display.render.placeholder.DisplayPlaceholderService;
 
+import java.util.Objects;
+
 public final class StringValue implements AttributeValue<String> {
 
     private final String value;
     private final DisplayPlaceholderService placeholderService;
+    private final boolean containsPlaceholders;
 
     public StringValue(String value, DisplayPlaceholderService placeholderService) {
+        Objects.requireNonNull(placeholderService, "placeholderService cannot be null");
         this.value = value;
         this.placeholderService = placeholderService;
+        this.containsPlaceholders = value != null && placeholderService.containsPlaceholders(value);
     }
 
     @Override
@@ -44,8 +49,11 @@ public final class StringValue implements AttributeValue<String> {
         if (value == null) {
             return new StaticCompiledAttributeValue<>(null);
         }
-        String resolvedValue = placeholderService.replacePlaceholders(value, context);
-        return new StaticCompiledAttributeValue<>(resolvedValue);
+        if (containsPlaceholders) {
+            String resolvedValue = placeholderService.replacePlaceholders(value, context);
+            return new StaticCompiledAttributeValue<>(resolvedValue, true);
+        }
+        return new StaticCompiledAttributeValue<>(value);
     }
 
     @Override

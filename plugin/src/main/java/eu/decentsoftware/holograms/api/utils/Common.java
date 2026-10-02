@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils;
 
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.semver.SemanticVersion;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;

@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.api.commands;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectField;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectionUtil;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 
@@ -14,8 +14,13 @@ import java.util.Set;
 
 public class CommandManager {
 
+    private final Server server;
     private final Map<String, DecentCommand> commands = new HashMap<>();
     private DecentCommand mainCommand;
+
+    public CommandManager(Server server) {
+        this.server = server;
+    }
 
     /*
      *  General Methods
@@ -23,7 +28,7 @@ public class CommandManager {
 
     public void destroy() {
         if (!commands.isEmpty()) {
-            commands.values().forEach(CommandManager::unregister);
+            commands.values().forEach(this::unregister);
             commands.clear();
         }
     }
@@ -31,13 +36,13 @@ public class CommandManager {
     public void registerCommand(DecentCommand decentCommand) {
         if (commands.containsKey(decentCommand.getName())) return;
         commands.put(decentCommand.getName(), decentCommand);
-        CommandManager.register(decentCommand);
+        register(decentCommand);
     }
 
     public void unregisterCommand(String name) {
         if (!commands.containsKey(name)) return;
         DecentCommand decentCommand = commands.remove(name);
-        CommandManager.unregister(decentCommand);
+        unregister(decentCommand);
     }
 
     public void setMainCommand(DecentCommand decentCommand) {
@@ -70,16 +75,16 @@ public class CommandManager {
         COMMAND_MAP_KNOWN_COMMANDS_FIELD = new ReflectField<>(SimpleCommandMap.class, "knownCommands");
     }
 
-    public static void register(Command command) {
+    private void register(Command command) {
         if (command == null) return;
-        SimpleCommandMap commandMap = GET_COMMAND_MAP_METHOD.invoke(DecentHologramsAPI.get().getPlugin().getServer());
-        CommandManager.unregister(command);
+        SimpleCommandMap commandMap = GET_COMMAND_MAP_METHOD.invoke(server);
+        unregister(command);
         commandMap.register("DecentHolograms", command);
     }
 
-    public static void unregister(Command command) {
+    private void unregister(Command command) {
         if (command == null) return;
-        SimpleCommandMap commandMap = GET_COMMAND_MAP_METHOD.invoke(DecentHologramsAPI.get().getPlugin().getServer());
+        SimpleCommandMap commandMap = GET_COMMAND_MAP_METHOD.invoke(server);
         Map<String, Command> cmdMap = COMMAND_MAP_KNOWN_COMMANDS_FIELD.getValue(commandMap);
         if (cmdMap != null && !cmdMap.isEmpty()) {
             cmdMap.remove(command.getLabel());

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display.attribute.defaults;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinition;
 import eu.decentsoftware.holograms.display.attribute.definition.AttributeDefinitionRegistry;

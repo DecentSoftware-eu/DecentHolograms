@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.nms.api.display.NmsDisplayMetadata;
 import eu.decentsoftware.holograms.nms.api.display.NmsDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsMoveDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayMetadataData;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import eu.decentsoftware.holograms.platform.api.data.DecentColor;
 import eu.decentsoftware.holograms.platform.api.data.DecentVector3f;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayBillboardConstraints;
@@ -33,7 +34,7 @@ import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataKey;
 import eu.decentsoftware.holograms.platform.api.render.metadata.MetadataType;
 import eu.decentsoftware.holograms.shared.DecentPosition;
 import net.minecraft.network.syncher.DataWatcher;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -45,33 +46,36 @@ abstract class AbstractDisplayRenderer<C> implements NmsDisplayRenderer<C> {
         this.entityId = entityId;
     }
 
+    @NotNull
     @Override
-    public void despawn(Player player) {
-        EntityPacketsBuilder.create()
+    public NmsPreparedRender despawn() {
+        return EntityPacketsBuilder.create()
                 .withRemoveEntity(entityId)
-                .sendTo(player);
+                .build();
     }
 
+    @NotNull
     @Override
-    public void move(Player player, NmsMoveDisplayData data) {
+    public NmsPreparedRender move(@NotNull NmsMoveDisplayData data) {
         DecentPosition position = data.getPosition();
-        EntityPacketsBuilder.create()
+        return EntityPacketsBuilder.create()
                 .withTeleportEntity(entityId, position)
-                .sendTo(player);
+                .build();
     }
 
+    @NotNull
     @Override
-    public void updateMetadata(Player player, NmsUpdateDisplayMetadataData data) {
+    public NmsPreparedRender updateMetadata(@NotNull NmsUpdateDisplayMetadataData data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create();
         List<NmsDisplayMetadata<?>> metadata = data.getMetadata();
         applyMetadata(metadata, metadataBuilder);
 
         List<DataWatcher.Item<?>> watchableObjects = metadataBuilder.toWatchableObjects();
+        EntityPacketsBuilder packetsBuilder = EntityPacketsBuilder.create();
         if (!watchableObjects.isEmpty()) {
-            EntityPacketsBuilder.create()
-                    .withEntityMetadata(entityId, watchableObjects)
-                    .sendTo(player);
+            packetsBuilder.withEntityMetadata(entityId, watchableObjects);
         }
+        return packetsBuilder.build();
     }
 
     protected void applyMetadata(List<NmsDisplayMetadata<?>> metadata, EntityMetadataBuilder metadataBuilder) {

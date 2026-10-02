@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.plugin.commands;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.actions.Action;
@@ -8,10 +9,12 @@ import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.commands.CommandBase;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
+import eu.decentsoftware.holograms.api.commands.CommandManager;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.HologramManager;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.entity.DecentEntityType;
@@ -29,21 +32,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @CommandInfo(
-        permissions = "dh.command.pages",
+        permissions = {Permissions.COMMAND_PAGES},
         usage = "/dh pages help",
         description = "All commands for editing hologram pages.",
         aliases = {"page", "p"}
 )
 public class PageSubCommand extends DecentCommand {
 
-    public PageSubCommand() {
+    public PageSubCommand(HologramManager hologramManager, CommandManager commandManager) {
         super("pages");
 
-        addSubCommand(new PageHelpSub());
-        addSubCommand(new PageAddSub());
-        addSubCommand(new PageInsertSub());
+        addSubCommand(new PageHelpSub(commandManager));
+        addSubCommand(new PageAddSub(hologramManager));
+        addSubCommand(new PageInsertSub(hologramManager));
         addSubCommand(new PageRemoveSub());
-        addSubCommand(new PageSwapSub());
+        addSubCommand(new PageSwapSub(hologramManager));
         addSubCommand(new PageSwitchSub());
         addSubCommand(new PageAddActionSub());
         addSubCommand(new PageRemoveActionSub());
@@ -74,15 +77,18 @@ public class PageSubCommand extends DecentCommand {
      */
 
     @CommandInfo(
-            permissions = "dh.command.pages.help",
+            permissions = {Permissions.COMMAND_PAGES_HELP},
             usage = "/dh page help",
             description = "All commands for editing pages.",
             aliases = {"?"}
     )
     static class PageHelpSub extends DecentCommand {
 
-        public PageHelpSub() {
+        private final CommandManager commandManager;
+
+        public PageHelpSub(CommandManager commandManager) {
             super("help");
+            this.commandManager = commandManager;
         }
 
         @Override
@@ -92,7 +98,7 @@ public class PageSubCommand extends DecentCommand {
                 Common.tell(sender, " &3&lHOLOGRAM PAGES HELP");
                 Common.tell(sender, " All page commands.");
                 sender.sendMessage("");
-                CommandBase command = PLUGIN.getCommandManager().getMainCommand().getSubCommand("pages");
+                CommandBase command = commandManager.getMainCommand().getSubCommand("pages");
                 printHelpSubCommandsAndAliases(sender, command);
                 return true;
             };
@@ -105,7 +111,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.add",
+            permissions = {Permissions.COMMAND_PAGES_ADD},
             usage = "/dh page add <hologram> [content]",
             description = "Add a page to Hologram.",
             aliases = {"append"},
@@ -113,8 +119,11 @@ public class PageSubCommand extends DecentCommand {
     )
     static class PageAddSub extends DecentCommand {
 
-        public PageAddSub() {
+        private final HologramManager hologramManager;
+
+        public PageAddSub(HologramManager hologramManager) {
             super("add");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -141,12 +150,12 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 3 && (args[1].startsWith("#ICON:") || args[1].startsWith("#HEAD:") || args[1].startsWith("#SMALLHEAD:"))) {
                     return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
-                        .filter(DecentMaterial::isItem)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                            .filter(DecentMaterial::isItem)
+                            .map(Material::name)
+                            .collect(Collectors.toList()));
                 } else if (args.length == 3 && args[1].startsWith("#ENTITY:")) {
                     return TabCompleteHandler.getPartialMatches(args[2], DecentEntityType.getAllowedEntityTypeNames());
                 }
@@ -156,15 +165,18 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.insert",
+            permissions = {Permissions.COMMAND_PAGES_INSERT},
             usage = "/dh page insert <hologram> <page> [content]",
             description = "Insert a page into Hologram.",
             minArgs = 2
     )
     static class PageInsertSub extends DecentCommand {
 
-        public PageInsertSub() {
+        private final HologramManager hologramManager;
+
+        public PageInsertSub(HologramManager hologramManager) {
             super("insert");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -191,22 +203,22 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 2) {
-                    Hologram hologram = PLUGIN.getHologramManager().getHologram(args[0]);
+                    Hologram hologram = hologramManager.getHologram(args[0]);
                     if (hologram != null) {
                         return TabCompleteHandler.getPartialMatches(args[1], IntStream
-                            .rangeClosed(1, hologram.size())
-                            .boxed().map(String::valueOf)
-                            .collect(Collectors.toList()));
+                                .rangeClosed(1, hologram.size())
+                                .boxed().map(String::valueOf)
+                                .collect(Collectors.toList()));
                     }
                 } else if (args.length == 4 && (args[2].startsWith("#ICON:") || args[2].startsWith("#HEAD:") || args[2].startsWith("#SMALLHEAD:"))) {
-                    return TabCompleteHandler.getPartialMatches(args[2], Arrays.stream(Material.values())
-                        .filter(DecentMaterial::isItem)
-                        .map(Material::name)
-                        .collect(Collectors.toList()));
+                    return TabCompleteHandler.getPartialMatches(args[3], Arrays.stream(Material.values())
+                            .filter(DecentMaterial::isItem)
+                            .map(Material::name)
+                            .collect(Collectors.toList()));
                 } else if (args.length == 4 && args[2].startsWith("#ENTITY:")) {
-                    TabCompleteHandler.getPartialMatches(args[3], DecentEntityType.getAllowedEntityTypeNames());
+                    return TabCompleteHandler.getPartialMatches(args[3], DecentEntityType.getAllowedEntityTypeNames());
                 }
                 return null;
             };
@@ -215,7 +227,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.remove",
+            permissions = {Permissions.COMMAND_PAGES_REMOVE},
             usage = "/dh page remove <hologram> <page>",
             description = "Remove a page from Hologram.",
             aliases = {"rm", "rem", "del", "delete"},
@@ -252,15 +264,18 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.swap",
+            permissions = {Permissions.COMMAND_PAGES_SWAP},
             usage = "/dh page swap <hologram> <page1> <page2>",
             description = "Swap two pages in a Hologram.",
             minArgs = 3
     )
     static class PageSwapSub extends DecentCommand {
 
-        public PageSwapSub() {
+        private final HologramManager hologramManager;
+
+        public PageSwapSub(HologramManager hologramManager) {
             super("swap");
+            this.hologramManager = hologramManager;
         }
 
         @Override
@@ -287,9 +302,9 @@ public class PageSubCommand extends DecentCommand {
         public TabCompleteHandler getTabCompleteHandler() {
             return (sender, args) -> {
                 if (args.length == 1) {
-                    return TabCompleteHandler.getPartialMatches(args[0], PLUGIN.getHologramManager().getHologramNames());
+                    return TabCompleteHandler.getPartialMatches(args[0], hologramManager.getHologramNames());
                 } else if (args.length == 2 || args.length == 3) {
-                    Hologram hologram = PLUGIN.getHologramManager().getHologram(args[0]);
+                    Hologram hologram = hologramManager.getHologram(args[0]);
                     if (hologram != null) {
                         return TabCompleteHandler.getPartialMatches(args[1], IntStream
                                 .rangeClosed(1, hologram.size())
@@ -303,7 +318,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.switch",
+            permissions = {Permissions.COMMAND_PAGES_SWITCH},
             usage = "/dh page switch <hologram> <page> [player]",
             description = "Switch to a page in hologram.",
             aliases = {"go", "view"},
@@ -324,7 +339,7 @@ public class PageSubCommand extends DecentCommand {
                     Lang.PAGE_DOES_NOT_EXIST.send(sender);
                     return true;
                 }
-                if (args.length > 2 && sender.hasPermission("dh.admin")) {
+                if (args.length > 2 && sender.hasPermission(Permissions.ADMIN)) {
                     Player player = Bukkit.getPlayer(args[2]);
                     if (player != null && player.isOnline()) {
                         hologram.show(player, index);
@@ -344,7 +359,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.actions",
+            permissions = {Permissions.COMMAND_PAGES_ACTIONS},
             usage = "/dh page actions <hologram> <page> <clickType> [listPage]",
             description = "List of click actions.",
             playerOnly = true,
@@ -391,7 +406,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.clearactions",
+            permissions = {Permissions.COMMAND_PAGES_CLEAR_ACTIONS},
             usage = "/dh page clearactions <hologram> <page> <clickType>",
             description = "Clear all click actions.",
             minArgs = 3
@@ -435,7 +450,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.addactions",
+            permissions = {Permissions.COMMAND_PAGES_ADD_ACTION},
             usage = "/dh page addaction <hologram> <page> <clickType> <action>",
             description = "Add a click action.",
             minArgs = 4
@@ -482,7 +497,7 @@ public class PageSubCommand extends DecentCommand {
     }
 
     @CommandInfo(
-            permissions = "dh.command.pages.removeaction",
+            permissions = {Permissions.COMMAND_PAGES_REMOVE_ACTION},
             usage = "/dh page removeaction <hologram> <page> <clickType> <index>",
             description = "Remove a click action.",
             aliases = {"remaction"},

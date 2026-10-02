@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -32,7 +33,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d rename <name> <new_name>",
         description = "Rename an existing display.",
-        permissions = "dh.command.displays.rename",
+        permissions = {Permissions.COMMAND_DISPLAYS_RENAME},
         minArgs = 2
 )
 class RenameDisplayCommand extends DecentCommand {

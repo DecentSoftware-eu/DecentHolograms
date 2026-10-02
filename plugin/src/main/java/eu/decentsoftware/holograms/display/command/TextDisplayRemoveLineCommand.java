@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -32,7 +33,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d removeline <name> <index>",
         description = "Remove a line of text from a Text Display.",
-        permissions = {"dh.command.displays.text.removeline"},
+        permissions = {Permissions.COMMAND_DISPLAYS_TEXT_REMOVE_LINE},
         aliases = {"remline"},
         minArgs = 2
 )

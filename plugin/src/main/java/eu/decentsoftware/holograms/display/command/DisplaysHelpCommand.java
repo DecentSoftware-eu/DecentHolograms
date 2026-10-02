@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
@@ -27,7 +28,7 @@ import eu.decentsoftware.holograms.api.utils.Common;
 @CommandInfo(
         usage = "/dh d help",
         description = "Show general displays help.",
-        permissions = {"dh.command.displays.help"},
+        permissions = {Permissions.COMMAND_DISPLAYS_HELP},
         aliases = {"?"}
 )
 class DisplaysHelpCommand extends DecentCommand {

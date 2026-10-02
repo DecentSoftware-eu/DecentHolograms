@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.bukkit.Location;
 
 /**
  * Represents a 3D position with yaw and pitch.
@@ -39,21 +38,4 @@ public class DecentPosition {
         }
         return new DecentPosition(x, this.y - y, z, yaw, pitch);
     }
-
-    /**
-     * Create a {@link DecentPosition} from a Bukkit Location.
-     *
-     * @param location The Bukkit Location.
-     * @return The new {@link DecentPosition}.
-     */
-    public static DecentPosition fromBukkitLocation(Location location) {
-        return new DecentPosition(
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getYaw(),
-                location.getPitch()
-        );
-    }
-
 }

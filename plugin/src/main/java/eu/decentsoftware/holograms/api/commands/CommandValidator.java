@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.commands;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
@@ -64,7 +65,7 @@ public class CommandValidator {
 		
 		String[] permissions = commandBase.getPermissions();
 		if (permissions != null && (permissions.length != 0)) {
-			if (sender.hasPermission("dh.admin")) {
+			if (sender.hasPermission(Permissions.ADMIN)) {
 				return true;
 			}
 			

@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
@@ -48,7 +49,7 @@ import java.util.stream.Stream;
 @CommandInfo(
         usage = "/dh d create <type> <name> [content]",
         description = "Create a new display",
-        permissions = {"dh.command.displays.create"},
+        permissions = {Permissions.COMMAND_DISPLAYS_CREATE},
         aliases = {"new", "c"},
         playerOnly = true,
         minArgs = 2

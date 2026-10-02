@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -35,7 +36,7 @@ import org.bukkit.entity.Player;
 @CommandInfo(
         usage = "/dh d clone <name> <new_name>",
         description = "Clone an existing display.",
-        permissions = "dh.command.displays.clone",
+        permissions = {Permissions.COMMAND_DISPLAYS_CLONE},
         playerOnly = true,
         minArgs = 2
 )

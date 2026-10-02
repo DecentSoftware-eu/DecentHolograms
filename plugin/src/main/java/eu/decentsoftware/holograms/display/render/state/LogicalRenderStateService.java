@@ -29,6 +29,8 @@ import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent
 import eu.decentsoftware.holograms.display.type.DisplayTypeDefinition;
 import eu.decentsoftware.holograms.display.type.DisplayTypeRegistry;
 
+import java.util.Map;
+
 public class LogicalRenderStateService {
 
     private final DisplayTypeRegistry displayTypeRegistry;
@@ -49,6 +51,8 @@ public class LogicalRenderStateService {
             currentState.setLocation(display.getLocation());
             currentState.clearAttributes();
             applyAttributes(display, currentState, context);
+        } else {
+            updateDynamicAttributes(display, currentState, context);
         }
 
         return currentState;
@@ -66,6 +70,28 @@ public class LogicalRenderStateService {
         for (AttributeKey<?> attributeKey : display.getAttributesMap().keySet()) {
             applyAttribute(attributeKey, display, state, context);
         }
+    }
+
+    private <T> void updateDynamicAttributes(DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {
+        Map<AttributeKey<T>, CompiledAttributeValue<T>> attributeValues = state.getAttributeValues();
+        for (Map.Entry<AttributeKey<T>, CompiledAttributeValue<T>> entry : attributeValues.entrySet()) {
+            if (entry.getValue().isDynamic()) {
+                applyAttributeIfChanged(entry.getKey(), display, state, context, entry.getValue());
+            }
+        }
+    }
+
+    private <T> void applyAttributeIfChanged(AttributeKey<T> key,
+                                             DisplayBase display,
+                                             LogicalRenderState state,
+                                             DisplayRenderContext context,
+                                             CompiledAttributeValue<T> previous) {
+        DisplayAttribute<T> attribute = display.getAttribute(key);
+        CompiledAttributeValue<T> value = compileAttribute(attribute, context);
+        if (value.equals(previous)) {
+            return;
+        }
+        state.addAttribute(key, value);
     }
 
     private <T> void applyAttribute(AttributeKey<T> key, DisplayBase display, LogicalRenderState state, DisplayRenderContext context) {

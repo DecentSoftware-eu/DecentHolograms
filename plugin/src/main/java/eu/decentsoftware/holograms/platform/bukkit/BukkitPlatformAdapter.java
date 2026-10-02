@@ -27,14 +27,20 @@ import eu.decentsoftware.holograms.platform.api.placeholder.PlaceholderProvider;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.PlatformRenderService;
 import eu.decentsoftware.holograms.platform.api.resource.SaveResourceService;
+import eu.decentsoftware.holograms.platform.api.scheduler.PlatformScheduler;
+import eu.decentsoftware.holograms.platform.api.text.TextFormat;
+import eu.decentsoftware.holograms.platform.api.text.TextFormatter;
 import eu.decentsoftware.holograms.platform.bukkit.placeholder.BukkitPlaceholderApiProvider;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerFactory;
 import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayerService;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitItemFactory;
 import eu.decentsoftware.holograms.platform.bukkit.render.BukkitRenderService;
+import eu.decentsoftware.holograms.platform.bukkit.text.LegacyBukkitTextFormatter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.List;
 
 public class BukkitPlatformAdapter implements PlatformAdapter {
@@ -46,17 +52,24 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     private final BukkitEventListener eventListener;
     private final List<PlaceholderProvider> placeholderProviders;
     private final BukkitSaveResourceService saveResourceService;
+    private final LegacyBukkitTextFormatter legacyTextFormatter;
+    private final PlatformScheduler scheduler;
 
-    public BukkitPlatformAdapter(JavaPlugin plugin, NmsDisplayRendererFactory rendererFactory) {
+    public BukkitPlatformAdapter(JavaPlugin plugin,
+                                 NmsDisplayRendererFactory rendererFactory,
+                                 BukkitPlayerFactory playerFactory,
+                                 PlatformScheduler scheduler) {
         capabilities = new BukkitPlatformCapabilities();
         materialService = new BukkitMaterialService();
-        playerService = new BukkitPlayerService();
+        playerService = new BukkitPlayerService(playerFactory);
         renderService = new BukkitRenderService(rendererFactory, new BukkitItemFactory());
         eventListener = new BukkitEventListener(renderService);
         placeholderProviders = Collections.singletonList(
                 new BukkitPlaceholderApiProvider()
         );
         saveResourceService = new BukkitSaveResourceService(plugin);
+        legacyTextFormatter = new LegacyBukkitTextFormatter();
+        this.scheduler = Objects.requireNonNull(scheduler, "scheduler cannot be null");
     }
 
     @NotNull
@@ -99,5 +112,20 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     @Override
     public SaveResourceService getSaveResourceService() {
         return saveResourceService;
+    }
+
+    @NotNull
+    @Override
+    public TextFormatter getTextFormatter(@NotNull TextFormat format) {
+        if (format == TextFormat.LEGACY) {
+            return legacyTextFormatter;
+        }
+        throw new IllegalArgumentException("Unsupported text format: " + format);
+    }
+
+    @NotNull
+    @Override
+    public PlatformScheduler getScheduler() {
+        return scheduler;
     }
 }

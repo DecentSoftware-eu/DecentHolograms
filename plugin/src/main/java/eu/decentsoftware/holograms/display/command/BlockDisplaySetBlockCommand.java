@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -33,7 +34,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d set-block <name> <block_type>",
         description = "Set the displayed block in a Block Display.",
-        permissions = {"dh.command.displays.setblock"},
+        permissions = {Permissions.COMMAND_DISPLAYS_SET_BLOCK},
         aliases = {"setblock", "block"},
         minArgs = 2
 )

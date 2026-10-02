@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.display.attribute;
 
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.DecentCommandException;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandler;
 import eu.decentsoftware.holograms.display.attribute.command.handler.AttributeCommandHandlerRegistry;

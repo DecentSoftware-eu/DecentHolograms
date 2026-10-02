@@ -1,21 +1,10 @@
-subprojects {
-    dependencies {
-        if (!project.path.endsWith(":nms-common")) {
-            implementation project(":nms:nms-common")
-        }
-        implementation project(":platform-api")
-    }
+plugins {
+    id 'dh.nms-aggregator'
 }
 
 dependencies {
-    childProjects.values().collect { child ->
-        implementation files("$rootDir/nms/${child.project.name}/build/libs/${child.project.name}.jar")
-    }
-}
-
-compileJava {
-    dependsOn childProjects.values().collect { child ->
-        child.tasks.named("jar")
+    childProjects.values().each { child ->
+        runtimeOnly project(child.path)
     }
 }
 

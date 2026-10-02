@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.config.DisplayConfigException;
 import eu.decentsoftware.holograms.display.config.DisplayPersistenceService;
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
@@ -117,6 +117,7 @@ public class DisplayService {
 
     public Collection<DisplayBase> getRegisteredDisplaysInRadius(DecentLocation location, double radius) {
         return displays.values().stream()
+                .filter(display -> display.getLocation().isSameWorld(location))
                 .filter(display -> display.getLocation().distanceSquared(location) <= radius * radius)
                 .collect(Collectors.toList());
     }

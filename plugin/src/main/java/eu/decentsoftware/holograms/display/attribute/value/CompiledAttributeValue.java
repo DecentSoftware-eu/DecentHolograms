@@ -83,4 +83,18 @@ public interface CompiledAttributeValue<T> {
      * @return true if the value has changed and needs re-evaluation
      */
     boolean isDirty();
+
+    /**
+     * Checks if this attribute's value is dynamic (changes over time).
+     *
+     * <p>When true, this attribute value will be recompiled on every logical state update.
+     * This should be used for values that change over time or based on external factors.
+     * For example, this can be used for values that contain placeholders.</p>
+     *
+     * @return true if the value is dynamic, false otherwise
+     * @since 2.10.2
+     */
+    default boolean isDynamic() {
+        return false;
+    }
 }

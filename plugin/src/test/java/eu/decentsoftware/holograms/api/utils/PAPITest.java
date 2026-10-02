@@ -24,7 +24,6 @@ import eu.decentsoftware.holograms.integration.Integration;
 import eu.decentsoftware.holograms.integration.IntegrationAvailabilityService;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -44,11 +43,6 @@ class PAPITest {
     private IntegrationAvailabilityService integrationAvailabilityService;
     @Mock
     private Player player;
-
-    @BeforeAll
-    static void beforeAll() {
-        Log.initializeForTests();
-    }
 
     @Test
     void testSetPlaceholders_PlaceholderAPINotEnabled() {

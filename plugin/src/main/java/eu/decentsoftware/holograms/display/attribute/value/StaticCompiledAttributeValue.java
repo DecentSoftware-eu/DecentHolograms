@@ -18,6 +18,8 @@
 
 package eu.decentsoftware.holograms.display.attribute.value;
 
+import java.util.Objects;
+
 /**
  * A static implementation of {@link CompiledAttributeValue} that represents
  * a precomputed or constant attribute value. This implementation holds a fixed
@@ -31,17 +33,34 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
 
     private static final StaticCompiledAttributeValue<?> EMPTY = new StaticCompiledAttributeValue<>(null);
     private final T value;
+    private final boolean dynamic;
     private boolean dirty;
 
     /**
      * Constructs a new {@code StaticCompiledAttributeValue} with the specified value.
      *
+     * @param value   The value to be held by this instance. This value is constant
+     *                and is returned every time the {@link #evaluate()} method is called.
+     * @param dynamic Whether the value is dynamic (changes over time)
+     * @since 2.10.2
+     */
+    public StaticCompiledAttributeValue(T value, boolean dynamic) {
+        this.value = value;
+        this.dynamic = dynamic;
+        this.dirty = true;
+    }
+
+    /**
+     * Constructs a new {@code StaticCompiledAttributeValue} with the specified value.
+     *
+     * <p>This constructor creates a value that in not dynamic ({@code #isDynamic() == false}).</p>
+     *
      * @param value The value to be held by this instance. This value is constant
      *              and is returned every time the {@link #evaluate()} method is called.
+     * @see #StaticCompiledAttributeValue(T, boolean)
      */
     public StaticCompiledAttributeValue(T value) {
-        this.value = value;
-        this.dirty = true;
+        this(value, false);
     }
 
     @Override
@@ -55,6 +74,11 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
         return dirty;
     }
 
+    @Override
+    public boolean isDynamic() {
+        return dynamic;
+    }
+
     /**
      * Returns a shared instance of {@code StaticCompiledAttributeValue} that represents an empty or null value.
      *
@@ -65,5 +89,20 @@ public final class StaticCompiledAttributeValue<T> implements CompiledAttributeV
     @SuppressWarnings("unchecked")
     public static <T> StaticCompiledAttributeValue<T> empty() {
         return (StaticCompiledAttributeValue<T>) EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StaticCompiledAttributeValue<?> that = (StaticCompiledAttributeValue<?>) o;
+        return dynamic == that.dynamic
+                && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, dynamic);
     }
 }

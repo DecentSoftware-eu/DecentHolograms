@@ -1,3 +1,7 @@
+plugins {
+    id 'dh.nms-module'
+}
+
 dependencies {
     compileOnly(libs.spigot)
 }

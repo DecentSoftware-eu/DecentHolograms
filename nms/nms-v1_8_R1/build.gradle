@@ -1,3 +1,5 @@
-dependencies {
-    compileOnly "org.spigotmc:spigot:1.8-R0.1-SNAPSHOT"
+plugins {
+    id 'dh.nms-module'
 }
+
+nmsModule("1.8-R0.1-SNAPSHOT", 8)

@@ -1,26 +1,52 @@
+import java.util.zip.ZipFile
+
 plugins {
+    id 'dh.nms-aggregator'
     id "maven-publish"
     alias(libs.plugins.shadow)
 }
 
-version = "2.10.1"
+version = "2.10.2-SNAPSHOT"
 description = "A lightweight yet very powerful hologram plugin with many features and configuration options."
 
-repositories {
-    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url = "https://repo.codemc.io/repository/maven-public/" }
-    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+java {
+    withSourcesJar()
 }
 
-configurations {
-    // Make compileOnly dependencies available in tests
-    testImplementation {
-        extendsFrom compileOnly
+def buildMetadata = {
+    if (project.hasProperty("release")) {
+        return ""
+    }
+    try {
+        def sha = providers.exec {
+            commandLine "git", "rev-parse", "--short=7", "HEAD"
+            ignoreExitValue = true
+        }.standardOutput.asText.get().trim()
+        if (sha.isEmpty()) {
+            return ""
+        }
+        def dirty = providers.exec {
+            commandLine "git", "status", "--porcelain"
+            ignoreExitValue = true
+        }.standardOutput.asText.get().trim()
+        return "+" + sha + (dirty.isEmpty() ? "" : ".dirty")
+    } catch (Exception ignored) {
+        return ""
+    }
+}()
+
+def displayVersion = "${project.version}${buildMetadata}"
+
+tasks.register("printVersion") {
+    def resolved = project.version.toString()
+    doLast {
+        println resolved
     }
 }
 
 dependencies {
     implementation project(":platform-api")
+    implementation project(":core")
     implementation project(":nms")
     implementation project(":nms:nms-common")
 
@@ -48,7 +74,7 @@ dependencies {
 }
 
 processResources {
-    def props = [version: project.version, description: project.description]
+    def props = [version: displayVersion, description: project.description]
     inputs.properties(props)
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
@@ -57,28 +83,90 @@ processResources {
 }
 
 jar {
-    manifest {
-        attributes "Multi-Release": "true"
-    }
+    enabled = false
 }
 
 shadowJar {
-    archiveFileName.set("DecentHolograms-${version}.jar")
+    archiveBaseName = rootProject.name
+    archiveVersion = displayVersion
+    archiveClassifier = ''
+
+    manifest {
+        attributes "Multi-Release": "true"
+    }
+
+    mergeServiceFiles()
+
+    exclude "META-INF/maven/**"
 
     relocate "org.bstats", "eu.decentsoftware.holograms.metrics"
     relocate "de.tr7zw.changeme.nbtapi", "eu.decentsoftware.holograms.libs.nbtapi"
     relocate "com.cryptomorin.xseries", "eu.decentsoftware.holograms.libs.xseries"
+    relocate "org.spongepowered.configurate", "eu.decentsoftware.holograms.libs.configurate"
+    relocate "io.leangen.geantyref", "eu.decentsoftware.holograms.libs.geantyref"
+    relocate "net.kyori.option", "eu.decentsoftware.holograms.libs.kyori.option"
+}
+
+def verifyRelocations = tasks.register("verifyRelocations") {
+    def shadowJarFile = tasks.named("shadowJar").flatMap { it.archiveFile }
+    def allowedPrefix = "eu/decentsoftware/holograms/"
+    def stampFile = layout.buildDirectory.file("tmp/verifyRelocations.stamp")
+    inputs.file(shadowJarFile).withPropertyName("shadowJar")
+    outputs.file(stampFile).withPropertyName("stamp")
+    doLast {
+        def leakedPackages = new TreeSet<String>()
+        def leakedServices = new TreeSet<String>()
+        new ZipFile(shadowJarFile.get().asFile).withCloseable { zip ->
+            for (entry in zip.entries()) {
+                def name = entry.name
+                if (name.startsWith("META-INF/versions/")) {
+                    def parts = name.split("/", 4)
+                    if (parts.length < 4) {
+                        continue
+                    }
+                    name = parts[3]
+                }
+                if (name.endsWith(".class")) {
+                    if (!name.startsWith(allowedPrefix)) {
+                        leakedPackages << name.substring(0, name.lastIndexOf("/")).replace("/", ".")
+                    }
+                } else if (name.startsWith("META-INF/services/") && !name.endsWith("/")) {
+                    def service = name.substring("META-INF/services/".length())
+                    if (!service.startsWith(allowedPrefix.replace("/", "."))) {
+                        leakedServices << service
+                    }
+                }
+            }
+        }
+        if (!leakedPackages.isEmpty() || !leakedServices.isEmpty()) {
+            def message = new StringBuilder("Shadow jar contains unrelocated entries.\n")
+            if (!leakedPackages.isEmpty()) {
+                message.append("Packages:\n")
+                leakedPackages.each { message.append("  ").append(it).append("\n") }
+            }
+            if (!leakedServices.isEmpty()) {
+                message.append("Service files:\n")
+                leakedServices.each { message.append("  META-INF/services/").append(it).append("\n") }
+            }
+            message.append("Add a relocate rule in shadowJar for each of the above.")
+            throw new GradleException(message.toString())
+        }
+        def stamp = stampFile.get().asFile
+        stamp.parentFile.mkdirs()
+        stamp.text = "ok"
+    }
+}
+
+tasks.named("check") {
+    dependsOn verifyRelocations
 }
 
 publishing {
     publications {
         create("shadow", MavenPublication) {
-            from(components["java"] as SoftwareComponent)
+            from(components["shadow"] as SoftwareComponent)
+            artifact(tasks.named("sourcesJar"))
             artifactId = "decentholograms"
         }
     }
-}
-
-test {
-    useJUnitPlatform()
 }

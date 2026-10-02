@@ -1,28 +1,26 @@
 package eu.decentsoftware.holograms.api.actions;
 
 import com.google.common.collect.Maps;
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.commands.CommandValidator;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.BungeeUtils;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.location.LocationUtils;
+import eu.decentsoftware.holograms.api.utils.scheduler.S;
+import eu.decentsoftware.holograms.logging.Log;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Map;
 
 public abstract class ActionType {
-
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
 
     /*
      * Cache
@@ -55,7 +53,10 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Common.tell(player, PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
+            // Actions are executed from a packet listener thread, and resolving placeholders
+            // reads the player, so it has to happen where the player is owned.
+            S.forPlayer(player, platformPlayer -> platformPlayer.sendMessage(
+                    Common.colorize(PAPI.setPlaceholders(player, string.replace("{player}", player.getName())))));
             return true;
         }
     };
@@ -66,10 +67,8 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
-                //
-                player.chat(PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
-            });
+            S.forPlayer(player, platformPlayer -> platformPlayer.chat(
+                    PAPI.setPlaceholders(player, string.replace("{player}", player.getName()))));
             return true;
         }
     };
@@ -80,9 +79,11 @@ public abstract class ActionType {
             Validate.notNull(player);
 
             String string = String.join(" ", args);
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> {
-                //
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, string.replace("{player}", player.getName())));
+            // Two halves, two owners: resolving placeholders reads the player, while a console
+            // command is dispatched globally.
+            S.forPlayer(player, () -> {
+                String command = PAPI.setPlaceholders(player, string.replace("{player}", player.getName()));
+                S.sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
             });
             return true;
         }
@@ -93,7 +94,10 @@ public abstract class ActionType {
         public boolean execute(Player player, String... args) {
             Validate.notNull(player);
             if (args != null && args.length >= 1) {
-                BungeeUtils.connect(player, args[0]);
+                String server = args[0];
+                // Proxy plugin messaging is Bukkit-family specific, so it stays here rather than
+                // moving onto PlatformPlayer - but sending still touches the player.
+                S.forPlayer(player, () -> BungeeUtils.connect(player, server));
             }
             return true;
         }
@@ -110,10 +114,14 @@ public abstract class ActionType {
                 string = player.getLocation().getWorld().getName() + ":" + string;
             }
             Location location = LocationUtils.asLocation(string);
-            if (location == null) {
+            if (location == null || location.getWorld() == null) {
                 return false;
             }
-            Bukkit.getScheduler().runTask(DECENT_HOLOGRAMS.getPlugin(), () -> player.teleport(location));
+            DecentLocation target = new DecentLocation(location.getWorld().getName(),
+                    location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+            // Not player.teleport(): a cross-region move is unsupported on region-threaded
+            // servers and has to go through the platform, which completes it asynchronously.
+            S.forPlayer(player, platformPlayer -> platformPlayer.teleport(target));
             return true;
         }
     };
@@ -128,18 +136,29 @@ public abstract class ActionType {
             }
 
             String[] spl = args[0].split(":", 3);
-            Sound sound;
-            try {
-                sound = Sound.valueOf(spl[0]);
-            } catch (Throwable ignored) {
-                return true;
+            float volume = 1.0f;
+            float pitch = 1.0f;
+            if (spl.length >= 3) {
+                try {
+                    volume = Float.parseFloat(spl[1]);
+                    pitch = Float.parseFloat(spl[2]);
+                } catch (NumberFormatException ignored) {
+                    // Fall back to the defaults rather than dropping the sound entirely.
+                }
             }
 
-            if (spl.length < 3) {
-                player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
-            } else {
-                player.playSound(player.getLocation(), sound, Float.parseFloat(spl[1]), Float.parseFloat(spl[2]));
-            }
+            float finalVolume = volume;
+            float finalPitch = pitch;
+            // Reads the player's position, so it belongs on the thread that owns them.
+            S.forPlayer(player, platformPlayer -> {
+                try {
+                    platformPlayer.playSound(spl[0], finalVolume, finalPitch);
+                } catch (IllegalArgumentException e) {
+                    // Reported rather than swallowed so a typo is visible, but contained so it
+                    // does not surface as a scheduler stack trace on every click.
+                    Log.warn("Cannot play sound for %s: %s", player.getName(), e.getMessage());
+                }
+            });
             return true;
         }
     };

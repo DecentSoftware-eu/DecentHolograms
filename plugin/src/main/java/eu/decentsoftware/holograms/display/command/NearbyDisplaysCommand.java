@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.display.command;
 
 import com.google.common.collect.Lists;
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -39,7 +40,7 @@ import java.util.function.Function;
 @CommandInfo(
         usage = "/dh d nearby <range> [page]",
         description = "List nearby displays.",
-        permissions = "dh.command.displays.nearby",
+        permissions = {Permissions.COMMAND_DISPLAYS_NEARBY},
         playerOnly = true,
         aliases = {"near"},
         minArgs = 1

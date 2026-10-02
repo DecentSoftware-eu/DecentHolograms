@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -31,7 +32,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d enable <name>",
         description = "Enable a display if it is disabled.",
-        permissions = "dh.command.displays.enable",
+        permissions = {Permissions.COMMAND_DISPLAYS_ENABLE},
         minArgs = 1
 )
 class EnableDisplayCommand extends DecentCommand {

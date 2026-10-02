@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -43,8 +43,9 @@ public final class CFG {
                 // -- If the missing file is a resource, use it
                 try (InputStream is = plugin.getResource(file.getName())) {
                     if (is != null) {
-                        InputStreamReader isr = new InputStreamReader(is);
-                        config = YamlConfiguration.loadConfiguration(isr);
+                        try (InputStreamReader isr = new InputStreamReader(is)) {
+                            config = YamlConfiguration.loadConfiguration(isr);
+                        }
                         config.save(file);
                         CFG.loadFromConfigurationToObject(object, config);
                         return config;

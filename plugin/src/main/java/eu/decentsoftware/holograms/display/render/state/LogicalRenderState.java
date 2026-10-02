@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.display.render.state;
 
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.value.CompiledAttributeValue;
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.display.render.content.CompiledDisplayContent;
+import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
 
 import java.util.LinkedHashMap;
@@ -60,8 +60,9 @@ public final class LogicalRenderState {
         attributeValues.put(key, value);
     }
 
-    public Map<AttributeKey<?>, CompiledAttributeValue<?>> getAttributeValues() {
-        return attributeValues;
+    @SuppressWarnings("unchecked") // validated on insertion
+    public <T> Map<AttributeKey<T>, CompiledAttributeValue<T>> getAttributeValues() {
+        return (Map<AttributeKey<T>, CompiledAttributeValue<T>>) (Map<?, ?>) attributeValues;
     }
 
     public void clearAttributes() {

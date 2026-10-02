@@ -7,7 +7,7 @@ import eu.decentsoftware.holograms.api.Settings;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.enums.HologramLineType;
 import eu.decentsoftware.holograms.api.holograms.objects.HologramObject;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.PAPI;
 import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import eu.decentsoftware.holograms.api.utils.entity.HologramEntity;
@@ -556,7 +556,16 @@ public class HologramLine extends HologramObject {
     }
 
     private Supplier<DecentPosition> getPositionSupplier() {
-        return () -> DecentPosition.fromBukkitLocation(getLocation());
+        return () -> {
+            Location bukkitLocation = getLocation();
+            return new DecentPosition(
+                    bukkitLocation.getX(),
+                    bukkitLocation.getY(),
+                    bukkitLocation.getZ(),
+                    bukkitLocation.getYaw(),
+                    bukkitLocation.getPitch()
+            );
+        };
     }
 
     private NmsHologramPartData<String> getTextPartData(Player player,
@@ -605,7 +614,14 @@ public class HologramLine extends HologramObject {
     }
 
     public boolean isInDisplayRange(@NonNull Player player) {
-        return parent == null || parent.getParent().isInDisplayRange(player);
+        if (parent == null) {
+            try {
+                return player.getWorld().equals(location.getWorld());
+            } catch (Exception ignored) {
+                return false;
+            }
+        }
+        return parent.getParent().isInDisplayRange(player);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

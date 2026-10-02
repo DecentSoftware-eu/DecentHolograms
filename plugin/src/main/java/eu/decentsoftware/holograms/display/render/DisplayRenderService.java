@@ -60,7 +60,7 @@ public class DisplayRenderService {
         }
 
         try (TimerHandle ignored = DecentProfiler.getInstance().startTimer(Metrics.RENDER_PLATFORM)) {
-            platformRenderService.render(context.getPlayer(), handle, intents);
+            platformRenderService.render(handle, intents).apply(context.getPlayer());
         }
 
         if (previousState == null || currentState == null) {

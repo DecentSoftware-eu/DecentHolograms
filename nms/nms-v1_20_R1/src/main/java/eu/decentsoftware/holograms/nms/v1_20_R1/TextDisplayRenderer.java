@@ -21,8 +21,9 @@ package eu.decentsoftware.holograms.nms.v1_20_R1;
 import eu.decentsoftware.holograms.nms.api.display.NmsSpawnDisplayData;
 import eu.decentsoftware.holograms.nms.api.display.NmsTextDisplayRenderer;
 import eu.decentsoftware.holograms.nms.api.display.NmsUpdateDisplayContentData;
+import eu.decentsoftware.holograms.nms.api.render.NmsPreparedRender;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -32,25 +33,27 @@ class TextDisplayRenderer extends AbstractDisplayRenderer<List<String>> implemen
         super(entityId);
     }
 
+    @NotNull
     @Override
-    public void spawn(Player player, NmsSpawnDisplayData<List<String>> data) {
+    public NmsPreparedRender spawn(@NotNull NmsSpawnDisplayData<List<String>> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create();
         applyMetadata(data.getMetadata(), metadataBuilder);
         metadataBuilder.withTextDisplayText(data.getContent());
 
-        EntityPacketsBuilder.create()
+        return EntityPacketsBuilder.create()
                 .withSpawnEntity(entityId, EntityType.TEXT_DISPLAY, data.getPosition())
                 .withEntityMetadata(entityId, metadataBuilder.toWatchableObjects())
-                .sendTo(player);
+                .build();
     }
 
+    @NotNull
     @Override
-    public void updateContent(Player player, NmsUpdateDisplayContentData<List<String>> data) {
+    public NmsPreparedRender updateContent(@NotNull NmsUpdateDisplayContentData<List<String>> data) {
         EntityMetadataBuilder metadataBuilder = EntityMetadataBuilder.create()
                 .withTextDisplayText(data.getContent());
 
-        EntityPacketsBuilder.create()
+        return EntityPacketsBuilder.create()
                 .withEntityMetadata(entityId, metadataBuilder.toWatchableObjects())
-                .sendTo(player);
+                .build();
     }
 }

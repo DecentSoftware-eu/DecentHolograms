@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -29,7 +30,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
 @CommandInfo(
         usage = "/dh d delete <name>",
         description = "Delete an existing display",
-        permissions = {"dh.command.displays.delete"},
+        permissions = {Permissions.COMMAND_DISPLAYS_DELETE},
         aliases = {"del"},
         minArgs = 1
 )

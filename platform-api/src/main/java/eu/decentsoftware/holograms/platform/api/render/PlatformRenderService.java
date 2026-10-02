@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.platform.api.render;
 
-import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.render.intent.RenderIntent;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,22 +29,29 @@ import java.util.List;
  * <p>Implementations must be able to identify a specific rendered object by {@link RenderObjectHandle}.
  * The intents provided for processing may update an existing object or create a new one.</p>
  *
+ * <p>Rendering is split in two: this service turns intents into a {@link PreparedRender}, which is
+ * then shown to as many players as needed. Nothing here takes a player, because none of this work
+ * depends on who is watching.</p>
+ *
  * @author d0by
  * @since 2.10.0
  */
 public interface PlatformRenderService {
 
     /**
-     * Apply the given rendering intents to the specified render object.
+     * Turns the given rendering intents into something that can be shown to a player.
      *
-     * <p>The rendering intents are applied in the order they are provided.</p>
+     * <p>The rendering intents are applied in the order they are provided. Nothing is shown to
+     * anyone until the returned {@link PreparedRender} is applied.</p>
      *
-     * @param player  The platform player for whom the rendering is performed.
      * @param handle  The handle representing the render object to render.
      * @param intents The list of intents describing the rendering operations to perform.
+     * @return The result, ready to be shown to any number of players.
      * @see RenderIntent
      * @see RenderObjectHandle
+     * @see PreparedRender
      * @since 2.10.0
      */
-    void render(@NotNull PlatformPlayer player, @NotNull RenderObjectHandle handle, @NotNull List<RenderIntent> intents);
+    @NotNull
+    PreparedRender render(@NotNull RenderObjectHandle handle, @NotNull List<RenderIntent> intents);
 }

@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.utils;
 
 import eu.decentsoftware.holograms.integration.Integration;
+import eu.decentsoftware.holograms.logging.Log;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;

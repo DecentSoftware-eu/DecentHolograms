@@ -1,0 +1,15 @@
+import org.gradle.api.attributes.java.TargetJvmVersion
+
+plugins {
+    id 'dh.java-conventions'
+}
+
+def highestNmsJavaVersion = 25
+
+configurations.configureEach {
+    if (canBeResolved && name.toLowerCase().endsWith("runtimeclasspath")) {
+        attributes {
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, highestNmsJavaVersion)
+        }
+    }
+}

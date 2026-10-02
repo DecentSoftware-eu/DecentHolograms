@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.display;
 
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.render.DisplayRenderCoordinator;
 
 import java.util.concurrent.Executors;

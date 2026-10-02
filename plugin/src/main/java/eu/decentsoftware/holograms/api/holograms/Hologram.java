@@ -8,7 +8,7 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.holograms.objects.UpdatingHologramObject;
-import eu.decentsoftware.holograms.api.utils.Log;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.event.EventFactory;
 import eu.decentsoftware.holograms.api.utils.exception.LocationParseException;
@@ -680,7 +680,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
                 } else {
                     // We need to run the task later on older versions as, if we don't, it causes issues with some holograms *randomly* becoming invisible.
                     // I *think* this is from despawning and spawning the entities (with the same ID) in the same tick.
-                    S.sync(() -> showPageTo(player, page, pageIndex), 0L);
+                    S.forPlayer(player, () -> showPageTo(player, page, pageIndex));
                 }
                 return true;
             }
@@ -811,7 +811,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
             NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.display(player, DecentPosition.fromBukkitLocation(location));
+            renderer.display(player, toDecentPosition(location));
             location.add(0, 1.8, 0);
         }
     }
@@ -850,9 +850,19 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         location.setY((int) (location.getY() - (isDownOrigin() ? 0 : page.getHeight())) + 0.5);
         for (int i = 0; i < amount; i++) {
             NmsClickableHologramRenderer renderer = page.getClickableRenderer(i);
-            renderer.move(player, DecentPosition.fromBukkitLocation(location));
+            renderer.move(player, toDecentPosition(location));
             location.add(0, 1.8, 0);
         }
+    }
+
+    private DecentPosition toDecentPosition(Location bukkitLocation) {
+        return new DecentPosition(
+                bukkitLocation.getX(),
+                bukkitLocation.getY(),
+                bukkitLocation.getZ(),
+                bukkitLocation.getYaw(),
+                bukkitLocation.getPitch()
+        );
     }
 
     public void teleportClickableEntitiesAll() {

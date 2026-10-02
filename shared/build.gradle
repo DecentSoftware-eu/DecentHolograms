@@ -1,10 +1,8 @@
-dependencies {
-    compileOnly(libs.spigot)
-
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
+plugins {
+    id 'dh.java-conventions'
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 }

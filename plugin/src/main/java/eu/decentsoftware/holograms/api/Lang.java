@@ -4,25 +4,26 @@ import com.google.common.collect.Maps;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.enums.EnumFlag;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.Log;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.api.utils.config.Phrase;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
+import eu.decentsoftware.holograms.logging.Log;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-@UtilityClass
-public class Lang {
+public final class Lang {
 
-    private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
+    private Lang() {
+        throw new UnsupportedOperationException("Cannot instantiate utility class");
+    }
 
     // General
     public static final Phrase PREFIX = new Phrase("prefix", Common.PREFIX);
@@ -46,6 +47,7 @@ public class Lang {
     public static final Phrase HOLOGRAM_UPDATED = new Phrase("hologram.updated", "{prefix}Hologram has been updated!");
     public static final Phrase HOLOGRAM_RENAMED = new Phrase("hologram.renamed", "{prefix}Hologram has been renamed! &7(&b%1$s&7 -> &b%2$s&7)");
     public static final Phrase HOLOGRAM_TELEPORTED = new Phrase("hologram.teleported", "{prefix}Teleported!");
+    public static final Phrase HOLOGRAM_WORLD_DOES_NOT_EXIST = new Phrase("hologram.world_does_not_exist", "{prefix}&cWorld of hologram '%1$s' doesn't exist!");
     public static final Phrase HOLOGRAM_MOVED = new Phrase("hologram.moved", "{prefix}Hologram has been moved!");
     public static final Phrase HOLOGRAM_ALIGNED = new Phrase("hologram.aligned", "{prefix}Hologram has been aligned!");
     public static final Phrase HOLOGRAM_ALIGN_SELF = new Phrase("hologram.align_self", "{prefix}Cannot align a Hologram to itself!");
@@ -189,25 +191,28 @@ public class Lang {
         } catch (IllegalAccessException e) {
             Log.warn("Failed to load Lang values.", e);
         }
-        Lang.reload();
     }
 
-    public static void reload() {
-        FileConfig config = new FileConfig(DECENT_HOLOGRAMS.getPlugin(), "lang.yml");
+    public static void reload(JavaPlugin plugin) {
+        Objects.requireNonNull(plugin, "plugin cannot be null");
+        FileConfig config = new FileConfig(plugin, "lang.yml");
         VALUES.values().forEach(configValue -> configValue.updateValue(config));
         Common.PREFIX = PREFIX.getValue();
     }
 
-    public static void sendVersionMessage(@NonNull CommandSender sender) {
+    public static void sendVersionMessage(CommandSender sender, String version) {
+        Objects.requireNonNull(sender, "sender cannot be null");
+        Objects.requireNonNull(version, "version cannot be null");
         Common.tell(sender,
                 "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f: \n&f- &7%s\n&f- &7%s",
-                DecentHologramsAPI.get().getPlugin().getDescription().getVersion(),
+                version,
                 "https://www.spigotmc.org/resources/96927/",
                 "https://modrinth.com/plugin/decentholograms"
         );
     }
 
-    public static void sendUpdateMessage(@NonNull CommandSender sender) {
+    public static void sendUpdateMessage(CommandSender sender) {
+        Objects.requireNonNull(sender, "sender cannot be null");
         Common.tell(sender,
                 "\n" + NEW_VERSION_AVAILABLE.getValue() + " \n&f- &7%s\n&f- &7%s",
                 "https://www.spigotmc.org/resources/96927/",
@@ -215,8 +220,8 @@ public class Lang {
         );
     }
 
-    @NonNull
-    public static List<String> getHologramInfo(@NonNull Hologram hologram) {
+    public static List<String> getHologramInfo(Hologram hologram) {
+        Objects.requireNonNull(hologram, "hologram cannot be null");
         List<String> info = new ArrayList<>();
         Location l = hologram.getLocation();
         info.add(String.format(" &8• &7Location: &b%s, %.2f, %.2f, %.2f", l.getWorld().getName(), l.getX(), l.getY(), l.getZ()));

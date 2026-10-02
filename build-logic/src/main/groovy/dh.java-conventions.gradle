@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group = 'eu.decentsoftware.holograms'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+if (project.path != ':shared') {
+    dependencies {
+        implementation project(':shared')
+    }
+}
+
+configurations {
+    // Make compileOnly dependencies available in tests
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

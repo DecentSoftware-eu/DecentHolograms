@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.nms.api.DecentHologramsNmsException;
 import eu.decentsoftware.holograms.nms.api.NmsAdapter;
 import eu.decentsoftware.holograms.shared.reflect.ReflectUtil;
@@ -12,7 +11,7 @@ import java.util.Objects;
 /**
  * This factory is responsible for creating the {@link NmsAdapter} for the current server version.
  *
- * <p>Create an instance of {@link NmsAdapter} via {@link #createNmsAdapter(Version)} to gain access
+ * <p>Create an instance of {@link NmsAdapter} via {@link #createNmsAdapter(String)} to gain access
  * to all (currently implemented) NMS-related methods.</p>
  *
  * @author d0by
@@ -24,16 +23,16 @@ public class NmsAdapterFactory {
     /**
      * Initialize the {@link NmsAdapter} instance for the current server version.
      *
-     * @param version The version for which the {@link NmsAdapter} should be created.
+     * @param moduleName The name of the NMS module to load.
      * @return The {@link NmsAdapter}.
      * @throws DecentHologramsNmsException If the current server version is not supported
      *                                     or something goes wrong during the initialization of the service.
      * @since 2.9.0
      */
-    public NmsAdapter createNmsAdapter(Version version) {
-        Objects.requireNonNull(version, "version cannot be null");
+    public NmsAdapter createNmsAdapter(String moduleName) {
+        Objects.requireNonNull(moduleName, "moduleName cannot be null");
 
-        String nmsAdapterImplementationClassName = "eu.decentsoftware.holograms.nms." + version.name() + ".NmsAdapterImpl";
+        String nmsAdapterImplementationClassName = "eu.decentsoftware.holograms.nms." + moduleName + ".NmsAdapterImpl";
         try {
             Class<?> nmsAdapterImplementationClass = ReflectUtil.getClass(nmsAdapterImplementationClassName);
             if (!NmsAdapter.class.isAssignableFrom(nmsAdapterImplementationClass)) {
@@ -45,7 +44,7 @@ public class NmsAdapterFactory {
         } catch (DecentHologramsNmsException e) {
             throw e;
         } catch (ClassNotFoundException e) {
-            throw new DecentHologramsNmsException("Unsupported server version: " + version.name());
+            throw new DecentHologramsNmsException("Unsupported server version: " + moduleName);
         } catch (NoSuchMethodException e) {
             throw new DecentHologramsNmsException("NmsAdapter implementation is missing the default constructor: "
                     + nmsAdapterImplementationClassName);

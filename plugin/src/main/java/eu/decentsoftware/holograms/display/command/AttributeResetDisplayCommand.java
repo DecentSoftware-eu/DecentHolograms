@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.display.command;
 
+import eu.decentsoftware.holograms.Permissions;
 import eu.decentsoftware.holograms.api.Lang;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
@@ -33,7 +34,7 @@ import eu.decentsoftware.holograms.plugin.Validator;
         usage = "/dh d reset-attribute <name> <attribute>",
         description = "Reset a display attribute to the default value.",
         aliases = {"resetattribute"},
-        permissions = {"dh.command.displays.resetattribute"},
+        permissions = {Permissions.COMMAND_DISPLAYS_RESET_ATTRIBUTES},
         minArgs = 2
 )
 class AttributeResetDisplayCommand extends DecentCommand {

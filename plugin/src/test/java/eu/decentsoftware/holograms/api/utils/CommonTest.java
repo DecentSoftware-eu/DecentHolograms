@@ -1,18 +1,11 @@
 package eu.decentsoftware.holograms.api.utils;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonTest {
-
-    @BeforeAll
-    static void beforeAll() {
-        // Initialize the Log class
-        Log.initializeForTests();
-    }
 
     @ParameterizedTest(name = "currentVersion={0}, newVersion={1}, expectedResult={2}")
     @CsvSource({
