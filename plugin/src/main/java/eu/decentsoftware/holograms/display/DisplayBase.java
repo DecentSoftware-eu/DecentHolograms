@@ -18,14 +18,20 @@
 
 package eu.decentsoftware.holograms.display;
 
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.display.attribute.AttributeKey;
 import eu.decentsoftware.holograms.display.attribute.DisplayAttribute;
 import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.platform.api.data.display.DisplayType;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +43,7 @@ public abstract class DisplayBase {
     protected DecentLocation location;
     protected DisplaySettings settings;
     protected Map<AttributeKey<?>, DisplayAttribute<?>> attributes = new ConcurrentHashMap<>();
+    private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
     private final AtomicLong lastLogicalUpdateMs = new AtomicLong(0);
     private volatile boolean configDirty = true;
@@ -136,5 +143,59 @@ public abstract class DisplayBase {
             return true;
         }
         return false;
+    }
+
+    public void addAction(ClickType clickType, Action action) {
+        actions.computeIfAbsent(clickType, k -> new ArrayList<>()).add(action);
+    }
+
+    public void executeActions(Player player, ClickType clickType) {
+        List<Action> clickActions = actions.get(clickType);
+        if (clickActions == null || clickActions.isEmpty()) {
+            return;
+        }
+        for (Action action : clickActions) {
+            if (!action.execute(player)) {
+                return;
+            }
+        }
+    }
+
+    public void clearActions(ClickType clickType) {
+        actions.remove(clickType);
+    }
+
+    public void removeAction(ClickType clickType, int index) {
+        List<Action> clickActions = actions.get(clickType);
+        if (clickActions != null) {
+            clickActions.remove(index);
+        }
+    }
+
+    public List<Action> getActions(ClickType clickType) {
+        List<Action> clickActions = actions.get(clickType);
+        if (clickActions == null) {
+            return new ArrayList<>();
+        }
+        return clickActions;
+    }
+
+    public boolean hasActions() {
+        for (ClickType clickType : ClickType.values()) {
+            List<Action> clickActions = actions.get(clickType);
+            if (clickActions != null && !clickActions.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Map<ClickType, List<Action>> getActionsMap() {
+        return Collections.unmodifiableMap(actions);
+    }
+
+    public void setActions(Map<ClickType, List<Action>> actions) {
+        this.actions.clear();
+        this.actions.putAll(actions);
     }
 }

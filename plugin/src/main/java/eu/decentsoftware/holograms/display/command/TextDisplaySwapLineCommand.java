@@ -65,6 +65,9 @@ class TextDisplaySwapLineCommand extends DecentCommand {
             textDisplay.swapLines(index1 - 1, index2 - 1);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
+            if (display.hasActions()) {
+                displayService.refreshClickableEntities(display);
+            }
             Lang.DISPLAY_TEXT_LINE_SWAPPED.send(sender, display.getName(), index1, index2);
             return true;
         };

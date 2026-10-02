@@ -142,6 +142,11 @@ public final class Permissions {
     public static final String COMMAND_DISPLAYS_TEXT_REMOVE_LINE = COMMAND_DISPLAYS_TEXT + ".removeline";
     public static final String COMMAND_DISPLAYS_TEXT_SET_LINE = COMMAND_DISPLAYS_TEXT + ".setline";
     public static final String COMMAND_DISPLAYS_TEXT_SWAP_LINES = COMMAND_DISPLAYS_TEXT + ".swaplines";
+    public static final String COMMAND_DISPLAYS_SET_PERMISSION = COMMAND_DISPLAYS + ".setpermission";
+    public static final String COMMAND_DISPLAYS_ADD_ACTION = COMMAND_DISPLAYS + ".addaction";
+    public static final String COMMAND_DISPLAYS_REMOVE_ACTION = COMMAND_DISPLAYS + ".removeaction";
+    public static final String COMMAND_DISPLAYS_CLEAR_ACTIONS = COMMAND_DISPLAYS + ".clearactions";
+    public static final String COMMAND_DISPLAYS_ACTIONS = COMMAND_DISPLAYS + ".actions";
     public static final String COMMAND_DISPLAYS_UPDATE_INTERVAL = COMMAND_DISPLAYS + ".updateinterval";
 
     // -- Profiler Commands

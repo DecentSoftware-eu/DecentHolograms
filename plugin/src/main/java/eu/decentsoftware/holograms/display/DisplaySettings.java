@@ -41,11 +41,18 @@ public class DisplaySettings {
      * The interval in ticks at which the display is updated for players within the update range.
      */
     private int updateInterval;
+    /**
+     * The permission required for a player to see this display.
+     *
+     * <p>If null or empty, all players can see the display (subject to other visibility rules).</p>
+     */
+    private String permission;
 
     public DisplaySettings() {
         this.enabled = true;
         this.displayRange = 256;
         this.updateInterval = 20;
+        this.permission = null;
     }
 
     public DisplaySettings copy() {
@@ -53,6 +60,7 @@ public class DisplaySettings {
         copy.setEnabled(this.isEnabled());
         copy.setDisplayRange(this.getDisplayRange());
         copy.setUpdateInterval(this.getUpdateInterval());
+        copy.setPermission(this.getPermission());
         return copy;
     }
 
@@ -78,5 +86,13 @@ public class DisplaySettings {
 
     public void setUpdateInterval(int updateInterval) {
         this.updateInterval = updateInterval;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 }

@@ -64,6 +64,15 @@ public interface PlatformPlayer {
     DecentLocation getLocation();
 
     /**
+     * Check whether the player has the given permission.
+     *
+     * @param permission The permission to check.
+     * @return {@code true} if the player has the permission, {@code false} otherwise.
+     * @since 2.10.0
+     */
+    boolean hasPermission(String permission);
+
+    /**
      * Moves the player to the given location.
      *
      * <p>Returns a future because not every platform can teleport synchronously: on a

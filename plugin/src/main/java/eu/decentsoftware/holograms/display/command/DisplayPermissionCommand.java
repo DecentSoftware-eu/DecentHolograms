@@ -24,52 +24,44 @@ import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
+import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.plugin.Validator;
 
 @CommandInfo(
-        usage = "/dh d set-facing <name> <yaw> [pitch]",
-        description = "Set the facing direction of a display.",
-        permissions = {Permissions.COMMAND_DISPLAYS_FACING},
-        aliases = {"setfacing", "facing", "face"},
-        minArgs = 2
+        usage = "/dh d setpermission <name> [permission]",
+        description = "Set display permission.",
+        aliases = {"permission", "setperm", "perm"},
+        permissions = {Permissions.COMMAND_DISPLAYS_SET_PERMISSION},
+        minArgs = 1
 )
-class FacingDisplayCommand extends DecentCommand {
+class DisplayPermissionCommand extends DecentCommand {
 
     private final DisplayService displayService;
 
-    FacingDisplayCommand(DisplayService displayService) {
-        super("set-facing");
+    DisplayPermissionCommand(DisplayService displayService) {
+        super("setpermission");
         this.displayService = displayService;
     }
 
     @Override
     public CommandHandler getCommandHandler() {
         return (sender, args) -> {
-            Validator.validateArgsCount(2, args);
+            Validator.validateArgsCount(1, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
+            DisplaySettings settings = display.getSettings();
 
-            DecentLocation location = display.getLocation();
-            float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, Lang.DISPLAY_FACING_INVALID_YAW.getValue());
-            float pitch = args.length > 2
-                    ? Validator.getFloat(args[2], -90.0f, 90.0f, Lang.DISPLAY_FACING_INVALID_PITCH.getValue())
-                    : location.getPitch();
-            display.setLocation(new DecentLocation(
-                    location.getWorldName(),
-                    location.getX(),
-                    location.getY(),
-                    location.getZ(),
-                    yaw,
-                    pitch
-            ));
-            displayService.updateDisplay(display);
-            if (display.hasActions()) {
-                displayService.refreshClickableEntities(display);
+            if (args.length >= 2) {
+                settings.setPermission(args[1]);
+                Lang.DISPLAY_PERMISSION_SET.send(sender, args[1]);
+            } else {
+                settings.setPermission(null);
+                Lang.DISPLAY_PERMISSION_REMOVED.send(sender);
             }
+
+            displayService.updateDisplayVisibility(display);
             displayService.saveDisplay(display);
-            Lang.DISPLAY_FACING_SET.send(sender, display.getName());
             return true;
         };
     }
@@ -79,10 +71,6 @@ class FacingDisplayCommand extends DecentCommand {
         return (sender, args) -> {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
-            } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], "0", "45", "90", "135", "180", "-45", "-90", "-135");
-            } else if (args.length == 3) {
-                return TabCompleteHandler.getPartialMatches(args[2], "0", "45", "90", "-45", "-90");
             }
             return null;
         };

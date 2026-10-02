@@ -19,29 +19,38 @@
 package eu.decentsoftware.holograms.display.command;
 
 import eu.decentsoftware.holograms.Permissions;
+import com.google.common.collect.Lists;
 import eu.decentsoftware.holograms.api.Lang;
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.commands.CommandHandler;
 import eu.decentsoftware.holograms.api.commands.CommandInfo;
 import eu.decentsoftware.holograms.api.commands.DecentCommand;
 import eu.decentsoftware.holograms.api.commands.TabCompleteHandler;
-import eu.decentsoftware.holograms.platform.api.data.DecentLocation;
+import eu.decentsoftware.holograms.api.utils.message.Message;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplayService;
 import eu.decentsoftware.holograms.plugin.Validator;
+import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @CommandInfo(
-        usage = "/dh d set-facing <name> <yaw> [pitch]",
-        description = "Set the facing direction of a display.",
-        permissions = {Permissions.COMMAND_DISPLAYS_FACING},
-        aliases = {"setfacing", "facing", "face"},
+        usage = "/dh d actions <display> <clickType> [listPage]",
+        description = "List click actions of a display.",
+        permissions = {Permissions.COMMAND_DISPLAYS_ACTIONS},
+        playerOnly = true,
         minArgs = 2
 )
-class FacingDisplayCommand extends DecentCommand {
+class DisplayListActionsCommand extends DecentCommand {
 
     private final DisplayService displayService;
 
-    FacingDisplayCommand(DisplayService displayService) {
-        super("set-facing");
+    DisplayListActionsCommand(DisplayService displayService) {
+        super("actions");
         this.displayService = displayService;
     }
 
@@ -50,26 +59,21 @@ class FacingDisplayCommand extends DecentCommand {
         return (sender, args) -> {
             Validator.validateArgsCount(2, args);
             DisplayBase display = Validator.getDisplay(displayService, args[0]);
-
-            DecentLocation location = display.getLocation();
-            float yaw = Validator.getFloat(args[1], -180.0f, 180.0f, Lang.DISPLAY_FACING_INVALID_YAW.getValue());
-            float pitch = args.length > 2
-                    ? Validator.getFloat(args[2], -90.0f, 90.0f, Lang.DISPLAY_FACING_INVALID_PITCH.getValue())
-                    : location.getPitch();
-            display.setLocation(new DecentLocation(
-                    location.getWorldName(),
-                    location.getX(),
-                    location.getY(),
-                    location.getZ(),
-                    yaw,
-                    pitch
-            ));
-            displayService.updateDisplay(display);
-            if (display.hasActions()) {
-                displayService.refreshClickableEntities(display);
+            ClickType clickType = ClickType.fromString(args[1]);
+            if (clickType == null) {
+                Lang.CLICK_TYPE_DOES_NOT_EXIST.send(sender, args[1]);
+                return true;
             }
-            displayService.saveDisplay(display);
-            Lang.DISPLAY_FACING_SET.send(sender, display.getName());
+            List<Action> actions = display.getActions(clickType);
+            if (actions == null || actions.isEmpty()) {
+                Lang.ACTION_NO_ACTIONS.send(sender);
+                return true;
+            }
+            int currentPage = args.length >= 3 ? Validator.getInteger(args[2], "Page must be a valid integer.") - 1 : 0;
+            List<String> header = Lists.newArrayList("", " &3&lDISPLAY ACTIONS", " &fList of all actions on display '" + display.getName() + "'.", "");
+            Function<Action, String> parseItem = action -> String.format(" &8• &b%s", action.toString());
+            String commandFormat = "/dh d actions " + args[0] + " " + args[1] + " %d";
+            Message.sendPaginatedMessage((Player) sender, currentPage, commandFormat, 15, header, null, actions, parseItem);
             return true;
         };
     }
@@ -80,9 +84,9 @@ class FacingDisplayCommand extends DecentCommand {
             if (args.length == 1) {
                 return TabCompleteHandler.getPartialMatches(args[0], displayService.getRegisteredDisplayNames());
             } else if (args.length == 2) {
-                return TabCompleteHandler.getPartialMatches(args[1], "0", "45", "90", "135", "180", "-45", "-90", "-135");
-            } else if (args.length == 3) {
-                return TabCompleteHandler.getPartialMatches(args[2], "0", "45", "90", "-45", "-90");
+                return TabCompleteHandler.getPartialMatches(args[1], Arrays.stream(ClickType.values())
+                        .map(ClickType::name)
+                        .collect(Collectors.toList()));
             }
             return null;
         };

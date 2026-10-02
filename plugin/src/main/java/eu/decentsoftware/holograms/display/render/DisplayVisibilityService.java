@@ -25,7 +25,17 @@ import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 public class DisplayVisibilityService {
 
     public boolean shouldBeShownToPlayer(DisplayBase display, PlatformPlayer player) {
-        return isDisplayEnabled(display) && isPlayerWithinDisplayRange(display, player);
+        return isDisplayEnabled(display)
+                && isPlayerWithinDisplayRange(display, player)
+                && hasRequiredPermission(display, player);
+    }
+
+    private boolean hasRequiredPermission(DisplayBase display, PlatformPlayer player) {
+        String permission = display.getSettings().getPermission();
+        if (permission == null || permission.trim().isEmpty()) {
+            return true;
+        }
+        return player.hasPermission(permission);
     }
 
     private boolean isDisplayEnabled(DisplayBase display) {

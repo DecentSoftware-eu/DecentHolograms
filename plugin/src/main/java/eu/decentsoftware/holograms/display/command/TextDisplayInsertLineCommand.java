@@ -61,6 +61,9 @@ class TextDisplayInsertLineCommand extends DecentCommand {
             textDisplay.addLine(index - 1, text);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
+            if (display.hasActions()) {
+                displayService.refreshClickableEntities(display);
+            }
             Lang.DISPLAY_TEXT_LINE_INSERTED.send(sender, display.getName(), index);
             return true;
         };

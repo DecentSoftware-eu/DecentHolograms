@@ -61,6 +61,9 @@ class TextDisplaySetLineCommand extends DecentCommand {
             textDisplay.setLine(index - 1, text);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
+            if (display.hasActions()) {
+                displayService.refreshClickableEntities(display);
+            }
             Lang.DISPLAY_TEXT_LINE_SET.send(sender, display.getName(), index);
             return true;
         };
