@@ -54,7 +54,10 @@ public class HologramManager extends Ticked {
         this.decentHolograms = decentHolograms;
         this.register();
 
-        S.async(this::reload); // Reload when the worlds are ready
+        S.async(() -> {
+            reload();
+            EventFactory.fireReloadEvent();
+        }); // Reload when the worlds are ready
     }
 
     @Override
