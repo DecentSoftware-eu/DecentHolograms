@@ -16,9 +16,13 @@ mockito = "4.11.0" # Has to be 4.x for Java 8 compatibility
 # Plugins
 shadow = "9.6.1"
 paperweight = "2.0.0-beta.24"
+adventure-libraries = "4.24.0"
+adventure-platform = "4.4.1"
 
 [libraries]
 spigot = { module = "org.spigotmc:spigot", version.ref = "spigot" }
+adventure-libraries = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure-libraries" }
+adventure-platform = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventure-platform" }
 placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderapi" }
 headdatabase-api = { module = "com.arcaniax:HeadDatabase-API", version.ref = "headdatabase-api" }
 bstats-bukkit = { module = "org.bstats:bstats-bukkit", version.ref = "bstats" }
