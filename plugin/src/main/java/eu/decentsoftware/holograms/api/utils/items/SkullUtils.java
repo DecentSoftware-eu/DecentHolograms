@@ -14,6 +14,7 @@ import eu.decentsoftware.holograms.skin.mojang.MojangSkinSource;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.SkullType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -48,6 +49,11 @@ public final class SkullUtils {
     private static Field gameProfileFieldResolvableProfile;
 
     private static Function<Property, String> valueResolver;
+
+    private static Method getPlayerProfileMethod;
+    private static Method getTexturesMethod;
+    private static Method texturesIsEmptyMethod;
+    private static boolean profileApiResolved = false;
 
     /**
      * Set when XSeries fails to handle profiles on the current server.
@@ -272,6 +278,65 @@ public final class SkullUtils {
                 itemStack.setDurability((short) SkullType.PLAYER.ordinal());
             }
         }
+    }
+
+    /**
+     * Set the owner of the given skull ItemStack to an online player, using the skin the server already has for them.
+     *
+     * <p>Versions without a profile API use the player's name instead.</p>
+     *
+     * @param itemStack The ItemStack.
+     * @param player    The online player.
+     * @return True if the owner was set, false if the server has no skin for the player.
+     * @since 2.10.2
+     */
+    static boolean setSkullOwningPlayer(@NonNull ItemStack itemStack, @NonNull Player player) {
+        if (!(itemStack.getItemMeta() instanceof SkullMeta)) {
+            return false;
+        }
+        if (!hasProfileApi()) {
+            setSkullOwner(itemStack, player.getName());
+            return true;
+        }
+        if (!hasSkin(player)) {
+            return false;
+        }
+        ItemMeta meta = itemStack.getItemMeta();
+        ((SkullMeta) meta).setOwningPlayer(player);
+        itemStack.setItemMeta(meta);
+        return true;
+    }
+
+    /**
+     * Check whether the server holds a skin for the given player.
+     *
+     * @param player The player.
+     * @return True if the player's profile has textures.
+     */
+    private static boolean hasSkin(Player player) {
+        try {
+            Object profile = getPlayerProfileMethod.invoke(player);
+            Object textures = getTexturesMethod.invoke(profile);
+            return !(boolean) texturesIsEmptyMethod.invoke(textures);
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            Log.warn("Failed to read the profile of %s.", e, player.getName());
+            return false;
+        }
+    }
+
+    private static boolean hasProfileApi() {
+        if (!profileApiResolved) {
+            try {
+                getPlayerProfileMethod = Player.class.getMethod("getPlayerProfile");
+                getTexturesMethod = Class.forName("org.bukkit.profile.PlayerProfile").getMethod("getTextures");
+                texturesIsEmptyMethod = Class.forName("org.bukkit.profile.PlayerTextures").getMethod("isEmpty");
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                // Server is running a version before 1.18.1.
+                getPlayerProfileMethod = null;
+            }
+            profileApiResolved = true;
+        }
+        return getPlayerProfileMethod != null;
     }
 
     /**

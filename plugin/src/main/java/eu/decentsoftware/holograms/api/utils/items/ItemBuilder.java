@@ -284,14 +284,13 @@ public class ItemBuilder implements Cloneable {
 		Player owner = Bukkit.getPlayer(playerName);
 
 		// If the player is online, we can just use their profile, which the server should have.
-		if (owner != null) {
-			SkullUtils.setSkullOwner(itemStack, playerName);
+		if (owner != null && SkullUtils.setSkullOwningPlayer(itemStack, owner)) {
 			return this;
 		}
 
 		/*
-		 * If the player is offline, we want to fetch the texture ourselves. This is because
-		 * if the server is NOT in online mode, it will not be able to fetch the texture from Mojang.
+		 * If the player is offline, or the server has no skin for them, we want to fetch the texture ourselves.
+		 * This is because if the server is NOT in online mode, it will not be able to fetch the texture from Mojang.
 		 */
 		final String texture = SkullUtils.getCachedOrFetchFromUsername(playerName);
 		if (texture != null) {
