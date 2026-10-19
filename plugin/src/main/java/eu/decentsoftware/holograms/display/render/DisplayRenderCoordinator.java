@@ -20,12 +20,15 @@ package eu.decentsoftware.holograms.display.render;
 
 import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
+import eu.decentsoftware.holograms.display.DisplayClickableService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderState;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateService;
 import eu.decentsoftware.holograms.display.render.state.LogicalRenderStateManager;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayer;
 import eu.decentsoftware.holograms.platform.api.player.PlatformPlayerService;
 import eu.decentsoftware.holograms.platform.api.render.RenderObjectHandle;
+import eu.decentsoftware.holograms.platform.bukkit.player.BukkitPlayer;
+import org.bukkit.entity.Player;
 
 public class DisplayRenderCoordinator {
 
@@ -34,21 +37,24 @@ public class DisplayRenderCoordinator {
     private final LogicalRenderStateService logicalRenderStateService;
     private final DisplayRenderService renderService;
     private final LogicalRenderStateManager logicalRenderStateManager;
+    private final DisplayClickableService clickableService;
 
     public DisplayRenderCoordinator(DisplayVisibilityService visibilityService,
                                     PlatformPlayerService playerService,
                                     LogicalRenderStateService logicalRenderStateService,
                                     DisplayRenderService renderService,
-                                    LogicalRenderStateManager logicalRenderStateManager) {
+                                    LogicalRenderStateManager logicalRenderStateManager,
+                                    DisplayClickableService clickableService) {
         this.visibilityService = visibilityService;
         this.playerService = playerService;
         this.logicalRenderStateService = logicalRenderStateService;
         this.renderService = renderService;
         this.logicalRenderStateManager = logicalRenderStateManager;
+        this.clickableService = clickableService;
     }
 
     public void hideDisplayForPlayer(DisplayBase display, PlatformPlayer player) {
-        if (isIsShownToPlayer(display, player)) {
+        if (isShownToPlayer(display, player)) {
             updateLogicalState(display, player, false);
         }
     }
@@ -67,7 +73,7 @@ public class DisplayRenderCoordinator {
 
     public void updateVisibility(DisplayBase display, PlatformPlayer player) {
         boolean shouldBeShownToPlayer = visibilityService.shouldBeShownToPlayer(display, player);
-        boolean isShownToPlayer = isIsShownToPlayer(display, player);
+        boolean isShownToPlayer = isShownToPlayer(display, player);
         if (shouldBeShownToPlayer && !isShownToPlayer) {
             updateLogicalState(display, player, true);
         } else if (!shouldBeShownToPlayer && isShownToPlayer) {
@@ -75,13 +81,21 @@ public class DisplayRenderCoordinator {
         }
     }
 
-    private boolean isIsShownToPlayer(DisplayBase display, PlatformPlayer player) {
+    public boolean isShownToPlayer(DisplayBase display, PlatformPlayer player) {
         return logicalRenderStateManager.getCurrentState(display.getName(), player.getUniqueId()) != null;
+    }
+
+    public void refreshClickableEntities(DisplayBase display) {
+        for (PlatformPlayer player : playerService.getOnlinePlayers()) {
+            if (isShownToPlayer(display, player)) {
+                clickableService.respawn(display, toBukkitPlayer(player));
+            }
+        }
     }
 
     public void update(DisplayBase display) {
         for (PlatformPlayer player : playerService.getOnlinePlayers()) {
-            if (isIsShownToPlayer(display, player)) {
+            if (isShownToPlayer(display, player)) {
                 updateLogicalState(display, player, true);
             }
         }
@@ -95,15 +109,23 @@ public class DisplayRenderCoordinator {
 
     private void updateLogicalState(DisplayBase display, PlatformPlayer player, boolean visible) {
         try {
+            boolean wasShown = isShownToPlayer(display, player);
             RenderObjectHandle handle = getRenderObjectHandle(display);
             DisplayRenderContext context = getDisplayRenderContext(player);
             LogicalRenderState currentState = logicalRenderStateManager.getCurrentState(handle.getId(), context.getPlayer().getUniqueId());
             LogicalRenderState state;
+            Player bukkitPlayer = toBukkitPlayer(player);
             if (visible) {
                 state = logicalRenderStateService.updateState(display, context, currentState);
+                if (wasShown) {
+                    clickableService.move(display, bukkitPlayer);
+                } else {
+                    clickableService.show(display, bukkitPlayer);
+                }
             } else {
                 state = null;
                 renderService.render(handle, null, context);
+                clickableService.hide(display, bukkitPlayer);
             }
 
             if (currentState == null || state == null) {
@@ -135,5 +157,9 @@ public class DisplayRenderCoordinator {
 
     private DisplayRenderContext getDisplayRenderContext(PlatformPlayer player) {
         return new DisplayRenderContext(player);
+    }
+
+    private Player toBukkitPlayer(PlatformPlayer player) {
+        return ((BukkitPlayer) player).getBukkitPlayer();
     }
 }

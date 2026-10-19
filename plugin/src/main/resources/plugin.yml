@@ -354,6 +354,11 @@ permissions:
       dh.command.displays.disable: true
       dh.command.displays.displayrange: true
       dh.command.displays.updateinterval: true
+      dh.command.displays.setpermission: true
+      dh.command.displays.addaction: true
+      dh.command.displays.removeaction: true
+      dh.command.displays.clearactions: true
+      dh.command.displays.actions: true
       dh.command.displays.attribute: true
       dh.command.displays.resetattribute: true
       dh.command.displays.listattributes: true
@@ -399,6 +404,21 @@ permissions:
     default: op
   dh.command.displays.updateinterval:
     description: "Allows player to use the command '/dh displays update-interval <display> <interval>'"
+    default: op
+  dh.command.displays.setpermission:
+    description: "Allows player to use the command '/dh displays setpermission <display> [permission]'"
+    default: op
+  dh.command.displays.addaction:
+    description: "Allows player to use the command '/dh displays addaction <display> <clickType> <action>'"
+    default: op
+  dh.command.displays.removeaction:
+    description: "Allows player to use the command '/dh displays removeaction <display> <clickType> <index>'"
+    default: op
+  dh.command.displays.clearactions:
+    description: "Allows player to use the command '/dh displays clearactions <display> <clickType>'"
+    default: op
+  dh.command.displays.actions:
+    description: "Allows player to use the command '/dh displays actions <display> <clickType> [listPage]'"
     default: op
   dh.command.displays.attribute:
     description: "Allows player to use the command '/dh displays attribute <display> <attribute> [value]'"

@@ -59,6 +59,9 @@ class TextDisplayRemoveLineCommand extends DecentCommand {
             textDisplay.removeLine(index - 1);
             displayService.updateDisplay(display);
             displayService.saveDisplay(display);
+            if (display.hasActions()) {
+                displayService.refreshClickableEntities(display);
+            }
             Lang.DISPLAY_TEXT_LINE_REMOVED.send(sender, display.getName(), index);
             return true;
         };

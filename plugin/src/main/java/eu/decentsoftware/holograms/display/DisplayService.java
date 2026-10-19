@@ -38,17 +38,21 @@ public class DisplayService {
     private final DisplayPersistenceService persistenceService;
     private final DisplayRenderCoordinator renderCoordinator;
     private final PlatformEventListener platformEventListener;
+    private final DisplayClickableService clickableService;
     private final Map<String, DisplayBase> displays = new ConcurrentHashMap<>();
 
     public DisplayService(DisplayPersistenceService persistenceService,
                           DisplayRenderCoordinator renderCoordinator,
-                          PlatformEventListener platformEventListener) {
+                          PlatformEventListener platformEventListener,
+                          DisplayClickableService clickableService) {
         this.persistenceService = persistenceService;
         this.renderCoordinator = renderCoordinator;
         this.platformEventListener = platformEventListener;
+        this.clickableService = clickableService;
     }
 
     public void shutdown() {
+        this.displays.keySet().forEach(clickableService::unload);
         this.displays.values().forEach(renderCoordinator::hideForEveryone);
         this.displays.clear();
     }
@@ -88,6 +92,7 @@ public class DisplayService {
             return false;
         }
         renderCoordinator.hideForEveryone(removedDisplay);
+        clickableService.unload(name);
         persistenceService.deleteDisplay(removedDisplay);
         platformEventListener.onDisplayDestroyed(name);
         return true;
@@ -99,6 +104,10 @@ public class DisplayService {
 
     public void updateDisplay(DisplayBase displayBase) {
         renderCoordinator.update(displayBase);
+    }
+
+    public void refreshClickableEntities(DisplayBase display) {
+        renderCoordinator.refreshClickableEntities(display);
     }
 
     public void hideDisplaysForPlayer(PlatformPlayer player) {

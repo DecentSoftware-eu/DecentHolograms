@@ -29,6 +29,8 @@ public class ConfigDisplaySettings {
     private double displayRange = 256;
     @Setting("update-interval")
     private int updateInterval = 20;
+    @Setting
+    private String permission;
 
     public boolean isEnabled() {
         return enabled;
@@ -52,5 +54,13 @@ public class ConfigDisplaySettings {
 
     public void setUpdateInterval(int updateInterval) {
         this.updateInterval = updateInterval;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 }

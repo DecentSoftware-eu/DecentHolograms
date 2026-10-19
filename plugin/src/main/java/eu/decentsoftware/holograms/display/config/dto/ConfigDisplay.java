@@ -46,6 +46,8 @@ public class ConfigDisplay {
     private String item;
     @Setting
     private String block;
+    @Setting
+    private Map<String, List<String>> actions = new HashMap<>();
 
     public String getName() {
         return name;
@@ -109,5 +111,13 @@ public class ConfigDisplay {
 
     public void setBlock(String block) {
         this.block = block;
+    }
+
+    public Map<String, List<String>> getActions() {
+        return actions;
+    }
+
+    public void setActions(Map<String, List<String>> actions) {
+        this.actions = actions;
     }
 }

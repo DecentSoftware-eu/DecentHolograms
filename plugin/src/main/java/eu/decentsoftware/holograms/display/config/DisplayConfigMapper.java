@@ -18,7 +18,10 @@
 
 package eu.decentsoftware.holograms.display.config;
 
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.display.BlockDisplay;
+import eu.decentsoftware.holograms.logging.Log;
 import eu.decentsoftware.holograms.display.DisplayBase;
 import eu.decentsoftware.holograms.display.DisplaySettings;
 import eu.decentsoftware.holograms.display.ItemDisplay;
@@ -69,6 +72,7 @@ public class DisplayConfigMapper {
                 throw new DisplayConfigException("Unknown display type: " + dto.getType());
         }
         attributeConfigMapper.attributesToDomain(display, dto.getAttributes());
+        actionsToDomain(display, dto.getActions());
         return display;
     }
 
@@ -120,7 +124,41 @@ public class DisplayConfigMapper {
         settings.setEnabled(dto.isEnabled());
         settings.setDisplayRange(dto.getDisplayRange());
         settings.setUpdateInterval(dto.getUpdateInterval());
+        settings.setPermission(dto.getPermission());
         return settings;
+    }
+
+    private void actionsToDomain(DisplayBase display, Map<String, List<String>> actionsDto) {
+        if (actionsDto == null || actionsDto.isEmpty()) {
+            return;
+        }
+        for (ClickType clickType : ClickType.values()) {
+            List<String> actionStrings = actionsDto.get(clickType.name());
+            if (actionStrings == null) {
+                continue;
+            }
+            for (String actionString : actionStrings) {
+                try {
+                    display.addAction(clickType, new Action(actionString));
+                } catch (Exception e) {
+                    Log.warn("Failed to parse action '%s' for display '%s'. Skipping...", e, actionString, display.getName());
+                }
+            }
+        }
+    }
+
+    private Map<String, List<String>> actionsToDto(DisplayBase domain) {
+        Map<String, List<String>> actionsDto = new java.util.LinkedHashMap<>();
+        for (Map.Entry<ClickType, List<Action>> entry : domain.getActionsMap().entrySet()) {
+            if (entry.getValue() == null || entry.getValue().isEmpty()) {
+                continue;
+            }
+            actionsDto.put(
+                    entry.getKey().name(),
+                    entry.getValue().stream().map(Action::toString).collect(Collectors.toList())
+            );
+        }
+        return actionsDto.isEmpty() ? null : actionsDto;
     }
 
     public ConfigDisplay toDto(DisplayBase domain) {
@@ -130,6 +168,7 @@ public class DisplayConfigMapper {
         dto.setLocation(locationToDto(domain.getLocation()));
         dto.setSettings(settingsToDto(domain.getSettings()));
         dto.setAttributes(attributesToDto(domain.getAttributes()));
+        dto.setActions(actionsToDto(domain));
         switch (domain.getType()) {
             case TEXT:
                 dto.setPages(pagesToDto((TextDisplay) domain));
@@ -170,6 +209,7 @@ public class DisplayConfigMapper {
         dto.setEnabled(settings.isEnabled());
         dto.setDisplayRange(settings.getDisplayRange());
         dto.setUpdateInterval(settings.getUpdateInterval());
+        dto.setPermission(settings.getPermission());
         return dto;
     }
 

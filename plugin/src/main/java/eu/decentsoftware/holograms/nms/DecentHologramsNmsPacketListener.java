@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.api.holograms.HologramManager;
+import eu.decentsoftware.holograms.display.DisplayClickService;
 import eu.decentsoftware.holograms.nms.api.NmsPacketListener;
 import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractAction;
 import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractEvent;
@@ -15,15 +16,20 @@ import eu.decentsoftware.holograms.nms.api.event.NmsEntityInteractEvent;
 public class DecentHologramsNmsPacketListener implements NmsPacketListener {
 
     private final HologramManager hologramManager;
+    private final DisplayClickService displayClickService;
 
-    public DecentHologramsNmsPacketListener(HologramManager hologramManager) {
+    public DecentHologramsNmsPacketListener(HologramManager hologramManager, DisplayClickService displayClickService) {
         this.hologramManager = hologramManager;
+        this.displayClickService = displayClickService;
     }
 
     @Override
     public void onEntityInteract(NmsEntityInteractEvent event) {
         ClickType clickType = mapEntityInteractActionToClickType(event.getAction());
         boolean processed = hologramManager.onClick(event.getPlayer(), event.getEntityId(), clickType);
+        if (!processed && displayClickService != null) {
+            processed = displayClickService.onClick(event.getPlayer(), event.getEntityId(), clickType);
+        }
         if (processed) {
             event.setHandled(true);
         }
