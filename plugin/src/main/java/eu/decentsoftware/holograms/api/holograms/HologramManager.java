@@ -97,6 +97,9 @@ public class HologramManager extends Ticked {
             hologram.show(player, hologram.getPlayerPage(player));
         } else if (hologram.isVisible(player) && !(hologram.canShow(player) && hologram.isInDisplayRange(player))) {
             hologram.hide(player);
+        } else if (hologram.isVisible(player)) {
+            // The hologram stays visible, but the player's permissions for its lines might have changed.
+            hologram.updateLineVisibility(player);
         }
     }
 

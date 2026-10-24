@@ -704,6 +704,30 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
     }
 
+    /**
+     * Update the visibility of the lines on the page the given player is viewing.
+     * Lines the player is no longer allowed to see get hidden, and lines the player
+     * is now allowed to see get shown.
+     *
+     * @param player Given player.
+     * @see HologramLine#updateVisibility(Player)
+     */
+    public void updateLineVisibility(@NonNull Player player) {
+        synchronized (visibilityMutex) {
+            // On 1.8, a page is shown one tick after the previous one gets hidden (see #show).
+            // Until then, the lines of the hidden page can't be told apart from lines hidden
+            // due to a missing permission, so they would be shown again.
+            if (!Version.after(8)) {
+                return;
+            }
+
+            HologramPage page = getPage(player);
+            if (page != null) {
+                page.getLines().forEach(line -> line.updateVisibility(player));
+            }
+        }
+    }
+
     public void update(@NonNull Player player) {
         update(false, player);
     }
