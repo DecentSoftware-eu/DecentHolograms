@@ -9,6 +9,9 @@ import eu.decentsoftware.holograms.api.utils.color.patterns.RainbowPattern;
 import eu.decentsoftware.holograms.api.utils.color.patterns.SolidPattern;
 import eu.decentsoftware.holograms.api.utils.reflect.ReflectMethod;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 
 import javax.annotation.Nonnull;
@@ -76,6 +79,7 @@ public class IridiumColorAPI {
             return result;
         }
         String input = string;
+        string = tryConvertMiniMessage(string);
         for (Pattern pattern : PATTERNS) {
             string = pattern.process(string);
         }
@@ -281,4 +285,20 @@ public class IridiumColorAPI {
         return COLORS.get(nearestColor);
     }
 
+    private static Boolean adventureSupported;
+    private static String tryConvertMiniMessage(String text) {
+        if (adventureSupported != null && !adventureSupported || text.contains("§")) {
+            return text;
+        }
+
+        // Switch minimessage to legacy format.
+        try {
+            Component component = MiniMessage.miniMessage().deserialize(text);
+            adventureSupported = true;
+            return LegacyComponentSerializer.legacySection().serialize(component);
+        } catch (NoClassDefFoundError thr) {
+            adventureSupported = false;
+        }
+        return text;
+    }
 }

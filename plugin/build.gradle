@@ -53,6 +53,8 @@ dependencies {
     compileOnly(libs.spigot)
     compileOnly(libs.placeholderapi)
     compileOnly(libs.headdatabase.api)
+    compileOnly(libs.adventure.libraries)
+    compileOnly(libs.adventure.platform)
 
     implementation(libs.bstats.bukkit)
     implementation(libs.item.nbt.api)
