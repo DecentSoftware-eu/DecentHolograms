@@ -8,7 +8,7 @@ xseries = "14.0.0"
 lombok = "1.18.48"
 annotations = "26.1.0"
 configurate = "4.2.0"
-gson = "2.14.0"
+gson = "2.15.0"
 # Test
 junit = "5.14.4"
 junit-platform-launcher = "1.14.4"
