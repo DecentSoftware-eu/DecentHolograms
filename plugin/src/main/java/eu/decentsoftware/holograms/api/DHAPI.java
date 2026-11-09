@@ -613,10 +613,9 @@ public final class DHAPI {
         //
         // Otherwise, we don't need to do anything as HologramLine#setContent already updated the line.
         if (prevType != line.getType()) {
-            Player[] viewers = line.getViewerPlayers().toArray(new Player[0]);
-            line.hide();
+            line.hide(false);
             line.setContent(content);
-            line.show(viewers);
+            line.show(true);
 
             // Realign lines in case the heights changed.
             if (parent != null) {

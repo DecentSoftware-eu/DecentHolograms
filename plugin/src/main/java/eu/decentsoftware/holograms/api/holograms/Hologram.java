@@ -240,6 +240,9 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
      */
     protected final Object visibilityMutex = new Object();
 
+    // Reused for range checks; access must be protected by visibilityMutex.
+    private final Location locationCache = new Location(null, 0, 0, 0);
+
     protected final String name;
     protected boolean saveToFile;
     protected final FileConfig config;
@@ -443,7 +446,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         // We want to keep the hologram facing working as a "default" value, but we don't want
         // it to override custom line facing.
         for (HologramPage page : this.pages) {
-            page.getLines().forEach(line -> {
+            page.forEachLines(line -> {
                 if (line.getFacing() == prev) {
                     line.setFacing(facing);
                 }
@@ -689,7 +692,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     private void showPageTo(@NonNull Player player, @NonNull HologramPage page, int pageIndex) {
-        page.getLines().forEach(line -> line.show(player));
+        page.forEachLines(line -> line.show(player));
         // Add player to viewers
         viewerPages.put(player.getUniqueId(), pageIndex);
         viewers.add(player.getUniqueId());
@@ -729,7 +732,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     public void updateAll(boolean force) {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_UPDATING)) {
-                getViewerPlayers().forEach(player -> performUpdate(force, player));
+                forEachViewerPlayers(player -> performUpdate(force, player));
             }
         }
     }
@@ -741,7 +744,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
         HologramPage page = getPage(player);
         if (page != null) {
-            page.getLines().forEach(line -> line.update(force, player));
+            page.forEachLines(line -> line.update(force, player));
         }
     }
 
@@ -758,7 +761,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     public void updateAnimationsAll() {
         synchronized (visibilityMutex) {
             if (isEnabled() && !hasFlag(EnumFlag.DISABLE_ANIMATIONS)) {
-                getViewerPlayers().forEach(this::performUpdateAnimations);
+                forEachViewerPlayers(this::performUpdateAnimations);
             }
         }
     }
@@ -770,7 +773,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
         HologramPage page = getPage(player);
         if (page != null) {
-            page.getLines().forEach(line -> line.updateAnimations(player));
+            page.forEachLines(line -> line.updateAnimations(player));
         }
     }
 
@@ -787,14 +790,14 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
     }
 
     private void hidePageFrom(@NonNull Player player, @NonNull HologramPage page) {
-        page.getLines().forEach(line -> line.hide(player));
+        page.forEachLines(line -> line.hide(player));
         hideClickableEntities(player);
     }
 
     public void hideAll() {
         synchronized (visibilityMutex) {
             if (isEnabled()) {
-                getViewerPlayers().forEach(this::hide);
+                forEachViewerPlayers(this::hide);
             }
         }
     }
@@ -818,7 +821,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void showClickableEntitiesAll() {
         if (isEnabled()) {
-            getViewerPlayers().forEach(this::showClickableEntities);
+            forEachViewerPlayers(this::showClickableEntities);
         }
     }
 
@@ -834,7 +837,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void hideClickableEntitiesAll() {
         if (isEnabled()) {
-            getViewerPlayers().forEach(this::hideClickableEntities);
+            forEachViewerPlayers(this::hideClickableEntities);
         }
     }
 
@@ -867,7 +870,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
 
     public void teleportClickableEntitiesAll() {
         if (isEnabled()) {
-            getViewerPlayers().forEach(this::teleportClickableEntities);
+            forEachViewerPlayers(this::teleportClickableEntities);
         }
     }
 
@@ -901,7 +904,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
          */
         try {
             if (player.getWorld().equals(location.getWorld())) {
-                return player.getLocation().distanceSquared(location) <= range * range;
+                return player.getLocation(locationCache).distanceSquared(location) <= range * range;
             }
         } catch (Exception ignored) {
             // Ignored
@@ -1002,7 +1005,7 @@ public class Hologram extends UpdatingHologramObject implements ITicked {
         }
 
         HologramPage page = pages.remove(index);
-        page.getLines().forEach(HologramLine::hide);
+        page.forEachLines(HologramLine::hide);
 
         // Update indexes of all the other pages.
         for (int i = 0; i < pages.size(); i++) {
