@@ -21,6 +21,7 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
@@ -113,9 +114,7 @@ public class HologramPage extends FlagHolder {
     @NonNull
     public HologramPage clone(@NonNull Hologram parent, int index) {
         HologramPage page = new HologramPage(parent, index);
-        for (HologramLine line : getLines()) {
-            page.addLine(line.clone(page, page.getNextLineLocation()));
-        }
+        forEachLines(line -> page.addLine(line.clone(page, page.getNextLineLocation())));
         for (Map.Entry<ClickType, List<Action>> entry : getActions().entrySet()) {
             for (Action action : entry.getValue()) {
                 page.addAction(entry.getKey(), action);
@@ -278,6 +277,16 @@ public class HologramPage extends FlagHolder {
     @NonNull
     public List<HologramLine> getLines() {
         return ImmutableList.copyOf(lines);
+    }
+
+    /**
+     * Perform an action for each line in page order without creating a snapshot.
+     * The page's lines must not be added or removed during iteration.
+     *
+     * @param action Action to perform for each line.
+     */
+    public void forEachLines(@NonNull Consumer<? super HologramLine> action) {
+        lines.forEach(action);
     }
 
     /*

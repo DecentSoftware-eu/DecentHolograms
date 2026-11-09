@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -369,6 +370,28 @@ public class HologramLine extends HologramObject {
         return playerList;
     }
 
+    /**
+     * Perform an action for the given players, or viewers or online players when none are given.
+     *
+     * @param onlyViewers Whether to use only viewers when no players are given.
+     * @param action Action to perform for each player.
+     * @param players Given players.
+     */
+    private void forEachPlayers(boolean onlyViewers, @NonNull Consumer<? super Player> action, Player... players) {
+        if (players == null || players.length == 0) {
+            if (onlyViewers) {
+                forEachViewerPlayers(action);
+            } else {
+                // Snapshot the live collection because actions may change the online player list during iteration.
+                new ArrayList<>(Bukkit.getOnlinePlayers()).forEach(action);
+            }
+        } else {
+            for (Player player : players) {
+                action.accept(player);
+            }
+        }
+    }
+
     @NotNull
     private String parsePlaceholders(@NotNull String string, @NonNull Player player, boolean papi) {
         // Replace internal placeholders.
@@ -433,24 +456,33 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void show(Player... players) {
+        show(false, players);
+    }
+
+    /**
+     * Show this line for given players, or viewers or online players when none are given.
+     *
+     * @param onlyViewers Whether to use only viewers when no players are given.
+     * @param players Given players.
+     */
+    public void show(boolean onlyViewers, Player... players) {
         synchronized (renderMutex) {
             if (isDisabled()) {
                 return;
             }
             hidePreviousIfNecessary();
-            List<Player> playerList = getPlayers(false, players);
-            for (Player player : playerList) {
+            forEachPlayers(onlyViewers, player -> {
                 if (player == null) {
-                    continue;
+                    return;
                 }
                 if (parent != null && parent.getParent().isHideState(player)) {
-                    continue;
+                    return;
                 }
                 if (!isVisible(player) && canShow(player) && isInDisplayRange(player)) {
                     renderer.display(player, getPartData(player, true, false));
                     viewers.add(player.getUniqueId());
                 }
-            }
+            }, players);
         }
     }
 
@@ -478,14 +510,13 @@ public class HologramLine extends HologramObject {
             }
 
             hidePreviousIfNecessary();
-            List<Player> playerList = getPlayers(true, players);
-            for (Player player : playerList) {
+            forEachPlayers(true, player -> {
                 if (renderer instanceof NmsTextHologramRenderer) {
                     updateTextIfNecessary(player, true);
                 } else if (containsPlaceholders || force) {
                     renderer.updateContent(player, getPartData(player, true, true));
                 }
-            }
+            }, players);
         }
     }
 
@@ -506,10 +537,7 @@ public class HologramLine extends HologramObject {
                 return;
             }
             hidePreviousIfNecessary();
-            List<Player> playerList = getPlayers(true, players);
-            for (Player player : playerList) {
-                renderer.move(player, getPartData(player, false, true));
-            }
+            forEachPlayers(true, player -> renderer.move(player, getPartData(player, false, true)), players);
         }
     }
 
@@ -519,12 +547,11 @@ public class HologramLine extends HologramObject {
                 return;
             }
             hidePreviousIfNecessary();
-            List<Player> playerList = getPlayers(true, players);
-            for (Player player : playerList) {
+            forEachPlayers(true, player -> {
                 if (renderer instanceof NmsTextHologramRenderer) {
                     updateTextIfNecessary(player, false);
                 }
-            }
+            }, players);
         }
     }
 
@@ -592,13 +619,24 @@ public class HologramLine extends HologramObject {
      * @param players Given players.
      */
     public void hide(Player... players) {
+        hide(true, players);
+    }
+
+    /**
+     * Hide this line for given players.
+     *
+     * @param remove Whether to remove the players from the viewer set.
+     * @param players Given players.
+     */
+    public void hide(boolean remove, Player... players) {
         synchronized (renderMutex) {
             hidePreviousIfNecessary();
-            List<Player> playerList = getPlayers(true, players);
-            for (Player player : playerList) {
+            forEachPlayers(true, player -> {
                 renderer.hide(player);
-                viewers.remove(player.getUniqueId());
-            }
+                if (remove) {
+                    viewers.remove(player.getUniqueId());
+                }
+            }, players);
         }
     }
 
@@ -608,7 +646,7 @@ public class HologramLine extends HologramObject {
                 return;
             }
 
-            getViewerPlayers().forEach(previousRenderer::hide);
+            forEachViewerPlayers(previousRenderer::hide);
             previousRenderer = null;
         }
     }

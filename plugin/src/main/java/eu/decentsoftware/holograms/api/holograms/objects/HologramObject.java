@@ -10,9 +10,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
@@ -163,8 +165,22 @@ public abstract class HologramObject extends FlagHolder {
     public List<Player> getViewerPlayers() {
         return getViewers().stream()
                 .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.isOnline())
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Perform an action for each online viewer without creating a snapshot or player list.
+     *
+     * @param action Action to perform for each viewer.
+     */
+    public void forEachViewerPlayers(@NonNull Consumer<? super Player> action) {
+        for (UUID uuid : viewers) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                action.accept(player);
+            }
+        }
     }
 
     /**
